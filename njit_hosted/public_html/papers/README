@@ -1,0 +1,5 @@
+- To build the paper, just type "make".
+- To build it and view it, type "make gv".
+- To build using normal LaTeX instead of PDFLaTeX, just type 
+  "make USE_PDFLATEX=false gv"
+- To get rid of temporary files, type "make clean"

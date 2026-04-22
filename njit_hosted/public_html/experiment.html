@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NJIT CS PhD Student Directory</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --njit-red: #C3001D;
+            --njit-text: #333333;
+            --njit-light-gray: #F2F2F2;
+        }
+        body {
+            font-family: 'Poppins', sans-serif;
+            line-height: 1.6;
+            color: var(--njit-text);
+            margin: 0;
+            padding: 0;
+            background-color: white;
+        }
+        .main-header {
+            background-color: white;
+            color: var(--njit-text);
+            padding: 10px 0;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 20px;
+        }
+        .logo {
+            display: flex;
+            align-items: center;
+        }
+        .logo img {
+            height: 40px;
+            margin-right: 10px;
+        }
+        .logo .title {
+            font-size: 18px;
+            margin: 0;
+            color: var(--njit-text);
+            font-weight: normal;
+        }
+        .logo .title a {
+            color: var(--njit-text);
+            text-decoration: none;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        h1 {
+            color: black;
+            text-align: center;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+        h2 {
+            color: black;
+            text-align: center;
+            margin-top: 0;
+            margin-bottom: 30px;
+            font-weight: 400;
+        }
+        #student-search-input {
+            width: 100%;
+            padding: 10px;
+            font-size: 16px;
+            font-family: 'Poppins', sans-serif;
+            border: 1px solid var(--njit-light-gray);
+            border-radius: 4px;
+            margin-bottom: 20px;
+        }
+        .directory {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        .student-card {
+            background-color: #fff;
+            border: 1px solid var(--njit-light-gray);
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+        .student-card:hover {
+            transform: translateY(-5px);
+        }
+        .student-name {
+            font-weight: 500;
+            font-size: 18px;
+            margin-bottom: 10px;
+            color: var(--njit-red);
+        }
+        .icons {
+            display: flex;
+            gap: 15px;
+            margin-top: 15px;
+        }
+        .icons a {
+            text-decoration: none;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 40px;
+            height: 40px;
+            background-color: var(--njit-light-gray);
+            border-radius: 50%;
+            transition: background-color 0.3s ease;
+        }
+        .icons a:hover {
+            background-color: var(--njit-red);
+        }
+        .icons img {
+            width: 24px;
+            height: 24px;
+        }
+    </style>
+</head>
+<body>
+    <header class="main-header">
+        <div class="header-content">
+            <div class="logo">
+                <a href="https://www.njit.edu" aria-label="NJIT">
+                    <img src="https://www.njit.edu/sites/default/files/njit-logo.png" alt="NJIT logo">
+                </a>
+                <h2 class="title"><a href="/"><span>Department of Computer Science</span></a></h2>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <h1>PhD Student Profiles</h1>
+        <h2>The CS-PhD program is home to more than 85 students.</h2>
+        
+        <input type="text" id="student-search-input" placeholder="Search students by name or email...">
+
+        <div class="directory" id="student-directory">
+            <!-- Student cards will be dynamically inserted here -->
+        </div>
+    </div>
+
+    <script>
+        const students = [
+            { name: "A M Muntasir Rahman", email: "ar238@njit.edu", webpage: "https://sites.google.com/njit.edu/ammuntasirrahman/", linkedin: "https://www.linkedin.com/in/a-m-muntasir-rahman/", scholar: "https://scholar.google.com/citations?user=_inhYXAAAAAJ&hl=en" },
+            { name: "Ahmad Alemari", email: "aaa376@njit.edu", linkedin: "https://www.linkedin.com/in/ahmad-alemari-927661121/" },
+            { name: "Akhitha S. Manjitha", email: "asm277@njit.edu", webpage: "https://asmanjitha.github.io/Akhitha_Manjitha/", linkedin: "https://www.linkedin.com/in/asmanjitha", github: "https://github.com/asmanjitha" },
+            // Add more students here...
+        ];
+
+        function createStudentCard(student) {
+            const card = document.createElement('div');
+            card.className = 'student-card';
+            card.innerHTML = `
+                <div class="student-name">${student.name}</div>
+                <div class="icons">
+                    <a href="mailto:${student.email}" title="Email">
+                        <img src="https://cs.njit.edu/sites/cs/files/email-icon.png" alt="Email">
+                    </a>
+                    ${student.webpage ? `
+                        <a href="${student.webpage}" title="Webpage" target="_blank">
+                            <img src="https://cs.njit.edu/sites/cs/files/internet.png" alt="Webpage">
+                        </a>
+                    ` : ''}
+                    ${student.linkedin ? `
+                        <a href="${student.linkedin}" title="LinkedIn" target="_blank">
+                            <img src="https://cs.njit.edu/sites/cs/files/LinkedIn_icon.svg_.webp" alt="LinkedIn">
+                        </a>
+                    ` : ''}
+                    ${student.scholar ? `
+                        <a href="${student.scholar}" title="Google Scholar" target="_blank">
+                            <img src="https://cs.njit.edu/sites/cs/files/google-scholar-icon-1024x1024-052lrrku.png" alt="Google Scholar">
+                        </a>
+                    ` : ''}
+                    ${student.github ? `
+                        <a href="${student.github}" title="GitHub" target="_blank">
+                            <img src="https://cs.njit.edu/sites/cs/files/github.png" alt="GitHub">
+                        </a>
+                    ` : ''}
+                </div>
+            `;
+            return card;
+        }
+
+        function renderDirectory(studentsToRender) {
+            const directory = document.getElementById('student-directory');
+            directory.innerHTML = '';
+            studentsToRender.forEach(student => {
+                directory.appendChild(createStudentCard(student));
+            });
+        }
+
+        function initializeSearch() {
+            const searchInput = document.getElementById('student-search-input');
+            searchInput.addEventListener('input', (e) => {
+                const searchTerm = e.target.value.toLowerCase();
+                const filteredStudents = students.filter(student => 
+                    student.name.toLowerCase().includes(searchTerm) ||
+                    student.email.toLowerCase().includes(searchTerm)
+                );
+                renderDirectory(filteredStudents);
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            renderDirectory(students);
+            initializeSearch();
+        });
+    </script>
+</body>
+</html>

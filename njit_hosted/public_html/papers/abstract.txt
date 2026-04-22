@@ -1,0 +1,24 @@
+
+
+
+  We study multigrid methods for solving linear systems involving Laplacians of graphs.
+  Multigrid methods have been and are being intensively studied by the numerical analysis
+  community. Still, after more than 25 years of research, there are no satisfactory proofs
+  of convergence.  Our approach is an outgrowth of  work of several researchers,
+  on combinatorial preconditioners. We prove tight spectral  perturbation results for
+  Laplacians, and we apply them to two-level methods, obtaining convergence results under
+  natural graph theoretic assumptions. We show that our assumptions are more general than
+  assumptions used by other authors. A major open problem is whether a uniform, 'local' two-level
+  hypothesis, is enough to prove sufficiently fast convergence for the full $V$-cycle. We give some
+  preliminary  results  and plan to address the problem in the thesis.
+
+  The second part of the proposal stems from the observation that three basic NP-complete
+  problems, the Hamiltonian Path problem, the Set Packing problem, and SAT, are amenable to an
+  algebraization that suggests a restricted but fairly rich framework of algorithmic
+  approaches for these problems. Building on this observation, among else: (i) We show the
+  hardness of approximating multivariate integrals and the near-optimality (under plausible
+  complexity theoretic assumptions) of the currently best known integration algorithm for positive
+  functions, (ii) We give a faster algorithm for the parameterized set-packing problem, solving
+  efficiently instances for asymptotically larger values of the parameters. (iii) We prove
+  results concerning zero-sum subsets of $\Zp^d$. Further results will be included in the thesis.
+
