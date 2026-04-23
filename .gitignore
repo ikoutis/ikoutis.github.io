@@ -1,2 +1,4 @@
 _site/
 
+*.py
+cv_papers.txt
