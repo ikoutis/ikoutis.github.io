@@ -90,144 +90,34 @@
 
         /* Hero */
         .ml-hero {
-            position: relative;
             max-width: 1200px;
-            margin: 2rem auto 4rem;
-            padding: 4.5rem 2.5rem 4rem;
-            border-radius: 1.5rem;
-            background: var(--ml-gradient);
-            color: #ffffff;
-            overflow: hidden;
-            box-shadow: var(--shadow-lg);
-        }
-
-        .ml-hero::before {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background:
-                radial-gradient(circle at 90% 10%, rgba(255,255,255,0.18), transparent 40%),
-                radial-gradient(circle at 5% 95%, rgba(255,255,255,0.12), transparent 50%);
-            pointer-events: none;
-        }
-
-        .ml-hero::after {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background-image:
-                linear-gradient(rgba(255,255,255,0.06) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(255,255,255,0.06) 1px, transparent 1px);
-            background-size: 32px 32px;
-            mask-image: radial-gradient(ellipse at center, black 30%, transparent 75%);
-            -webkit-mask-image: radial-gradient(ellipse at center, black 30%, transparent 75%);
-            pointer-events: none;
-        }
-
-        .ml-hero-inner { position: relative; z-index: 1; max-width: 760px; }
-
-        .ml-hero-eyebrow {
-            font-family: 'Oswald', sans-serif;
-            text-transform: uppercase;
-            letter-spacing: 3px;
-            font-size: 0.8rem;
-            font-weight: 500;
-            opacity: 0.85;
-            margin-bottom: 1.25rem;
-        }
-
-        .ml-hero h1 {
-            font-family: 'Oswald', sans-serif;
-            font-size: clamp(2.5rem, 6vw, 4.25rem);
-            font-weight: 600;
-            line-height: 1.02;
-            letter-spacing: -1px;
-            margin-bottom: 1.25rem;
-        }
-
-        .ml-hero h1 .accent {
-            font-style: italic;
-            font-weight: 400;
-            opacity: 0.95;
-        }
-
-        .ml-hero-tagline {
-            font-size: 1.2rem;
-            line-height: 1.6;
-            font-weight: 300;
-            max-width: 60ch;
-            opacity: 0.95;
-            margin-bottom: 2rem;
-        }
-
-        .ml-hero-meta {
+            margin: 2rem auto 3.5rem;
+            padding: 1.75rem 1.5rem;
             display: flex;
-            flex-wrap: wrap;
-            gap: 2rem 2.5rem;
             align-items: center;
-            margin-bottom: 2.25rem;
-        }
-
-        .ml-stat .num {
-            font-family: 'Oswald', sans-serif;
-            font-size: 2rem;
-            font-weight: 600;
-            line-height: 1;
-            display: block;
-        }
-
-        .ml-stat .label {
-            font-size: 0.78rem;
-            text-transform: uppercase;
-            letter-spacing: 1.5px;
-            opacity: 0.8;
-            margin-top: 0.4rem;
+            gap: 1rem;
+            border-bottom: 1px solid var(--border-color);
         }
 
         .ml-author {
             display: flex;
             align-items: center;
-            gap: 0.75rem;
-            font-size: 0.95rem;
-            opacity: 0.95;
+            gap: 0.85rem;
         }
 
         .ml-author .avatar {
-            width: 44px;
-            height: 44px;
+            width: 36px;
+            height: 36px;
             border-radius: 50%;
             object-fit: cover;
-            border: 2px solid rgba(255,255,255,0.4);
+            opacity: 0.9;
         }
 
-        .ml-author .who { font-weight: 500; }
-        .ml-author .where { font-size: 0.82rem; opacity: 0.8; }
-
-        .ml-cta-row { display: flex; flex-wrap: wrap; gap: 0.85rem; }
-
-        .ml-cta {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.55rem;
-            padding: 0.85rem 1.5rem;
-            border-radius: 999px;
-            font-weight: 500;
+        .ml-author .who {
             font-size: 0.95rem;
-            transition: all 0.2s ease;
+            font-weight: 500;
+            color: var(--text-secondary);
         }
-
-        .ml-cta.primary { background: #ffffff; color: var(--ml-primary); }
-        .ml-cta.primary:hover { transform: translateY(-2px); box-shadow: 0 8px 16px rgba(0, 0, 0, 0.18); }
-
-        .ml-cta.ghost {
-            background: rgba(255, 255, 255, 0.12);
-            color: #ffffff;
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            backdrop-filter: blur(8px);
-        }
-
-        .ml-cta.ghost:hover { background: rgba(255, 255, 255, 0.2); transform: translateY(-2px); }
-        .ml-cta svg { width: 16px; height: 16px; }
 
         /* Section groupings */
         .ml-section {
@@ -397,38 +287,9 @@
     </nav>
 
     <header class="ml-hero">
-        <div class="ml-hero-inner">
-            <div class="ml-hero-eyebrow">A course in 20 modules</div>
-            <h1>Machine Learning <span class="accent">— understand why,<br>not just how.</span></h1>
-            <p class="ml-hero-tagline">
-                Most resources tell you what an algorithm does. These notes focus on <em>why</em> — what each algorithm assumes about the data, and why those assumptions are reasonable, useful, or risky. Written to be read in order, from k-NN through recurrent networks.
-            </p>
-
-            <div class="ml-hero-meta">
-                <div class="ml-author">
-                    <img class="avatar" src="../assets/images/IK.jpg" alt="Yiannis Koutis">
-                    <div>
-                        <div class="who">Yiannis Koutis</div>
-                        <div class="where">Associate Professor, NJIT</div>
-                    </div>
-                </div>
-                <div class="ml-stat">
-                    <span class="num">20</span>
-                    <span class="label">Modules</span>
-                </div>
-                <div class="ml-stat">
-                    <span class="num">3</span>
-                    <span class="label">Tracks</span>
-                </div>
-            </div>
-
-            <div class="ml-cta-row">
-                <a class="ml-cta primary" href="1.-Introduction-to-ML.html">
-                    Start with Module 1
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
-                </a>
-                <a class="ml-cta ghost" href="#deep-learning">Jump to deep learning</a>
-            </div>
+        <div class="ml-author">
+            <img class="avatar" src="../assets/images/IK.jpg" alt="Yiannis Koutis">
+            <span class="who">Yiannis Koutis</span>
         </div>
     </header>
 
