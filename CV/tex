@@ -1,0 +1,646 @@
+
+%---------------------------------------------------------------------------
+% Document Specific Customizations
+
+% Make lists without bullets and with no indentation
+\setlength{\leftmargini}{0em}
+\renewcommand{\labelitemi}{}
+
+% Use large bold font for printed name at top of pages
+\renewcommand{\namefont}{\large\textbf}
+
+
+%---------------------------------------------------------------------------
+
+
+\begin{resume}
+
+
+\begin{comment}
+\begin{ncolumn}{2}
+  Computer Science Department   & {\tt ioannis.koutis@cs.cmu.edu} \\
+  Carnegie Mellon University    & {\tt \verb+http://www.cs.cmu.edu/~jkoutis+} \\
+  5000 Forbes Avenue            & \\
+  Pittsburgh, PA 15213          & \\
+ \end{ncolumn}
+ \end{comment}
+
+
+
+
+%---------------------------------------------------------------------------
+
+
+\section{\bf \color{Blue}{\large Education}}
+
+\vspace{0.3cm}
+
+PhD 2007 : Carnegie Mellon University, Pittsburgh. \\
+Thesis: Combinatorial and algebraic tools for optimal multilevel algorithms. \\ Advisor: Gary L.
+Miller.
+
+
+BSc/Diploma 1998: Computer Engineering and Informatics Department, University of Patras. \\
+{\em Engineering School Valedictorian}\\
+Thesis: Parallel algorithms for the computation of pseudospectra. \\ Advisor: Efstratios
+Gallopoulos.\\
+
+\section{\bf  \color{Blue}{\large Current Appointments}}
+
+
+\vspace{0.3cm}
+
+2022-present: Associate Chair of Graduate Studies, Department of Computer Science, NJIT
+
+2017-present: Associate Professor, New Jersey Institute of Technology.	
+
+
+
+
+\section{\bf  \color{Blue}{\large Past Appointments}}
+
+
+~
+
+\begin{itemize}
+	
+\item 2010-2020: Adjunct Faculty, Carnegie Mellon University.	
+
+\item 2014-2018: Associate Professor, University of Puerto Rico-Rio Piedras.
+
+\item 2010-2014: Assistant Professor, University of Puerto Rico-Rio Piedras.
+
+\item Sep 2014-Dec 2014: Visiting Scientist, Simons Institute.
+
+\item Feb 2014-May 2014: Visiting Professor, ICERM, Brown University.
+
+\item 2008-2010: Systems Scientist, Special Faculty, Carnegie Mellon University.
+
+\item 2007-2008: Postdoctoral Researcher, Carnegie Mellon University.
+
+\end{itemize}
+
+
+
+\section{\bf { \color{Blue}{\large Grants} }}
+
+\begin{itemize}
+	
+\item 2023-2025: co-PI in ``NSF: Cybertraining: Pilot: Cyberinfrastructure-Enabled Machine Learning for Understanding and Forecasting Space Weather'' [\$190K]
+
+\item 2020-2022: ``NSF: Spectral Network Alignment'' [\$150K]
+	
+\item 2018-2021: ``NSF: Practice-Friendly Theory and Algorithms for Linear Regression Problems'' [\$250K]	
+
+\item 2012-2018: ``NSF CAREER: Fast algorithms via a spectral theory for graphs with a prescribed cut structure (NSF)''
+[\$500K]
+
+
+\item 2010-2013: co-PI in ``NSF:Algorithm Design Using Spectral Graph Theory''
+[\$500K]
+
+
+\item 2012-2014: ``UPR - Institute of Functional Nanomaterials (IFN):  Computational analysis of neural images via spectral methods''
+[\$50K]
+
+
+\item 2008-2009: Co-investigator in the University of Pittsburgh Medical Center (UPMC) grant for the development of new medical imaging methods based on spectral approaches [\$700k]
+
+%\item 2007: Contributed in the proposal writing for NSF Grant ''Spectral graph theory and its applications''
+% [\$1M over 3 years]
+
+\end{itemize}
+
+
+%---------------------------------------------------------------------------
+
+
+\section{\bf \color{Blue}{\large Refereed Conference and Workshop Publications}}
+\vspace{0.3cm}
+
+%\bibliographystyle{jspublist-en}
+%\begin{btSect}{../Bibliography/config,../Bibliography/J-Koutis}
+%\btPrintAll
+%\end{btSect}
+
+{{\bf [31]}} M. Dindoost, O. Alvarado Rodriguez, B. Bryg, I. Koutis, D. A. Bader, {HiperMotif: Novel parallel subgraph isomorphism in large-scale property graphs}. In {\em IEEE High Performance Extreme Computing, HPEC 2025}
+
+{{\bf [30]}} A. Moradi Karkaj, M. J. Nelson, I. Koutis, A. Hoover, {Prompt Wrangling: On replication and generalization in large language models for PCG levels}. In {\em Proceedings of the 15th {\color{red}{Workshop}} on Procedural Content Generation, FDG 2024}
+
+{{\bf [29]}} I. Bustany, G. Gasparyan,  A. Kahng, I. Koutis, B. Pramanik, Z. Wang, {TritonPart: An Open-Source Constraints-Driven General Partitioning Multi-Tool for VLSI Physical Design}. In {\em 42nd 
+	International Conference on Computer-Aided Design, ICCAD 2023}
+
+{{\bf [28]}} I. Koutis, M. Wlodarczyk, M. Zehavi, Sidestepping Barriers for Dominating Set in Parameterized Complexity. In {\em 18th International Symposium on Parameterized and Exact Computation, IPEC 2023}
+
+{{\bf [27]}} E. Beikihassan, A. Parviz, N. Aghaieabiane, A. Hoover, I. Koutis, {Resource-constrained knowledge diffusion processes
+	inspired by human peer learning}. In {\em 26th European Conference on Artificial Intelligence, ECAI 2023} [\textbf{full oral presentation}]
+
+
+{{\bf [26]}} I. Bustany, A. Kahng, I. Koutis, B. Pramanik, Z. Wang, {SpecPart: A supervised spectral framework for hypergraph partitioning solution improvement}. In {\em 41st 
+International Conference on Computer-Aided Design, ICCAD 2022} \textbf{[best paper award]}
+
+{{\bf [25]}} E. Beikihassan, A. Hoover, I. Koutis, A. Parviz, {Ensemble Learning as a Peer Process}, In {\em Agent Learning in Open-Endedness {\color{red}{Workshop}}  (ALOE),   ICLR 2022}
+
+{{\bf [24]}} I. Koutis, B. Pramanik, {Spectral Hypergraph Partitioning Revisited}, In {\em SIAM Conference on Applied and Computational Discrete Algorithms, ACDA 2021}
+
+{{\bf [23]}} D. Wei, I. Koutis, S. Basu-Roy, {Peer Learning Through Targeted Dynamic Groups Formation}, In {\em 37th IEEE International Conference on Data
+Engineering, ICDE 2021}
+
+{{\bf [22]}} I. Koutis and H. Le, {Spectral Graph Modification for Improved Spectral Clustering,}.\\ In {\em 33rd  Conference on Neural Information Processing Systems,  NeurIPS 2019
+}
+
+{{\bf [21]}} D. Calandriello, I. Koutis, A. Lazaric, M. Valco, {Improved Large-Scale Graph Learning through Ridge Spectral Sparsification}.
+  In: {\em 35th International Conference on Machine Learning, ICML 2018}
+
+{{\bf [20]}} A. Kolla, I. Koutis, V. Madan, A. K. Sinop, {Spectrally Robust Graph Isomorphism}. \\ In: {\em 45th  International Colloquium on Automata, Languages, and Programming, ICALP 2018} 
+
+
+{{\bf [19]}} A. Bj\"orklund, P. Kaski, I. Koutis, {Directed Hamiltonicity and Out-Branchings via Generalized Laplacians}.
+In: {\em 44th  International Colloquium on Automata, Languages, and Programming, ICALP 2017} \textbf{[best paper award]}
+
+{{\bf [18]}} I. Abraham, D. Durfee, I. Koutis, S. Krinninger, R. Peng, {On fully dynamic graph sparsifiers},
+\\ In: {\em 57th Annual IEEE Symposium on Foundations of Computer Science, FOCS 2016}
+
+{{\bf [17]}} M. Cucuringu, I. Koutis, S. Chawla, G. Miller, R. Peng, {Simple and Scalable Constrained Clustering:
+A Generalized Spectral Method}, \\ In: {\em The 19th International Conference on
+Artificial Intelligence and Statistics, AISTATS 2016}
+
+{{\bf [16]}} C. Mavroforakis, R. Garcia-Lebron, I. Koutis, E. Terzi, {Spanning edge centrality: large-scale computation and applications}, In: {\em Proceedings of the 24th International World Wide Web Conference, WWW 2015}
+
+{{\bf [15]}} I. Koutis, {Simple parallel and distributed algorithms for spectral graph sparsification}, In: {\em Proceedings of the 26th Annual Symposium on Parallelism in Algorithms and Architectures, SPAA 2014}
+
+
+{{\bf [14]}}  L. Brueggeman, M. Fellows, R. Fleischer, M. Lackner, C. Komusiewicz, I. Koutis, A. Pfandler, F.~Rosamond, {Train Marshalling Is Fixed Parameter Tractable}, In: {\em Proceedings of Fun with Algorithms, FUN 2012.}
+
+
+{{\bf [13]}}  I. Koutis, A. Levin, R. Peng, {Improved spectral sparsification and numerical algorithms for SDD matrices}, In: {\em Proceedings of the 29th Annual Symposium on Theoretical Aspects of Computer Science, STACS 2012.}
+
+{{\bf [12]}}  I. Koutis, G. Miller, R. Peng, {A nearly-$m\log n$ solver for SDD linear systems}, In: {\em Proceedings of the 52nd Annual IEEE Symposium on Foundations of Computer Science, FOCS 2011.}
+
+
+{{\bf [11]}}  G. Blelloch, I. Koutis, A. Gupta, G. Miller, R. Peng, K. Tangwongsan, {Near linear-work parallel SDD solvers, low-diameter decomposition and low-stretch subgraphs}, In: {\em Proceedings of the 23rd Annual Symposium on Parallelism in Algorithms and Architectures, SPAA 2011}
+
+
+{{\bf [10]}}  I. Koutis, G. Miller, R. Peng, {Approaching optimality for solving symmetric diagonally dominant systems}, In: {\em Proceedings of the 51st Annual IEEE Symposium on Foundations of Computer Science, FOCS 2010.}
+
+{{\bf [9]}} G. Blelloch, I. Koutis, G. Miller, K. Tangwongsan, {Hierarchical Diagonal Blocking with precision reduction applied to combinatorial multigrid}, In: {\em Proceedings of the 23rd ACM/IEEE Conference on High Performance Computing, SC 2010.}
+
+{{\bf [8]}} I. Koutis, G. Miller, D. Tolliver, {Combinatorial preconditioners and multilevel solvers for problems in computer vision and image processing}, 2009, In: {\em Proceedings of the 5th International Symposium on Visual Computing,  ISVC 2009.}
+
+{\bf [7]} I. Koutis and R. Williams, {Limits and applications of group algebras for parameterized problems}, In: {\em Proceedings of the $35^{th}$ International Colloquium on Automata, Languages and Programming, ICALP 2009}.
+
+{{\bf [6]}} C. Tsourakakis, P. Drineas, E. Michelakis, I. Koutis, C. Faloutsos, Spectral counting of triangles in power-law networks via element-wise sparsification, In: {\em Proceedings of the $2009$ International Conference on Advances in Social Networks Analysis and Mining, ASONAM 2009}.
+
+{\bf [5]} I. Koutis, {Faster algebraic algorithms for path and packing problems}. In: {\em Proceedings of the $35^{th}$ International Colloquium on Automata, Languages and Programming, ICALP 2008}.
+
+{\bf [4]} I. Koutis, G. Miller, {Graph partitioning into isolated, high conductance clusters: theory, computation and applications to preconditioning}. In: {\em Proceedings of the $20^{th}$ Symposium on Parallelism in Algorithms and Architectures, SPAA 2008}.
+
+
+{\bf [3]} I. Koutis, G. L. Miller, {A linear work, $O(n^{1/6})$ time, parallel
+algorithm for solving planar  Laplacians}. In: {\em Proceedings of the $18^{th}$ ACM-SIAM
+Symposium on Discrete Algorithms, SODA 2007}.
+
+
+{\bf {\bf [2]}} I. Koutis, On the hardness of
+  multivariate integration. In: {\em Proceedings of the $6^{th}$ International
+  Workshop on Approximation Algorithms for Combinatorial Optimization Problems, pp.~122-128,
+  APPROX, 2003}.
+
+{\bf [1]} C. Bekas, E. Kokiopoulou, I. Koutis and E. Gallopoulos, Parallel computation of
+matrix  pseudospectra. In: {\em Proceedings of the
+  $15^{th}$ ACM International Conference On Supercomputing, ICS 2001, pp.~260-269}.
+
+
+%---------------------------------------------------------------------------
+\section{\bf \color {Blue}{\large Journal Publications}}
+\vspace{0.3cm}
+
+{{\bf [18]}}   S. Rajendra Patil, A. Parmanand Pandey, I. Koutis, M. Xu, Hierarchical Mamba Meets Hyperbolic Geometry: A New Paradigm for Structured Language Embeddings, In {\em Transactions of Machine Learning Research, 2026}
+
+{{\bf [17]}} N. Aghaieabiane, I. Koutis: SGCP: A spectral self-learning method for clustering genes in co-expression networks, In {\em BMC Bioinformatics, 2024}
+
+{{\bf [16]}} I. Bustany, A. Kahng, I. Koutis, B Pramanik, Z. Wang, K-SpecPart: Supervised Embedding Algorithms and Cut Overlay for Improved Hypergraph Partitioning,
+In {\em IEEE Transactions on Computer-Aided Design of Integrated Circuits and Systems, 2023}
+
+{{\bf [15]}} I. Koutis, G. Miller, R. Peng, {A generalized Cheeger inequality}, In {\em Linear Algebra and Its Applications, 2023}
+
+{{\bf [14]}} N. Aghaieabiane, I. Koutis, {A novel calibration step in gene co-expression network construction}, In {\em Frontiers in Bioinformatics, 2021}
+
+{\bf [13]} I. Koutis and S. C. Xu, {Simple parallel and distributed algorithms for spectral graph sparsification}, In: {\em ACM Transactions on Parallel Computing, 2016}
+
+{\bf [12]} I. Koutis and R. Williams, {Limits and applications of group algebras for parameterized problems}, In: {\em ACM Transactions on Algorithms (TALG), 2016}.
+
+{{\bf [11]}} I. Koutis, Multilinear Monomial Detection, \\Invited In: {\em Encyclopedia of Algorithms, 2016}
+
+{{\bf [10]}} I. Koutis, R. Williams, Algebraic Fingerprints for faster algorithms. \\In: {\em Communications of the ACM, 2016, January 2016}.
+
+{{\bf [9]}} I. Koutis, A. Levin, R. Peng, Faster spectral sparsification and numerical algorithms for SDD matrices. \\ In: {\em ACM Transactions on Algorithms (TALG), 2015}.
+
+{{\bf [8]}} I. Koutis, G. Miller, R. Peng, Approaching optimality for solving symmetric diagonally dominant systems.  Invited in: {\em SIAM Journal on Computing, special issue FOCS 2010}, Vol.~43, No.~1, pp.~337-354, 2014
+
+{{\bf [7]}}  G. Blelloch, I. Koutis, A. Gupta, G. Miller, R. Peng, K. Tangwongsan, \\ {Near linear-work parallel SDD solvers, low-diameter decomposition and low-stretch subgraphs.} \\ Invited In: {\em Theory of Computing Systems}, March 2013
+
+{{\bf [6]}} I. Koutis, G.Miller, R. Peng,  {A fast solver for a class of linear systems.} \\ Invited In: {\em Communications of the
+ACM}, October 2012
+
+{{\bf [5]}} I. Koutis, {Constrained multilinear detection for faster functional motif discovery.}\\  In:  {\em Information Processing Letters}, Vol.~112, No.~22, pp.~889--892, 2012
+
+
+{{\bf [4]}}  I. Koutis, G. Miller, D. Tolliver, {Combinatorial preconditioners and multilevel solvers for problems in computer vision and image processing}. \\  Invited In: {\em Computer Vision and Image Understanding}, 115(12), pp.~1638-1646, 2011.
+
+{{\bf [3]}} C. Tsourakakis, P. Drineas, E. Michelakis, I. Koutis, C. Faloutsos, Spectral counting of triangles in power-law networks via element-wise sparsification and triangle-based link recommendation. \\ In: {\em Social Network Analysis and Mining} Vol.~1, No.~2, pp.~75--81, 2011.
+
+{\bf [2]} I. Koutis, {Parameterized complexity and improved
+  inapproximability for computing the largest $j$-simplex in a $V$-polytope.}
+  \\ In: {\em Information Processing  Letters} 1, No.~1, pp.~8--13, 2006.
+
+{\bf {\bf [1]}} I. Koutis, A faster  parameterized algorithm for set packing.\\  In:
+{\em Information Processing Letters}, No.~1, pp.~4--7, 2005.
+
+
+%---------------------------------------------------------------------------
+
+\section{\bf  \color{Blue}{\large Other Publications and Preprints}}
+
+\vspace{0.3cm}
+
+%{{\bf [4]}} I.~Bustany, A.~B.~Kahng, I.~Koutis, B.~Pramanik, Z.~Wang, K-SpecPart: Supervised embedding algorithms and cut overlay for improved hypergraph partitioning,\\ {\small \url{https://arxiv.org/abs/2305.06167}}
+
+
+%{{\bf [4]}} I. Koutis, An unconditional lower bound for integrating multivariate functions in the oracle model, 2010, {\newblock \em In Preparation.}
+
+
+{{\bf [3]}}  I. Koutis, Dimensionality restrictions on sums over {${\mathbb
+Z}_p^d$}, 2007, \\ {\newblock \em CMU-CS-07-103 Technical Report}.
+
+
+{\bf {\bf [2]}} I. Koutis, {Spectrum through pseudospectrum}, 2001,
+\\ \newblock {\em Arxiv Report No 0701368}.
+
+
+{\bf [1]} I. Koutis and E. Gallopoulos, Iterations on domains for computing the
+matrix pseudospectrum, 1999,
+\newblock {\em Manuscript}.
+
+%---------------------------------------------------------------------------
+
+\section{\bf \color{Blue}{\large Patents}}
+
+\vspace{0.3cm}
+
+{(2013)}:  I. Koutis and G. L. Miller,  \\ Title: {\em Methods for solving graph Laplacians. US 8516029.}
+
+{(2014)}:   I. Koutis and G. L. Miller, \\ Title: {\em Method and apparatuses
+for solving weighted planar graphs. US 8711146.   }
+
+
+
+%---------------------------------------------------------------------------
+
+
+\section{\bf \color{Blue}{\large Awards and Honors}}
+
+\vspace{0.3cm}
+
+% 2007 SIAM student travel support for CSC07.
+
+(2022): William J. McCalla ICCAD Best Paper Award (back end)
+
+(2020): Ying Wu College of Computing Excellence in Teaching Award. 
+
+(2017): ICALP - Track A: Best paper award
+
+\vspace{-0.25cm}
+
+(2012): NSF CAREER award
+
+\vspace{-0.25cm}
+
+
+(2002): SIAM student travel award.
+
+\vspace{-0.25cm}
+
+(1999): Best Engineering Student award from the Technical Chamber of Greece.
+
+\vspace{-0.25cm}
+(1998): University of Patras Engineering School Valedictorian.
+
+\vspace{-0.25cm}
+
+(1993-1998): Yearly awards from the Greek State Scholarships Foundation.
+
+%---------------------------------------------------------------------------
+
+\section{\bf \color{Blue}{\large Invited Talks}}
+
+\vspace{0.3cm}
+
+
+{\em Spectral Graph Modification for Improved Spectral Clustering}
+\newline The New York Colloquium on Algorithms and Complexity
+\newline CUNY University, N, November 15, 2019
+
+
+{\em  Pragmatic Ridge Spectral Sparsification for Large-Scale Graph Learning}
+\newline DIMACS Workshop on Randomized Numerical Linear Algebra, Statistics, and Optimization 
+\newline Rutgers University (New Brunswick), NJ, September 18, 2019
+
+
+{\em Spectrally Robust Graph Isomorphism}
+\newline Simons Institute of Technology
+\newline Berkeley, CA, September 25, 2018
+
+
+{\em Directed Hamiltonicity and Out-Branchings via Generalized Laplacians}
+\newline Rutgers Business School
+\newline Newark, NJ, February 22, 2018
+
+
+{\em A survey of provably fast linear system solvers}
+\newline Alan Turing Institute
+\newline London, UK, November 01, 2017
+
+{\em Improved algebraic algorithms for out-branchings problems}
+\newline Randomization in Parameterized Complexity
+\newline Schloss Dagstuhl, Germany, January 2017
+
+{\em On full dynamic graph sparsifiers}
+\newline Algebraic and Spectral Graph Theory, Banff International Research Station
+\newline Banff, Canada, August 04, 2016 
+
+{\em On full dynamic graph sparsifiers}
+\newline Recent Advances on Randomized Numerical Linear Algebra, NII Shonan Meeting
+\newline Shonan Village, Japan, July 26, 2016
+
+{\em Spectral algorithms for graph mining and analysis}
+\newline Workshop on Algorithms for Modern Massive Data Sets, MMDS 2014
+\newline Berkeley, California, June 17th, 2014
+
+{\em Spectral algorithms for graph mining and analysis}
+\newline Workshop on Eigenvectors in graph theory and related problems in numerical linear algebra, 
+\newline ICERM, Providence, Rhode Island, May 7th, 2014
+
+{\em Spectral graph sparsification and fast Laplacian solvers}
+\newline Boston University, May 5th, 2014
+
+{\em Segmenting neurons in 3D EM images}
+\newline IBDR PI workshop, Washington DC, May 2nd, 2014
+
+{\em Spectral sparsification of graphs: an overview of theory and practical methods}
+\newline Workshop on Large Scale Matrix Analysis and Inference, NIPS 2013
+\newline Lake Tahoe, Nevada, December 9th, 2013
+
+{\em Algebraization in parameterized algorithms and complexity}
+\newline AMS Special Session on the Mathematical Underpinnings of Multivariate Complexity and Algorithm Design, and its frontiers, and the field of Incrementalization
+\newline San Diego, January 12, 2013
+
+{\em Laplacian Solvers: Theory and Practice}
+\newline Workshop on Randomized Numerical Linear Algebra: Theory and Practice, FOCS 2012
+\newline New Brunswick, October 20, 2012
+
+{\em SDD Solvers: Bridging the Gap Between Theory and Practice}
+\newline Workshop on Algorithms for Modern Massive Data Sets, MMDS 2012
+\newline Stanford, July 13, 2012
+
+{\em Spectral graph theory, matrix sums and near-optimal SDD solvers}
+\newline SIAM Applied Linear Algebra Conference
+\newline Valencia, June 18, 2012
+
+{\em The power of group algebras in constrained monomial detection problems}
+\newline Seminar on the Exact Complexity of NP-hard problems
+\newline Schloss Dagstuhl, November 10, 2010
+
+{\em Graph Sparsification p.2, An $O(m\log^2 n)$ algorithm for solving SDD systems}
+\newline Microsoft Research, Redmond, September 2, 2010
+
+
+{\em Graph Sparsification p.1, The Combinatorial Multigrid Solver}
+\newline Microsoft Research, Redmond, September 2, 2010
+
+{\em How to make a computer see better?}
+\newline University of Puerto Rico, Rio Piedras, September 15, 2009
+
+{\em Fast detection of square-free terms in multivariate polynomials: one algo-stone, many algo-birds,}
+\newline University of Puerto Rico, Rio Piedras, September 14, 2009
+
+{\em M-matrix systems and solvers in Computer Science,}
+\newline University of Wyoming, March 30, 2009
+
+{\em Spectral Graph Theory meets Practice: The Combinatorial Multigrid Solver,}
+\newline Yale University, January 23, 2009
+
+{\em Advances in the Theory and Computation of Pseudospectra},
+\newline SIAM 50th Anniversary and Annual Meeting
+\newline Matrix Spectra and Pseudospectra Minisymposium
+\newline July 8-12, 2002, Philadelphia, PA.
+
+
+
+\section{\bf \color{Blue}{\large Conference and Workshop Presentations}}
+
+\vspace{0.3cm}
+
+{\em Theoretical Foundations of Data Science: Algorithmic, Mathematical, and Statistical (TFoDS)}
+\newline April 28 - Saturday, April 30, 2016
+
+{\em Fast SDD solvers via sampling by approximate leverage scores}
+\newline 6th International ERCIM Conference on
+Computational and Methodological Statistics (2013)
+
+{\em Spectral Algorithms for Segmenting Neurons in their Three-dimensional Space}
+\newline [with R. Garcia, J. Farrington, J. Serrano-Velez, E. Rosa-Molinar]
+\newline Neuroscience 2011
+
+{\em The Combinatorial Multigrid Solver} \newline [with Gary L. Miller]
+\newline The $14^{th}$ Copper Mountain Conference on Multigrid Methods (2009)
+
+{\em Unassisted segmentation of multiple retinal layers via spectral rounding}
+\newline [with D. Tolliver, I. Koutis, H. Ishikawa, J.S. Schuman, and G.L. Miller]
+\newline Association of Research in Vision and Opthalmology, ARVO 2008 Annual Meeting,
+
+
+
+{\em A Linear Work, Parallel Algorithm for Solving Planar Laplacians}
+\newline [with Gary L. Miller]
+\newline Combinatorial Scientific Computing (CSC07), Costa Mesa, California (2007)
+
+
+{\em Efficiently Solving Linear systems using Support Tree Preconditioners}
+\newline [with Gary L. Miller]
+\newline Parallel Processing for Scientific Computing (PP06), San Francisco, California, February 2006
+
+
+
+{\em Hermitian Methods for Computing Eigenvalues}
+\newline  [with E. Gallopoulos]
+\newline  5th IMACS Conference on Iterative Methods in Scientific Computing, May 2001
+
+{\em Iterations on Domains for the Computation of  Matrix (Pseudo)-Spectrum}
+\newline [with E. Gallopoulos]
+\newline Conference on the Foundations of Computational Mathematics (FOCM), Oxford, July 1999,
+
+
+
+%---------------------------------------------------------------------------
+
+\section{\bf \color{Blue}{\large Professional Service}}
+
+
+\begin{itemize}
+
+
+\item Participation in NSF Funding Panels (CCF/AF, IIS/RI)
+
+\item Participation in DoE Funding Panel 
+
+\item European Research Council (ERC)
+
+\item Program Committee Member, PKDD-Nectar 2014,2015, WSDM 2016, WWW 2015--2018, WebConf 2019--2022, KDD 2017, KDD-Applied Track 2018, LATIN 2018, CIKM 2018, AAAI 2019--2020, ICCAD 2024--2026, DAC 2025--2026
+
+\item Referee for CS conferences (STOC, FOCS, SODA, SPAA, STACS, ESA, MFCS)
+
+\item Referee for journals including (JACM, ACM TALG, JCSS, Algorithmica, TOPC, IPL, SIMAX)
+
+\item Workshop Organizer, “Electrical Flows, Graphs Laplacians and Algorithms: Spectral Theory and Beyond”, ICERM, 2014 
+
+
+
+\end{itemize}
+
+
+
+%---------------------------------------------------------------------------
+
+\section{\bf \color{Blue}{\large Teaching}}
+
+~
+
+\begin{itemize}
+	
+\item {\bf Online Course Design:} NJIT Machine Learning (DS 675), Deep Learning (DS 677)
+	
+\item Machine Learning (CS/DS 675), NJIT, S20, F20, F21, Su21, F22, S22, Su22, S23, S24 
+
+\item Deep Learning (CS/DS 677), NJIT, F21, S21, F22, S23, Su23, F23, S24, Sum24
+	
+\item Data Structures and Algorithms (CS 610), NJIT, F19, Su20, Su21, S26
+
+\item Computational Complexity (CS 611), NJIT, S18, S19, S20, S21
+	
+\item Advanced Data Structures and Algorithm Design (CS 435), NJIT, F17, F18	
+	
+\item Theory of Computability, UPRRP, F15, F16
+
+\item Fun with programming interview questions, UPRRP, S15
+
+\item Theory of Computation, UPRRP, F13
+
+\item Design and Analysis of Algorithms, UPRRP, S12, S17
+
+\item High Level Programming Languages, UPRRP, S12, S15
+
+\item Undergraduate Machine Learning, UPRRP, F11, F12, F13
+
+\item Numerical Analysis, UPRRP, S11, S13
+
+\item Linear Algebra for Computer Scientists, UPRRP, F10
+
+\item Teaching Assistant, Principles of Programming, CMU, S02
+
+\item Teaching Assistant, Formal Languages Automata and Computation, CMU, S01
+
+\item Teaching Assistant, Advanced Scientific Computing, University of Patras, F99
+
+\end{itemize}
+
+%--------------------------------------------------------------------------
+\section{\bf \color{Blue}{\large Advising}}
+
+~
+
+\begin{itemize}
+
+
+
+\item \textbf{Current PhD students}: Soroush Vahidi, Azadeh Naderi, Arash Moradi Karkaj
+
+\item \textbf{Graduated NJIT PhD students}: \\
+$\bullet$ Ali Parviz, 2025 [first position: Visiting Researcher at Google] \\
+$\bullet$ Ehsan Beikihassan, 2024 [first position: CCC Intelligent Solutions] \\
+$\bullet$ Niloofar Aghaieabiane, 2023 [first position: JP Morgan] \\
+$\bullet$ Huong Le, 2021 [first position: Lecturer at NJIT]
+
+
+\item \textbf{PhD Committee Member (NJIT) current:}   Mehtab Sidhu, Yupeng Xu, Chunhui Xu, Hongyang Zhang, Haotian Yin, Mohammad Dindoost, Zhibo Ye, Siqi Jiang, Swastik Biswas, Zhenduo Wang
+
+\item \textbf{Awarded PhDs - Committee Member (NJIT):} 2019: Abdulrhman Fahad Aljouie , 2020: Xin Yin, 2021: Zhihang Hu, Yunzhe Xue, Dong Wei, 2022: Shibo Yao, Cavidan Yakupoglu, Gerges Firas, Yasser Abduallah, 2023: Mojtaba Zaheri, Mahsa Asadi, Hessam Mohammadi, Sepideh Nikookar, Md Moinul Islam, Xiang Lin, 2024: Wenlu Du, Minjuan Zhang, 2025: Oliver Alvarado Rodriguez, Fuhuan Li, Jingyi Gu, Haoran Liu, 2026: Shen Fan
+
+\item \textbf{Awarded PhDs - Committee Member (external):} Shen Chen Xu (CMU, 2017), Yixuan He (University of Oxford, 2024), Tijn de Vos (University of Salzburg, 2024), Jingbang Chen (University of Waterloo, 2025)
+
+\item \textbf{MS Committee Member (NJIT):} Rahul Basu (2020), Sanyamee Patel (2020), Sarvesh Shukla (2020), Joseph Patchett (2022), Ritwik Reddy Kolan (2026)
+
+\item \textbf{Graduated MS students}: Kadir Altunel (2025), Richard Garcia-Lebron (2014)
+
+\item \textbf{Former Undergraduate}: Richard Garcia-Lebron, Jose Farrington , Karlo Martinez, Leonardo Cardona,  Carlos Feliciano, Idalyn Mirabal, Alejandro Vientos, Alberto Ruiz, Gustavo Gratacos
+
+\end{itemize}
+
+
+%--------------------------------------------------------------------------
+\section{\bf \color{Blue}{\large Service at NJIT}}
+
+~
+
+\begin{itemize}
+
+
+\item 2025: Spearheaded the creation and launch of the Barclays–NJIT MS in Computer Science partnership program.
+
+\item 2024-2026 : Center for Educational Innovation and Excellence, Advisory Board
+
+\item 2024-2025 : Member of the NJIT group participating in AAC\&U's Institute for AI, Pedagogy, and the Curriculum
+
+\item 2024-2026: Member of the AI Teaching/Learning Group (charged by the Provost)
+
+
+\item 2023-2025: CS representative on the Faculty Senate Committee on Academic Assessment
+
+\item 2021-2025: YWCC representative on the Faculty Senate Committee on Research, Scholarship and Creative Academic Activity 
+	
+\item 2019-2022: Committee on Information Technology, Library, and Academic Resources
+
+\item 2018-2019: Innovative Educational Technology Working Group
+
+\end{itemize}
+
+\section{\bf \color{Blue}{\large Service at UPRRP }}
+
+
+~
+
+\begin{itemize}
+	
+\item 2016-2017: Department Coordinator for Student Learning Assessment	
+
+\item 2012-2014: Member of the committee for the creation of a MS program in Computer Science.
+
+\item 2011: Undergraduate Research Coordinator of the Computer Science Department.
+
+\end{itemize}
+
+
+%---------------------------------------------------------------------------
+%\section{\bf \color{Blue}{\large Languages}}
+%
+%~
+%\begin{itemize}
+%\item { Greek, English}
+%\item { French} - Fluent in Reading and Comprehension. Writing and Speaking not practiced recently.
+%\end{itemize}
+
+
+\end{resume}
+
+
+%%===========================================================================%%
