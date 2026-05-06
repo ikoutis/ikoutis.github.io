@@ -7529,7 +7529,7 @@ a.anchor-link {
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
 <h2 id="5.1-The-Logistic-Neuron--%E2%AC%A4-"><strong>5.1 The Logistic Neuron<font color="#FFCC00">  ⬤ </font></strong><a class="anchor-link" href="#5.1-The-Logistic-Neuron--%E2%AC%A4-">¶</a></h2><p>Thinking of a biological neuron as having just two (1/0) states of excitation is an oversimplification. The neuron does have a continuous range of outputs with a very sharp transition from 0 to 1, around the threshold. That leads us to the definition of the logistic neuron shown (in the case of 2D) in the following picture.</p>
 <br/>
-<p><img alt="Logistic neuron" src="images/5__Logistic_regression_image_1_1B5xo7Gg.png"/></p>
+<p><img alt="Logistic neuron" src="images/5__Logistic_regression_image_1_1B5xo7Gg.png" width="476"/></p>
 <br/>
 <p>The activation of the logistic neuron is the sigmoid function</p>
 <p>$$
@@ -7706,7 +7706,7 @@ $w_i = w_i - \rho \cdot g_i$  </li>
 </ul>
 <p>Given the trained classifiers and a point $x$, each of these three classifiers outputs a probability for $x$: $p_{\mathit{cat}}$, $p_{\mathit{dog}}$, and $p_{\mathit{human}}$. We can then assign $x$ to the class that gets the highest probability. For example, if $p_{\mathit{dog}}&gt;p_{\mathit{cat}}$ and $p_{\mathit{dog}}&gt;p_{\mathit{human}}$, we can output the classification <em>dog</em> for $x$. In the unlikely case we have a tie, we can resolve it arbitrarily.</p>
 <br/>
-<p><img alt="One-vs-Rest" src="images/5__Logistic_regression_image_3_1B6qbAS2.png"/></p>
+<p><img alt="One-vs-Rest" src="images/5__Logistic_regression_image_3_1B6qbAS2.png" width="412"/></p>
 <br/>
 <p>We can think of these 3 classifiers as a 2-layered 'network' of neurons (as shown in the figure above), although the network is still trivial since the 3 neurons do not interact with each other.</p>
 <p>More generally, if we have $k$ labels, we will train exactly $k$ one-vs-rest classifiers. The number of trained classifiers is much smaller than the $k(k-1)/2$ classifiers required by the one-vs-one method. However, we should observe that we now train these $k$ classifiers on the entire dataset $X$. Thus, training one such classifier is going to be more expensive relative to training a single classifier in the one-vs-one method. Overall, one-vs-one will likely be faster to train, for most datasets $X$.</p>

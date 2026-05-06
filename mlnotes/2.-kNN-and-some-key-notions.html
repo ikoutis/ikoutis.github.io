@@ -7575,7 +7575,7 @@ $$x = [x_1,\ldots,x_d] \mathrm{~~~and~~~} x' = [x_1',\ldots,x_d']\,.$$</p>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
 <h2 id="2.4--Nearest-Neighbors--%E2%AC%A4-"><strong>2.4  Nearest Neighbors<font color="#FFCC00">  ⬤ </font></strong><a class="anchor-link" href="#2.4--Nearest-Neighbors--%E2%AC%A4-">¶</a></h2><p>Now that we have a measure for similarity, we turn to the memory retrieval task. It seems plausible that when we try to retrieve a memory, our brain does not consider all stored memories, but instead very quickly narrows down to an area of the memory with similar objects/points. This gives rise to the idea of deciding the class of the new point based on $k$ nearest neighbors, for some fixed number $k$.</p>
-<p><img alt="Nearest-Neighbors illustration" src="images/2__kNN_and_some_key_notions_image_2_1LjZ5Ln-.png"/></p>
+<p><img alt="Nearest-Neighbors illustration" src="images/2__kNN_and_some_key_notions_image_2_1LjZ5Ln-.png" width="400"/></p>
 <p>The picture above illustrates this idea. Here, we retrieve the $k=5$ nearest neighbors, and select the label of the majority.</p>
 </div>
 </div>
@@ -7617,7 +7617,7 @@ $$x = [x_1,\ldots,x_d] \mathrm{~~~and~~~} x' = [x_1',\ldots,x_d']\,.$$</p>
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
 <h2 id="2.7-Overfitting,-Underfitting,-Generalization-and-Learning-Biases-%E2%AC%A4-"><strong>2.7 Overfitting, Underfitting, Generalization and Learning Biases<font color="#FFCC00"> ⬤ </font></strong><a class="anchor-link" href="#2.7-Overfitting,-Underfitting,-Generalization-and-Learning-Biases-%E2%AC%A4-">¶</a></h2><p>As a general rule, the purpose of supervised ML algorithms is to enable us to predict the label of previously unseen points, i.e. points that are not in the available data set $X$. Ideally, a good ML algorithm should make very few mistakes if asked to make predictions on data points from $X$. Because k-NN is based on memory, there is actually a way to make it 100% accurate on points from $X$: just set $k=1$. Then for, every point $\hat{x} \in X$, the 1-NN will be itself, and so the label prediction will be always accurate.</p>
 <p>However, by paying too much attention to our data $X$, we increase the chances of making more mistakes on unseen points. This is an instance of what we will call <em>overfitting</em>.</p>
-<p><img alt="Nearest Neighbors Overfitting" src="images/2__kNN_and_some_key_notions_image_3_1Lv-uj63.png"/></p>
+<p><img alt="Nearest Neighbors Overfitting" src="images/2__kNN_and_some_key_notions_image_3_1Lv-uj63.png" width="390"/></p>
 <p>Even a single point that is an outlier, or even erroneously labeled can case an entire area of the space to get the wrong label. In this picture all the yellow area would be labeled as 'blue circle'. Intuitively, we can see that this labeling would likely turn out to be wrong.</p>
 <p>A larger value for $k$ increases the algorithm's ability to <em>generalize</em> to new examples. On the other hand, for a very large value of $k$ the algorithm becomes very insensitive to the data. That is an instance of what we will call <em>underfitting</em>.</p>
 <p>These different settings for the hyperparameter $k$ can also be viewed as a kind of learning bias. A small $k$ reflects a low bias towards respecting the overall majority, but for larger values of $k$ that bias increases. We will later see how to 'mathematicize' these notions.</p>
@@ -7944,7 +7944,7 @@ Labels counts in y_test: [15 15 15]
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
 <h2 id="2.12-k-NN-as-a-Regression-Algorithm--%E2%AC%A4-"><strong>2.12 k-NN as a Regression Algorithm<font color="#FFCC00">  ⬤ </font></strong><a class="anchor-link" href="#2.12-k-NN-as-a-Regression-Algorithm--%E2%AC%A4-">¶</a></h2><p>Several ML algorithms have both classification and regression versions. It is often a nice exercise to start from a classification algorithm and imagine how to convert it into a regression algorithm, or vice versa.</p>
 <p>Let's now attempt the exercise in the case of k-NN. As a visual aid, we can use the same picture from before, but we can now imagine that the labels are specific values.</p>
-<p><img alt="Nearest-Neighbors illustration" src="images/2__kNN_and_some_key_notions_image_5_1LjZ5Ln-.png"/></p>
+<p><img alt="Nearest-Neighbors illustration" src="images/2__kNN_and_some_key_notions_image_5_1LjZ5Ln-.png" width="562"/></p>
 <p>For concreteness, assume that we have found the 5 nearest of of $\hat{x}$: $x^{(i_1)},\ldots x^{(i_1)}$, with corresponding values $v_1,\ldots,v_5$.
 What can be our prediction for the value of $\hat{x}$?</p>
 <p>Following the previous logic, we can consider predicting the value of $\hat{x}$ to be a <em>weighted</em> average of the 5 nearby values, according to the distance of $\hat{x}$ from these 5 nearest points.</p>

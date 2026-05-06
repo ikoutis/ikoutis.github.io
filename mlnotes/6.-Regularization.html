@@ -7528,7 +7528,7 @@ a.anchor-link {
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
 <h2 id="6.1-Sensitivity-to-Noise-%E2%AC%A4-"><strong>6.1 Sensitivity to Noise<font color="#FFCC00"> ⬤ </font></strong><a class="anchor-link" href="#6.1-Sensitivity-to-Noise-%E2%AC%A4-">¶</a></h2><p>Consider as a visual example the following 2D dataset.</p>
-<p><img alt="2D dataset with 3 classes" src="images/6__Regularization_image_1_17Wdo7zf.png"/></p>
+<p><img alt="2D dataset with 3 classes" src="images/6__Regularization_image_1_17Wdo7zf.png" width="434"/></p>
 <p>Suppose now we have one point $x=(x_1,x_2)$, and a second one $x' = (x_1+\epsilon,x_2)$, which comes from adding a bit of noise $\epsilon$ to $x_1$.
 Since we expect that nearby points in space should belong to the same class, the classifier should not be too sensitive to the noise.</p>
 <p>Let's then consider the net input of a classifier with weights $[w_0,w_1,w_2]$ for our two points:</p>
@@ -7583,7 +7583,7 @@ $$</p>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
 <p>Let's now consider the $l_2$-regularization loss function $L_{\mathit{reg}}(w) = L(w) + \lambda\,\|w\|_2$. This is a sum of two different functions: a loss (or 'cost') $L(w)$, and a penalty $\lambda\,\|w\|_2$. The following image shows the contour plots of both functions in a simple 2D example. The contour plot of the regularization part consists of circles, because the set of points that are on the same level $L$ define the circle $w_1^2+w_2^2=L$.</p>
-<p><img alt="Contour plots for l2-regularization" src="images/6__Regularization_image_3_1ERqBeXK.png"/></p>
+<p><img alt="Contour plots for l2-regularization" src="images/6__Regularization_image_3_1ERqBeXK.png" width="400"/></p>
 <p>There are two different points that minimize each part separately, but their sum is minimized at a different intermediate point. In fact, in the case of $l_2$-regression, there is a unique tangent line to the corresponding contour curves of the two functions.</p>
 </div>
 </div>

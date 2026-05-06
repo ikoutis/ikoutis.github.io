@@ -7527,7 +7527,7 @@ a.anchor-link {
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h2 id="4.1-A-Biological-Neuron--%E2%AC%A4-"><strong>4.1 A Biological Neuron<font color="#FFCC00">  ⬤ </font></strong><a class="anchor-link" href="#4.1-A-Biological-Neuron--%E2%AC%A4-">¶</a></h2><p><img alt="Biological neuron illustration" src="images/4__Linear_separability_and_the_Perceptron_image_1_1EPKYKcO.png"/></p>
+<h2 id="4.1-A-Biological-Neuron--%E2%AC%A4-"><strong>4.1 A Biological Neuron<font color="#FFCC00">  ⬤ </font></strong><a class="anchor-link" href="#4.1-A-Biological-Neuron--%E2%AC%A4-">¶</a></h2><p><img alt="Biological neuron illustration" src="images/4__Linear_separability_and_the_Perceptron_image_1_1EPKYKcO.png" width="692"/></p>
 <p>Biologists have studied animal neurons. A typical neuron works by taking a number of inputs that are chemical/electrical signals from other neurons through its dendrites. Not all incoming signals have the same 'weight': the brain is plastic and the dendrites modulate the signals before they are combined in the cell nucleus. When the combined modulated signals exceed some threshold (which may be different for each neuron), the neuron becomes <em>activated</em> and sends a signal to its output. Otherwise, the neuron is not activated.</p>
 <p>Since the neuron appears to have two fundamental states (activated or not), we can speculate that it may be able to make binary decisions or classifications. This leads us to the mathematical modeling of a biological neuron as a perceptron.</p>
 </div>
@@ -7571,7 +7571,7 @@ $$</p>
 Working with the definition, these are exactly the set of points $x$ that satisfy</p>
 <p>$$ wx^T+ b =0\, .$$</p>
 <p>This decision boundary, or <strong>decision surface</strong>, is the equation of a $d$-dimensional hyperplane, and the two decision regions will be what we call half-spaces.</p>
-<p><img alt="linear separatility in 2D" src="images/4__Linear_separability_and_the_Perceptron_image_2_1x9RwkW-.png"/></p>
+<p><img alt="linear separatility in 2D" src="images/4__Linear_separability_and_the_Perceptron_image_2_1x9RwkW-.png" width="492"/></p>
 <p>For a 2D example, the boundary is a line, while the two semi-planes are the two decision regions.</p>
 <p>This leads us to the notion of <strong>linear separability</strong>: If we have a dataset $X$ where datapoints belong to two classes, and these two classes can be separated by a hyperplane, then we say that $X$ is linearly separable.</p>
 <p>It follows, by definition, that if $X$ is linearly separable then there exists a perceptron that can separate it (and be 100% accurate on all points). And vice-versa, if $X$ is not linearly separable, then no perceptron can fully separate it.</p>
@@ -7643,9 +7643,9 @@ $w_k = w_k - \left( \hat{y} - y_j\right) X_{j,k} $  </li>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
 <h2 id="4.6--Learning-Logical-Gates-%E2%AC%A4-"><strong>4.6  Learning Logical Gates<font color="#FFCC00"> ⬤ </font></strong><a class="anchor-link" href="#4.6--Learning-Logical-Gates-%E2%AC%A4-">¶</a></h2><p>Computer hardware and CPUs in particular, consist of millions of simple transistors implementing three basic logical functions: AND, OR and NOT.</p>
-<p><img alt="Truth tables for logical gates" src="images/4__Linear_separability_and_the_Perceptron_image_3_1wRIUQyy.png"/></p>
+<p><img alt="Truth tables for logical gates" src="images/4__Linear_separability_and_the_Perceptron_image_3_1wRIUQyy.png" width="492"/></p>
 <p>All other logical functions can be impemented using networks of these three basic gates. For example the XOR function (whose truth table is above) can be implemented as a 3-layer network of NOT-AND gates as shown here:</p>
-<p><img alt="XOR implemented with NAND gates" src="images/4__Linear_separability_and_the_Perceptron_image_4_1wX8S_kH.png"/></p>
+<p><img alt="XOR implemented with NAND gates" src="images/4__Linear_separability_and_the_Perceptron_image_4_1wX8S_kH.png" width="535"/></p>
 </div>
 </div>
 </div>
@@ -7657,7 +7657,7 @@ $w_k = w_k - \left( \hat{y} - y_j\right) X_{j,k} $  </li>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
 <p>One way to see these logical functions (say the AND gate) is as a binary classifier that separates 4 points into two classes. Then one can ask this question: Can a perceptron 'learn' the 2-input OR gate? We can instantly see that the answer is yes by looking at the linear separability in the picture. Similarly, AND &amp; NOT-AND are linearly separable.</p>
-<p><img alt="Linear separability for logical gates" src="images/4__Linear_separability_and_the_Perceptron_image_5_1wguGVcg.png"/></p>
+<p><img alt="Linear separability for logical gates" src="images/4__Linear_separability_and_the_Perceptron_image_5_1wguGVcg.png" width="535"/></p>
 <p>On the other hand, the XOR logical gate cannot be learned by a simple perceptron, but as we will see we a network of perceptrons can 'learn' the XOR gate.</p>
 <p>Similarly to logical circuits in computers , it is believed that the high-level functionality of our brain emerges through networks of neurons. But what type of computational tasks can individual neurons perform? It was until recently believed that individual human neurons can only behave like simple separable logical gates, but there is now evidence that single neurons can actually be more complex and operate even like XOR gates [<a href="https://www.quantamagazine.org/neural-dendrites-reveal-their-computational-power-20200114/">2</a>].</p>
 </div>
@@ -7683,7 +7683,7 @@ $w_k = w_k - \left( \hat{y} - y_j\right) X_{j,k} $  </li>
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
 <h2 id="4.7--Feature-Engineering-Revisited-%E2%AC%A4-"><strong>4.7  Feature Engineering Revisited<font color="#FFCC00"> ⬤ </font></strong><a class="anchor-link" href="#4.7--Feature-Engineering-Revisited-%E2%AC%A4-">¶</a></h2><p>Consider the picture on the left. The dataset is clearly not separable, so it can not be learned by a perceptron.</p>
 <p>To each point $(x,y)$ in our dataset, we now add one extra feature/coordinate, $x^2+y^2$, so that the point becomes $(x,y,x^2+y^2)$.</p>
-<p><img alt="The non-linear power of engineered features" src="images/4__Linear_separability_and_the_Perceptron_image_6_1B-SBFNy.png"/></p>
+<p><img alt="The non-linear power of engineered features" src="images/4__Linear_separability_and_the_Perceptron_image_6_1B-SBFNy.png" width="645"/></p>
 <p>This 'engineered' 3D-dataset is plotted in the second figure. We can see that the dataset has now become linearly separable. Specifically we see that the plane separating the two classes is defined by $x^2+y^2 = 0.5$; that is, the third coordinate is equal to 0.5. If we go back to the original space, the set of points $(x,y)$ that satisfy the equation $x^2+y^2 = 0.5$ is a circle of radius $1/\sqrt{2}$. The linear separation surface in 3D becomes a non-linear surface in 2D.</p>
 <p>This is yet another example of the power of feature engineering. However, generally speaking, engineering appropriate features is a difficult task that requires a very good understanding of the application and/or the dataset.</p>
 </div>
@@ -7701,7 +7701,7 @@ $w_k = w_k - \left( \hat{y} - y_j\right) X_{j,k} $  </li>
 <li>Given a linearly separable dataset $X$, the number of perceptrons that can separate the classes is usually infinite. The output of the perceptron learning algorithm depends on the random initialization and the order in which the points are visited by the algorithm.</li>
 <li>In some cases, the algorithm can learn a perceptron with a decision surface that is much closer to one of the classes than it is to the other. That is demonstrated in the following figure. Intuitively speaking, such decision surfaces are undesirable since we should not have any <em>a priori</em> preference for any class.</li>
 </ul>
-<p><img alt="A linearly separable dataset" src="images/4__Linear_separability_and_the_Perceptron_image_7_1x9RwkW-.png"/></p>
+<p><img alt="A linearly separable dataset" src="images/4__Linear_separability_and_the_Perceptron_image_7_1x9RwkW-.png" width="492"/></p>
 </div>
 </div>
 </div>

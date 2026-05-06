@@ -7654,7 +7654,7 @@ $$</p>
 <p>However, as we discussed above, we can replace the inner-product notion of similarity (that comes from Euclidean distance), with other types of similarity measures. In that case, we will (essentially) be learning hyperplanes with transformed high-dimensional points, that can be then translated back to non-linear separation surfaces in the original space. However, these transformed high-dimensional points will never be explicitly calculated by the algorithm, because the algorithm does not require the points, but only their distances!</p>
 <p>All this means that SVMs can be computed by essentially the same algorithm on such transformed data, by simply changing the notion of similarity. That is why SVM algorithms offer as a hyperparameter the choice of a <strong>kernel</strong> as the similarity measure.</p>
 <p>This procedure has become known as the <em>kernel trick</em>. The following image is a common visualization of how linear separation in higher dimensions can be equivalent to nonlinear separation in the original space.</p>
-<p><img alt="Visualization for kernel trick" src="images/7__Support_Vector_Machines_image_3_1B-SBFNy.png"/>.</p>
+<p><img alt="Visualization for kernel trick" src="images/7__Support_Vector_Machines_image_3_1B-SBFNy.png" width="766"/>.</p>
 <p>The kernel trick is a very interesting way of performing nonlinear classification. However, the computational requirements of the algorithm are quite high, and as a result the algorithm can be used only in relatively small data sets.</p>
 </div>
 </div>
@@ -7678,7 +7678,7 @@ $$
     \min \|w\|_2^2 + C \sum_{i=1}^n \zeta_i \, .
 $$</p>
 <p>Here $C$ is the <em>inverse</em> strength of regularization. If we let $C$ be very large, then minimization will have to make the slacks very small — that is, the slacks would not play a big role.</p>
-<img alt="No description has been provided for this image" height="285" src="images/7__Support_Vector_Machines_image_4_1ytxZE8Y.png" width="520"/>
+<img alt="No description has been provided for this image" height="371" src="images/7__Support_Vector_Machines_image_4_1ytxZE8Y.png" width="676"/>
 </div>
 </div>
 </div>
