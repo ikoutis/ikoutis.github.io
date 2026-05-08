@@ -7528,9 +7528,9 @@ a.anchor-link {
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
 <h2 id="16.1--Nonlinear-Activations--%E2%AC%A4-"><strong>16.1  Nonlinear Activations <font color="#FFCC00"> ⬤ </font></strong><a class="anchor-link" href="#16.1--Nonlinear-Activations--%E2%AC%A4-">¶</a></h2><p>Recall that so far we have discussed neural networks with layers of sigmoid neurons.</p>
-<p><img alt="A 3-layer network" src="images/16__MLP_Classifiers_image_1_15euS6fT.png"/></p>
+<p><img alt="A 3-layer network" src="images/16__MLP_Classifiers_image_1_15euS6fT.png" style="width: 40%;"/></p>
 <p>While having sigmoid functions in the output makes a lot of sense for classification problems, in principle there is no absolute necessity to use the sigmoid function in the neurons of the hidden layers. In general, hidden layer neurons can replace $\sigma(z)$ with some other nonlinear activation function $\phi(z)$. Some common choices include:</p>
-<p><img alt="Three activation functions" src="images/16__MLP_Classifiers_image_2_17L5Oqm3.png"/></p>
+<p><img alt="Three activation functions" src="images/16__MLP_Classifiers_image_2_17L5Oqm3.png" style="width: 40%;"/></p>
 <ul>
 <li><p>The hyperbolic tangent function $\phi(z) = tanh(z)$, which has 'step' behavior similar to that of the sigmoid function, but with a range between $-1$ and $1$.</p>
 </li>
@@ -7549,7 +7549,7 @@ a.anchor-link {
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
 <h2 id="16.2--Softmax-%E2%AC%A4-"><strong>16.2  Softmax<font color="#FFCC00"> ⬤ </font></strong><a class="anchor-link" href="#16.2--Softmax-%E2%AC%A4-">¶</a></h2><p>In a classification problem with $k$ labels, one idea is to let the output layer consist of $k$ sigmoid neurons, where each neuron outputs a probability that the input is in the corresponding class. In this case, the sum of the $k$ outputs will not be equal to 1 — that is, it will not be a <strong>probability distribution</strong>.</p>
 <p>The softmax layer adds one extra normalization calculation that ensures that the final output can be interpreted as a probability distribution. This is illustrated in the following picture:</p>
-<p><img alt="The softmax layer" src="images/16__MLP_Classifiers_image_3_17LkLrHu.png"/></p>
+<p><img alt="The softmax layer" src="images/16__MLP_Classifiers_image_3_17LkLrHu.png" style="width: 40%;"/></p>
 <p>Please note, that in the softmax layer above we take $\sigma(z) = exp(-z)$.</p>
 </div>
 </div>

@@ -7619,7 +7619,31 @@ $$</p>
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h2 id="10.7-Permutation-Based-Feature-Importance-Pseudocode-%E2%AC%A4-"><strong>10.7 Permutation-Based Feature Importance Pseudocode<font color="#008DFF"> ⬤ </font></strong><a class="anchor-link" href="#10.7-Permutation-Based-Feature-Importance-Pseudocode-%E2%AC%A4-">¶</a></h2><p><img alt="image containing pseudocode" src="images/10__Attribute_selection_and_importance_image_1_1zWATigi.png"/></p>
+<h2 id="10.7-Permutation-Based-Feature-Importance-Pseudocode-%E2%AC%A4-"><strong>10.7 Permutation-Based Feature Importance Pseudocode<font color="#008DFF"> ⬤ </font></strong><a class="anchor-link" href="#10.7-Permutation-Based-Feature-Importance-Pseudocode-%E2%AC%A4-">¶</a></h2>
+<div style="background-color: #f8f9fa; padding: 15px; border-radius: 5px; border: 1px solid #dee2e6; font-family: monospace; white-space: pre;"><b>Permutation Feature Importance</b>
+
+<b>Input:</b>
+    fitted model $m$
+    dataset $D$
+    number of repetitions $K$
+    scoring function $\text{score}(\cdot, \cdot)$
+
+<b>Compute reference score:</b>
+    $s \leftarrow \text{score}(m, D)$
+
+<b>For</b> each feature $f_j$, corresponding to column $j$ of $D$:
+
+    <b>For</b> $k = 1, \dots, K$:
+
+        Construct $\tilde{D}_{k,j}$ by randomly shuffling column $j$ of $D$
+        while leaving all other columns unchanged.
+
+        $s_{k,j} \leftarrow \text{score}(m, \tilde{D}_{k,j})$
+
+    $i_j \leftarrow s - \frac{1}{K} \sum_{k=1}^K s_{k,j}$
+
+<b>Output:</b>
+    feature importances $i_1, \dots, i_d$</div>
 <p>For how to use this algorithm, see the <a href="https://scikit-learn.org/stable/modules/permutation_importance.html"><em>scikit-learn</em> manual</a>.</p>
 </div>
 </div>

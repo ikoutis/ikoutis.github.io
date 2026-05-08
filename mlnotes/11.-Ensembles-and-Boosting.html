@@ -7571,7 +7571,7 @@ and again select the class $j$ that has the highest geometric mean $g_j$.</p>
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
 <h2 id="11.3--Bootstrapped-Aggregation-(Bagging)-%E2%AC%A4-"><strong>11.3  Bootstrapped Aggregation (Bagging)<font color="#FFCC00"> ⬤ </font></strong><a class="anchor-link" href="#11.3--Bootstrapped-Aggregation-(Bagging)-%E2%AC%A4-">¶</a></h2><p>In a society of human learners, the learning process is never perfect. Every individual can be trained only on a subset of the available knowledge — in other words, she observes only some of the available training points, and pays attention to only some of their features.</p>
 <p>This observation underlies the intuition of a method of ensemble learning known as <em>bagging</em>, short for '<em>Bootstrapped AGgregation</em>'.</p>
-<p><img alt="bagging" src="images/11__Ensembles_image_2_15Fk5t2L.png"/></p>
+<p><img alt="bagging" src="images/11__Ensembles_image_2_15Fk5t2L.png" style="width: 40%;"/></p>
 </div>
 </div>
 </div>
@@ -7618,7 +7618,7 @@ and again select the class $j$ that has the highest geometric mean $g_j$.</p>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
 <h2 id="11.4--AdaBoost-(Adaptive-Boosting)-%E2%AC%A4-"><strong>11.4  AdaBoost (Adaptive Boosting)<font color="#FFCC00"> ⬤ </font></strong><a class="anchor-link" href="#11.4--AdaBoost-(Adaptive-Boosting)-%E2%AC%A4-">¶</a></h2><p>Unlike bagging that trains $N$ classifiers, Adaptive Boosting is an algorithm that is based on the idea of learning the classifiers $C_1,C_2,\ldots,C_N$ in a sequential order, in a way that 'forces' classifier $C_{i+1}$ to correct the mistakes of classifier $C_i$, by paying more attention to the <em>training</em> points that were misclassified by $C_i$. This is illustrated in the picture below.</p>
-<p><img alt="AdaBoost illustration" src="images/11__Ensembles_image_3_1FWl7jFV.png"/></p>
+<p><img alt="AdaBoost illustration" src="images/11__Ensembles_image_3_1FWl7jFV.png" style="width: 48%;"/></p>
 <p>Naturally, this means that $C_{i+1}$ will be 'instructed' to overfit these points, and that can make its generalization worsen. For that reason we will give <em>less voting power</em> to classifier $C_{i+1}$. Then, assuming a good setting for the voting power of the classifiers, our ensemble will generalize better than each individual classifier.</p>
 </div>
 </div>

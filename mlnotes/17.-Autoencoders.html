@@ -7538,7 +7538,7 @@ a.anchor-link {
 </ul>
 <p>The following picture shows an autoencoder with one hidden layer.</p>
 <br/>
-<p><img alt="Autoencoder arhitecture" src="images/17__Autoencoders_image_2_1IZmnviR.png"/></p>
+<p><img alt="Autoencoder arhitecture" src="images/17__Autoencoders_image_2_1IZmnviR.png" style="width: 35%;"/></p>
 <p>Essentially the autoencoder's objective is to approximately reconstruct the input in the output layer, but do so by first 'compressing it' through the hidden layers.</p>
 <p>The way this is done is via a loss function. More specifically, the network takes as input some point $X_i$ and returns an output $y_i = f(X_i,w)$ depending on $X_i$ and the weights of the network. We can then define a loss, such as the mean squared error:</p>
 <p>$$
@@ -7569,7 +7569,7 @@ $$</p>
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h3 id="17.2.1-Dimensionality-Reduction"><strong>17.2.1 Dimensionality Reduction</strong><a class="anchor-link" href="#17.2.1-Dimensionality-Reduction">¶</a></h3><p><img alt="Simple autoencoder" src="images/17__Autoencoders_image_4_1IZmnviR.png"/></p>
+<h3 id="17.2.1-Dimensionality-Reduction"><strong>17.2.1 Dimensionality Reduction</strong><a class="anchor-link" href="#17.2.1-Dimensionality-Reduction">¶</a></h3><p><img alt="Simple autoencoder" src="images/17__Autoencoders_image_4_1IZmnviR.png" style="width: 35%;"/></p>
 <p>Given an input point $x$, the activation values $a_h(x)$ of the bottleneck hidden layer can be viewed as learned lower-dimensional features. Because these features maintain the 'essential' information about the data, and because the autoencoder usually involves at least one layer that effects a nonlinear transformation, the autoencoder can be viewed as a <strong>nonlinear</strong> dimensionality reduction.</p>
 <p>In fact, in a 3-layer autoencoder, disallowing all nonlinear activation functions at the hidden layer would produce a <strong>linear</strong> dimensionality reduction, that can be shown to be essentially equivalent to PCA! In other words, one can replace the entire sophisticated mathematical machinery of PCA with a simple neural autoencoder.</p>
 <p>The following image shows the input and the output reconstructed image with a nonlinear autoencoder and with PCA (linear autoencoder) with target dimension equal to the hidden layer size.</p>

@@ -7531,7 +7531,7 @@ a.anchor-link {
 <p><img alt="A sigmoid unit, and a concise illustration" src="images/15__Introduction_to_Neural_Networks_image_1_1E_stDul.png"/></p>
 <p>The figure on the left shows a single neuron, and the figure on the right is a more concise version of it.</p>
 <p>We have also seen the One-vs-Rest method, which can be regarded as combining the predictions of multiple outputs coming from different neurons, as shown in the figure below.</p>
-<p><img alt="An illustration of one-vs-rest" src="images/15__Introduction_to_Neural_Networks_image_2_1FcGHe8I.png"/></p>
+<p><img alt="An illustration of one-vs-rest" src="images/15__Introduction_to_Neural_Networks_image_2_1FcGHe8I.png" style="width: 32%;"/></p>
 <p>Each of these output neurons can be trained independently (in parallel with the others), and so we can view them as an entire <em>output layer</em>. The combined input-output layers together form a primitive 2-layer neural network. We should not forget that this type of network is still able to separate the space only with hyperplanes.</p>
 </div>
 </div>
@@ -7544,7 +7544,7 @@ a.anchor-link {
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
 <h2 id="15.2--Connecting-Neurons-Together:-3-Layer-Networks--%E2%AC%A4-"><strong>15.2  Connecting Neurons Together: 3-Layer Networks<font color="#FFCC00">  ⬤ </font></strong><a class="anchor-link" href="#15.2--Connecting-Neurons-Together:-3-Layer-Networks--%E2%AC%A4-">¶</a></h2><p>Neural networks become much more interesting when we add one intermediate (also called <em>hidden</em>) layer of neurons as shown in this picture:</p>
-<p><img alt="A 3-layer network" src="images/15__Introduction_to_Neural_Networks_image_3_15euS6fT.png"/></p>
+<p><img alt="A 3-layer network" src="images/15__Introduction_to_Neural_Networks_image_3_15euS6fT.png" style="width: 40%;"/></p>
 <p>This is still a simple 'device' that has a <strong>forward</strong> mode that takes one input $x$ and computes an output. The simple but important difference is that the neuron in the output layer takes as its inputs the activation values of the hidden layer. More specifically, if $\sigma(z_1), \sigma(z_2), \sigma(z_3)$ are the outputs of the hidden layer neurons, then the output of Neuron 4 (in the output layer) will be:</p>
 <p>$$
      \sigma(z_4)\,, \:\:\:\mathrm{where}\:\:\:
@@ -7564,7 +7564,7 @@ $$</p>
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
 <h2 id="15.3-Training-3-Layer-Networks-%E2%AC%A4-"><strong>15.3 Training 3-Layer Networks<font color="#FFCC00"> ⬤ </font></strong><a class="anchor-link" href="#15.3-Training-3-Layer-Networks-%E2%AC%A4-">¶</a></h2><p>A 3-layer neural network is still a simple device that takes an input $x$ and computes an output. For example, the neural network in the above picture will compute two outputs $[\hat{y}_4,\hat{y}_5]$ that we can then compare with the true labels $[{y}_4,{y}_5]$ and calculate a loss for the point $x$. We can then aggregate all individual losses, which gives rise to a loss function $L(X,y,W)$ that depends on the data and on all weights $W$. Our goal will be to learn the weights $W$ that minimize the loss, and we can do that by using one of the optimizers we have learned about. So, everything we have learned for simple single-neuron models applies in nearly the same way for neural networks.</p>
 <p>However, one important difference is that unlike the single-neuron models where loss functions are convex and mathematically well-understood, the 'loss landscape' for 3-neural networks is much more complex, with many local minima, as illustrated in the picture below. Such local minima make training a more challenging task. But while gradient descent-based optimizers will become stuck at local minima most (or nearly all!) of the time, neural networks are still able to generalize better than simple neurons. Developing a theoretical understanding of the generalization performance of neural networks is a significant open problem in Machine Learning.</p>
-<p><img alt="Local and global minima" src="images/15__Introduction_to_Neural_Networks_image_4_1FinLq71.png"/></p>
+<p><img alt="Local and global minima" src="images/15__Introduction_to_Neural_Networks_image_4_1FinLq71.png" style="width: 40%;"/></p>
 </div>
 </div>
 </div>
@@ -7619,7 +7619,7 @@ $$</p>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
 <p>As we described in section 15.1, it is not very difficult to do the forward calculation one neuron at a time. However, it is useful to think about the entire calculation in terms of matrices.</p>
-<p><img alt="Illustration of a 3-layer network" src="images/15__Introduction_to_Neural_Networks_image_8_15euS6fT.png"/></p>
+<p><img alt="Illustration of a 3-layer network" src="images/15__Introduction_to_Neural_Networks_image_8_15euS6fT.png" style="width: 40%;"/></p>
 <p>Consider as an example the above neural network. Each of these three neurons has its own dedicated set of weights, and we can make them <strong>columns</strong> of a matrix of weight parameters, as follows:</p>
 <p>$$
     W_{\mathrm{ih}} = \left( \begin{array}{ccc}
@@ -7712,7 +7712,7 @@ We also said that in order to avoid that (and converge faster) we can work with 
 <p>We have previously done a derivation of the gradient descent rule for the linear regression model. We only showed the rule for the logistic regression, which was derived by maximizing the likelihood measure.</p>
 <p>In order to see the essense of backpropagation we will try to see how it works in the single neuron case. Take a look at the following picture:</p>
 <br/>
-<p><img alt="A sigmoid neuron followed by loss calculation" src="images/15__Introduction_to_Neural_Networks_image_9_15mLSY8_.png"/></p>
+<p><img alt="A sigmoid neuron followed by loss calculation" src="images/15__Introduction_to_Neural_Networks_image_9_15mLSY8_.png" style="width: 40%;"/></p>
 </div>
 </div>
 </div>
@@ -7773,7 +7773,7 @@ $$</p>
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
 <h3 id="15.7.1--Deeper-Backpropagation"><strong>15.7.1  Deeper Backpropagation</strong><a class="anchor-link" href="#15.7.1--Deeper-Backpropagation">¶</a></h3><p>To train a network with 3 or more layers, we will follow <strong>exactly</strong> the same approach: We will try to minimize an error function $E$, and  we will do that by computing derivatives (gradient terms) of the error, by backpropagating questions and calculations. The exact calculations are somewhat tedious, but in fact they can be carried out even automatically (by automatic differentiation programs).</p>
 <p>Let's look at a snapshot of a calculation for a weight going from the input to the inner layer.</p>
-<p><img alt="back-propagation in part of a computation graph" src="images/15__Introduction_to_Neural_Networks_image_10_15sY0zzQ.png"/></p>
+<p><img alt="back-propagation in part of a computation graph" src="images/15__Introduction_to_Neural_Networks_image_10_15sY0zzQ.png" style="width: 40%;"/></p>
 </div>
 </div>
 </div>
@@ -7806,9 +7806,8 @@ $$</p>
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h2 id="15.8--Hidden-Layer-as-Learned-Features-%E2%AC%A4-"><strong>15.8  Hidden Layer as Learned Features<font color="#FFCC00"> ⬤ </font></strong><a class="anchor-link" href="#15.8--Hidden-Layer-as-Learned-Features-%E2%AC%A4-">¶</a></h2><p><img alt="Learned features illustration" src="images/15__Introduction_to_Neural_Networks_image_11_1IoTPmew.png"/></p>
+<h2 id="15.8--Hidden-Layer-as-Learned-Features-%E2%AC%A4-"><strong>15.8  Hidden Layer as Learned Features<font color="#FFCC00"> ⬤ </font></strong><a class="anchor-link" href="#15.8--Hidden-Layer-as-Learned-Features-%E2%AC%A4-">¶</a></h2><p><img alt="Learned features illustration" src="images/15__Introduction_to_Neural_Networks_image_11_1IoTPmew.png" style="width: 40%;"/></p>
 <p>In previous chapters we have discussed the power of adding engineering features to our data. Of course, engineering appropriate features requires a deeper understanding of the data and its semantics, and further domain knowledge. Furthermore, the engineered features are <strong>fixed</strong> functions of the input data.</p>
-<p>One can view hidden layers in Neural Networks as <strong>learned features</strong>. For example, in the picture above one can view the three marked neurons in the hidden layer as trainable functions that will compute some 'features' of the the input data, but unlike engineered features, these features are learned by the network as part of the loss minimization process. Such learned features can correspond to concepts we do understand (e.g. whether the input relates to a plane, a car, or a dog) or features that we do not understand or perceive directly. This makes neural networks relatively opaque and difficult to interpret, but on the other hand it relieves data scientists from the task of studying the data in depth in order to develop feature engineering methods. That means that efforts can be directed into creating more interesting ANN architectures, with different types and patterns of connectivity.</p>
 </div>
 </div>
 </div>

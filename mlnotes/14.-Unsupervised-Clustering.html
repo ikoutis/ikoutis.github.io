@@ -7617,7 +7617,7 @@ $$</li>
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
 <hr/>
 <h2 id="14.2-Agglomerative-Hierarchical-Clustering-%E2%AC%A4-"><strong>14.2 Agglomerative Hierarchical Clustering<font color="#008DFF"> ⬤ </font></strong><a class="anchor-link" href="#14.2-Agglomerative-Hierarchical-Clustering-%E2%AC%A4-">¶</a></h2><p>Another way of producing a clustering is through <em>agglomeration</em> — that is, by building up larger clusters through successive merging of smaller clusters. To do this, we need a policy by which we can decide which clusters should be merged at any given step. The way this is managed is through some notion of a <em>distance</em> between clusters.</p>
-<p><img alt="No description has been provided for this image" src="images/14__Unsupervised_Clustering_image_2_1LaSLHOd.png" width="350"/>
+<p><img alt="No description has been provided for this image" src="images/14__Unsupervised_Clustering_image_2_1LaSLHOd.png" width="420"/>
 <img alt="No description has been provided for this image" src="images/14__Unsupervised_Clustering_image_3_1n19LM2f.png" width="350"/></p>
 <h3 id="14.2.1-Linkage-Policies"><strong>14.2.1 Linkage Policies</strong><a class="anchor-link" href="#14.2.1-Linkage-Policies">¶</a></h3><p>At each step of agglomerative clustering, two clusters are merged. Of all the candidate pairs, the one with smallest inter-cluster distance is chosen.</p>
 <p>There are several common ways in which the distance between two clusters $A$ and $B$ can be defined. These include:</p>

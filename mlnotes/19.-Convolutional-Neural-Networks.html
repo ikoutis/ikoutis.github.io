@@ -7563,7 +7563,7 @@ a.anchor-link {
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h2 id="19.3-The-Hidden-Feature-vs-the-Hidden-Image-%E2%AC%A4-"><strong>19.3 The Hidden Feature vs the Hidden Image<font color="#FFCC00"> ⬤ </font></strong><a class="anchor-link" href="#19.3-The-Hidden-Feature-vs-the-Hidden-Image-%E2%AC%A4-">¶</a></h2><p><img alt="Learned features illustration" src="images/19__Convolutional_Neural_Networks_image_5_1KV_gSGY.png"/></p>
+<h2 id="19.3-The-Hidden-Feature-vs-the-Hidden-Image-%E2%AC%A4-"><strong>19.3 The Hidden Feature vs the Hidden Image<font color="#FFCC00"> ⬤ </font></strong><a class="anchor-link" href="#19.3-The-Hidden-Feature-vs-the-Hidden-Image-%E2%AC%A4-">¶</a></h2><p><img alt="Learned features illustration" src="images/19__Convolutional_Neural_Networks_image_5_1KV_gSGY.png" style="width: 40%;"/></p>
 <p>Recall that we can view the hidden neurons of a neural network as learned features. A single hidden neuron corresponds to one such feature and, as such, it is a <strong>global</strong> feature because its calculation depends on the entire input.</p>
 <br/>
 <p><img alt="Local features on a dog" src="images/19__Convolutional_Neural_Networks_image_6_1KgYiWnt.png&amp;"/></p>
@@ -7583,12 +7583,12 @@ a.anchor-link {
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
 <h2 id="19.4-Calculating-a-Feature-Map-%E2%AC%A4-"><strong>19.4 Calculating a Feature Map<font color="#008DFF"> ⬤ </font></strong><a class="anchor-link" href="#19.4-Calculating-a-Feature-Map-%E2%AC%A4-">¶</a></h2><p>Let's now show the application of a feature map in a mathematically more concrete way.</p>
-<p><img alt="Sliding window of feature map" src="images/19__Convolutional_Neural_Networks_image_8_1Kq2fOAs.png"/></p>
+<p><img alt="Sliding window of feature map" src="images/19__Convolutional_Neural_Networks_image_8_1Kq2fOAs.png" style="width: 35%;"/></p>
 <p>The image above is a miniature version of the black-and-white image of the previous section.</p>
-<p><img alt="One application of feature map" src="images/19__Convolutional_Neural_Networks_image_9_1Kte9JCc.png"/></p>
+<p><img alt="One application of feature map" src="images/19__Convolutional_Neural_Networks_image_9_1Kte9JCc.png" style="width: 35%;"/></p>
 <p>We can define a 2x2 <em>filter</em> as shown in blue above. The filter is applied to every 2x2 patch of the input image; the picture shows the application on the green patch. The output of a single application on a 2x2 patch is the sum of the entry-wise products of the input patch with the filter, i.e. a generalization of the inner product to 2D arrays.</p>
 <br/>
-<p><img alt="Feature map output" src="images/19__Convolutional_Neural_Networks_image_10_1KrvoYlC.png"/></p>
+<p><img alt="Feature map output" src="images/19__Convolutional_Neural_Networks_image_10_1KrvoYlC.png" style="width: 35%;"/></p>
 <p>We can then move the filter over all possible locations in the input image, and for each such  location calculate a single output number, that is put into the corresponding location of the output feature map. This is illustrated in the above image, where we now see that applying this very simple filter results in an image that, as expected, has only a black column of pixels highlighting the 'edges' of the input image. Here we also observe that the output array is smaller by one unit in both dimensions.</p>
 </div>
 </div>
