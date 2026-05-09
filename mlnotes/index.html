@@ -1,18 +1,23 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Machine Learning Notes — Yiannis Koutis</title>
-    <meta name="description" content="A 20-module course on machine learning by Yiannis Koutis (NJIT). Understand why each algorithm exists, not just how it works.">
-    
+    <meta name="description"
+        content="A 20-module course on machine learning by Yiannis Koutis (NJIT). Understand why each algorithm exists, not just how it works.">
+
     <!-- Open Graph / Social Media Meta Tags -->
     <meta property="og:title" content="Machine Learning Notes — Yiannis Koutis">
-    <meta property="og:description" content="A comprehensive, 20-module open access course on Machine Learning, covering foundations through modern Deep Learning.">
+    <meta property="og:description"
+        content="A comprehensive, 20-module open access course on Machine Learning, covering foundations through modern Deep Learning.">
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://ikoutis.github.io/mlnotes/">
-    <meta property="og:image" content="https://ikoutis.github.io/assets/images/ml_banner.png">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Oswald:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <meta property="og:image" content="https://ikoutis.github.io/assets/images/ml_banner_.png">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Oswald:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
     <style>
         :root {
             --bg-color: #f8fafc;
@@ -50,7 +55,11 @@
             }
         }
 
-        * { box-sizing: border-box; margin: 0; padding: 0; }
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
 
         body {
             font-family: 'Inter', sans-serif;
@@ -61,7 +70,10 @@
             -webkit-font-smoothing: antialiased;
         }
 
-        a { color: inherit; text-decoration: none; }
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
 
 
 
@@ -186,14 +198,16 @@
             min-height: 158px;
             overflow: hidden;
             transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1),
-                        box-shadow 0.25s ease,
-                        border-color 0.25s ease;
+                box-shadow 0.25s ease,
+                border-color 0.25s ease;
         }
 
         .ml-card::before {
             content: '';
             position: absolute;
-            top: 0; left: 0; right: 0;
+            top: 0;
+            left: 0;
+            right: 0;
             height: 3px;
             background: var(--ml-gradient);
             transform: scaleX(0);
@@ -207,7 +221,9 @@
             border-color: transparent;
         }
 
-        .ml-card:hover::before { transform: scaleX(1); }
+        .ml-card:hover::before {
+            transform: scaleX(1);
+        }
 
         .ml-card-head {
             display: flex;
@@ -275,15 +291,29 @@
             font-size: 0.9rem;
         }
 
-        .ml-footer a { color: var(--ml-primary); font-weight: 500; }
-        .ml-footer a:hover { text-decoration: underline; }
+        .ml-footer a {
+            color: var(--ml-primary);
+            font-weight: 500;
+        }
+
+        .ml-footer a:hover {
+            text-decoration: underline;
+        }
 
         @media (max-width: 640px) {
-            .ml-hero { padding: 3rem 1.75rem 3rem; margin: 1rem 0.75rem 2.5rem; border-radius: 1.25rem; }
-            .ml-hero-meta { gap: 1.5rem; }
+            .ml-hero {
+                padding: 3rem 1.75rem 3rem;
+                margin: 1rem 0.75rem 2.5rem;
+                border-radius: 1.25rem;
+            }
+
+            .ml-hero-meta {
+                gap: 1.5rem;
+            }
         }
     </style>
 </head>
+
 <body>
 
     <header class="ml-hero">
@@ -291,7 +321,11 @@
         <a href="https://ikoutis.github.io" class="ml-author">
             <img class="avatar" src="../assets/images/IK.jpg" alt="Yiannis Koutis">
             <span class="who">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                    stroke-linejoin="round">
+                    <line x1="19" y1="12" x2="5" y2="12"></line>
+                    <polyline points="12 19 5 12 12 5"></polyline>
+                </svg>
                 Yiannis Koutis
             </span>
         </a>
@@ -305,32 +339,62 @@
         </div>
         <div class="ml-grid">
             <a href="1.-Introduction-to-ML.html" class="ml-card">
-                <div class="ml-card-head"><span class="ml-card-number">Module 01</span><span class="ml-card-arrow"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg></span></div>
+                <div class="ml-card-head"><span class="ml-card-number">Module 01</span><span class="ml-card-arrow"><svg
+                            width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="5" y1="12" x2="19" y2="12"></line>
+                            <polyline points="12 5 19 12 12 19"></polyline>
+                        </svg></span></div>
                 <div class="ml-card-title">Introduction to ML</div>
                 <div class="ml-card-sub">What learning means and the shape of the field.</div>
             </a>
             <a href="2.-kNN-and-some-key-notions.html" class="ml-card">
-                <div class="ml-card-head"><span class="ml-card-number">Module 02</span><span class="ml-card-arrow"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg></span></div>
+                <div class="ml-card-head"><span class="ml-card-number">Module 02</span><span class="ml-card-arrow"><svg
+                            width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="5" y1="12" x2="19" y2="12"></line>
+                            <polyline points="12 5 19 12 12 19"></polyline>
+                        </svg></span></div>
                 <div class="ml-card-title">k-Nearest Neighbors</div>
                 <div class="ml-card-sub">The simplest classifier — and the vocabulary it forces us to invent.</div>
             </a>
             <a href="3.-Linear-regression,-feature-engineering.html" class="ml-card">
-                <div class="ml-card-head"><span class="ml-card-number">Module 03</span><span class="ml-card-arrow"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg></span></div>
+                <div class="ml-card-head"><span class="ml-card-number">Module 03</span><span class="ml-card-arrow"><svg
+                            width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="5" y1="12" x2="19" y2="12"></line>
+                            <polyline points="12 5 19 12 12 19"></polyline>
+                        </svg></span></div>
                 <div class="ml-card-title">Linear Regression &amp; Features</div>
                 <div class="ml-card-sub">Fitting lines, and why the features often matter more than the line.</div>
             </a>
             <a href="4.-Linear-separability,-perceptron.html" class="ml-card">
-                <div class="ml-card-head"><span class="ml-card-number">Module 04</span><span class="ml-card-arrow"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg></span></div>
+                <div class="ml-card-head"><span class="ml-card-number">Module 04</span><span class="ml-card-arrow"><svg
+                            width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="5" y1="12" x2="19" y2="12"></line>
+                            <polyline points="12 5 19 12 12 19"></polyline>
+                        </svg></span></div>
                 <div class="ml-card-title">Perceptron &amp; Linear Separability</div>
                 <div class="ml-card-sub">The first learning algorithm — and the things it can't do.</div>
             </a>
             <a href="5.-Logistic-regression.html" class="ml-card">
-                <div class="ml-card-head"><span class="ml-card-number">Module 05</span><span class="ml-card-arrow"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg></span></div>
+                <div class="ml-card-head"><span class="ml-card-number">Module 05</span><span class="ml-card-arrow"><svg
+                            width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="5" y1="12" x2="19" y2="12"></line>
+                            <polyline points="12 5 19 12 12 19"></polyline>
+                        </svg></span></div>
                 <div class="ml-card-title">Logistic Regression</div>
                 <div class="ml-card-sub">Turning a line into a probability.</div>
             </a>
             <a href="6.-Regularization.html" class="ml-card">
-                <div class="ml-card-head"><span class="ml-card-number">Module 06</span><span class="ml-card-arrow"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg></span></div>
+                <div class="ml-card-head"><span class="ml-card-number">Module 06</span><span class="ml-card-arrow"><svg
+                            width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="5" y1="12" x2="19" y2="12"></line>
+                            <polyline points="12 5 19 12 12 19"></polyline>
+                        </svg></span></div>
                 <div class="ml-card-title">Regularization</div>
                 <div class="ml-card-sub">Why simpler models often generalize better.</div>
             </a>
@@ -345,42 +409,82 @@
         </div>
         <div class="ml-grid">
             <a href="7.-Support-Vector-Machines.html" class="ml-card">
-                <div class="ml-card-head"><span class="ml-card-number">Module 07</span><span class="ml-card-arrow"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg></span></div>
+                <div class="ml-card-head"><span class="ml-card-number">Module 07</span><span class="ml-card-arrow"><svg
+                            width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="5" y1="12" x2="19" y2="12"></line>
+                            <polyline points="12 5 19 12 12 19"></polyline>
+                        </svg></span></div>
                 <div class="ml-card-title">Support Vector Machines</div>
                 <div class="ml-card-sub">The geometric idea of a margin, and the kernel trick.</div>
             </a>
             <a href="8.-Decision-Trees.html" class="ml-card">
-                <div class="ml-card-head"><span class="ml-card-number">Module 08</span><span class="ml-card-arrow"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg></span></div>
+                <div class="ml-card-head"><span class="ml-card-number">Module 08</span><span class="ml-card-arrow"><svg
+                            width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="5" y1="12" x2="19" y2="12"></line>
+                            <polyline points="12 5 19 12 12 19"></polyline>
+                        </svg></span></div>
                 <div class="ml-card-title">Decision Trees</div>
                 <div class="ml-card-sub">Learning by asking questions.</div>
             </a>
             <a href="9.-Hyperparameter-Tuning-and-Validation.html" class="ml-card">
-                <div class="ml-card-head"><span class="ml-card-number">Module 09</span><span class="ml-card-arrow"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg></span></div>
+                <div class="ml-card-head"><span class="ml-card-number">Module 09</span><span class="ml-card-arrow"><svg
+                            width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="5" y1="12" x2="19" y2="12"></line>
+                            <polyline points="12 5 19 12 12 19"></polyline>
+                        </svg></span></div>
                 <div class="ml-card-title">Hyperparameter Tuning &amp; Validation</div>
                 <div class="ml-card-sub">Choosing models honestly.</div>
             </a>
             <a href="10.-Attribute-Selection.html" class="ml-card">
-                <div class="ml-card-head"><span class="ml-card-number">Module 10</span><span class="ml-card-arrow"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg></span></div>
+                <div class="ml-card-head"><span class="ml-card-number">Module 10</span><span class="ml-card-arrow"><svg
+                            width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="5" y1="12" x2="19" y2="12"></line>
+                            <polyline points="12 5 19 12 12 19"></polyline>
+                        </svg></span></div>
                 <div class="ml-card-title">Attribute Selection</div>
                 <div class="ml-card-sub">Which features actually carry signal.</div>
             </a>
             <a href="11.-Ensembles-and-Boosting.html" class="ml-card">
-                <div class="ml-card-head"><span class="ml-card-number">Module 11</span><span class="ml-card-arrow"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg></span></div>
+                <div class="ml-card-head"><span class="ml-card-number">Module 11</span><span class="ml-card-arrow"><svg
+                            width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="5" y1="12" x2="19" y2="12"></line>
+                            <polyline points="12 5 19 12 12 19"></polyline>
+                        </svg></span></div>
                 <div class="ml-card-title">Ensembles &amp; Boosting</div>
                 <div class="ml-card-sub">Why a society of imperfect learners outperforms a single one.</div>
             </a>
             <a href="12.-Probabilistic-Framework.html" class="ml-card">
-                <div class="ml-card-head"><span class="ml-card-number">Module 12</span><span class="ml-card-arrow"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg></span></div>
+                <div class="ml-card-head"><span class="ml-card-number">Module 12</span><span class="ml-card-arrow"><svg
+                            width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="5" y1="12" x2="19" y2="12"></line>
+                            <polyline points="12 5 19 12 12 19"></polyline>
+                        </svg></span></div>
                 <div class="ml-card-title">Probabilistic Framework</div>
                 <div class="ml-card-sub">Re-reading machine learning as inference.</div>
             </a>
             <a href="13.-Dimensionality-Reduction.html" class="ml-card">
-                <div class="ml-card-head"><span class="ml-card-number">Module 13</span><span class="ml-card-arrow"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg></span></div>
+                <div class="ml-card-head"><span class="ml-card-number">Module 13</span><span class="ml-card-arrow"><svg
+                            width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="5" y1="12" x2="19" y2="12"></line>
+                            <polyline points="12 5 19 12 12 19"></polyline>
+                        </svg></span></div>
                 <div class="ml-card-title">Dimensionality Reduction</div>
                 <div class="ml-card-sub">Finding the few axes that matter.</div>
             </a>
             <a href="14.-Unsupervised-Clustering.html" class="ml-card">
-                <div class="ml-card-head"><span class="ml-card-number">Module 14</span><span class="ml-card-arrow"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg></span></div>
+                <div class="ml-card-head"><span class="ml-card-number">Module 14</span><span class="ml-card-arrow"><svg
+                            width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="5" y1="12" x2="19" y2="12"></line>
+                            <polyline points="12 5 19 12 12 19"></polyline>
+                        </svg></span></div>
                 <div class="ml-card-title">Unsupervised Clustering</div>
                 <div class="ml-card-sub">Finding structure without labels.</div>
             </a>
@@ -395,32 +499,62 @@
         </div>
         <div class="ml-grid">
             <a href="15.-Introduction-to-Neural-Networks.html" class="ml-card">
-                <div class="ml-card-head"><span class="ml-card-number">Module 15</span><span class="ml-card-arrow"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg></span></div>
+                <div class="ml-card-head"><span class="ml-card-number">Module 15</span><span class="ml-card-arrow"><svg
+                            width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="5" y1="12" x2="19" y2="12"></line>
+                            <polyline points="12 5 19 12 12 19"></polyline>
+                        </svg></span></div>
                 <div class="ml-card-title">Introduction to Neural Networks</div>
                 <div class="ml-card-sub">Connecting neurons together — and what changes when you do.</div>
             </a>
             <a href="16.-Non-linear-layers,-softmax,-cross-entropy.html" class="ml-card">
-                <div class="ml-card-head"><span class="ml-card-number">Module 16</span><span class="ml-card-arrow"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg></span></div>
+                <div class="ml-card-head"><span class="ml-card-number">Module 16</span><span class="ml-card-arrow"><svg
+                            width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="5" y1="12" x2="19" y2="12"></line>
+                            <polyline points="12 5 19 12 12 19"></polyline>
+                        </svg></span></div>
                 <div class="ml-card-title">Nonlinear Layers, Softmax &amp; Cross-Entropy</div>
                 <div class="ml-card-sub">The building blocks of every modern network.</div>
             </a>
             <a href="17.-Autoencoders.html" class="ml-card">
-                <div class="ml-card-head"><span class="ml-card-number">Module 17</span><span class="ml-card-arrow"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg></span></div>
+                <div class="ml-card-head"><span class="ml-card-number">Module 17</span><span class="ml-card-arrow"><svg
+                            width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="5" y1="12" x2="19" y2="12"></line>
+                            <polyline points="12 5 19 12 12 19"></polyline>
+                        </svg></span></div>
                 <div class="ml-card-title">Autoencoders</div>
                 <div class="ml-card-sub">Learning compact representations.</div>
             </a>
             <a href="18.-Introduction-to-PyTorch.html" class="ml-card">
-                <div class="ml-card-head"><span class="ml-card-number">Module 18</span><span class="ml-card-arrow"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg></span></div>
+                <div class="ml-card-head"><span class="ml-card-number">Module 18</span><span class="ml-card-arrow"><svg
+                            width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="5" y1="12" x2="19" y2="12"></line>
+                            <polyline points="12 5 19 12 12 19"></polyline>
+                        </svg></span></div>
                 <div class="ml-card-title">Introduction to PyTorch</div>
                 <div class="ml-card-sub">Building networks in code.</div>
             </a>
             <a href="19.-Convolutional-Neural-Networks.html" class="ml-card">
-                <div class="ml-card-head"><span class="ml-card-number">Module 19</span><span class="ml-card-arrow"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg></span></div>
+                <div class="ml-card-head"><span class="ml-card-number">Module 19</span><span class="ml-card-arrow"><svg
+                            width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="5" y1="12" x2="19" y2="12"></line>
+                            <polyline points="12 5 19 12 12 19"></polyline>
+                        </svg></span></div>
                 <div class="ml-card-title">Convolutional Neural Networks</div>
                 <div class="ml-card-sub">Exploiting spatial structure in images.</div>
             </a>
             <a href="20.-Recurrent-Neural-Networks.html" class="ml-card">
-                <div class="ml-card-head"><span class="ml-card-number">Module 20</span><span class="ml-card-arrow"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg></span></div>
+                <div class="ml-card-head"><span class="ml-card-number">Module 20</span><span class="ml-card-arrow"><svg
+                            width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="5" y1="12" x2="19" y2="12"></line>
+                            <polyline points="12 5 19 12 12 19"></polyline>
+                        </svg></span></div>
                 <div class="ml-card-title">Recurrent Neural Networks</div>
                 <div class="ml-card-sub">Learning over sequences.</div>
             </a>
@@ -432,29 +566,28 @@
     </footer>
 
     <script language="JavaScript" type="text/javascript">
-    var sc_project=675452;
-    var sc_partition=5;
-    var sc_security="02e5a115";
+        var sc_project = 675452;
+        var sc_partition = 5;
+        var sc_security = "02e5a115";
     </script>
     <script language="JavaScript" type="text/javascript" src="https://www.statcounter.com/counter/counter.js"></script>
     <noscript></noscript>
 
-<!-- Default Statcounter code for Machine Learning Notes
+    <!-- Default Statcounter code for Machine Learning Notes
 https://ikoutis.github.io/mlnotes/ -->
-<script type="text/javascript">
-var sc_project=13227244; 
-var sc_invisible=1; 
-var sc_security="ea08696e"; 
-</script>
-<script type="text/javascript"
-src="https://www.statcounter.com/counter/counter.js"
-async></script>
-<noscript><div class="statcounter"><a title="Web Analytics
-Made Easy - Statcounter" href="https://statcounter.com/"
-target="_blank"><img class="statcounter"
-src="https://c.statcounter.com/13227244/0/ea08696e/1/"
-alt="Web Analytics Made Easy - Statcounter"
-referrerPolicy="no-referrer-when-downgrade"></a></div></noscript>
-<!-- End of Statcounter Code -->
+    <script type="text/javascript">
+        var sc_project = 13227244;
+        var sc_invisible = 1;
+        var sc_security = "ea08696e"; 
+    </script>
+    <script type="text/javascript" src="https://www.statcounter.com/counter/counter.js" async></script>
+    <noscript>
+        <div class="statcounter"><a title="Web Analytics
+Made Easy - Statcounter" href="https://statcounter.com/" target="_blank"><img class="statcounter"
+                    src="https://c.statcounter.com/13227244/0/ea08696e/1/" alt="Web Analytics Made Easy - Statcounter"
+                    referrerPolicy="no-referrer-when-downgrade"></a></div>
+    </noscript>
+    <!-- End of Statcounter Code -->
 </body>
+
 </html>
