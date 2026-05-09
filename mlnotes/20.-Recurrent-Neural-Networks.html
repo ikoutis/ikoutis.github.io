@@ -7510,6 +7510,48 @@ a.anchor-link {
 <!-- End of mermaid configuration --></head>
 <body class="jp-Notebook" data-jp-theme-light="true" data-jp-theme-name="JupyterLab Light">
 <main>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&display=swap');
+.ml-sticky-banner {
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    background-color: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    padding: 8px 20px;
+    text-align: left;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+    font-family: 'Oswald', sans-serif;
+    font-size: 1.15rem;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+}
+.ml-sticky-banner a {
+    text-decoration: none;
+    color: #333;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: color 0.2s ease;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+}
+.ml-sticky-banner a:hover {
+    color: #2563eb;
+}
+.ml-sticky-banner a svg {
+    transition: transform 0.2s ease;
+}
+.ml-sticky-banner a:hover svg {
+    transform: translateX(-3px);
+}
+</style>
+<div class="ml-sticky-banner">
+    <a href="index.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width: 18px; height: 18px;"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+        Machine Learning Notes
+    </a>
+</div>
 <div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
@@ -7595,7 +7637,7 @@ a.anchor-link {
 $\{h^{(1)},\ldots,h^{(t)}\}$. The final vector $h^{(t)}$ can be viewed as the 'state of mind' when the entire sequence has been processed. Before the network starts processing a new sequence, the activations of the hidden neurons are reset to 0.</p>
 <hr/>
 <p>There is an alternative --and more computationally efficient-- way of computing the activations $h^{(t)}$.</p>
-<p><img alt="Matrix calculations" src="images/20__Recurrent_Neural_Networks_image_8_1EkQ9lPV.png"/></p>
+<p><img alt="Matrix calculations" src="images/20__Recurrent_Neural_Networks_image_8_1EkQ9lPV.png" style="width: 50%;"/></p>
 <p>This is given in the picture above. The two matrices of weights are stacked together, and also $x^{(t)}$ and $h^{(t-1)}$ are stacked together. In that way the computation can be done with only one matrix multiplication. (<strong>Note:</strong> In this graphic we use column vectors instead of the usual row vectors for $x$ and $h$.)</p>
 </div>
 </div>
@@ -7652,7 +7694,7 @@ $\{h^{(1)},\ldots,h^{(t)}\}$. The final vector $h^{(t)}$ can be viewed as the 's
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
 <h2 id="20.7--Bidirectional-Recurrent-Layers-%E2%AC%A4-"><strong>20.7  Bidirectional Recurrent Layers<font color="#008DFF"> ⬤ </font></strong><a class="anchor-link" href="#20.7--Bidirectional-Recurrent-Layers-%E2%AC%A4-">¶</a></h2><p>Consider the expression 'new year'. Our understanding of it allows us to imagine what the <em>previous</em> word might be: 'happy'. In some sense, that implies that our ability to predict the past implies a better understanding of the time sequence. That is also true in physics, where equations are time reversible and do give us the ability to back-calculate a previous state. This motivates the introduction of bidirectional layers.</p>
-<p><img alt="How a bidirectional layer works" src="images/20__Recurrent_Neural_Networks_image_13_1Ej8QDPR.png"/></p>
+<p><img alt="How a bidirectional layer works" src="images/20__Recurrent_Neural_Networks_image_13_1Ej8QDPR.png" style="width: 50%;"/></p>
 <p>A bidirectional layer consists of two different recurrent layers, with different sets of parameters. The first layer works as usual, but the second layer reads the input sequence in reverse order. Thus, given an input sequence $\{x^{(1)}, \ldots, x{(t)}\}$, the first layer will output sequence
 $\{h_f^{(1)}, \ldots, h_f^{(t)}\}$, and the second layer will output a sequence $\{h_s^{(t)}, \ldots, h_s^{(1)}\}$.  Then, the output sequence of the entire bidirectional layer will be: $\{y^{(1)}, \ldots, y{(t)}\}$, where
 $$
@@ -7672,12 +7714,12 @@ $$</p>
 <h2 id="20.8--Newer-Types-of-Recurrent-Layers-%E2%AC%A4-"><strong>20.8  Newer Types of Recurrent Layers<font color="#008DFF"> ⬤ </font></strong><a class="anchor-link" href="#20.8--Newer-Types-of-Recurrent-Layers-%E2%AC%A4-">¶</a></h2><p>The original recurrent layers have been vastly improved in recent years, resulting in better learning for deeper sequences.</p>
 <br/>
 <p>Here let's see how 'Gated Recurrent Units' (GRUs) work.</p>
-<p><img alt="The Gated Recurrent Unit" src="images/20__Recurrent_Neural_Networks_image_14_1EjEOEec.png"/></p>
+<p><img alt="The Gated Recurrent Unit" src="images/20__Recurrent_Neural_Networks_image_14_1EjEOEec.png" style="width: 50%;"/></p>
 <p>The main idea of the GRU gate is that the new hidden state $h_t$ is an <strong>update</strong> of the previous hidden state $h_{t-1}$. In that update, part comes directly from $h_{t-1}$ and the rest from a 'provisional' activation $\tilde{h}_{t}$. The update weights depend on a learnable set of weights that are <em>different</em> for each neuron. In that way, after training, the hidden layer can have neurons that are more or less sensitive to their previous hidden state.</p>
 <p>The GRU also includes a <strong>reset</strong> mechanism which can learn to partially forget the previous hidden state of selective neurons before the calculation of of the new provisional hidden state. This intuitively can be effective when we have abrupt changes in a sentence (e.g. a period), or in a time series (e.g. a large drop in stock value after earnings).</p>
 <p>The above equations explain how $h_t$ is computed. In this picture $W_z, W_r$ are additional matrices of trainable parameters, and $r_t, z_t$  are vectors of dimension equal to $h_t$. Observe that $r_t,z_t$ involve trainable parameters, and that their activation is sigmoid, which means that they are numbers in $[0,1]$. Each entry of $r_t$ is the reset factor for the corresponding neuron, and each entry of $z_t$ is the update weight for the corresponding neuron. (Note: here, * denotes entry-wise multiplication, not convolution.)</p>
 <p>GRUs were preceded by LSTMs (Long Short-Term Memory), which have more trainable parameters than GRUs and used an extra 'memory' (cell state) vector besides the hidden state. In general, GRUs are considered more powerful. Here is what an LSTM looks like.</p>
-<p><img alt="LSTM unit" src="images/20__Recurrent_Neural_Networks_image_15_1ElclRks.png"/></p>
+<p><img alt="LSTM unit" src="images/20__Recurrent_Neural_Networks_image_15_1ElclRks.png" style="width: 50%;"/></p>
 </div>
 </div>
 </div>
@@ -7704,11 +7746,11 @@ $$</p>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
 <h3 id="20.9.1--An-Architecture"><strong>20.9.1  An Architecture</strong><a class="anchor-link" href="#20.9.1--An-Architecture">¶</a></h3><p>Here is one architecture for character-based language modeling, taken from <a href="https://towardsdatascience.com/text-generation-with-bi-lstm-in-pytorch-5fda6e7cc22c">here</a>.</p>
-<p><img alt="An architecture for character prediction" src="images/20__Recurrent_Neural_Networks_image_17_1EnZ5f4s.png"/></p>
+<p><img alt="An architecture for character prediction" src="images/20__Recurrent_Neural_Networks_image_17_1EnZ5f4s.png" style="width: 50%;"/></p>
 <p>This is the 'unrolled' picture of the architecture, but we can see the basic elements. There is still a learnable embedding layer for converting characters to vectors. Next we have a bidirectional LSTM layer, with concatenation of the outputs of the forward and backward layers. These are passed into a unidirectional LSTM layer. That produces an output sequence, of which we keep the last vector, that we then feed to a linear layer, and finally to the final softmax layer. The last softmax layer must have 26 outputs, since we are trying to predict the next character.</p>
 <p>Such architectures reach a decent accuracy for predicting the next character, depending of course on the length of the training window and the amount of data.</p>
 <h3 id="20.9.2-Generating-Text"><strong>20.9.2 Generating Text</strong><a class="anchor-link" href="#20.9.2-Generating-Text">¶</a></h3><p>This is how text generation works on this toy architecture and dataset:</p>
-<p><img alt="Auto-regressive application in text generation" src="images/20__Recurrent_Neural_Networks_image_18_1Eobgx6D.png"/></p>
+<p><img alt="Auto-regressive application in text generation" src="images/20__Recurrent_Neural_Networks_image_18_1Eobgx6D.png" style="width: 50%;"/></p>
 <p>The performance is not so great, but more complex models have reached interesting levels of coherent text generation. It should be noted that because the softmax of this model predicts only a probability for the next letter, when generating text that letter is not selected deterministically, but instead at random with some probability. Therefore, many different texts can be produced from a given seed. Skewing the selection probabilities can yield more coherent and reasonable texts.</p>
 </div>
 </div>
@@ -7738,5 +7780,23 @@ $$</p>
 </div>
 </div>
 </main>
+
+<!-- Default Statcounter code for Machine Learning Notes
+https://ikoutis.github.io/mlnotes/ -->
+<script type="text/javascript">
+var sc_project=13227244; 
+var sc_invisible=1; 
+var sc_security="ea08696e"; 
+</script>
+<script type="text/javascript"
+src="https://www.statcounter.com/counter/counter.js"
+async></script>
+<noscript><div class="statcounter"><a title="Web Analytics
+Made Easy - Statcounter" href="https://statcounter.com/"
+target="_blank"><img class="statcounter"
+src="https://c.statcounter.com/13227244/0/ea08696e/1/"
+alt="Web Analytics Made Easy - Statcounter"
+referrerPolicy="no-referrer-when-downgrade"></a></div></noscript>
+<!-- End of Statcounter Code -->
 </body>
 </html>

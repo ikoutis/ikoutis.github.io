@@ -7510,6 +7510,48 @@ a.anchor-link {
 <!-- End of mermaid configuration --></head>
 <body class="jp-Notebook" data-jp-theme-light="true" data-jp-theme-name="JupyterLab Light">
 <main>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&display=swap');
+.ml-sticky-banner {
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    background-color: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    padding: 8px 20px;
+    text-align: left;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+    font-family: 'Oswald', sans-serif;
+    font-size: 1.15rem;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+}
+.ml-sticky-banner a {
+    text-decoration: none;
+    color: #333;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: color 0.2s ease;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+}
+.ml-sticky-banner a:hover {
+    color: #2563eb;
+}
+.ml-sticky-banner a svg {
+    transition: transform 0.2s ease;
+}
+.ml-sticky-banner a:hover svg {
+    transform: translateX(-3px);
+}
+</style>
+<div class="ml-sticky-banner">
+    <a href="index.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width: 18px; height: 18px;"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+        Machine Learning Notes
+    </a>
+</div>
 <div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
@@ -7618,7 +7660,7 @@ a.anchor-link {
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
 <p>An additional hyperparameter of 2D convolutions is the <strong>stride</strong>, which is a pair of numbers $(s_v,s_h)$. This is illustrated in the picture below, where the stride is $(s_v,s_h)=(2,2)$. The application of the kernel starts by placing its top-leftmost cell at the top-leftmost cell of the (potentially padded) input, which has coordinates $(0,0)$. Then, the possible locations of the top-leftmost cell of the kernel are positions of the form $(s_v\cdot i,s_h\cdot  j)$ on the input, for all $i,j$ which allow the kernel to still fully fit in the input. This essentially means that we start with the kernel window at the top-leftmost position and then we slide it horizontally or vertically only by the increments specified by $(s_v,s_h)$.</p>
 <p>In most cases $s_v$ and $s_h$ are equal, so we can specify the stride with only a single number $s$. The use of stride implies that we want to make the output dimensions smaller by a factor of $s$. And in many cases $s=2$, which  means that the output will have dimensions approximately half of the input dimensions. For that reason the option of 'same' padding is not available in combination with the use of stride.</p>
-<p><img alt="Example of strode" src="images/19__Convolutional_Neural_Networks_image_13_1LBN7CjP.png"/></p>
+<p><img alt="Example of strode" src="images/19__Convolutional_Neural_Networks_image_13_1LBN7CjP.png" style="width: 60%;"/></p>
 </div>
 </div>
 </div>
@@ -7655,7 +7697,7 @@ a.anchor-link {
 <h2 id="19.7--The-Pooling-and-Dropout-Layers-%E2%AC%A4-"><strong>19.7  The Pooling and Dropout Layers<font color="#008DFF"> ⬤ </font></strong><a class="anchor-link" href="#19.7--The-Pooling-and-Dropout-Layers-%E2%AC%A4-">¶</a></h2><h3 id="19.7.1--Pooling"><strong>19.7.1  Pooling</strong><a class="anchor-link" href="#19.7.1--Pooling">¶</a></h3><p>The mean pooling (or average pooling) <strong>operator</strong> takes as input a 2D array $I$ and returns another 2D array $O$. It operates on $I$ in exactly the same way as a kernel, except that all weights in the kernel are set equal to $1/T$, where $T$ is the total number of cells in the kernel. Importantly, these weights are always the same, and are <strong>not trainable</strong>. It is also usually the case that mean pooling is used in combination with a stride. Effectively, the mean pooling operator takes one image $I$ and 'summarizes' it into a smaller image $O$. Each 'pixel' in $O$ is an average of a patch of pixels in $I$.</p>
 <p>The max pooling operator works in a similar way as mean pooling, except that it calculates the maximum over each patch, instead of the average.</p>
 <p><strong>The pooling layer.</strong> In a pooling layer we will have $c_{in}$ arrays in the input. The pooling layer applies the specified pooling operator on each input array, and outputs exactly $c_{in}$ arrays. Since pooling layers are used with stride, the output arrays are in general expected to be smaller relative to the input (often by a factor of 2 in each dimension).</p>
-<p><img alt="Pooling layers" src="images/19__Convolutional_Neural_Networks_image_16_1LKZJOvv.png"/></p>
+<p><img alt="Pooling layers" src="images/19__Convolutional_Neural_Networks_image_16_1LKZJOvv.png" style="width: 50%;"/></p>
 </div>
 </div>
 </div>
@@ -7668,7 +7710,7 @@ a.anchor-link {
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
 <h3 id="19.7.2-Dropout"><strong>19.7.2 Dropout</strong><a class="anchor-link" href="#19.7.2-Dropout">¶</a></h3><p>The dropout layer applies <strong>during the training process only</strong> to the activations $a_l$ of a previous 'regular' layer $l$ of the neural network. For each given minibatch in training, we replace the tensor of activations $a_h$ by $a'_h$, where a proportion $p$ of the entries in $a_l$ are randomly zeroed out, and the remaining entries are multiplied by $1/(1-p)$. Then $a'_h$ is used to compute the next layer. During testing the neural network uses all activations and learned weights.</p>
 <p>This is illustrated in the picture below.</p>
-<p><img alt="Dropout layer" src="images/19__Convolutional_Neural_Networks_image_17_1LMaC417.png"/></p>
+<p><img alt="Dropout layer" src="images/19__Convolutional_Neural_Networks_image_17_1LMaC417.png" style="width: 40%;"/></p>
 <p>Dropout layers have been proposed to reduce overfitting, and improve generalization. They are widely popular, and have become the default mechanism currently used for regularization in deep neural networks.</p>
 </div>
 </div>
@@ -7681,7 +7723,7 @@ a.anchor-link {
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
 <h3 id="19.7.3--A-CNN-architecture"><strong>19.7.3  A CNN architecture</strong><a class="anchor-link" href="#19.7.3--A-CNN-architecture">¶</a></h3><p>We are now ready to look at a simple CNN architecture. This example is designed for the MNIST dataset, and is relatively small and shallow. Many other CNN architectures have been proposed. The diagram below shows how a single input 'point' propagates through the network. Here the point is a 3D tensor with only one color channel. If we wanted to handle 3 color channels, we would simply change the appropriate dimension of the input channel to 3. (<strong>Note</strong>: In implementations, the number of channels is usually the 1st dimension, not the 3rd dimension as shown in the diagram.)</p>
-<p><img alt="A CNN architecture" src="images/19__Convolutional_Neural_Networks_image_18_1LN297Gx.png"/></p>
+<p><img alt="A CNN architecture" src="images/19__Convolutional_Neural_Networks_image_18_1LN297Gx.png" style="width: 50%;"/></p>
 </div>
 </div>
 </div>
@@ -7748,5 +7790,23 @@ a.anchor-link {
 </div>
 </div>
 </main>
+
+<!-- Default Statcounter code for Machine Learning Notes
+https://ikoutis.github.io/mlnotes/ -->
+<script type="text/javascript">
+var sc_project=13227244; 
+var sc_invisible=1; 
+var sc_security="ea08696e"; 
+</script>
+<script type="text/javascript"
+src="https://www.statcounter.com/counter/counter.js"
+async></script>
+<noscript><div class="statcounter"><a title="Web Analytics
+Made Easy - Statcounter" href="https://statcounter.com/"
+target="_blank"><img class="statcounter"
+src="https://c.statcounter.com/13227244/0/ea08696e/1/"
+alt="Web Analytics Made Easy - Statcounter"
+referrerPolicy="no-referrer-when-downgrade"></a></div></noscript>
+<!-- End of Statcounter Code -->
 </body>
 </html>

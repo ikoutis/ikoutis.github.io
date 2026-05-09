@@ -7510,6 +7510,48 @@ a.anchor-link {
 <!-- End of mermaid configuration --></head>
 <body class="jp-Notebook" data-jp-theme-light="true" data-jp-theme-name="JupyterLab Light">
 <main>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&display=swap');
+.ml-sticky-banner {
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    background-color: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    padding: 8px 20px;
+    text-align: left;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+    font-family: 'Oswald', sans-serif;
+    font-size: 1.15rem;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+}
+.ml-sticky-banner a {
+    text-decoration: none;
+    color: #333;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: color 0.2s ease;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+}
+.ml-sticky-banner a:hover {
+    color: #2563eb;
+}
+.ml-sticky-banner a svg {
+    transition: transform 0.2s ease;
+}
+.ml-sticky-banner a:hover svg {
+    transform: translateX(-3px);
+}
+</style>
+<div class="ml-sticky-banner">
+    <a href="index.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width: 18px; height: 18px;"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+        Machine Learning Notes
+    </a>
+</div>
 <div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
@@ -7844,5 +7886,23 @@ $$</p>
 </div>
 </div>
 </main>
+
+<!-- Default Statcounter code for Machine Learning Notes
+https://ikoutis.github.io/mlnotes/ -->
+<script type="text/javascript">
+var sc_project=13227244; 
+var sc_invisible=1; 
+var sc_security="ea08696e"; 
+</script>
+<script type="text/javascript"
+src="https://www.statcounter.com/counter/counter.js"
+async></script>
+<noscript><div class="statcounter"><a title="Web Analytics
+Made Easy - Statcounter" href="https://statcounter.com/"
+target="_blank"><img class="statcounter"
+src="https://c.statcounter.com/13227244/0/ea08696e/1/"
+alt="Web Analytics Made Easy - Statcounter"
+referrerPolicy="no-referrer-when-downgrade"></a></div></noscript>
+<!-- End of Statcounter Code -->
 </body>
 </html>
