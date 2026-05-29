@@ -7591,7 +7591,7 @@ and
 $$
     P(X = 3, Y = \mathit{blue}) = 0 \, .
 $$</p>
-<h3 id="12.1.3-Conditional-probability"><strong>12.1.3 Conditional probability</strong><a class="anchor-link" href="#12.1.3-Conditional-probability">¶</a></h3><p><strong>Conditional Probability:</strong> We write $P(A|B)$ to denote the probability that event $A$ happens <em>given</em> that event $B$ happened. For example $P(Y = \mathit{red}\,|X=1)$ denotes the probability that the face is red given that it is 1, which we know is a certainty. So, we have $P(Y=\mathit{red},X=1)=1$.</p>
+<h3 id="12.1.3-Conditional-probability"><strong>12.1.3 Conditional probability</strong><a class="anchor-link" href="#12.1.3-Conditional-probability">¶</a></h3><p><strong>Conditional Probability:</strong> We write $P(A|B)$ to denote the probability that event $A$ happens <em>given</em> that event $B$ happened. For example $P(Y = \mathit{red}\,|X=1)$ denotes the probability that the face is red given that it is 1, which we know is a certainty. So, we have $P(Y=\mathit{red}|X=1)=1$.</p>
 <p>On the other hand, $P(X=1|Y = \mathit{red})$ denotes the probability that the dice roll is 1, given that we have already observed the color of the face (red). In that case, we have four different possible events of observing a red die face, but they do not have equal probabilities. The total probability of these four events is $9/12$ (the sum of the four probabilities), and the probability of $X=1$ is $1/12$.</p>
 <p>$P(X=1|Y = \mathit{red}) = (1/12)/(9/12) = 1/9$.</p>
 <p>(One intuitive way to think about this: in 120 statistically balanced rolls, 90 of them would be expected to have a red color, and among them 10 would also be $X=1$. So, the probability that we get $X=1$ is $1/9$.)</p>
@@ -7833,7 +7833,7 @@ $$</p>
 <p>$$
      \hat{y} = \mathrm{argmax}_y\, p(x|y)p(y) \, .
 $$</p>
-<p>We can now procede with the estimation of $p(x|y)p(y)$ for each $y$.</p>
+<p>We can now proceed with the estimation of $p(x|y)p(y)$ for each $y$.</p>
 <p><strong>Estimating $p(y)$:</strong> This is simply the probability that we observe label $y$ when we draw images from the distribution that generates them. In general we can use the training set $y$ for estimating that. For a given label $i$, we count the number of training points with label $i$, and divide by the total number of training points, and use this proportion as an estimate of $p(y=i)$.</p>
 <p><strong>Estimating $p(x|y)$:</strong> There are $2^{784}$ possible images, and $p(x|y)$ asks for the probability of each of them given the label $y$. This is an intractable calculation; however, we will work around this issue by assuming that the individual pixels are mutually <em>independent</em> (given the label). If $x_1,\ldots,x_{784}$ are the pixels of the image, independence implies that
 $$
@@ -7843,7 +7843,7 @@ $$</p>
 <p>$$p(x_t=i|y=j) = s_i\,/\,n_j\, .$$</p>
 <p>This can be somewhat problematic because we can get $p(x_t = i)=0$, which would make $p(x|y)=0$. For that reason we use the so-called <em>Laplace smoothing</em> approximation for our estimate:</p>
 <p>$$p(x_t=i|y=j) = \frac{s_i+1}{n_j+1}\, .$$</p>
-<p>This assigns for each pixel $t$ a probability that it is black, given that the image has label $j$, for $j=0,9$. These probabilities are visualized in the following picture where it can be seen that they recover nice smooth versions of the 10 digits!</p>
+<p>This assigns for each pixel $t$ a probability that it is black, given that the image has label $j$, for $j=0,\ldots,9$. These probabilities are visualized in the following picture where it can be seen that they recover nice smooth versions of the 10 digits!</p>
 <p><img alt="visualizing probabilities calculated by Bayes' classifier" src="images/12__Probabilistic_Framework_image_4_1MBZ3AXK.png"/></p>
 <p>We can then use these estimates to evaluate $p(x|y)$. In practice, since each class of MNIST has the same number of examples, each class label $y$ has the same probability $p(y)$. In such cases, it suffices to find the value $y$ that maximizes $p(x|y)$. Thus for MNIST we can instead solve the following equivalent problem:</p>
 <p>$$  \hat{y} = \mathrm{argmax}_y \log p(x|y)p(y) = \mathrm{argmax}_y \log p(x|y) = \mathrm{argmax}_y \sum_{t=1}^{784} \log p(x_t|y)\, . $$</p>

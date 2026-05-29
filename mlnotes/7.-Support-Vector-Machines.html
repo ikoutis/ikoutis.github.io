@@ -7733,9 +7733,9 @@ $$</p>
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
 <h2 id="7.6--Optimization-Again:-The-Hinge-Loss-%E2%AC%A4-"><strong>7.6  Optimization Again: The Hinge Loss<font color="#FF5733"> ⬤ </font></strong><a class="anchor-link" href="#7.6--Optimization-Again:-The-Hinge-Loss-%E2%AC%A4-">¶</a></h2><p>We can write the loss function as follows:
 $$
-     \min \|w\|_2^2 + C \sum_{i=1}^n \max\left\{0,1 - \mathrm{sign}(y_i-0.5)\,(xw^T +b)\right\}\, .
+     \min \|w\|_2^2 + C \sum_{i=1}^n \max\left\{0,1 - \mathrm{sign}(y_i-0.5)\,(X_iw^T +b)\right\}\, .
 $$</p>
-<p>Notice that when $y_i=1$, we pay a penalty of $1- (xw^T+b)$ which is precisely equal to $\zeta_i$ (as defined for class 1). When $y_i=0$, the penalty is $1+ (xw^T+b)$ which is again equal to $\zeta_i$ (as defined for class 0).</p>
+<p>Notice that when $y_i=1$, we pay a penalty of $1- (X_iw^T+b)$ which is precisely equal to $\zeta_i$ (as defined for class 1). When $y_i=0$, the penalty is $1+ (X_iw^T+b)$ which is again equal to $\zeta_i$ (as defined for class 0).</p>
 <p>Replacing the slacks with this so-called <em>hinge loss</em> allows the use of gradient descent for finding the best weights. Gradient descent is usually much faster than quadratic programming, but it is limited only to linear classification, since it cannot be made to work with the kernel trick. That is the reason <em>scikit-learn</em> has two different implementations of SVMs: sklearn.svm.SVC and sklearn.svm.LinearSVC.</p>
 </div>
 </div>

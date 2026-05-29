@@ -7987,7 +7987,7 @@ Labels counts in y_test: [15 15 15]
 <h2 id="2.12-k-NN-as-a-Regression-Algorithm--%E2%AC%A4-"><strong>2.12 k-NN as a Regression Algorithm<font color="#FFCC00">  ⬤ </font></strong><a class="anchor-link" href="#2.12-k-NN-as-a-Regression-Algorithm--%E2%AC%A4-">¶</a></h2><p>Several ML algorithms have both classification and regression versions. It is often a nice exercise to start from a classification algorithm and imagine how to convert it into a regression algorithm, or vice versa.</p>
 <p>Let's now attempt the exercise in the case of k-NN. As a visual aid, we can use the same picture from before, but we can now imagine that the labels are specific values.</p>
 <p><img alt="Nearest-Neighbors illustration" src="images/2__kNN_and_some_key_notions_image_5_1LjZ5Ln-.png" width="562"/></p>
-<p>For concreteness, assume that we have found the 5 nearest of of $\hat{x}$: $x^{(i_1)},\ldots x^{(i_1)}$, with corresponding values $v_1,\ldots,v_5$.
+<p>For concreteness, assume that we have found the 5 nearest of $\hat{x}$: $x^{(i_1)},\ldots x^{(i_1)}$, with corresponding values $v_1,\ldots,v_5$.
 What can be our prediction for the value of $\hat{x}$?</p>
 <p>Following the previous logic, we can consider predicting the value of $\hat{x}$ to be a <em>weighted</em> average of the 5 nearby values, according to the distance of $\hat{x}$ from these 5 nearest points.</p>
 <p>There are several weighting rules that one can come up with, and a few of them are commonly implemented. To find out the details, the <a href="https://scikit-learn.org/stable/modules/generated/sklearn.neighbors.KNeighborsRegressor.html">manual</a> is your friend.</p>

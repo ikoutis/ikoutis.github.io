@@ -7614,16 +7614,26 @@ $$
 \, .
 $$
 The variance $\mathit{Var}[a_1]$ can be regarded as a standardized dot-product of the list $a_1$ with itself.</p>
-<p>Now, instead of measuring the average squared deviation of values from their expectation within a single list, we can instead measure the average of the product of deviations of two different lists, $a_1$ and $a_2$. The <em><strong>covariance</strong></em> is defined as follows:
+<p>Now, instead of measuring the average squared deviation of values from their expectation within a single list, we can instead measure the average of the product of deviations of two different lists, $a_1$ and $a_2$. The population <em><strong>covariance</strong></em> is defined as follows:
 $$
-\mathit{Cov}[a_1,a_2]
+\mathrm{Cov}[a_1,a_2]
 \: = \:
-\frac{1}{d}\sum_{j=1}^d (a_{1j} - E[a_1])(a_{2j} - E[a_2])
+\frac{1}{d}\sum_{j=1}^d (a_{1j} - \mathrm{E}[a_1])(a_{2j} - \mathrm{E}[a_2])
 \: = \:
-\frac{1}{d}\,(a_1 - E[a_1])\cdot (a_2 - E[a_2])
-\, .
+\frac{1}{d}\,(a_1 - \mathrm{E}[a_1])\cdot (a_2 - \mathrm{E}[a_2])
+\, ,
 $$
-The covariance $\mathit{Cov}[a_1,a_2]$ can be regarded as a standardized dot-product of the lists $a_1$ and $a_2$.</p>
+or alternatively for samples:
+$$
+\widehat{\mathrm{Cov}}[a_1,a_2]
+\: = \:
+\frac{1}{d-1}\sum_{j=1}^d (a_{1j} - \bar{a}_1)(a_{2j} - \bar{a}_2)
+\: = \:
+\frac{1}{d-1}\,(a_1 - \bar{a}_1 \mathbf{1})\cdot (a_2 - \bar{a}_2 \mathbf{1})
+\, ,
+$$
+where $\bar{a}$ is the average of the entries of vector $a$, and $\mathbf{1}$ is the vector with all entries equal to $1$.
+The sample covariance $\widehat{\mathrm{Cov}}[a_1,a_2]$ can be regarded as a standardized dot-product of the lists $a_1$ and $a_2$.</p>
 <p>In probabilistic terms, the covariance between two random variables $A$ and $B$ is given by
 $$
 \mathit{Cov}[A,B]
@@ -7662,7 +7672,7 @@ C_{ij}
 \: = \:
 \left(X^T X\right)_{ij}
 \: = \:
-\sum_{k=1}^d x_{ki}x_{kj}
+\sum_{k=1}^n x_{ki}x_{kj}
 \: = \:
 a_i \cdot a_j
 \, ,
@@ -7677,10 +7687,10 @@ a_i\cdot a_j
 \: = \:
 (a_i - E[a_i])\cdot (a_j - E[a_j])
 \: = \:
-d\cdot\mathit{Cov}[a_i,a_j]
+n\cdot\mathrm{Cov}[a_i,a_j]
 \, ,
 $$
-which is the covariance between column $a_i$ and column $a_j$ (times a constant factor $d$).
+which is the covariance between column $a_i$ and column $a_j$ (times a constant factor $n$).
 For this reason, assuming that $X$ has been standardized in this way, $X^T X$ is called the <em><strong>covariance matrix</strong></em> of $X$.</p>
 </div>
 </div>
@@ -7802,9 +7812,9 @@ $$
 Ae'_i = A(ce_i) = cAe_i = c\lambda_i e_i = \lambda_i (ce_i) = \lambda_i e'_i \, .
 $$</p>
 <p>So, not only is $e'_i$ an eigenvector, it also has the same eigenvalue as $e_i$. Since all eigenvectors sharing the same direction also share the same eigenvalue, it is often convenient to assume that the eigenvectors are normalized to unit length (that is, scaled so that $\|e_i\|_2=1$).</p>
-<h4 id="13.3.2.2-Orthogonality"><strong>13.3.2.2 Orthogonality</strong><a class="anchor-link" href="#13.3.2.2-Orthogonality">¶</a></h4><p>If the matrix $A$ is symmetric (that is, if $A^T = A$), then its (distinct) eigenvectors are all mutually orthogonal — that is, each pair of vectors forms a right angle, and their dot products are zero:
+<h4 id="13.3.2.2-Orthogonality"><strong>13.3.2.2 Orthogonality</strong><a class="anchor-link" href="#13.3.2.2-Orthogonality">¶</a></h4><p>If the matrix $A$ is symmetric (that is, if $A^T = A$), then any pair of eigenvectors with distinct eigenvalues is orthogonal — that is, the pair of vectors forms a right angle, and their dot product is zero:
 $$
-e_i \cdot e_j = 0.
+\lambda_i \neq \lambda_j \Longrightarrow e_i \cdot e_j = 0.
 $$</p>
 <p>Verifying this on our example, we see that the matrix $A$ is indeed symmetric, since $a_{ij} = a_{ji}$ for every choice $i,j\in\{1,2\}$. Its two eigenvectors $e_1=[1,1]^T$ and $e_2=[1,-1]^T$ do have dot product $e_1\cdot e_2= (1)(1)+(1)(-1) = 0$. The orthogonality of $e_1$ and $e_2$ can also be seen in the animation above.</p>
 <p>A nice property of covariance matrices is that they are always symmetric. To check this, we can take the transpose of $X^T X$ and observe that we get back the original matrix, $X^T X$:
@@ -7812,7 +7822,7 @@ $$
 (X^T X)^T = X^T (X^T)^T = X^T X \, .
 $$
 The eigenvectors of a covariance matrix are therefore guaranteed to be mutually orthogonal.</p>
-<h4 id="13.3.2.3-Eigenvalues-and-the-Frobenius-Norm"><strong>13.3.2.3 Eigenvalues and the Frobenius Norm</strong><a class="anchor-link" href="#13.3.2.3-Eigenvalues-and-the-Frobenius-Norm">¶</a></h4><p>Given a $d\times d$ matrix $A$, it is known that $A$ has exactly $d$ distinct eigenvectors.</p>
+<h4 id="13.3.2.3-Eigenvalues-and-the-Frobenius-Norm"><strong>13.3.2.3 Eigenvalues and the Frobenius Norm</strong><a class="anchor-link" href="#13.3.2.3-Eigenvalues-and-the-Frobenius-Norm">¶</a></h4><p>Given a symmetric real-valued $d\times d$ matrix $A$, it is known that $A$ has an orthonormal basis of $d$ eigenvectors.</p>
 <p>An interesting relationship exists between the entries of a matrix and its eigenvalues. If each entry $a_{ij}$ is squared and then added up, the total equals the sum of square of the eigenvalues.
 $$
 \sum_{i=1}^d \sum_{j=1}^d a^2_{ij} = \sum_{i=1}^d \lambda^2_i \, .
@@ -7927,9 +7937,9 @@ $$</p>
 <ol>
 <li>We subtract the attribute mean from each of its attributes, so that the mean of each attribute becomes zero.</li>
 <li>We then divide each attribute value by the attribute standard deviation.</li>
-<li>As a result, for the vector of all values of any given attribute, the norm would be 1.</li>
+<li>After standardization, for the vector of all values of any given attribute, the norm would be $\sqrt{n}$ (or $\sqrt{n-1}$, if sample-based standardization is used).</li>
 </ol>
-<p>Even before standardizing, we can divide every attribute by $\sqrt{n}$. This scaling operation is strictly speaking not required, but it does make the calculations simpler and more numerically stable.</p>
+<p>After standardizing, we can divide every attribute by $\sqrt{n}$ (or $\sqrt{n-1}$). This scaling operation is strictly speaking not required, but it does make the norm of the vectors of attributes equal to 1. Any subsequent calculations involving these vectors would then be simpler and more numerically stable.</p>
 <p>PCA is based on the idea of looking at all pairwise correlations, and leads us to the calculation of a covariance matrix $C=X^T X$. We calculate entry $(i,j)$ as follows:
 $$
     C_{ij} = x_i^T x_j \, .
@@ -7946,14 +7956,18 @@ $$</p>
 <li>The process is repeated, generating eigenvectors in descending order of their eigenvalues, until $k$ components have been extracted.</li>
 </ol>
 <p>The first principal component $e_1$ has the largest eigenvalue $\lambda_1$, which means that it is the direction in which the transformation has the greatest amount of 'stretch'. One way to think about this stretch is in terms of variation. If all the datapoints of $C$ were to be projected on a line with direction $v$, then the choice of $v$ that would maximize the variance turns out to be $e_1$.</p>
-<p>Since the first $k$ principal components are the ones with the largest possible eigenvalues, taken together they are known to capture the greatest possible proportion of the total variance within the dataset. We can quantify this by the ratio
+<p>Since the first $k$ principal components are the ones with the largest possible eigenvalues, taken together they are known to capture the greatest possible proportion of the total variance within the dataset. We can quantify the performance of PCA by the proportion of total variance that is explained by the new basis, given by the ratio
+$$
+\sum_{i=1}^k \lambda_i \bigg/ \sum_{i=1}^d \lambda_i
+\, .
+$$
+Alternatively, we can characterize it by the proportion of Frobenius norm (or 'matrix energy') captured by the first $k$ eigenvalues.
 $$
 \sum_{i=1}^k \lambda_i^2 \bigg/ \|C\|_F^2
 \:=\:
 \sum_{i=1}^k \lambda_i^2 \bigg/ \sum_{i=1}^d \lambda_i^2
-\, ,
+\, .
 $$</p>
-<p>where $\|C\|_F$ is the Frobenius norm of $C$. The higher this ratio, the higher the proportion of total variance that is explained by the new basis.</p>
 <p>Then, we can compute the projections of all points in $X$ to these $k$ principal components, by doing the projection trick. The projection trick actually yields a matrix $W$, so that all our transformations can be described as
 $$
            \tilde{X} = X W.
@@ -7970,8 +7984,8 @@ $$</p>
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h3 id="13.4.2-Method-2"><strong>13.4.2 Method 2</strong><a class="anchor-link" href="#13.4.2-Method-2">¶</a></h3><p>I will now discuss another way of computing <strong>not</strong> the principal component themselves, but rather the <strong>projections</strong> of the data points to the principal components. That is, the projections $\tilde{X}$ will be calculated directly.</p>
-<p>Let us begin with the covariance matrix $C = X^T X$. Suppose I have an eigenvector $v$ for it, with eigenvalue $\lambda$. This by definition means, that we have
+<h3 id="13.4.2-Method-2"><strong>13.4.2 Method 2</strong><a class="anchor-link" href="#13.4.2-Method-2">¶</a></h3><p>We will now discuss another way of computing <strong>not</strong> the principal component themselves, but rather the <strong>projections</strong> of the data points to the principal components. That is, the projections $\tilde{X}$ will be calculated directly.</p>
+<p>Let us begin with the covariance matrix $C = X^T X$. Suppose we have an eigenvector $v$ for it, with eigenvalue $\lambda$. This by definition means that we have
 $$
      C v = \lambda v \, .
 $$</p>

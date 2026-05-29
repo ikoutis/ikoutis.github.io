@@ -2,3 +2,5 @@ _site/
 
 *.py
 cv_papers.txt
+
+/mlnotes/DS675-exportfolder

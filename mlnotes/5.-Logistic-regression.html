@@ -7728,7 +7728,8 @@ $w_i = w_i - \rho \cdot g_i$  </li>
 <li><strong>return</strong> $w,b$</li>
 </ul>
 <hr/>
-<p>This is precisely the same algorithm we saw for linear regression. There is only one superficial difference: we now use the function $\sigma(b + X_j w^T)$ instead of $b + X_j w^T$ in the update rules. The difference is superficial because $\sigma(b + X_j w^T)$ is the output of the logistic neuron, and $b + X_j w^T$ is the output of the linear regression model. In either case, we use the output of the same model.</p>
+<p>This is precisely the same algorithm we saw for linear regression. There is only one small difference: we now use the function $\sigma(b + X_j w^T)$ instead of $b + X_j w^T$ in the update rules. The difference seems superficial because $\sigma(b + X_j w^T)$ is the output of the logistic neuron, and $b + X_j w^T$ is the output of the linear regression model.</p>
+<p>However, it is NOT correct to assume that the model outputs always appear in gradient descent update rules for other learning algorithms: these update rules are derived using the gradient of the loss function associated with the learning algorithm! For logistic regression, the loss function is the negative log-likelihood. Can you compute its gradient?</p>
 </div>
 </div>
 </div>
