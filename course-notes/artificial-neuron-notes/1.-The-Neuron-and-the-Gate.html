@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Meeting 1. The Neuron and the Gate — CS 301</title>
+<meta name="description" content="CS 301 Introduction to Data Science, NJIT. Course notes for meeting 1: The Neuron and the Gate.">
+<meta name="cs301-meeting" content="1">
+<meta name="cs301-title" content="The Neuron and the Gate">
+<meta name="cs301-acts" content="Act 1 The Biological Neuron ·  Act 2 Logic Gates and Certainty ·  Act 3 Computing a Neuron, Approximately">
+<style>
+@font-face { font-family: "Latin Modern Roman"; src: url(fonts/lmroman10-regular.otf); font-weight: normal; font-style: normal; }
+@font-face { font-family: "Latin Modern Roman"; src: url(fonts/lmroman10-italic.otf); font-weight: normal; font-style: italic; }
+@font-face { font-family: "Latin Modern Roman"; src: url(fonts/lmroman10-bold.otf); font-weight: bold; font-style: normal; }
+@font-face { font-family: "Latin Modern Roman"; src: url(fonts/lmroman10-bolditalic.otf); font-weight: bold; font-style: italic; }
+@font-face { font-family: "Latin Modern Sans"; src: url(fonts/lmsans10-regular.otf); font-weight: normal; }
+@font-face { font-family: "Latin Modern Sans"; src: url(fonts/lmsans10-bold.otf); font-weight: bold; }
+@font-face { font-family: "Latin Modern Mono"; src: url(fonts/lmmono10-regular.otf); }
+:root { --njred: #CC0033; --ink: #1A1A1A; --muted: #555555; --faint: #DDDDDD; --paper: #F7F7F5;
+  --serif: "Latin Modern Roman", "Computer Modern Serif", Georgia, "Times New Roman", serif;
+  --sans: "Latin Modern Sans", "Helvetica Neue", Arial, sans-serif;
+  --mono: "Latin Modern Mono", Consolas, "Courier New", monospace; }
+html { background: #fff; }
+body { margin: 0; color: var(--ink); font-family: var(--serif); font-size: 18px; line-height: 1.5;
+  -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; }
+.page { max-width: 720px; margin: 0 auto; padding: 44px 24px 72px; }
+a { color: inherit; }
+.titleblock { border-top: 3px solid var(--njred); border-bottom: 1px solid var(--faint); padding: 20px 0 16px; margin-bottom: 30px; }
+.kicker { font-family: var(--sans); font-weight: bold; font-size: 12.5px; color: var(--njred); margin: 0 0 14px; display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+.kicker .pdf { font-weight: normal; color: var(--muted); text-decoration: none; border: 1px solid var(--faint); border-radius: 3px; padding: 1px 8px; }
+.kicker .pdf:hover { color: var(--njred); border-color: var(--njred); }
+h1 { font-family: var(--sans); font-size: 30px; line-height: 1.2; margin: 0 0 10px; }
+.acts { font-family: var(--sans); font-size: 13px; color: var(--muted); margin: 0; }
+h2.act { font-family: var(--sans); font-size: 21px; color: var(--njred); margin: 48px 0 20px; padding-bottom: 9px; border-bottom: 1px solid var(--faint); }
+h3 { font-family: var(--sans); font-size: 15.5px; margin: 30px 0 8px; }
+h4.example { font-family: var(--sans); font-size: 15.5px; margin: 22px 0 6px; }
+h4.example .label { color: var(--njred); }
+p { margin: 0; }
+p + p { text-indent: 1.6em; }
+.note { background: var(--paper); padding: 14px 18px; margin: 24px 0; }
+.note .lead { font-family: var(--sans); font-weight: bold; font-size: 15.5px; }
+.note p { display: inline; }
+.note p + p { display: block; text-indent: 1.6em; margin-top: 0.4em; }
+.note ul { margin-top: 10px; }
+.source { font-size: 13px; color: var(--muted); margin-top: 6px; text-indent: 0 !important; }
+.pull { text-align: center; margin: 14px 0; text-indent: 0 !important; }
+.bigq { text-align: center; font-size: 22px; margin: 18px 0; text-indent: 0 !important; }
+.math { margin: 8px 0 14px; overflow-x: auto; }
+.c-njred { color: var(--njred); }
+.muted { color: var(--muted); }
+ul, ol { margin: 10px 0 12px; padding-left: 2.2em; }
+li { margin: 0 0 5px; }
+li p { display: inline; }
+figure { margin: 22px 0; text-align: center; }
+figure img { max-width: 100%; height: auto; }
+.tables { display: flex; justify-content: center; align-items: flex-start; gap: 44px; flex-wrap: wrap; margin: 18px 0; }
+table { border-collapse: collapse; font-size: 16.5px; }
+table.tt th { font-weight: normal; border-bottom: 1px solid var(--ink); padding: 2px 11px 4px; }
+table.tt td { padding: 3px 11px 0; }
+table.tt .rule { border-left: 1px solid var(--ink); }
+table.trans td { padding: 6px 18px; }
+table.trans td:first-child { padding-left: 0; }
+table.trans td:last-child { padding-right: 0; }
+pre.code { font-family: var(--mono); font-size: 15px; line-height: 1.4; margin: 16px 0 16px 44px; white-space: pre; overflow-x: auto; }
+code { font-family: var(--mono); font-size: 92%; }
+footer { margin-top: 56px; padding-top: 12px; border-top: 1px solid var(--faint); font-family: var(--sans); font-size: 12.5px; color: var(--muted);
+  display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+footer a { text-decoration: none; }
+footer a:hover { color: var(--njred); }
+@media (max-width: 560px) { body { font-size: 17px; } .page { padding: 28px 18px 56px; } h1 { font-size: 25px; } pre.code { margin-left: 12px; } }
+@media print { .page { max-width: none; padding: 0; } .kicker .pdf { display: none; } h2.act { break-after: avoid; } h3, h4 { break-after: avoid; } figure, .note, table { break-inside: avoid; } }
+</style>
+<script>window.MathJax = { tex: { inlineMath: [['\\(', '\\)']], displayMath: [['\\[', '\\]']] }, chtml: { scale: 1.02 } };</script>
+<script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+</head>
+<body>
+<main class="page">
+<header class="titleblock">
+<p class="kicker">NJIT · CS 301 · INTRODUCTION TO DATA SCIENCE · FALL 2026 <a class="pdf" href="1.-The-Neuron-and-the-Gate.pdf">PDF</a></p>
+<h1>Meeting 1. The Neuron and the Gate</h1>
+<p class="acts">Act 1 The Biological Neuron ·  Act 2 Logic Gates and Certainty ·  Act 3 Computing a Neuron, Approximately</p>
+</header>
+<aside class="note"><span class="lead">About these notes.</span>
+<p>There is no textbook to buy in CS 301: these notes are the course’s text, written by the instructors and posted on Canvas as each meeting is reached. They follow the meetings themselves — including questions and examples that came up in class — and, together with the assignment notebook you build, they are what the exams are set from. Logistics, grading, and the schedule live in the syllabus.</p>
+</aside>
+<p>Unit I is organized around a single question:</p>
+<p class="pull"><em>A logic gate is <span class="c-njred">written</span>. Could a neuron be <span class="c-njred">taught?</span></em></p>
+<p>This first meeting introduces the two objects in that sentence — the biological neuron, a living cell, and the logic gate, the exact device computers are made of — and ends with a 1943 idea that connects them: a neuron, written as arithmetic. Everything else in the unit grows out of that construction.</p>
+<h2 class="act" id="act-1">Act 1. The Biological Neuron</h2>
+<h3 id="s-1-1">1.1 Eighty-six billion, in kinds</h3>
+<p>Your brain runs on roughly <strong>86 billion</strong> neurons. For decades the standard figure was “100 billion” — a round number that no measurement ever produced. Newer laboratory technique settled the question directly: dissolve brain tissue into a suspension, count the cell nuclei in samples of it, and scale up. The answer comes out near 86 billion on average — about 16 billion in the cerebral cortex and about 69 billion in the cerebellum. There is a small lesson smuggled inside the fact, and it is worth keeping for a course about drawing conclusions from data: <em>a number with a measurement behind it beats a rounder one without.</em></p>
+<p>A neuron is a cell — a strange-looking one, as the next section shows — and the 86 billion are not one cell repeated. Neurons come in <strong>kinds</strong>. Recent atlases of the human brain, built by reading out which genes individual cells express, sort them into 461 broad clusters and 3,313 finer ones: thousands of distinct types, differing in shape, in chemistry, in what they connect to, and in how they respond. Set the two numbers side by side and a design principle appears. Hundreds of kinds, billions of cells: each kind is repeated hundreds of millions of times. The repetition continues at the next scale up — small circuits of neurons, organized a particular way, occur again and again across the brain. The brain is a <em>modular</em> construction: a few designs, reused everywhere. Hold on to that thought, because the same principle shows up twice more before this meeting ends — once inside the computer, and once in the large AI systems built out of artificial neurons, which are themselves small modules repeated at enormous scale.</p>
+<p class="source">The counts: Azevedo et al., <em>J. Comp. Neurol.</em> 513 (2009), 532–541, doi:10.1002/cne.21974. The cell-type atlas: <em>Transcriptomic diversity of cell types across the adult human brain</em>, Science 382 (2023), doi:10.1126/science.add7046.</p>
+<h3 id="s-1-2">1.2 What one cell does</h3>
+<figure><img src="images/neuron.svg" alt="neuron" width="496" height="235"></figure>
+<p>The branched structures on the left are <strong>dendrites</strong>, from the Greek <em>dendron</em>, a tree — and they do look like the branches of one. Signals from other neurons, chemical or electrical, arrive there, at contact points called <strong>synapses</strong>. What arrives is gathered into the <strong>cell body</strong> (the soma), and when the cell responds, the response travels down the <strong>axon</strong> — the long fiber to the right — and out through the axon terminals to other cells.</p>
+<p>The operation of the cell, reduced to four steps:</p>
+<ol>
+<li>Signals <strong>arrive</strong> at the dendrites, at the synapses.</li>
+<li>Each synapse has a <strong>strength</strong>. One way to say it: a synapse decides how much attention its input gets. A strong synapse passes its signal on with force; a weak one barely registers it; some push in the negative direction and <em>suppress</em> the cell instead.</li>
+<li>The cell body <strong>adds up</strong> what arrives — each signal counted in proportion to the strength of the synapse it crossed.</li>
+<li>Past a <strong>threshold</strong>, the cell <strong>fires</strong>: a spike travels down the axon to the next cells. Below the threshold it stays quiet. The threshold is the cell’s own; different neurons have different ones.</li>
+</ol>
+<p>Different kinds of neuron elaborate this in different ways, but this four-step description — <em>arrive, weigh, add, compare</em> — is the one the entire unit is built on. It is worth memorizing in exactly this form, because Act 3 will walk through the same four steps in the same order and do something surprising with them.</p>
+<h3 id="s-1-3">1.3 Nothing here is exact</h3>
+<p>Nothing in the previous section behaves like a symbol in an equation.</p>
+<ul>
+<li><strong>Everything is continuous.</strong> The voltage across the cell’s membrane does not switch between levels; it slides through every value in a range. (A range, not an unbounded scale — the cell regulates itself, and activity that ran away unchecked would destroy it.)</li>
+<li><strong>Signals are pulses, not values.</strong> A neuron does not hand the next cell a number. It emits spikes, and what carries information is their <em>rate</em> and their <em>timing</em>.</li>
+<li><strong>The contact is chemical.</strong> At most synapses the signal crosses the gap as a puff of neurotransmitter molecules — and the crossing is not the same twice.</li>
+<li><strong>There is noise.</strong> The same input twice does not produce the same response twice. Hear the same song twice and it does not trace the same pattern through your brain either time.</li>
+<li><strong>There is no global clock.</strong> Nothing ticks all 86 billion cells forward in step. Be careful with what this does <em>not</em> say: timing matters a great deal in the brain — the timing of spikes carries information, down to the millisecond. What is missing is a shared metronome, not time itself.</li>
+<li><strong>The strengths themselves change.</strong> Act, and the feedback of acting adjusts the synapses: strengths grow and shrink with use. That ongoing adjustment is learning. Step out of a dark room into bright sunlight and the first seconds are overwhelming — then the relevant cells adjust how much input they take, and the discomfort fades. Something physical changed, and what changed is strengths.</li>
+</ul>
+<p>In four words: <em>continuous, noisy, unclocked, changing.</em> Nothing about this is a defect — it is how the tissue works, and it is the machinery you are thinking with right now. But now set it against the other machine in the room. A computer has <em>none</em> of these properties, by design and at considerable expense — and what a computer is actually made of is where this meeting goes next.</p>
+<h2 class="act" id="act-2">Act 2. Logic Gates and Certainty</h2>
+<h3 id="s-2-1">2.1 The machine, from very far away</h3>
+<p>Seen from far enough away, a computer is a three-stage story:</p>
+<figure><img src="images/machine.svg" alt="machine" width="552" height="175"></figure>
+<p>The world on the left is continuous — light, sound, pressure, voltages from a microphone. At the machine’s boundary all of it is <em>converted</em>: measured, and written as strings of 0s and 1s. In the middle, everything the machine does — arithmetic, text, video, this very document — is operations on those 0s and 1s, nothing else. At the far boundary some of the results are converted back to the continuous world: pixels on a screen, sound from a speaker, motion in a motor. Not all of them come back out: a file written to disk or a message sent across the network stays 0s and 1s the whole way. Storage is physical too — a disk encodes each bit as the state of some small piece of solid matter — but what the physical state encodes is a discrete symbol.</p>
+<p>Two side remarks belong here. First, “discrete” is a design choice, not a law of nature: there was once a whole branch of computing built on continuous signals — analog computers — and the quantum machines now being developed are different again. The machines this course runs on are the discrete kind. Second, the middle of the picture is not a free-for-all: a <strong>clock</strong> ticks, and internal results move forward only when it says they are ready. That clock is one more thing the brain of Act 1 does not have.</p>
+<h3 id="s-2-2">2.2 Two symbols, and nothing in between</h3>
+<p>Physically, a wire inside the machine is held at one of two voltage levels — <em>high</em> or <em>low</em> — and we write those states <strong>1</strong> and <strong>0</strong>. The voltages in between exist, of course; the circuit is engineered so that they never <em>mean</em> anything. A wire crosses the in-between band as fast as possible and is only ever read as one symbol or the other. Compare the cell: its membrane voltage lives in the in-between and carries meaning everywhere in its range. A wire is built so that it never does. That engineering choice is where the computer’s exactness begins.</p>
+<h3 id="s-2-3">2.3 Three gates</h3>
+<p>The operations performed on bits are built from <strong>logic gates</strong>: small devices that take one or two bits and produce one bit, by a rule small enough to write out in full.</p>
+<figure><img src="images/three-gates.svg" alt="three-gates" width="420" height="84"></figure>
+<p><strong>AND</strong> answers 1 only when both inputs are 1. <strong>OR</strong> answers 1 when at least one input is 1. <strong>NOT</strong> takes a single input and answers with the other symbol. In class you filled these tables in yourself; here they are complete:</p>
+<div class="tables">
+<table class="tt">
+<tr><th style="text-align:center">\(a\)</th><th style="text-align:center">\(b\)</th><th class="rule" style="text-align:center">AND</th></tr>
+<tr><td style="text-align:center">0</td><td style="text-align:center">0</td><td class="rule" style="text-align:center">0</td></tr>
+<tr><td style="text-align:center">0</td><td style="text-align:center">1</td><td class="rule" style="text-align:center">0</td></tr>
+<tr><td style="text-align:center">1</td><td style="text-align:center">0</td><td class="rule" style="text-align:center">0</td></tr>
+<tr><td style="text-align:center">1</td><td style="text-align:center">1</td><td class="rule" style="text-align:center">1</td></tr>
+</table>
+<table class="tt">
+<tr><th style="text-align:center">\(a\)</th><th style="text-align:center">\(b\)</th><th class="rule" style="text-align:center">OR</th></tr>
+<tr><td style="text-align:center">0</td><td style="text-align:center">0</td><td class="rule" style="text-align:center">0</td></tr>
+<tr><td style="text-align:center">0</td><td style="text-align:center">1</td><td class="rule" style="text-align:center">1</td></tr>
+<tr><td style="text-align:center">1</td><td style="text-align:center">0</td><td class="rule" style="text-align:center">1</td></tr>
+<tr><td style="text-align:center">1</td><td style="text-align:center">1</td><td class="rule" style="text-align:center">1</td></tr>
+</table>
+<table class="tt">
+<tr><th style="text-align:center">\(a\)</th><th class="rule" style="text-align:center">NOT</th></tr>
+<tr><td style="text-align:center">0</td><td class="rule" style="text-align:center">1</td></tr>
+<tr><td style="text-align:center">1</td><td class="rule" style="text-align:center">0</td></tr>
+</table>
+</div>
+<p>A table like this is the <em>complete</em> truth about its gate — every input the gate will ever see, and the answer to each — which is why it is called a <strong>truth table</strong>. There is nothing more to know about AND than its four rows.</p>
+<p>Gates also come in wider versions: an AND with three or more inputs answers 1 exactly when <em>all</em> of its inputs are 1, and real chips use such gates freely because they save space. Everything in this unit works with the two-input versions, and nothing is lost.</p>
+<h3 id="s-2-4">2.4 How many kinds of part does a computer need?</h3>
+<p>Inside a real processor you would find implementations of perhaps ten different logical operations — the three above, XOR, and other variants — because dedicated circuits are efficient. But that is engineering convenience. The interesting question is: how many <em>different</em> kinds of gate do you actually need, to build all the logic of a computer?</p>
+<p>The answer is three: AND, OR and NOT are enough, given a clock, to build the entire logic of a processor. Can you do better? A student in class pointed out that two suffice — AND and NOT — because OR can be assembled out of them: \(a\) OR \(b\) answers 0 only when both inputs are 0, which is the same as NOT (NOT \(a\) AND NOT \(b\)).</p>
+<p>And you can do better still. <em>One</em> kind of gate is enough: the <strong>NAND</strong>, which is simply AND followed by NOT — it answers with the opposite of what AND answers.</p>
+<div class="tables">
+<table class="tt">
+<tr><th style="text-align:center">\(a\)</th><th style="text-align:center">\(b\)</th><th class="rule" style="text-align:center">NAND</th></tr>
+<tr><td style="text-align:center">0</td><td style="text-align:center">0</td><td class="rule" style="text-align:center">1</td></tr>
+<tr><td style="text-align:center">0</td><td style="text-align:center">1</td><td class="rule" style="text-align:center">1</td></tr>
+<tr><td style="text-align:center">1</td><td style="text-align:center">0</td><td class="rule" style="text-align:center">1</td></tr>
+<tr><td style="text-align:center">1</td><td style="text-align:center">1</td><td class="rule" style="text-align:center">0</td></tr>
+</table>
+</div>
+<p>Each of the three basic gates can be written using nothing but NAND:</p>
+<ul>
+<li>NOT \(a\)  =  NAND\((a,a)\) — <span class="muted">one NAND, both inputs fed from the same wire</span></li>
+<li>\(a\) AND \(b\)  =  NAND\(\big(\)NAND\((a,b),\,\)NAND\((a,b)\big)\)</li>
+<li>\(a\) OR \(b\)  =  NAND\(\big(\)NAND\((a,a),\,\)NAND\((b,b)\big)\)</li>
+</ul>
+<p>One NAND, then two, then three — and no second kind of part anywhere in the list. Follow this to its conclusion and it says something remarkable: a single repeatable unit, copied a few billion times and wired together, is a complete processor.</p>
+<aside class="note"><span class="lead">Why NAND rather than AND?</span>
+<p>Because of what gates are made of. In CMOS — the transistor technology chips are built in — a NAND takes four transistors, while an AND is built as a NAND followed by an inverter: six. The inverting gate is the cheap one, so it is the one chips are made from. The name misleads a little: “NAND” sounds like an AND with a NOT bolted on, but physically it is the AND that is the composite.</p>
+</aside>
+<aside class="note"><span class="lead">The same trick twice.</span>
+<p>Act 1 ended with a brain built by repetition: a few hundred kinds of cell, each copied hundreds of millions of times, arranged into small circuits that are themselves repeated. Here is the computer doing the same thing with a cast of <em>one</em>: a single kind of unit, repeated by the billion, composed into modules, and the modules into a machine. Two completely different technologies, one construction principle.</p>
+</aside>
+<h3 id="s-2-5">2.5 Wiring gates together</h3>
+<p>The output of one gate can feed an input of another, and every computation the machine performs is, at bottom, such a wiring. The way to understand a small circuit is to <em>trace</em> it: fix the inputs, and push the values through gate by gate.</p>
+<h4 class="example"><span class="label">Example 2.1</span> Trace the circuit</h4>
+<p>Three NANDs, wired as below — the circuit you traced on the meeting’s worksheet. The values on the two internal wires are named \(n_1\) and \(n_2\).</p>
+<figure><img src="images/nand-circuit.svg" alt="nand-circuit" width="386" height="199"></figure>
+<p>Take the row \(a = 0\), \(b = 0\). The top gate receives \(a\) on both inputs, so \(n_1 = \text{NAND}(0,0) = 1\); likewise \(n_2 = 1\); and the output is \(\text{NAND}(1,1) = 0\). Now \(a = 0\), \(b = 1\): the top gate still sees \((0,0)\), so \(n_1 = 1\); the bottom gate sees \((1,1)\), so \(n_2 = 0\); and the output is \(\text{NAND}(1,0) = 1\). Before computing the row \((1,0)\), notice that the circuit is <em>symmetric</em>: swapping \(a\) and \(b\) swaps the roles of \(n_1\) and \(n_2\) and cannot change the output. So \((1,0)\) gives 1 with no further work. The last row, \((1,1)\), gives \(n_1 = n_2 = 0\) and output \(\text{NAND}(0,0) = 1\).</p>
+<div class="tables">
+<table class="tt">
+<tr><th style="text-align:center">\(a\)</th><th style="text-align:center">\(b\)</th><th class="rule" style="text-align:center">\(n_1\)</th><th style="text-align:center">\(n_2\)</th><th class="rule" style="text-align:center">out</th></tr>
+<tr><td style="text-align:center">0</td><td style="text-align:center">0</td><td class="rule" style="text-align:center">1</td><td style="text-align:center">1</td><td class="rule" style="text-align:center">0</td></tr>
+<tr><td style="text-align:center">0</td><td style="text-align:center">1</td><td class="rule" style="text-align:center">1</td><td style="text-align:center">0</td><td class="rule" style="text-align:center">1</td></tr>
+<tr><td style="text-align:center">1</td><td style="text-align:center">0</td><td class="rule" style="text-align:center">0</td><td style="text-align:center">1</td><td class="rule" style="text-align:center">1</td></tr>
+<tr><td style="text-align:center">1</td><td style="text-align:center">1</td><td class="rule" style="text-align:center">0</td><td style="text-align:center">0</td><td class="rule" style="text-align:center">1</td></tr>
+</table>
+</div>
+<p>Read the last column: 0, 1, 1, 1. This three-NAND circuit <em>is</em> the OR gate — it is the third identity of the previous section, verified row by row.</p>
+<p>Two things about the trace are worth saying out loud. First, on paper the gates were evaluated one at a time, but in the machine nothing waits: \(n_1\) and \(n_2\) settle <em>simultaneously</em>. Concurrency is not an advanced feature of computers; it is present in three gates. Second, the shortcut used for the row \((1,0)\) — spotting a symmetry instead of recomputing — is a genuine habit of the field, and it returns in Act 3.</p>
+<h3 id="s-2-6">2.6 A gate is exact</h3>
+<p>Now the point of this whole act. A gate’s four-row table is not a summary of its typical behavior; it is its <em>entire</em> behavior.</p>
+<ul>
+<li>The same inputs give the same answer, <em>every</em> time — and the same answer on every copy of the chip ever manufactured.</li>
+<li>No noise, no drift, no history: a gate remembers nothing about any input before this one. It answers, and is done.</li>
+<li>A clock says when each answer is settled and may be read.</li>
+</ul>
+<p>Gates are exact because they were <em>designed</em> to be — set to their behavior at the factory, from construction. Place the two machines side by side. The cell of Act 1: continuous, noisy, unclocked, always changing. The gate: none of those four things — and an enormous engineering effort is spent, continuously, on keeping it that way.</p>
+<h3 id="s-2-7">2.7 A gate you can run</h3>
+<p>A gate is fixed hardware. But an entire computer is built out of gates, programming languages run on the computer — and in a programming language you can write the gate back down as code:</p>
+<pre class="code">class AndGate:
+    def __call__(self, a, b):
+        return 1 if (a == 1 and b == 1) else 0
+
+gate = AndGate()
+for a, b, expected in [(0,0,0), (0,1,0), (1,0,0), (1,1,1)]:
+    assert gate(a, b) == expected</pre>
+<p>The loop at the bottom deserves a second look: it is the truth table, row by row. The table is not documentation — it is the test. A gate class that passes its own truth table is finished, and there is nothing else to check. That is what certainty buys: a complete specification small enough to test in full.</p>
+<p>Notice also the loop in the construction itself: physical gates make a processor, the processor runs Python, and inside Python we have just rebuilt a gate — as software. Put enough of these software gates together and you could simulate an entire computer, inside the computer. This is not a party trick; it is daily practice. When engineers design a new chip, the design runs as exactly this kind of simulation — whole toolchains exist to translate a physical circuit design into a program — long before anything is manufactured.</p>
+<aside class="note"><span class="lead">Toward the assignment.</span>
+<p>Task 1 of the unit assignment asks for exactly what this section did once: the four gate classes — AND, OR, NOT, NAND — each tested against its own truth table, in your own notebook.</p>
+</aside>
+<h2 class="act" id="act-3">Act 3. Computing a Neuron, Approximately</h2>
+<h3 id="s-3-1">3.1 Gates can count</h3>
+<p>Wired together, gates do arithmetic. Two of them add one bit to one bit:</p>
+<figure><img src="images/half-adder.svg" alt="half-adder" width="300" height="156"></figure>
+<p>The XOR gate (1 when <em>exactly one</em> input is 1) produces the sum bit, and an AND produces the carry — check it against \(1 + 1\), which is 10 in binary: sum 0, carry 1. Chain copies of this circuit and you add 64-bit numbers. Multiplication is shifting and adding; comparison, subtraction, and the rest of arithmetic follow. Every number the machine ever adds, it adds <em>with gates</em> — there is no other machinery underneath.</p>
+<p>None of this is an afterthought. Doing arithmetic is the very reason the first computers were built, and it was clear from the earliest machines of the 1940s that gates were up to the job. A pocket calculator is the idea in its purest form: not a full computer, but gates doing arithmetic, and nothing else. (The oldest game to play with one: type a large number and press the square-root key repeatedly. The display marches toward 1 — fast at first, then very slowly. Working out <em>why</em> it slows down is a good exercise for later in the course.)</p>
+<h3 id="s-3-2">3.2 Turn the question around</h3>
+<p>So: arithmetic is built out of gates.</p>
+<p class="bigq">Could a <span class="c-njred">neuron</span> be built out of <span class="c-njred">arithmetic</span>?</p>
+<p>This is the question this unit — and, in a real sense, this course — is about. Note what the question does <em>not</em> ask. It does not ask for a neuron built directly out of gates, wire by wire. It asks for something easier and smarter: the machine already knows arithmetic — additions, multiplications, comparisons, the calculator’s operations — so build the neuron out of <em>that</em>, one level up. What follows compresses roughly a decade of thinking from the 1940s and 1950s into a page.</p>
+<h3 id="s-3-3">3.3 The cell, written as arithmetic</h3>
+<p>Return to the four-step description of Act 1, and translate each step — in order — into a piece of arithmetic. This is a <em>modeling</em> step: deciding what each biological feature becomes, as a number or an operation.</p>
+<div class="tables">
+<table class="trans">
+<tr><td class="muted" style="text-align:left">signals cross the synapses</td><td style="text-align:left">inputs \(x_1, \ldots, x_n\)</td></tr>
+<tr><td class="muted" style="text-align:left">each synapse has a strength</td><td style="text-align:left">a weight \(w_i\) for each input</td></tr>
+<tr><td class="muted" style="text-align:left">the cell body adds what arrives</td><td style="text-align:left">\(w_1x_1 + w_2x_2 + \cdots + w_nx_n\)</td></tr>
+<tr><td class="muted" style="text-align:left">it fires past a threshold</td><td style="text-align:left">output 1 if the sum is \(\geq \theta\), else 0</td></tr>
+</table>
+</div>
+<p>In prose: the incoming signals become numbers \(x_1, \ldots, x_n\) — real numbers, since the signals they stand for are continuous. Each synapse’s strength becomes a number too, the <strong>weight</strong> \(w_i\): a large weight is a synapse paying close attention to its input, a weight near zero is one ignoring it, and a negative weight pushes the cell away from firing. The cell body’s gathering becomes multiplication and addition — each input counted in proportion to its weight — and the firing decision becomes a comparison against the <strong>threshold</strong>, which by long tradition gets a Greek letter: \(\theta\). (Every course acquires its Greek letters eventually; this is our first.)</p>
+<p>Writing \(w_1x_1 + w_2x_2 + \cdots + w_nx_n\) in full gets old quickly. A student in class supplied the standard shorthand, which says exactly the same thing:</p>
+<div class="math">\[ \sum_{i=1}^{n} w_i x_i \qquad\qquad \text{“the sum, over $i$ from 1 to $n$, of $w_ix_i$.”} \]</div>
+<p>The whole object — inputs, weights, sum, threshold — drawn as one device:</p>
+<figure><img src="images/unit.svg" alt="unit" width="438" height="211"></figure>
+<p>Three inputs are drawn; there could be any number. Notice that the picture is the neuron of Act 1 with every part replaced by its arithmetic counterpart — and that the weights and the threshold are the only things about it that can be changed.</p>
+<h4 class="example"><span class="label">Example 3.1</span> Does it fire?</h4>
+<p>Fix a unit with three inputs, weights \(w = (2, -1, 2)\), and threshold \(\theta = 3\) — the unit from the meeting’s worksheet. For each input, form the weighted sum and compare it with \(\theta\).</p>
+<p>For \(x = (1, 0, 1)\): the sum is \(2 \cdot 1 + (-1) \cdot 0 + 2 \cdot 1 = 4\), and \(4 \geq 3\), so the unit fires: output 1. For \(x = (1, 1, 1)\): the sum is \(2 - 1 + 2 = 3\) — <em>exactly</em> the threshold. Which way does it go? Intuition cannot settle this; only the definition can, and our definition says the unit fires when the sum is <em>greater than or equal to</em> \(\theta\). Output 1. The row is a small lesson in reading definitions literally: a boundary case is decided by the written rule, not by feel. (And the rule has consequences: raise the threshold to 3.5 and this row, alone among the four, changes its answer.) For \(x = (0, 1, 1)\): the sum is \(0 - 1 + 2 = 1 &lt; 3\). Silent: output 0. For \(x = (1, 1, 0)\): no arithmetic needed. The first and third weights are equal, so swapping \(x_1\) and \(x_3\) cannot change the sum — this is the same symmetry shortcut as in Example 2.1. The sum is again 1, and the output 0.</p>
+<div class="tables">
+<table class="tt">
+<tr><th style="text-align:center">\(x_1\)</th><th style="text-align:center">\(x_2\)</th><th style="text-align:center">\(x_3\)</th><th class="rule" style="text-align:center">sum</th><th class="rule" style="text-align:center">out</th></tr>
+<tr><td style="text-align:center">1</td><td style="text-align:center">0</td><td style="text-align:center">1</td><td class="rule" style="text-align:center">4</td><td class="rule" style="text-align:center">1</td></tr>
+<tr><td style="text-align:center">1</td><td style="text-align:center">1</td><td style="text-align:center">1</td><td class="rule" style="text-align:center">3</td><td class="rule" style="text-align:center">1</td></tr>
+<tr><td style="text-align:center">0</td><td style="text-align:center">1</td><td style="text-align:center">1</td><td class="rule" style="text-align:center">1</td><td class="rule" style="text-align:center">0</td></tr>
+<tr><td style="text-align:center">1</td><td style="text-align:center">1</td><td style="text-align:center">0</td><td class="rule" style="text-align:center">1</td><td class="rule" style="text-align:center">0</td></tr>
+</table>
+</div>
+<p>One more question, and it is the good one: <em>which function is this?</em> Restricted to inputs of 0s and 1s, the unit computes some logical function — it has a truth table, like any gate. But it is not AND, not OR, not NAND: it is a logical function with no name. That is not a defect. It is the first sign that these units cover more ground than the named gates do.</p>
+<h3 id="s-3-4">3.4 McCulloch and Pitts, 1943</h3>
+<p>The unit you just evaluated has a birth certificate. In 1943 Warren McCulloch, a neurophysiologist, and Walter Pitts, a logician, wrote down exactly this model — inputs, weights, a threshold, an all-or-none output. The collaboration is worth noticing in itself: from its very beginning, this field has been built by neuroscience, psychology, mathematics, logic and engineering pooling their forces, and a data scientist today still works at that same junction.</p>
+<p>McCulloch and Pitts did not stop at proposing the unit. They proved things about it:</p>
+<ul>
+<li>Weights and threshold can be <em>chosen</em> so that one unit reproduces a named gate exactly. There is a setting for AND, a setting for OR, a setting for NOT, a setting for NAND. (Try to find some of these settings yourself — for AND with two inputs, what weights and threshold work?)</li>
+<li>Wired into networks, such units can compute <em>any</em> logical function — so a complete computing machine could, in principle, be assembled from them.</li>
+</ul>
+<p>Two remarks. First, notice the inversion that makes the result striking: the unit is a model of a <em>cell</em>, and what it was proved to compute is <em>logic</em>. Second, notice that we have come full circle. The path this meeting walked: gates \(\to\) gates do arithmetic \(\to\) arithmetic, arranged as a unit, models a neuron \(\to\) units with well-chosen weights behave as gates again — now as software, one level up. We are back where we started, and the loop is closed.</p>
+<p class="source">W. S. McCulloch and W. Pitts, “A logical calculus of the ideas immanent in nervous activity,” <em>Bulletin of Mathematical Biophysics</em> 5 (1943), 115–133.</p>
+<aside class="note"><span class="lead">Gates, twice in one meeting.</span>
+<p>Gates have now appeared in two entirely different roles. As the <em>thing to imitate</em>: AND, OR and NOT are functions a unit can be asked to reproduce. And as the <em>material</em>: the additions and the comparison the unit performs are themselves carried out by gates. The loop is real, not a play on words — a machine assembled from exact, memoryless parts, imitating a cell that has neither property.</p>
+</aside>
+<h3 id="s-3-5">3.5 Approximately</h3>
+<p>The title of this act ends in a qualifier, and it is doing real work. What the model <em>keeps</em> from the cell: weighted inputs, accumulation, a threshold, an all-or-none response. What it <em>leaves out</em>: everything else in Act 1. There is no timing and no spike rate — the unit gives one answer, once. There is no chemistry, no noise, no gap to cross. The continuous, messy behavior of the tissue has been discretized into clean arithmetic, and something is unavoidably lost in that step.</p>
+<p>Lost, but not fatally. When you listen to an MP3 you are listening to discretized music: some nuance of the room where it was recorded is gone, and yet what remains is very much worth having. The bet this unit makes is of the same kind — that a discretized neuron, wrong about the biology in a dozen deliberate ways, keeps enough of the right structure to be worth building on.</p>
+<p>(How much is lost is not a settled question. There are serious people who argue that the continuous — perhaps even quantum — character of the biology is essential to what brains do, mind and consciousness included, and that no discrete machine will reach it; others argue the opposite. Nobody currently knows. The model takes no position, and is useful either way.)</p>
+<p>One omission matters more than all the others, and it is the one to carry out of this meeting. In the model as McCulloch and Pitts left it, the weights are numbers we choose, and they stay where we put them. In the cell, the strengths are set by nobody: they change with experience, continuously, as long as you live. Every weight in Example 3.1 was picked by hand. The unit question — <em>written, or taught?</em> — is asking whether that gap can be closed.</p>
+<h3 id="s-3-6">3.6 Coda: on making mistakes</h3>
+<p>One more thread from the meeting, because it bears on how to take this course. When the strengths in your brain adjust, what drives the adjustment is feedback — overwhelmingly, feedback from <em>mistakes</em>. And the same is true, exactly and literally, of the AI systems built from the units of this unit: they are trained by being scored, erring, and having their weights nudged after every error, an astronomical number of times. As far as anyone knows, in people and machines alike, <em>making mistakes is the only thing that reliably produces learning</em>. Reading feels like learning; scrolling feels like learning; neither compares to attempting something, getting it wrong, and adjusting.</p>
+<p>The scale of it is worth a rough, back-of-the-envelope look — the numbers that follow are order-of-magnitude estimates made in class, not measurements. A human brain runs on about 20 watts, roughly the dimmest light bulb in the house; a person’s education spends those 20 watts over 20-odd years. Serving one person’s conversation with a large AI model costs power on a loosely similar scale per conversation. But the <em>training</em> that produced the model spent energy that, converted into 20-watt human-years, comes out not at 25 years but at <em>thousands</em> — thousands of years of education, compressed, nearly all of it spent making mistakes and adjusting weights. You get 25. Spend them accordingly: in this course, use whatever tools you like, but arrange your work so that your own mistakes are made honestly, visibly — and by <em>you</em>.</p>
+<aside class="note"><span class="lead">After this meeting.</span>
+<ul>
+<li>Set up your environment: <strong>Python 3 and Jupyter with NumPy</strong> — Anaconda locally, or Colab in a browser.</li>
+<li>Assignment Task 1, <em>Gates by hand</em>: the four gate classes (AND, OR, NOT, NAND), each tested against the truth table you filled in during the meeting.</li>
+<li>The week’s exit quiz is on Canvas.</li>
+</ul>
+</aside>
+<footer>
+<span>CS 301 · Meeting 1 · <a href="index.html">all meetings</a></span>
+<span>generated from meeting-01.tex on 2026-09-02</span>
+</footer>
+</main>
+</body>
+</html>
