@@ -170,7 +170,7 @@ footer a:hover { color: var(--njred); }
 <p>One NAND, then two, then three — and no second kind of part anywhere in the list. Follow this to its conclusion and it says something remarkable: a single repeatable unit, copied a few billion times and wired together, is a complete processor.</p>
 <aside class="note"><span class="lead">Why NAND rather than AND?</span> <p>Because of what gates are made of. In CMOS — the transistor technology chips are built in — a NAND takes four transistors, while an AND is built as a NAND followed by an inverter: six. The inverting gate is the cheap one, so it is the one chips are made from. The name misleads a little: “NAND” sounds like an AND with a NOT bolted on, but physically it is the AND that is the composite.</p>
 </aside>
-<aside class="note"><span class="lead">The same trick twice.</span> <p>Act 1 ended with a brain built by repetition: a few hundred kinds of cell, each copied hundreds of millions of times, arranged into small circuits that are themselves repeated. Here is the computer doing the same thing with a cast of <em>one</em>: a single kind of unit, repeated by the billion, composed into modules, and the modules into a machine. Two completely different technologies, one construction principle.</p>
+<aside class="note"><span class="lead">The same principle twice.</span> <p>Act 1 ended with a brain built by repetition: a few hundred kinds of cell, each copied hundreds of millions of times, arranged into small circuits that are themselves repeated. Here is the computer doing the same thing with a cast of <em>one</em>: a single kind of unit, repeated by the billion, composed into modules, and the modules into a machine. Two completely different technologies, one construction principle.</p>
 </aside>
 <h3 id="s-2-5">2.5 Wiring gates together</h3>
 <p>The output of one gate can feed an input of another, and every computation the machine performs is, at bottom, such a wiring. The way to understand a small circuit is to <em>trace</em> it: fix the inputs, and push the values through gate by gate.</p>
@@ -209,7 +209,7 @@ footer a:hover { color: var(--njred); }
 gate = AndGate()
 for a, b, expected in [(0,0,0), (0,1,0), (1,0,0), (1,1,1)]:
     assert gate(a, b) == expected</pre>
-<p>The loop at the bottom deserves a second look: it is the truth table, row by row. The table is not documentation — it is the <em>test</em>. A gate class that passes its own truth table is finished, and there is nothing else to check. That is what certainty buys: a complete specification small enough to test in full.</p>
+<p>The loop at the bottom deserves a second look: it is the truth table, row by row. The table is not a description of the class for a reader to consult; it is the requirement the class has to meet, and the loop checks that requirement on every row. A gate class that passes its own truth table is finished, and there is nothing else to check. This is one consequence of a gate’s exactness: its specification is complete, and small enough to test in full.</p>
 <p>Notice also the loop in the construction itself: physical gates make a processor, the processor runs Python, and inside Python we have just rebuilt a gate — as software. Put enough of these software gates together and you could simulate an entire computer, inside the computer. This is not a party trick; it is daily practice. When engineers design a new chip, the design runs as exactly this kind of simulation — whole toolchains exist to translate a physical circuit design into a program — long before anything is manufactured.</p>
 <aside class="note"><span class="lead">Toward the assignment.</span> <p>Task 1 of the unit assignment asks for exactly what this section did once: the four gate classes — AND, OR, NOT, NAND — each tested against its own truth table, in your own notebook.</p>
 </aside>
@@ -269,7 +269,7 @@ for a, b, expected in [(0,0,0), (0,1,0), (1,0,0), (1,1,1)]:
 <aside class="note"><span class="lead">Gates, twice in one meeting.</span> <p>Gates have now appeared in two entirely different roles. As the <em>thing to imitate</em>: AND, OR and NOT are functions a unit can be asked to reproduce. And as the <em>material</em>: the additions and the comparison the unit performs are themselves carried out by gates. The loop is real, not a play on words — a machine assembled from exact, memoryless parts, imitating a cell that has neither property.</p>
 </aside>
 <h3 id="s-3-5">3.5 Approximately</h3>
-<p>The title of this act ends in a qualifier, and it is doing real work. What the model <em>keeps</em> from the cell: weighted inputs, accumulation, a threshold, an all-or-none response. What it <em>leaves out</em>: everything else in Act&nbsp;1. There is no timing and no spike rate — the unit gives one answer, once. There is no chemistry, no noise, no gap to cross. The continuous, messy behavior of the tissue has been discretized into clean arithmetic, and something is unavoidably lost in that step.</p>
+<p>The title of this act ends in a qualifier, and the qualifier matters. What the model <em>keeps</em> from the cell: weighted inputs, accumulation, a threshold, an all-or-none response. What it <em>leaves out</em>: everything else in Act&nbsp;1. There is no timing and no spike rate — the unit gives one answer, once. There is no chemistry, no noise, no gap to cross. The continuous, messy behavior of the tissue has been discretized into clean arithmetic, and something is unavoidably lost in that step.</p>
 <p>Lost, but not fatally. When you listen to an MP3 you are listening to discretized music: some nuance of the room where it was recorded is gone, and yet what remains is very much worth having. The bet this unit makes is of the same kind — that a discretized neuron, wrong about the biology in a dozen deliberate ways, keeps enough of the right structure to be worth building on.</p>
 <p>(How much is lost is not a settled question. There are serious people who argue that the continuous — perhaps even quantum — character of the biology is essential to what brains do, mind and consciousness included, and that no discrete machine will reach it; others argue the opposite. Nobody currently knows. The model takes no position, and is useful either way.)</p>
 <p>One omission matters more than all the others, and it is the one to carry out of this meeting. In the model as McCulloch and Pitts left it, the weights are numbers <em>we</em> choose, and they stay where we put them. In the cell, the strengths are set by nobody: they change with experience, continuously, as long as you live. Every weight in Example 3.1 was picked by hand. The unit question — <em>written, or taught?</em> — is asking whether that gap can be closed.</p>
@@ -284,7 +284,7 @@ for a, b, expected in [(0,0,0), (0,1,0), (1,0,0), (1,1,1)]:
 </aside>
 <footer>
 <span>CS 301 · Meeting 1 · <a href="index.html">all meetings</a></span>
-<span>generated from meeting-01.tex on 2026-09-02</span>
+<span>generated from meeting-01.tex on 2026-09-05</span>
 </footer>
 </main>
 </body>
