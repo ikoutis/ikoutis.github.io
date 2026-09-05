@@ -191,6 +191,22 @@ footer a:hover { color: var(--njred); }
 <p>Read the last column: \(0,1,1,1\). This three-NAND circuit <em>is</em> the OR gate — it is the third identity of the previous section, verified row by row.</p>
 </section>
 <p>Two things about the trace are worth saying out loud. First, on paper the gates were evaluated one at a time, but in the machine nothing waits: \(n_1\) and \(n_2\) settle <em>simultaneously</em>. Concurrency is not an advanced feature of computers; it is present in three gates. Second, the shortcut used for the row \((1,0)\) — spotting a symmetry instead of recomputing — is a genuine habit of the field, and it returns in Act&nbsp;3.</p>
+<section class="worked" id="ex-2-2">
+<h4 class="example"><span class="label">Example 2.2</span> The same method, for AND</h4>
+<p>The second identity of \S2.4 says that AND is two NANDs: the first takes \(a\) and \(b\), and the second takes the first’s output on both of its inputs. Drawn as a circuit, with the one internal wire named \(n_1\):</p>
+<figure><img src="images/and-from-nands.svg" alt="and-from-nands" width="358" height="66"></figure>
+<p>The method is the one of Example&nbsp;2.1, and it is the same for every circuit: fix the inputs, push the values through the gates in the order they are wired, and write down each internal wire as you reach it. For \((0,0)\): \(n_1 = \text{NAND}(0,0) = 1\), and the output is \(\text{NAND}(1,1) = 0\). For \((0,1)\) and \((1,0)\): \(n_1 = 1\) again, so the output is \(0\) again. For \((1,1)\): \(n_1 = \text{NAND}(1,1) = 0\), and the output is \(\text{NAND}(0,0) = 1\).</p>
+<div class="tables">
+<table class="tt">
+<tr><th style="text-align:center">\(a\)</th><th style="text-align:center">\(b\)</th><th class="rule" style="text-align:center">\(n_1\)</th><th class="rule" style="text-align:center">out</th></tr>
+<tr><td style="text-align:center">0</td><td style="text-align:center">0</td><td class="rule" style="text-align:center">1</td><td class="rule" style="text-align:center">0</td></tr>
+<tr><td style="text-align:center">0</td><td style="text-align:center">1</td><td class="rule" style="text-align:center">1</td><td class="rule" style="text-align:center">0</td></tr>
+<tr><td style="text-align:center">1</td><td style="text-align:center">0</td><td class="rule" style="text-align:center">1</td><td class="rule" style="text-align:center">0</td></tr>
+<tr><td style="text-align:center">1</td><td style="text-align:center">1</td><td class="rule" style="text-align:center">0</td><td class="rule" style="text-align:center">1</td></tr>
+</table>
+</div>
+<p>The last column is \(0,0,0,1\): AND. Notice what the second gate is doing: fed the same value on both inputs, a NAND simply inverts it, which is the first identity of \S2.4 (NOT \(a\) = NAND\((a,a)\)) appearing as a part of a larger circuit. Read this way, the three identities are not three facts to memorize but one method applied three times.</p>
+</section>
 <h3 id="s-2-6">2.6 A gate is exact</h3>
 <p>Now the point of this whole act. A gate’s four-row table is not a summary of its typical behavior; it is its <em>entire</em> behavior.</p>
 <ul>
