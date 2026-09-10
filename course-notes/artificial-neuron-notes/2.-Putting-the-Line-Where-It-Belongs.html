@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Meeting 2. Putting the Line Where It Belongs — CS 301</title>
+<meta name="description" content="CS 301 Introduction to Data Science, NJIT. Course notes for meeting 2: Putting the Line Where It Belongs.">
+<meta name="cs301-meeting" content="2">
+<meta name="cs301-title" content="Putting the Line Where It Belongs">
+<meta name="cs301-acts" content="Act 1 Gates by Hand · Act 2 More Than Two Inputs · Act 3 The Linear Score">
+<style>
+@font-face { font-family: "Latin Modern Roman"; src: url(fonts/lmroman10-regular.otf); font-weight: normal; font-style: normal; }
+@font-face { font-family: "Latin Modern Roman"; src: url(fonts/lmroman10-italic.otf); font-weight: normal; font-style: italic; }
+@font-face { font-family: "Latin Modern Roman"; src: url(fonts/lmroman10-bold.otf); font-weight: bold; font-style: normal; }
+@font-face { font-family: "Latin Modern Roman"; src: url(fonts/lmroman10-bolditalic.otf); font-weight: bold; font-style: italic; }
+@font-face { font-family: "Latin Modern Sans"; src: url(fonts/lmsans10-regular.otf); font-weight: normal; }
+@font-face { font-family: "Latin Modern Sans"; src: url(fonts/lmsans10-bold.otf); font-weight: bold; }
+@font-face { font-family: "Latin Modern Mono"; src: url(fonts/lmmono10-regular.otf); }
+:root { --njred: #CC0033; --ink: #1A1A1A; --muted: #555555; --faint: #DDDDDD; --paper: #F7F7F5;
+  --serif: "Latin Modern Roman", "Computer Modern Serif", Georgia, "Times New Roman", serif;
+  --sans: "Latin Modern Sans", "Helvetica Neue", Arial, sans-serif;
+  --mono: "Latin Modern Mono", Consolas, "Courier New", monospace; }
+html { background: #fff; }
+body { margin: 0; color: var(--ink); font-family: var(--serif); font-size: 18px; line-height: 1.5;
+  -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; }
+.page { max-width: 720px; margin: 0 auto; padding: 44px 24px 72px; }
+a { color: inherit; }
+.titleblock { border-top: 3px solid var(--njred); border-bottom: 1px solid var(--faint); padding: 20px 0 16px; margin-bottom: 30px; }
+.kicker { font-family: var(--sans); font-weight: bold; font-size: 12.5px; color: var(--njred); margin: 0 0 14px; display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+.kicker .pdf { font-weight: normal; color: var(--muted); text-decoration: none; border: 1px solid var(--faint); border-radius: 3px; padding: 1px 8px; }
+.kicker .pdf:hover { color: var(--njred); border-color: var(--njred); }
+h1 { font-family: var(--sans); font-size: 30px; line-height: 1.2; margin: 0 0 10px; }
+.acts { font-family: var(--sans); font-size: 13px; color: var(--muted); margin: 0; }
+h2.act { font-family: var(--sans); font-size: 21px; color: var(--njred); margin: 48px 0 20px; padding-bottom: 9px; border-bottom: 1px solid var(--faint); }
+h3 { font-family: var(--sans); font-size: 15.5px; margin: 30px 0 8px; }
+h4.example { font-family: var(--sans); font-size: 15.5px; margin: 22px 0 6px; }
+h4.example .label { color: var(--njred); }
+.worked { margin: 0 0 22px; }
+p { margin: 0; }
+p + p { text-indent: 1.6em; }
+.note { background: var(--paper); padding: 14px 18px; margin: 24px 0; }
+.note .lead { font-family: var(--sans); font-weight: bold; font-size: 15.5px; }
+.note p { display: inline; }
+.note p + p { display: block; text-indent: 1.6em; margin-top: 0.4em; }
+.note ul { margin-top: 10px; }
+.source { font-size: 13px; color: var(--muted); margin-top: 6px; text-indent: 0 !important; }
+.pull { text-align: center; margin: 14px 0; text-indent: 0 !important; }
+.bigq { text-align: center; font-size: 22px; margin: 18px 0; text-indent: 0 !important; }
+.math { margin: 8px 0 14px; overflow-x: auto; }
+.red, .c-njred { color: var(--njred); }
+.muted { color: var(--muted); }
+ul, ol { margin: 10px 0 12px; padding-left: 2.2em; }
+li { margin: 0 0 5px; }
+li p { display: inline; }
+figure { margin: 22px 0; text-align: center; }
+figure img { max-width: 100%; height: auto; }
+.tables { display: flex; justify-content: center; align-items: flex-start; gap: 44px; flex-wrap: wrap; margin: 18px 0; }
+table { border-collapse: collapse; font-size: 16.5px; }
+table.tt th { font-weight: normal; border-bottom: 1px solid var(--ink); padding: 2px 11px 4px; }
+table.tt td { padding: 3px 11px 0; }
+table.tt .rule { border-left: 1px solid var(--ink); }
+table.trans td { padding: 6px 18px; }
+table.trans td:first-child { padding-left: 0; }
+table.trans td:last-child { padding-right: 0; }
+pre.code { font-family: var(--mono); font-size: 15px; line-height: 1.4; margin: 16px 0 16px 44px; white-space: pre; overflow-x: auto; }
+code { font-family: var(--mono); font-size: 92%; }
+footer { margin-top: 56px; padding-top: 12px; border-top: 1px solid var(--faint); font-family: var(--sans); font-size: 12.5px; color: var(--muted);
+  display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+footer a { text-decoration: none; }
+footer a:hover { color: var(--njred); }
+@media (max-width: 560px) { body { font-size: 17px; } .page { padding: 28px 18px 56px; } h1 { font-size: 25px; } pre.code { margin-left: 12px; } }
+@media print { .page { max-width: none; padding: 0; } .kicker .pdf { display: none; } h2.act, h3, h4 { break-after: avoid; } figure, .note, table { break-inside: avoid; } }
+</style>
+<script>window.MathJax = { tex: { inlineMath: [['\\(', '\\)']], displayMath: [['\\[', '\\]']] }, chtml: { scale: 1.02 } };</script>
+<script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+</head>
+<body>
+<main class="page">
+<header class="titleblock">
+<p class="kicker">NJIT · CS 301 · INTRODUCTION TO DATA SCIENCE · FALL 2026 <a class="pdf" href="2.-Putting-the-Line-Where-It-Belongs.pdf">PDF</a></p>
+<h1>Meeting 2. Putting the Line Where It Belongs</h1>
+<p class="acts">Act 1 Gates by Hand · Act 2 More Than Two Inputs · Act 3 The Linear Score</p>
+</header>
+<aside class="note"><span class="lead">About these notes.</span> <p>There is no textbook to buy in CS&nbsp;301: these notes are the course’s text, written by the instructors and posted on Canvas as each meeting is reached. They follow the meetings themselves — including questions and examples that came up in class — and, together with the assignment notebook you build, they are what the exams are set from. Logistics, grading, and the schedule live in the syllabus.</p>
+</aside>
+<p>Meeting 1 ended on a unit whose weights and threshold were simply handed to you: \(w = (2, -1, 2)\), \(\theta = 3\), and the only question was whether it fired. This meeting turns that around. You choose the numbers. The tool for choosing them is a picture — the unit’s inputs as points, its decision as a line — and the picture is so useful that the whole meeting is spent learning what it shows, watching it run out of room, and then writing down the notation that takes over where the picture stops. The order is deliberate: first the work, then the notation the work turns out to need.</p>
+<aside class="note"><span class="lead">Before we start: from Review Quiz 1.</span> <p>The first review quiz asked what was least clear, and three things came back often enough to answer here.</p>
+<ul>
+<li><em>Reading a circuit of NANDs.</em> One method, every time: fix the inputs, push the values through the gates in the order they are wired, and write down each internal wire as you reach it. The small circle on a gate symbol means <em>inverted output</em>: a NAND is an AND with that circle, and a NAND fed the same value on both inputs simply inverts it. The meeting 1 notes now carry this as Example 2.2, next to the three-NAND trace of Example 2.1.</li>
+<li><em>The threshold.</em> \(\theta\) is a number that belongs to the unit, like its weights. It is not an input: nothing arrives on it. The unit computes one number, \(w_1x_1 + \cdots + w_nx_n\), and compares it with \(\theta\). Equal counts as firing — the rule is \(\geq\), and a boundary case is decided by the written rule, not by feel. So far every \(w_i\) and every \(\theta\) was <em>given</em>. This meeting is about choosing them.</li>
+<li><em>Neuron and gate, beyond “exact.”</em> The cell is continuous, noisy, unclocked, changing; the gate is none of those four, at considerable engineering expense. The model of meeting 1 keeps four things from the cell — weighted inputs, a sum, a threshold, an all-or-none answer — and drops everything else. That is what “approximately” in that act’s title means. If the biology makes the arithmetic feel more complicated than it is: the arithmetic is the object, and the cell is where its shape came from. You may set the cell aside and lose nothing on the exam.</li>
+</ul>
+<p>And to the question “is this data science?”: yes. Unit I builds, from scratch, the one object that the methods of data science are made of; the syllabus says where each of the three units goes.</p>
+</aside>
+<h2 class="act" id="act-1">Act 1. Gates by Hand</h2>
+<h3 id="s-1-1">1.1 Last meeting’s unit, with numbers in it</h3>
+<p>Take the two-input version of the unit and put numbers in it: weights \(w_1 = 1\) and \(w_2 = 2\), threshold \(\theta = 1.5\).</p>
+<figure><img src="images/unit-two-inputs.svg" alt="unit-two-inputs" width="429" height="157"></figure>
+<p>Feed it the four rows of the AND table and see what comes out. The sum for an input \((x_1, x_2)\) is \(1\cdot x_1 + 2\cdot x_2\), and the unit fires when that sum is at least \(1.5\):</p>
+<div class="tables">
+<table class="tt">
+<tr><th style="text-align:center">\(x_1\)</th><th style="text-align:center">\(x_2\)</th><th class="rule" style="text-align:center">sum</th><th class="rule" style="text-align:center">fires?</th><th style="text-align:center">AND</th></tr>
+<tr><td style="text-align:center">0</td><td style="text-align:center">0</td><td class="rule" style="text-align:center">0</td><td class="rule" style="text-align:center">0</td><td style="text-align:center">0</td></tr>
+<tr><td style="text-align:center">0</td><td style="text-align:center">1</td><td class="rule" style="text-align:center">2</td><td class="rule" style="text-align:center"><span class="red">1</span></td><td style="text-align:center"><span class="red">0</span></td></tr>
+<tr><td style="text-align:center">1</td><td style="text-align:center">0</td><td class="rule" style="text-align:center">1</td><td class="rule" style="text-align:center">0</td><td style="text-align:center">0</td></tr>
+<tr><td style="text-align:center">1</td><td style="text-align:center">1</td><td class="rule" style="text-align:center">3</td><td class="rule" style="text-align:center">1</td><td style="text-align:center">1</td></tr>
+</table>
+</div>
+<p>Three rows out of four are right. The unit fires on \((0,1)\), where AND says \(0\): the second input alone, with its weight of \(2\), is enough to push the sum past \(1.5\). This near miss is the meeting’s starting point on purpose. A unit that is wrong everywhere invites a fresh guess; a unit that is wrong at exactly one corner invites <em>reasoning</em> — about which way to move something, and by how much. To reason about it, you need to see what the numbers are doing.</p>
+<h3 id="s-1-2">1.2 What the picture is showing</h3>
+<p>Here is the same unit as a picture.</p>
+<figure><img src="images/square-and-wrong.svg" alt="square-and-wrong" width="232" height="226"></figure>
+<p>Take it slowly; the rest of the meeting is built on it.</p>
+<ul>
+<li>Each of the four inputs is a <strong>point</strong> on the unit square: \((0,0)\), \((0,1)\), \((1,0)\) and \((1,1)\) — the four corners.</li>
+<li>A <strong>filled</strong> corner means the gate should answer \(1\) there; an open corner means it should answer \(0\). For AND, only \((1,1)\) is filled.</li>
+<li>The <strong>shaded side</strong> is where the unit fires — where \(w_1x_1 + w_2x_2\) has reached the threshold. Its edge is a straight line.</li>
+<li>So the weights and the threshold do one single thing: they place a <strong>line</strong>, and the unit’s answer for any input is which side of the line the input lands on.</li>
+</ul>
+<p>Read the failure off the picture. The corner \((0,1)\), ringed, sits on the shaded side, and it should not. The line is too low on the left. That sentence — <em>too low on the left</em> — is a statement about where to move the line, and it is more than the table gave you.</p>
+<h3 id="s-1-3">1.3 Where that line came from</h3>
+<p>The boundary is where the sum <em>equals</em> the threshold:</p>
+<div class="math">\[ 1\,x_1 + 2\,x_2 \;=\; 1.5 . \]</div>
+<p>Solve for \(x_2\) and it is a line like any other:</p>
+<div class="math">\[ x_2 \;=\; \frac{1.5 - x_1}{2} \;=\; 0.75 - 0.5\,x_1 . \]</div>
+<p>Two points are enough to draw it: at \(x_1 = 0\) the line passes through \(x_2 = 0.75\), and at \(x_1 = 1\) through \(x_2 = 0.25\).</p>
+<figure><img src="images/square-line-points.svg" alt="square-line-points" width="232" height="226"></figure>
+<p>The conversion is worth doing once by hand, because it is the bridge between two ways of seeing the same unit: as three numbers, and as a line. Move the threshold and the line slides; change a weight and it tilts. Every choice you make in the numbers is a move in the picture.</p>
+<p>One case the rearrangement does not cover. If \(w_2 = 0\) the boundary is a vertical line, \(x_1 = \theta/w_1\), and “solve for \(x_2\)” is undefined — the line exists, this particular way of writing it does not produce it. The worked unit keeps \(w_2 \neq 0\) on purpose.</p>
+<section class="worked" id="ex-1-1">
+<h4 class="example"><span class="label">Example 1.1</span> Make it right</h4>
+<p>This is the first task of the meeting’s sheet: find \(w_1\), \(w_2\) and \(\theta\) so that the unit answers AND on all four rows — and then, in a sentence or two, write down how you decided. What did you look at first, and what made you change it?</p>
+<p>There is no single answer, and two routes are worth seeing side by side. The first keeps the weights \((1, 2)\) and raises the threshold: push \(\theta\) past \(2\), say to \(2.5\), and the line moves away from the origin, parallel to itself, until \((0,1)\) falls off the firing side. Check the four rows: sums \(0, 2, 1, 3\) against \(2.5\) give \(0, 0, 0, 1\) — AND. The second starts over with equal weights, \(w_1 = w_2 = 1\) and \(\theta = 1.5\): the sums are \(0, 1, 1, 2\), and only the last reaches \(1.5\) — AND again, with a line that runs diagonally between \((1,1)\) and the other three corners.</p>
+<p>Both are correct, and so are infinitely many others. There is no <em>the</em> setting for AND; there is a whole <strong>region</strong> of settings that work, and any point in that region does the job. A gate has one truth table; the unit that reproduces it has infinitely many valid settings.</p>
+</section>
+<h3 id="s-1-4">1.4 Keep what you wrote down</h3>
+<p>The second half of the task — the sentence about how you decided — is not a warm-up, and it is not spent when the meeting ends. Look at what the two routes of Example 1.1 actually are. One says: <em>I saw which corner was on the wrong side and moved the line toward it.</em> The other says: <em>I tried numbers until the table came out right.</em> Those are two different <em>procedures</em>, and both of them worked.</p>
+<p class="bigq">You just ran a search by hand.</p>
+<p>Keep the sheet. What you wrote on it is the thing to look at again when the question comes up of whether something other than a person could follow the same procedure.</p>
+<aside class="note"><span class="lead">Toward the assignment.</span> <p>Task 1 of the unit assignment asks for exactly this, as code: a <code>ThresholdUnit</code> class, constructed from its weights and threshold, and a dictionary of hand-chosen settings for AND, OR, NAND and NOT, each verified against its truth table with the same <code>check</code> that verified the gate classes. It also asks for the reasoning again, in a Markdown cell.</p>
+</aside>
+<h2 class="act" id="act-2">Act 2. More Than Two Inputs</h2>
+<h3 id="s-2-1">2.1 A gate with three inputs</h3>
+<p>Nothing in the unit says “two.” Give it three inputs, three weights, and ask it for the AND of three inputs: answer \(1\) only when all three are \(1\).</p>
+<figure><img src="images/unit-three-and.svg" alt="unit-three-and" width="477" height="211"></figure>
+<p>Eight rows in the table now instead of four — but the unit is the one you already have, one weight longer, and the arithmetic has not changed.</p>
+<section class="worked" id="ex-2-1">
+<h4 class="example"><span class="label">Example 2.1</span> Eight rows</h4>
+<p>With \(w = (1, 1, 1)\) the sum is simply the number of inputs that are \(1\), so the eight rows can be checked at a glance: the sum is \(0\) for one row, \(1\) for three rows, \(2\) for three rows, and \(3\) for the row \((1,1,1)\) alone. Against \(\theta = 2.5\), only that last row fires.</p>
+<div class="tables">
+<table class="tt">
+<tr><th style="text-align:center">\(x_1\)</th><th style="text-align:center">\(x_2\)</th><th style="text-align:center">\(x_3\)</th><th class="rule" style="text-align:center">sum</th><th class="rule" style="text-align:center">fires?</th></tr>
+<tr><td style="text-align:center">0</td><td style="text-align:center">0</td><td style="text-align:center">0</td><td class="rule" style="text-align:center">0</td><td class="rule" style="text-align:center">0</td></tr>
+<tr><td style="text-align:center">0</td><td style="text-align:center">0</td><td style="text-align:center">1</td><td class="rule" style="text-align:center">1</td><td class="rule" style="text-align:center">0</td></tr>
+<tr><td style="text-align:center">0</td><td style="text-align:center">1</td><td style="text-align:center">0</td><td class="rule" style="text-align:center">1</td><td class="rule" style="text-align:center">0</td></tr>
+<tr><td style="text-align:center">0</td><td style="text-align:center">1</td><td style="text-align:center">1</td><td class="rule" style="text-align:center">2</td><td class="rule" style="text-align:center">0</td></tr>
+<tr><td style="text-align:center">1</td><td style="text-align:center">0</td><td style="text-align:center">0</td><td class="rule" style="text-align:center">1</td><td class="rule" style="text-align:center">0</td></tr>
+<tr><td style="text-align:center">1</td><td style="text-align:center">0</td><td style="text-align:center">1</td><td class="rule" style="text-align:center">2</td><td class="rule" style="text-align:center">0</td></tr>
+<tr><td style="text-align:center">1</td><td style="text-align:center">1</td><td style="text-align:center">0</td><td class="rule" style="text-align:center">2</td><td class="rule" style="text-align:center">0</td></tr>
+<tr><td style="text-align:center">1</td><td style="text-align:center">1</td><td style="text-align:center">1</td><td class="rule" style="text-align:center">3</td><td class="rule" style="text-align:center">1</td></tr>
+</table>
+</div>
+<p>The threshold could be anything strictly between \(2\) and \(3\); \(2.5\) is the middle of that range, which is a good habit — it leaves the most room on both sides.</p>
+</section>
+<h3 id="s-2-2">2.2 Eight rows, eight corners</h3>
+<p>Two inputs gave a square with four corners. Three give a <strong>cube</strong> with eight, and only \((1,1,1)\) is filled: only there should the unit fire.</p>
+<figure><img src="images/cube-bare.svg" alt="cube-bare" width="205" height="179"></figure>
+<p>And the boundary? Where the sum equals the threshold is now \(x_1 + x_2 + x_3 = 2.5\), and that is not a line but a <strong>plane</strong> — drawn here as a patch, cutting off the one corner that fires.</p>
+<figure><img src="images/cube-plane.svg" alt="cube-plane" width="262" height="231"></figure>
+<p>The plane does everything the line did: it splits the space in two, and the answer is which side you are on. One corner above, seven below.</p>
+<h3 id="s-2-3">2.3 Same object, one dimension up</h3>
+<p>Line up the two cases, and the case after them:</p>
+<div class="tables">
+<table class="trans">
+<tr><td style="text-align:left"><span class="muted">two inputs</span></td><td style="text-align:left"><span class="muted">three inputs</span></td><td style="text-align:left"><span class="muted">four, or forty</span></td></tr>
+<tr><td style="text-align:left">a point on a square</td><td style="text-align:left">a point in a cube</td><td style="text-align:left">a point … somewhere</td></tr>
+<tr><td style="text-align:left">\(w_1x_1 + w_2x_2\)</td><td style="text-align:left">\(w_1x_1 + w_2x_2 + w_3x_3\)</td><td style="text-align:left">\(w_1x_1 + \cdots + w_nx_n\)</td></tr>
+<tr><td style="text-align:left">split by a <span class="red">line</span></td><td style="text-align:left">split by a <span class="red">plane</span></td><td style="text-align:left">split by <span class="red">?</span></td></tr>
+</table>
+</div>
+<p>The arithmetic extends to any number of inputs without changing shape. The picture does not: at four inputs there is no square and no cube, and no page to draw on. The thing that splits the space is still there — it has a name, a <em>hyperplane</em>, and it behaves like the line and the plane in every way that matters — but you cannot see it.</p>
+<h3 id="s-2-4">2.4 Two inputs was the small case</h3>
+<p>It would be convenient if two or three inputs were the normal case and forty the exotic one. It is the other way round.</p>
+<ul>
+<li>Measurements rarely arrive one or two at a time. A day of weather is a high temperature <em>and</em> a low one <em>and</em> a humidity <em>and</em> a pressure — four numbers describing one day. There is no square to put that on, and no cube either.</li>
+<li>The cell of meeting 1 was never working with two inputs. A cortical neuron collects from <em>thousands</em> of synapses at once.</li>
+</ul>
+<p>So the picture cannot serve as the general tool. Its role was to show what the tool has to do — divide the space, and report the side — and it has done that. What is needed now is a way to write the unit that works in forty dimensions as easily as in two.</p>
+<p class="bigq">The arithmetic still works in forty dimensions.</p>
+<p class="bigq">Writing it out longhand does not.</p>
+<p>\(w_1x_1 + w_2x_2 + w_3x_3 + w_4x_4 + w_5x_5 + \cdots\) — at forty inputs, this has forty terms, and every statement about the unit has to drag them along. Act 3 fixes that.</p>
+<h2 class="act" id="act-3">Act 3. The Linear Score</h2>
+<h3 id="s-3-1">3.1 Write it once</h3>
+<p>The sum, in full and in the shorthand from meeting 1:</p>
+<div class="math">\[ w_1x_1 + w_2x_2 + \cdots + w_nx_n \;=\; \sum_{i=1}^{n} w_i x_i . \]</div>
+<p>Now collect the weights into one object, \(\mathbf{w} = (w_1, \ldots, w_n)\), and the inputs into another, \(\mathbf{x} = (x_1, \ldots, x_n)\) — two <strong>vectors</strong>, each a list of \(n\) numbers. Then the whole sum has a name and a symbol:</p>
+<div class="math">\[ \mathbf{w} \cdot \mathbf{x} \qquad\text{the \alert{inner product} of $\mathbf{w}$ and $\mathbf{x}$.} \]</div>
+<p>Also called the dot product. It takes two lists of \(n\) numbers and returns <em>one</em> number — multiply the lists entry by entry, add up the products — and it looks the same whether \(n\) is two or forty. This is the whole notation: two symbols for two lists, and a dot between them.</p>
+<h3 id="s-3-2">3.2 One number, and it is the score</h3>
+<p>\(\mathbf{w}\cdot\mathbf{x}\) is the <strong>score</strong> the unit computes for an input, and it is worth reading as a quantity, not only as a thing to compare with \(\theta\). A large positive score means the input is well inside the firing side, far from the line. A large negative score means well outside. A score near zero means near the boundary — the picture’s line is exactly the set of inputs whose score equals the threshold. The threshold is just where the score is cut.</p>
+<p>It is tidier to put the threshold on the same side of the comparison as everything else. Write \(b = -\theta\):</p>
+<div class="math">\[ \mathbf{w}\cdot\mathbf{x} \;\geq\; \theta \qquad\Longleftrightarrow\qquad \mathbf{w}\cdot\mathbf{x} + b \;\geq\; 0 . \]</div>
+<p>\(b\) is called the <strong>bias</strong>. Same unit, same behaviour on every input; what has changed is bookkeeping. The threshold has become one more number of the same kind as the weights — a number to choose, alongside them — and the unit’s decision is now a comparison with zero. The unit, in full: it answers \(1\) when \(\mathbf{w}\cdot\mathbf{x} + b \geq 0\), and \(0\) otherwise.</p>
+<h3 id="s-3-3">3.3 The same thing as matrices</h3>
+<p>You have seen vectors and matrices before, and the inner product is a matrix product in disguise. Take \(\mathbf{w}\) and \(\mathbf{x}\) to be <strong>columns</strong> — \(n \times 1\) matrices. Then \(\mathbf{w}^{\mathsf{T}}\), the transpose, is a row, \(1 \times n\), and the product of a \(1 \times n\) row with an \(n \times 1\) column is a \(1 \times 1\) matrix:</p>
+<div class="math">\[ \underbrace{\mathbf{w}^{\mathsf{T}}}_{1 \times n}\; \underbrace{\mathbf{x}}_{n \times 1} \;=\; \underbrace{\mathbf{w}^{\mathsf{T}}\mathbf{x}}_{1 \times 1} \;=\; \mathbf{w}\cdot\mathbf{x} . \]</div>
+<p>A \(1 \times 1\) matrix is a single number, which is why the shapes work out. You will meet \(\mathbf{w}^{\mathsf{T}}\mathbf{x}\), \(\mathbf{w}\cdot\mathbf{x}\) and \(\langle \mathbf{w}, \mathbf{x}\rangle\) used for the same thing, sometimes on the same page.</p>
+<h3 id="s-3-4">3.4 Transposing reverses the order</h3>
+<p>One rule about transposes, and one trap. The rule: for any two matrices that can be multiplied,</p>
+<div class="math">\[ (AB)^{\mathsf{T}} \;=\; B^{\mathsf{T}}A^{\mathsf{T}} \qquad\muteds{\text{--- the order \emph{flips}.}} \]</div>
+<p>Apply it to the score. The score is \(1 \times 1\), and a \(1 \times 1\) matrix is equal to its own transpose, so</p>
+<div class="math">\[ \mathbf{w}^{\mathsf{T}}\mathbf{x} \;=\; \left(\mathbf{w}^{\mathsf{T}}\mathbf{x}\right)^{\mathsf{T}} \;=\; \mathbf{x}^{\mathsf{T}}\mathbf{w} . \]</div>
+<p>So for the inner product specifically, the order does not matter. Now the trap: it does not matter <em>only because the product is \(1 \times 1\)</em>. In general, transposition reverses the order of a product, and \((AB)^{\mathsf{T}} = A^{\mathsf{T}}B^{\mathsf{T}}\) is false — try it on a \(2 \times 3\) and a \(3 \times 4\) matrix, where the right-hand side cannot even be multiplied. Do not remember this section as “the transpose commutes.” Remember it as: the order flips, and the score is too small for the flip to show. Note it; this is the kind of thing an exam asks.</p>
+<section class="worked" id="ex-3-1">
+<h4 class="example"><span class="label">Example 3.1</span> One more gate</h4>
+<p>The second task of the meeting’s sheet. Same square, same method as Act 1: find \(w_1\), \(w_2\) and \(\theta\) so that the unit answers <span class="red">XOR</span> — \(1\) when the two inputs <em>differ</em>, \(0\) when they agree.</p>
+<figure><img src="images/square-xor.svg" alt="square-xor" width="232" height="226"></figure>
+<div class="tables">
+<table class="tt">
+<tr><th style="text-align:center">\(x_1\)</th><th style="text-align:center">\(x_2\)</th><th class="rule" style="text-align:center">XOR</th></tr>
+<tr><td style="text-align:center">0</td><td style="text-align:center">0</td><td class="rule" style="text-align:center">0</td></tr>
+<tr><td style="text-align:center">0</td><td style="text-align:center">1</td><td class="rule" style="text-align:center">1</td></tr>
+<tr><td style="text-align:center">1</td><td style="text-align:center">0</td><td class="rule" style="text-align:center">1</td></tr>
+<tr><td style="text-align:center">1</td><td style="text-align:center">1</td><td class="rule" style="text-align:center">0</td></tr>
+</table>
+</div>
+<p>Two corners are filled this time, \((0,1)\) and \((1,0)\), and two are open. Try it, on paper, for as long as it takes to have something to say. Then <strong>write down what happens</strong>: the settings you tried, the most rows you got right, and what you currently think the reason is. The record is the point of the exercise, whatever it contains; Task 1 of the assignment asks for the same record in a cell of your notebook.</p>
+</section>
+<h3 id="s-3-5">3.5 Two things to take with you</h3>
+<p>Two questions are left open at the end of this meeting, on purpose.</p>
+<ul>
+<li>You set the weights for AND by hand, and you wrote down how you did it. <span class="red">Could something other than a person follow that procedure?</span> A person does not scale to forty weights. The procedure might.</li>
+<li>XOR: whatever happened just now, it was not for lack of trying. <span class="red">So what exactly went wrong?</span></li>
+</ul>
+<p>Neither is answered here. Both are answered in this unit.</p>
+<aside class="note"><span class="lead">After this meeting.</span> <ul>
+<li>Assignment Task 1, <em>Gates by hand</em>, is open on Canvas: the four gate classes tested against their truth tables; OR built from three NANDs; <code>ThresholdUnit(w, theta)</code> with its score and its bias; weights and thresholds chosen by hand for AND, OR, NAND and NOT, with your reasoning; a three-input AND; and the XOR record. The page on Canvas has every cell to paste.</li>
+<li>On Canvas there is also a <strong>page where you can move the line</strong> and watch the four corners. Write your XOR record first, so that it describes your own attempt; then give the page five minutes with XOR selected.</li>
+<li><strong>Keep the sheet</strong> you wrote your reasoning on.</li>
+<li>The week’s review quiz is on Canvas.</li>
+</ul>
+</aside>
+<footer>
+<span>CS 301 · Meeting 2 · <a href="index.html">all meetings</a></span>
+<span>generated from meeting-02.tex on 2026-09-10</span>
+</footer>
+</main>
+</body>
+</html>
