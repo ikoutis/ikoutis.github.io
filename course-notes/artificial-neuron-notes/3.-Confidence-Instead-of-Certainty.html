@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Meeting 3. Confidence Instead of Certainty — CS 301</title>
+<meta name="description" content="CS 301 Introduction to Data Science, NJIT. Course notes for meeting 3: Confidence Instead of Certainty.">
+<meta name="cs301-meeting" content="3">
+<meta name="cs301-title" content="Confidence Instead of Certainty">
+<meta name="cs301-acts" content="Act 1 An Uncertain World · Act 2 Real Data Is Not a Truth Table · Act 3 The Sigmoid Function · Act 4 Wrong, With a Probability">
+<style>
+@font-face { font-family: "Latin Modern Roman"; src: url(fonts/lmroman10-regular.otf); font-weight: normal; font-style: normal; }
+@font-face { font-family: "Latin Modern Roman"; src: url(fonts/lmroman10-italic.otf); font-weight: normal; font-style: italic; }
+@font-face { font-family: "Latin Modern Roman"; src: url(fonts/lmroman10-bold.otf); font-weight: bold; font-style: normal; }
+@font-face { font-family: "Latin Modern Roman"; src: url(fonts/lmroman10-bolditalic.otf); font-weight: bold; font-style: italic; }
+@font-face { font-family: "Latin Modern Sans"; src: url(fonts/lmsans10-regular.otf); font-weight: normal; }
+@font-face { font-family: "Latin Modern Sans"; src: url(fonts/lmsans10-bold.otf); font-weight: bold; }
+@font-face { font-family: "Latin Modern Mono"; src: url(fonts/lmmono10-regular.otf); }
+:root { --njred: #CC0033; --ink: #1A1A1A; --muted: #555555; --faint: #DDDDDD; --paper: #F7F7F5;
+  --serif: "Latin Modern Roman", "Computer Modern Serif", Georgia, "Times New Roman", serif;
+  --sans: "Latin Modern Sans", "Helvetica Neue", Arial, sans-serif;
+  --mono: "Latin Modern Mono", Consolas, "Courier New", monospace; }
+html { background: #fff; }
+body { margin: 0; color: var(--ink); font-family: var(--serif); font-size: 18px; line-height: 1.5;
+  -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; }
+.page { max-width: 720px; margin: 0 auto; padding: 44px 24px 72px; }
+a { color: inherit; }
+.titleblock { border-top: 3px solid var(--njred); border-bottom: 1px solid var(--faint); padding: 20px 0 16px; margin-bottom: 30px; }
+.kicker { font-family: var(--sans); font-weight: bold; font-size: 12.5px; color: var(--njred); margin: 0 0 14px; display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+.kicker .pdf { font-weight: normal; color: var(--muted); text-decoration: none; border: 1px solid var(--faint); border-radius: 3px; padding: 1px 8px; }
+.kicker .pdf:hover { color: var(--njred); border-color: var(--njred); }
+h1 { font-family: var(--sans); font-size: 30px; line-height: 1.2; margin: 0 0 10px; }
+.acts { font-family: var(--sans); font-size: 13px; color: var(--muted); margin: 0; }
+h2.act { font-family: var(--sans); font-size: 21px; color: var(--njred); margin: 48px 0 20px; padding-bottom: 9px; border-bottom: 1px solid var(--faint); }
+h3 { font-family: var(--sans); font-size: 15.5px; margin: 30px 0 8px; }
+h4.example { font-family: var(--sans); font-size: 15.5px; margin: 22px 0 6px; }
+h4.example .label { color: var(--njred); }
+.worked { margin: 0 0 22px; }
+p { margin: 0; }
+p + p { text-indent: 1.6em; }
+.note { background: var(--paper); padding: 14px 18px; margin: 24px 0; }
+.note .lead { font-family: var(--sans); font-weight: bold; font-size: 15.5px; }
+.note p { display: inline; }
+.note p + p { display: block; text-indent: 1.6em; margin-top: 0.4em; }
+.note ul { margin-top: 10px; }
+.source { font-size: 13px; color: var(--muted); margin-top: 6px; text-indent: 0 !important; }
+.pull { text-align: center; margin: 14px 0; text-indent: 0 !important; }
+.bigq { text-align: center; font-size: 22px; margin: 18px 0; text-indent: 0 !important; }
+.math { margin: 8px 0 14px; overflow-x: auto; }
+.red, .c-njred { color: var(--njred); }
+.muted { color: var(--muted); }
+ul, ol { margin: 10px 0 12px; padding-left: 2.2em; }
+li { margin: 0 0 5px; }
+li p { display: inline; }
+figure { margin: 22px 0; text-align: center; }
+figure img { max-width: 100%; height: auto; }
+.tables { display: flex; justify-content: center; align-items: flex-start; gap: 44px; flex-wrap: wrap; margin: 18px 0; }
+table { border-collapse: collapse; font-size: 16.5px; }
+table.tt th { font-weight: normal; border-bottom: 1px solid var(--ink); padding: 2px 11px 4px; }
+table.tt td { padding: 3px 11px 0; }
+table.tt .rule { border-left: 1px solid var(--ink); }
+table.trans td { padding: 6px 18px; }
+table.trans td:first-child { padding-left: 0; }
+table.trans td:last-child { padding-right: 0; }
+pre.code { font-family: var(--mono); font-size: 15px; line-height: 1.4; margin: 16px 0 16px 44px; white-space: pre; overflow-x: auto; }
+code { font-family: var(--mono); font-size: 92%; }
+footer { margin-top: 56px; padding-top: 12px; border-top: 1px solid var(--faint); font-family: var(--sans); font-size: 12.5px; color: var(--muted);
+  display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+footer a { text-decoration: none; }
+footer a:hover { color: var(--njred); }
+@media (max-width: 560px) { body { font-size: 17px; } .page { padding: 28px 18px 56px; } h1 { font-size: 25px; } pre.code { margin-left: 12px; } }
+@media print { .page { max-width: none; padding: 0; } .kicker .pdf { display: none; } h2.act, h3, h4 { break-after: avoid; } figure, .note, table { break-inside: avoid; } }
+</style>
+<script>window.MathJax = { tex: { inlineMath: [['\\(', '\\)']], displayMath: [['\\[', '\\]']] }, chtml: { scale: 1.02 } };</script>
+<script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+</head>
+<body>
+<main class="page">
+<header class="titleblock">
+<p class="kicker">NJIT · CS 301 · INTRODUCTION TO DATA SCIENCE · FALL 2026 <a class="pdf" href="3.-Confidence-Instead-of-Certainty.pdf">PDF</a></p>
+<h1>Meeting 3. Confidence Instead of Certainty</h1>
+<p class="acts">Act 1 An Uncertain World · Act 2 Real Data Is Not a Truth Table · Act 3 The Sigmoid Function · Act 4 Wrong, With a Probability</p>
+</header>
+<aside class="note"><span class="lead">About these notes.</span> <p>There is no textbook to buy in CS&nbsp;301: these notes are the course’s text, written by the instructors and posted on Canvas as each meeting is reached. They follow the meetings themselves — including questions and examples that came up in class — and, together with the assignment notebook you build, they are what the exams are set from. Logistics, grading, and the schedule live in the syllabus.</p>
+</aside>
+<p>Meetings 1 and 2 built a unit that answers \(1\) or \(0\) and checked it against a truth table. This meeting sets the gates aside for a while — they come back — and turns toward data: a real dataset, recorded a few miles from campus, and a unit that answers with a <em>probability</em> instead of a verdict. The question of the unit still stands — a gate is written; could a neuron be taught? — but before it can be asked of real data, the unit has to be able to say how sure it is.</p>
+<h2 class="act" id="act-1">Act 1. An Uncertain World</h2>
+<h3 id="s-1-1">1.1 Six feet tall</h3>
+<p>Two people are each six feet tall. One was born in 1950, the other in 2000. Going by chromosomes: is each of them XX or XY?</p>
+<p>The first thing to settle is not the answer but the <em>kind</em> of answer. Can you be sure? No. There are women who are six feet tall, and the question does not arrive with a certificate attached. What you can have is a level of confidence: “I would put 90 percent on XY,” or some other number. Asked for that number in class, the room offered a range — one student said about 50 percent, perhaps a little more; another said 89. Nobody said 100, and nobody should have.</p>
+<p>The measurements settle what the number actually is.</p>
+<figure><img src="images/height-overlap.svg" alt="height-overlap" width="464" height="232"></figure>
+<p>The two curves are the distribution of adult height in the United States — women on the left, men on the right — from a national survey in which heights were measured rather than asked about. At 72 inches, six feet, the men’s curve still has a substantial tail to the right and the women’s has almost none: about <strong>15 in every 100 men</strong> reach six feet, and <strong>fewer than 1 in 1,000 women</strong>. Among six-footers, then, men outnumber women by roughly 75 to 1, and the probability that a six-footer is XY comes out near <strong>0.99</strong>. Notice how quickly the number moves with the height: at \(5'9''\) it is about 0.88. The lesson is not that 0.99 is the right answer to memorize. The lesson is that <em>about</em> is a number — a measured one — and not a hedge.</p>
+<p class="source">The curves: NHANES 2015–2018 (Fryar CD, Carroll MD, Gu Q, Afful J, Ogden CL, <em>Anthropometric reference data for children and adults: United States, 2015–2018</em>, Vital Health Stat 3(46), 2021), adults 20 and over; drawn as normal approximations to the survey’s percentiles.</p>
+<h3 id="s-1-2">1.2 Does the year of birth change it?</h3>
+<p>The second piece of information looks as if it should move the number. People born in 2000 grew up with better food and medicine than people born in 1950, so surely they are taller, and surely that shifts the curves. One student’s instinct in class was that it would change the answer a little, not a lot. For the United States the data say it changes the answer not at all.</p>
+<figure><img src="images/height-cohorts.svg" alt="height-cohorts" width="464" height="255"></figure>
+<p>The plot shows mean height at age 18 by year of birth, over a century. In the United States, men born in 1950 and men born in the 1990s both average 177&nbsp;cm; women, 163&nbsp;cm in both cohorts. The growth happened earlier, in the first half of the century, and then stopped. In South Korea the same plot is still climbing: women born in the 1990s are 6&nbsp;cm taller than women born in 1950, and men 7&nbsp;cm taller. Populations can move the other way too. In Greece, the generation that grew up during and just after the war of the 1940s came out shorter than their parents — nutrition was poor for years — and the generations after them recovered.</p>
+<p>So the second data point does matter, just not in the way the question suggested. It matters because the probability was never a property of six feet alone. <em>It belongs to six feet in a population</em>, and the population is a matter of place and time. The same measurement, taken in Seoul in 1950 and in Newark today, carries different odds. This is also why more data is better: a curve drawn from the right population and the right decade answers a question that the same curve drawn from the wrong one gets wrong.</p>
+<p class="source">NCD Risk Factor Collaboration, <em>A century of trends in adult human height</em>, eLife 5:e13410 (2016) — mean height at age 18 by year of birth, 1896–1996; the last cohort in the data is 1996, which is why the plot and the text say “the 1990s.”</p>
+<h3 id="s-1-3">1.3 Certain, or confident?</h3>
+<p>Place this beside the gates of meeting 1. A gate’s world is 0 or 1: the same input gives the same answer every time, and the answer is complete. The world a cell lives in is nothing like that. Heights are <strong>continuous</strong> — every value occurs. Measurements are <strong>noisy</strong>. And a measurement is <strong>ambiguous</strong>: the same six feet is compatible with more than one answer. In such a world the best possible answer to “XX or XY?” is not a verdict but a degree — <em>how much</em>.</p>
+<p>Your brain gives answers of exactly this kind all day, and the confidence behind them is measurable: on the ambiguous cases you hesitate longer and err more often, which is what you would expect from a system that commits to an answer while carrying a probability underneath.</p>
+<h3 id="s-1-4">1.4 The cell is not all-or-none either</h3>
+<p>Meeting 1 reduced the cell to a device that fires or does not. That was a simplification, and it is time to give some of the reality back.</p>
+<figure><img src="images/firing-rate.svg" alt="firing-rate" width="471" height="197"></figure>
+<p>Below its threshold the cell is silent. Above it, the cell fires spikes at a <em>rate</em> that rises with the input — a graded response, not a switch. And the rate does not rise forever: it saturates. A cell has only so much energy, and after each spike it needs a recovery interval of about a millisecond, the refractory period, before it can fire again, so no cell fires faster than a few hundred spikes a second. The cell’s output is therefore <strong>graded and bounded at both ends</strong>: it answers <em>how hard</em>, on a scale from silence to a ceiling. The arithmetic unit of meeting 1 kept the threshold and dropped the grading: it answers \(1\) or \(0\). The plan for the rest of this meeting, as it was put in class, is to give the arithmetic unit back a little of the cell’s messiness — not to make it worse, but to make it able to say how sure it is. That means two things: look at a real dataset and ask whether its answers are certain; then give the unit an output between \(0\) and \(1\).</p>
+<p class="source">The firing-rate curve is a schematic; the axes carry no numbers because the rates differ by cell type by an order of magnitude. The standard treatment is P.&nbsp;Dayan and L.&nbsp;F.&nbsp;Abbott, <em>Theoretical Neuroscience</em> (MIT Press, 2001), chapter 5.</p>
+<h2 class="act" id="act-2">Act 2. Real Data Is Not a Truth Table</h2>
+<h3 id="s-2-1">2.1 A day of weather, as numbers</h3>
+<p>The dataset is the weather at Newark Liberty airport, one row per day from 2006 through 2024, taken from the record NOAA keeps for the station. Four numbers describe a day: the <strong>high</strong> and the <strong>low</strong> temperature, the average <strong>humidity</strong>, and the average sea-level <strong>pressure</strong> — the four numbers meeting 2 mentioned when it argued that measurements rarely arrive one or two at a time. Asked in class how many numbers a unit would receive for one day, the room said four; asked how many dimensions the data therefore has, the answer spelled itself: the data is four-dimensional. Meeting 2 showed that the picture runs out at three inputs. Here is a problem where it has already run out, and that is the everyday case, not the exception.</p>
+<p>There are 6,940 rows. Each carries a <strong>label</strong>: \(1\) if the day falls in the <em>warm half</em> of the year, May through October, and \(0\) if it falls in the <em>cold half</em>, November through April. The label is computed from the date, and for that reason the date is not one of the inputs — §4.3 says why this matters more than it seems. The question the unit is asked: from the four measurements alone, which half of the year is it?</p>
+<h3 id="s-2-2">2.2 A notebook, run top to bottom</h3>
+<p>The meeting’s data work lives in a notebook, <em>The DS Excursion</em>, which you can run yourself: it is on Canvas as a page of cells to paste into a notebook of your own, and it opens directly in Colab from this address:</p>
+<p><a href="https://colab.research.google.com/github/ikoutis/ikoutis.github.io/blob/master/course-notes/artificial-neuron-notes/notebooks/the-ds-excursion.ipynb">https://colab.research.google.com/github/ikoutis/ikoutis.github.io/blob/master/course-notes/artificial-neuron-notes/notebooks/the-ds-excursion.ipynb</a></p>
+<p>What follows is what it does, step by step, because the steps are a small data-science workflow in themselves.</p>
+<p>The data starts life as a spreadsheet — a CSV file, one line per day — at a public address. Loading it takes four lines:</p>
+<p></p>
+<pre class="code">import pandas as pd
+
+URL = ("https://ikoutis.github.io/course-notes/"
+       "artificial-neuron-notes/data/newark-weather.csv")
+df = pd.read_csv(URL, parse_dates=["date"])
+
+df.head()
+df.shape
+df.describe()</pre>
+<p>The library is <strong>pandas</strong>, and <code>pd</code> is its customary short name. What <code>read_csv</code> returns is a <strong>DataFrame</strong>: a table held in memory, one row per record and one named column per quantity, so that Python sees the spreadsheet the way you do. <code>head</code> shows the first rows; <code>shape</code> counts rows and columns; <code>describe</code> summarises every column — its mean, its spread, its smallest and largest values. The four measurements are the table’s <strong>features</strong>: the columns a classifier is given to work with.</p>
+<p>Nobody is asked to write these lines from memory. It was said plainly in class that the instructor would need a moment to look them up too, and that this kind of code is exactly what an AI assistant produces reliably. What you are asked to know is what each line <em>does</em> — which is the part the assistant cannot know for you.</p>
+<h3 id="s-2-3">2.3 Holes</h3>
+<p>Here is the first thing real data has that a truth table never does.</p>
+<p></p>
+<pre class="code">df.isna().sum()
+
+FEATURES = ["tmax_f", "tmin_f", "humidity_pct", "pressure_hpa"]
+df = df.dropna(subset=FEATURES)</pre>
+<p>Of the 6,940 days, <strong>64 have no humidity reading and 75 have no pressure reading</strong>. Nothing sinister happened: instruments fail, a sensor at an airport stops reporting for a day, and the record keeps the gap rather than inventing a number. In a factory, a sensor that has quietly died is an ordinary Tuesday.</p>
+<p>What do you do with a hole? Three things, in class’s order. You can <strong>drop</strong> the row: you do not trust it, so you leave it out. You can <strong>fill</strong> the hole with the column’s average — put in something approximately right rather than nothing. Or you can fill it more carefully from <em>similar</em> days: the 64 days without a humidity all have a temperature, so take the days with the same temperature and use their average humidity. Each is a judgment, and a data scientist makes such judgments constantly. This course drops: what remains is <strong>6,865 days — 3,455 in the warm half and 3,410 in the cold half</strong>, almost exactly balanced.</p>
+<p>Keep the moral. The noisiness promised at the start of the meeting is not only inside the cell, and not only inside the unit about to be built. It comes with the data: measurements are continuous, noisy, and sometimes simply absent. A truth table has no missing rows. A station has days the instrument did not report.</p>
+<h3 id="s-2-4">2.4 One measurement, two classes</h3>
+<p>Part of every data-science workflow is looking at the data before asking anything of it, and there is a course devoted to nothing but that (DS&nbsp;450, data visualization). Here two pictures are enough. The first is a <strong>histogram</strong> of the daily high.</p>
+<figure><img src="images/newark-hist.svg" alt="newark-hist" width="510" height="255"></figure>
+<p>Read it as a count: the horizontal axis is the day’s high, in bins of five degrees, and the height of a bar is the number of days whose high fell in that bin — a handful above 100° F, a handful near 20, and the bulk in between, in the bell shape that a great many measured quantities take. The two halves of the year are drawn as two overlaid histograms. Below about 55° F nearly every day is cold-half; above about 75, nearly every day is warm-half; and between 55 and 75 the two shapes overlap — a day with a high of 65 is warm-half about as often as not. Look also at the far right of the gray histogram: cold-half days with a high of 80° F and more. Those are November days, three of them in the years covered. (A prediction was ventured in class that there would be more this November. Treat it as a prediction.)</p>
+<h3 id="s-2-5">2.5 Two measurements</h3>
+<p>The second picture is a <strong>scatter plot</strong>: two measurements at once.</p>
+<figure><img src="images/newark-scatter.svg" alt="newark-scatter" width="390" height="312"></figure>
+<p>Each day is one point — its high on the horizontal axis, its low on the vertical — filled red for the warm half and hollow for the cold. Set this beside the unit square of meeting 2. That square had two inputs and four corners; this plane has two inputs and 6,865 points. And where each corner came with its answer attached, here the two clouds run into each other along a band, and no day in the band comes with its answer attached.</p>
+<p>A histogram needs one variable, because its second axis is spent on counting. A scatter plot spends both axes on measurements, which is why a third measurement wants a third axis: three variables make a three-dimensional scatter, as a student said in class, and you would have to walk around it, or put on the right glasses, to read it. Beyond three, drawing stops — the conclusion of meeting 2, now with a real dataset attached.</p>
+<section class="worked" id="ex-2-1">
+<h4 class="example"><span class="label">Example 2.1</span> Mark the surprising days</h4>
+<p>Look at the scatter plot and find three days that seem to sit in the wrong cloud. In class two kinds were pointed out on the projected plot. Up in the red cloud, among the hot days, sit a few hollow points: cold-half days whose high and low both belong to summer. Down in the gray cloud sit a few red points: warm-half days on which both the high and the low were winter temperatures. Before deciding that either is an error, write down what you would want to know about it.</p>
+<p>This kind of looking is part of the job. A radiologist reading a scan is doing it — looking for the thing that does not fit — with the benefit of long training in what belongs. A data scientist does it with plots, and does it early: the person who notices a small cluster of customers doing something unexpected, in one corner of the data at one time of year, and says so, has found something no summary statistic would have shown. Machines will do more and more of this, but a person looking at a picture still brings something the machine does not: a connection to the world the numbers came from.</p>
+</section>
+<h3 id="s-2-6">2.6 The 80° day in November</h3>
+<p>Here are the surprising days, looked up by date.</p>
+<div class="tables">
+<table class="tt">
+<tr><th style="text-align:left">date</th><th class="rule" style="text-align:center">high</th><th style="text-align:center">low</th><th style="text-align:center">humidity</th><th style="text-align:center">pressure</th><th class="rule" style="text-align:left">label</th></tr>
+<tr><th style="text-align:left">2022-11-07</th><th class="rule" style="text-align:center">81° F</th><th style="text-align:center">56° F</th><th style="text-align:center">45%</th><th style="text-align:center">1022 hPa</th><th class="rule" style="text-align:left">cold half</th></tr>
+<tr><th style="text-align:left">2024-11-01</th><th class="rule" style="text-align:center">82° F</th><th style="text-align:center">58° F</th><th style="text-align:center">47%</th><th style="text-align:center">1015 hPa</th><th class="rule" style="text-align:left">cold half</th></tr>
+<tr><th style="text-align:left">2024-11-06</th><th class="rule" style="text-align:center"><span class="red">83° F</span></th><th style="text-align:center">63° F</th><th style="text-align:center">57%</th><th style="text-align:center">1016 hPa</th><th class="rule" style="text-align:left">cold half</th></tr>
+<tr><td style="text-align:left">2020-05-09</td><td class="rule" style="text-align:center"><span class="red">50° F</span></td><td style="text-align:center">34° F</td><td style="text-align:center">44%</td><td style="text-align:center">1012 hPa</td><td class="rule" style="text-align:left">warm half</td></tr>
+</table>
+</div>
+<p>The four numbers of a day live on very different scales — temperatures in tens of degrees, humidity a percentage, pressure a number near a thousand — and that is simply what the instruments record. Look instead at the labels. <strong>Every one of them is correct.</strong> The high on November 6, 2024 was 83° F, and it was November; the high on May 9, 2020 was 50° F, with a low of 34, and it was May. These are not typos and not sensor faults; most of the class was in New Jersey for both of them, and the May day fell in the first spring of the pandemic, when everyone was home to notice the weather. The label records which half of the year a day belongs to — not what the weather was like.</p>
+<p>The consequence is the hinge of this meeting. No rule on these four numbers can put November 6, 2024 on the cold side without putting a typical June day there too. The day looks, in every measurement the unit is given, like summer.</p>
+<h3 id="s-2-7">2.7 What a truth table never has</h3>
+<p>Three things, then, that the data has and no truth table does.</p>
+<ul>
+<li><strong>The same input can carry either label.</strong> Two six-foot-tall people born in the same year: identical data, and yet one may be XX and the other XY. An 83° F high is an ordinary June day, and it happened in November. A true story from class: a pet weighing 16 pounds — cat or dog? The room said dog, reasonably. It is a cat.</li>
+<li><strong>No row is exact.</strong> Every entry is a measurement, read off an instrument, on a day the instrument may have missed.</li>
+<li><strong>There are more rows than you can look at.</strong> A gate had four; this table has 6,865; the records of one hospital system for one year run to millions.</li>
+</ul>
+<p>Certainty, in short, failed on this data before any model was tried. You cannot look at a row and say with certainty which class it is in. You can look at it and say <em>with confidence</em> which class it is in — and the rest of the meeting is about giving the unit that ability.</p>
+<h2 class="act" id="act-3">Act 3. The Sigmoid Function</h2>
+<h3 id="s-3-1">3.1 What is a probability?</h3>
+<p>The probability course you took treats probability abstractly — sample spaces, events, axioms. For this course, a more concrete reading is enough, and it is the one to keep. A probability is a number between \(0\) and \(1\) that says <em>how much of the time</em>. If you were handed a thousand people fitting the description “six feet tall” and had to answer XX or XY for each, you would answer XY, and you would be right about 99 percent of the time: that is what “probability 0.99” means. Of a thousand 16-pound pets, nearly all are dogs; that is the 0.99 behind “probably a dog.” In data science a probability is grounded in counts.</p>
+<p>On the scatter plot the same reading is available directly. Take any one point in the plane and collect all the days that land near it; the probability of “warm half” at that point is the <em>fraction</em> of those days that are warm-half. For the four corners of a truth table that fraction is always \(0\) or \(1\) — each row has exactly one answer. On the weather it is \(0\) or \(1\) far from the band, and somewhere in between inside it.</p>
+<h3 id="s-3-2">3.2 The score is unbounded</h3>
+<p>Return to the unit of meeting 2. Its score is</p>
+<div class="math">\[ s \;=\; \mathbf{w}\cdot\mathbf{x} + b, \]</div>
+<p>the weights times the inputs, plus the bias (which is the threshold moved across: \(b = -\theta\)). It was said in class, and it is true: the mathematics in this course does not get much harder than this line. Now look at what the score <em>ranges</em> over. The weights can be any numbers and the inputs can be any numbers, so the score runs from \(-\infty\) to \(+\infty\); on the weather, with the line drawn later in this meeting, it runs from about \(-100\) to about \(+75\). But a probability lives in \([0, 1]\). What is needed is a function that takes a score, anywhere on the number line, and returns a probability — and it is clear what the function has to do:</p>
+<ul>
+<li>it should be <strong>increasing</strong>: a low score means a low probability, the unit should not fire at all; a high score means a high probability, the unit fires at full intensity;</li>
+<li>at the threshold — score exactly \(0\), the neutral point — it should give \(\tfrac12\): on the fence;</li>
+<li>it should be <strong>smooth</strong>, with no jump, and it should <strong>never quite reach</strong> \(0\) or \(1\).</li>
+</ul>
+<h3 id="s-3-3">3.3 The sigmoid</h3>
+<p>The function is the <strong>sigmoid</strong>:</p>
+<div class="math">\[ \sigma(s) \;=\; \frac{1}{1 + e^{-s}}. \]</div>
+<p>Take the score, flip its sign, put it in the exponent, and form the ratio. Its graph is the red curve:</p>
+<figure><img src="images/sigmoid.svg" alt="sigmoid" width="417" height="230"></figure>
+<p>Very negative scores give probabilities near \(0\); very positive ones give probabilities near \(1\); in between there is a smooth transition that passes through exactly \(\tfrac12\) at \(s = 0\). Asked in class what the shape was, a student said an S — which is the name: <em>sigmoid</em>, S-shaped. (If an exam ever asks you to draw one, draw an S. The joke was made in class; it is also correct.) Three properties to keep:</p>
+<ul>
+<li>\(\sigma(0) = \tfrac12\);</li>
+<li>\(\sigma(-s) = 1 - \sigma(s)\): the curve is symmetric about the middle point, so a score and its negative give complementary probabilities;</li>
+<li>the limits \(0\) and \(1\) are never reached.</li>
+</ul>
+<p>The dashed curve behind the sigmoid is the unit of meeting 1, which jumps from \(0\) to \(1\) at the threshold: certainty, with nothing in between. The sigmoid makes the same trip with a smooth middle, and that middle is the whole point. It is what a biological neuron does, and it is what the world of Act&nbsp;2 demands — a unit that cannot be certain but can be confident.</p>
+<section class="worked" id="ex-3-1">
+<h4 class="example"><span class="label">Example 3.1</span> Sigma by hand</h4>
+<p>Compute \(\sigma(s)\) for four scores, using \(e^{2} \approx 7.39\) and \(e^{10} \approx 22026\).</p>
+<p>For \(s = 0\): the exponential of \(0\) is \(1\), so \(\sigma(0) = 1/(1+1) = 0.5\). The fence, as expected.</p>
+<p>For \(s = 2\): this is the row the class stumbled on, and the stumble is worth recording. The first attempt put \(e^{2} = 7.39\) into the denominator as it stands, \(1/(1 + 7.39) \approx 0.12\) — a probability near zero for a comfortably positive score, which should have felt wrong. Two students stopped it: the exponent is \(-s\), not \(s\), so what belongs in the denominator is \(e^{-2} = 1/e^{2} = 1/7.39 \approx 0.135\). Then</p>
+<div class="math">\[ \sigma(2) \;=\; \frac{1}{1 + 0.135} \;\approx\; 0.88. \]</div>
+<p>A score of \(2\) is already a fairly confident yes.</p>
+<p>For \(s = -2\): no new arithmetic. By the symmetry, \(\sigma(-2) = 1 - \sigma(2) \approx 0.12\). A score of \(-2\) is the same confidence, the other way.</p>
+<p>For \(s = 10\): \(e^{-10} = 1/22026 \approx 0.000045\), so \(\sigma(10) \approx 0.99995\) — very, very close to \(1\), and still not \(1\).</p>
+<p>Two questions follow. <em>For which \(s\) is \(\sigma(s) \ge \tfrac12\)?</em> For \(s \ge 0\) — a student gave the answer at once, and it is the content of §3.5. <em>Make the sigmoid infinitely steep; which function is left?</em> Squeeze the transition until it happens all at once, and what remains is the step: the unit of meeting 1, which is therefore the sigmoid’s limiting case rather than a different thing.</p>
+</section>
+<h3 id="s-3-4">3.4 Temperature</h3>
+<p>There is one more number to put in, and it has a name you may have heard elsewhere. Divide the score by a constant \(T &gt; 0\) before applying the sigmoid:</p>
+<div class="math">\[ \sigma\!\left(\frac{s}{T}\right). \]</div>
+<p>Think about what dividing by \(10\) does: zero stays zero, and every other score moves ten times closer to zero. The transition therefore spreads out — a score has to be much larger before the unit is sure. Divide by \(\tfrac14\) instead, which is multiplying by \(4\), and the transition sharpens.</p>
+<figure><img src="images/sigmoid-temperature.svg" alt="sigmoid-temperature" width="417" height="230"></figure>
+<p>A small \(T\) makes the curve steeper and closer to the step: the unit becomes stricter, and in the limit it becomes meeting 1’s unit. A large \(T\) flattens the curve toward \(\tfrac12\) everywhere: the unit becomes noncommittal, and in the limit it is a coin flip. On the weather, where the score is in degrees Fahrenheit, \(T\) is a <em>width in degrees</em>: how far from the boundary a day has to be before the unit is sure about it.</p>
+<p>The name is <strong>temperature</strong>, and a student recognized it from large language models: the interface to one exposes a parameter called the temperature, and it is this same \(T\), applied to the model’s scores for its next word. Run a model at a low temperature and it is rigid and matter-of-fact, always taking its most probable option; raise the temperature and it loosens, spreads its bets, and becomes more varied — more “poetic,” as it was put in class. The class’s picture of the two settings was two people asked whether a 35-pound animal is a cat or a dog. The strict one says “dog” and gives the alternative no chance at all. The relaxed one says “probably a dog — but it might be a cat from another planet.” Both have their uses, and \(T\) is the dial between them. The word itself comes from physics, where the same formula appears with an actual temperature in it.</p>
+<aside class="note"><span class="lead">A note from the day.</span> <p>The day before this meeting, OpenAI announced that an internal model of theirs had produced a proof for the Navier–Stokes existence-and-smoothness problem — one of the seven Millennium Prize Problems, open for decades, which asks whether the equations of fluid flow can break down in finite time. By the company’s account, up to ten thousand copies of the model worked on it for about 88 hours, and the resulting proof was checked by the Lean proof assistant. Within hours a mathematician at NYU raised a question about whether his group’s unpublished work had fed the effort, and when these notes were written the mathematical community was still examining the claim. It came up in class because it is the kind of news that now arrives weekly, and because the systems that make such news are built — at enormous scale — from units of the kind this course is constructing by hand.</p>
+</aside>
+<p class="source">OpenAI, <em>On the Navier–Stokes Millennium Prize Problem</em> (openai.com, September 8, 2026); reported in <em>Nature</em> and <em>Quanta Magazine</em> the same day. Verify the current state of the claim before repeating it.</p>
+<h3 id="s-3-5">3.5 Still a line</h3>
+<p>Suppose the unit says “51 percent cat.” Sometimes you have to act, and acting means rounding: 51 percent becomes “cat.” There is nothing wrong with this. In class it was put in terms of betting: a 51-percent edge, used over and over, makes money in the long run — you do not bet everything, because you are not certain, but you bet a little, many times, and the edge compounds. So confidence can be converted back into a decision by <strong>thresholding</strong> it at \(\tfrac12\): through the probability, as it were, back to a yes or a no.</p>
+<p>What does the unit look like once you do that? This is the mathematical point of the meeting, and it was flagged in class as the kind of thing exams and job interviews ask. For any temperature \(T &gt; 0\),</p>
+<div class="math">\[ \sigma\!\left(\frac{\mathbf{w}\cdot\mathbf{x} + b}{T}\right) \;\ge\; \tfrac12 \quad\Longleftrightarrow\quad \frac{\mathbf{w}\cdot\mathbf{x} + b}{T} \;\ge\; 0 \quad\Longleftrightarrow\quad \mathbf{w}\cdot\mathbf{x} + b \;\ge\; 0 . \]</div>
+<p>The first step is the sigmoid’s own property — it is at or above \(\tfrac12\) exactly when its argument is at or above \(0\) — and the second is that dividing by a positive number does not change a sign. So thresholding the probability at \(\tfrac12\) is <em>identical</em> to thresholding the score at \(0\), whatever \(T\) is: the set of inputs the unit calls “more likely warm than not” is precisely the half-plane meeting 2 drew. The sigmoid changed what the unit says about points away from the line. It did not move the line.</p>
+<p>There is a second way to say the same thing. Write \(P\) for the unit’s output and solve for the score: \(P/(1-P)\) is the <strong>odds</strong>, and its logarithm, the <strong>log-odds</strong>, is</p>
+<div class="math">\[ \log\frac{P}{1-P} \;=\; \frac{\mathbf{w}\cdot\mathbf{x} + b}{T}, \]</div>
+<p>which is linear in \(\mathbf{x}\). Underneath the S-shaped curve, the unit is still doing what it did in meeting 2: computing a line.</p>
+<h3 id="s-3-6">3.6 The same line, blurred</h3>
+<p>The right way to see what did change is to color the plane by the unit’s output instead of by its decision.</p>
+<figure><img src="images/sigmoid-plane.svg" alt="sigmoid-plane" width="557" height="234"></figure>
+<p>A unit that answered with certainty would paint the plane in two flat colors, red on one side of the line and white on the other. This unit paints in <em>shades</em>. Right at the boundary — the fence, as it was called in class — the shade says 51, 52, 53 percent; move away from it and the shade deepens quickly toward one on the warm side and fades toward zero on the cold. The two panels use two temperatures, \(4\)° F and \(12\)° F, and the \(0.5\) contour is the same line in both. \(T\) changes nothing about the boundary and everything about how sure the unit is away from it.</p>
+<h3 id="s-3-7">3.7 What changed, what did not</h3>
+<div class="tables">
+<table class="tt">
+<tr><th style="text-align:left"></th><th class="rule" style="text-align:center">meeting 1’s unit</th><th style="text-align:center">today’s unit</th></tr>
+<tr><td style="text-align:left">output</td><td class="rule" style="text-align:center">\(\{0, 1\}\)</td><td style="text-align:center">\((0, 1)\), strictly between</td></tr>
+<tr><td style="text-align:left">boundary</td><td class="rule" style="text-align:center">a line</td><td style="text-align:center">the same line</td></tr>
+<tr><td style="text-align:left">settings</td><td class="rule" style="text-align:center">\(\mathbf{w}\), \(b\)</td><td style="text-align:center">\(\mathbf{w}\), \(b\), and one more number, \(T\)</td></tr>
+</table>
+</div>
+<p>Why “strictly between”? A student gave the reason in class: the sigmoid never reaches \(0\) or \(1\), whatever the score. That is true of the function. On a computer it is not quite true of the number — floating-point arithmetic has finite precision, and a large enough score produces an output that rounds to exactly \(1.0\) or exactly \(0.0\). Worth knowing the first time a notebook prints a probability of \(1.0\) for something that is not certain.</p>
+<p class="bigq"><span class="red">A gate answers with certainty; a neuron answers with confidence.</span></p>
+<h2 class="act" id="act-4">Act 4. Wrong, With a Probability</h2>
+<h3 id="s-4-1">4.1 A line by hand</h3>
+<p>Back to the data, with the new unit in hand. Draw a line through the band, by eye: where the high and the low add up to \(120\) — that is, where their average is 60° F — and call the side above it warm.</p>
+<figure><img src="images/newark-boundary.svg" alt="newark-boundary" width="390" height="312"></figure>
+<p>That line puts <strong>89.7 percent</strong> of the days on the correct side. The other <strong>707 days</strong>, of 6,865, are drawn in gold: they sit on the wrong side of the line. In one sense they are simply wrong. In the sense that matters they are, as it was put in class, on the wrong side <em>with a probability</em> — the unit never claimed certainty about them, and §4.3 shows what that buys. The line drawn by eye is not the best one: try every line and the best does <strong>91 percent</strong>. No line does 100 — and that is measured, not guessed. How the best line is found is the question meeting 2 ended on — could a procedure find the weights? — and it stays open here.</p>
+<h3 id="s-4-2">4.2 Why not 100 percent</h3>
+<p>Inside the band the same (high, low) occurs in both halves of the year, and a line gives each point one side. That much is geometry. The reason the band exists is the calendar. <strong>April and October are the same weather with different labels</strong>: the mean daily high is 63° F in April and 68° F in October, and the label calls one cold and the other warm by the month, not by the weather. Ask which days the line gets wrong and the answer is mostly April and October days — which is an <em>explanation</em> of the unit’s errors, not an excuse for them. Producing such explanations is a discipline of its own now, explainable AI: looking at a model’s answers and saying why it gave them. The errors here are not the instrument being noisy. They are the question being hard.</p>
+<section class="worked" id="ex-4-1">
+<h4 class="example"><span class="label">Example 4.1</span> Wrong, with a probability</h4>
+<p>Take the day of the table in §2.6, November 6, 2024: a high of 82.9° F and a low of 63.0. Under the line of §4.1 its score is</p>
+<div class="math">\[ s \;=\; 82.9 + 63.0 - 120 \;=\; 25.9, \]</div>
+<p>well above zero. Run it through the sigmoid with a temperature of \(T = 10\):</p>
+<div class="math">\[ \sigma\!\left(\frac{25.9}{10}\right) \;=\; \sigma(2.59) \;\approx\; 0.93. \]</div>
+<p>The unit says: <em>93 percent warm half.</em> The day is in the cold half. So the unit is wrong — and it gave 7 percent to what actually happened. The unit of meeting 1, given the same day, would have said “warm half” and given the truth nothing at all. A wrong answer with a probability attached is a different kind of wrong. Never forget the 7 percent: in data science, in machine learning, in AI, the probability is always there, and the answer is never certain.</p>
+</section>
+<h3 id="s-4-3">4.3 When the answer was hidden in the data</h3>
+<p>There has been excitement about artificial neurons before, more than once and on much smaller evidence, and one story from the early days gets told in every course on the subject. It was told in class as a story heard secondhand, and that is what it is: nobody has ever found the original. A network was trained to find tanks in photographs and seemed to do it perfectly — until it turned out that every photo with a tank in it had been taken in one kind of weather, and every photo without one in another. The network had learned to tell sunny days from cloudy days. The answer had leaked into the data through a side door, and the model, which finds <em>whatever</em> separates the labels, went through the side door.</p>
+<p>The story may be a legend, but the failure is real and has been documented many times since:</p>
+<ul>
+<li>A network trained to read chest X-rays could tell, from the film alone, <em>which hospital</em> it came from — and since hospitals differ in how sick their patients are, the hospital leaked into the diagnosis.</li>
+<li>A network that recognized one class of animal in photographs was reading a photographer’s <em>tag</em> in the corner of the images, which happened to appear only in that class.</li>
+<li>A network rating skin lesions rated them more malignant when purple <em>surgical markings</em> were visible in the picture.</li>
+</ul>
+<p>The words for this are <em>leak</em> and <em>confound</em>: some other variable in the data that reveals the answer without being the answer. The Newark data has one waiting. The label is computed from the date, so a programming accident that let the date column into the unit would produce a unit that is right on every day and has learned nothing whatever about weather. That is why the date is never an input, and why the month is read in the notebook only to look days up. A classifier finds whatever separates the labels. Make sure the only thing that separates them is the thing you meant.</p>
+<p class="source">The tank story: G.&nbsp;Branwen, <em>The Neural Net Tank Urban Legend</em>, <a href="https://gwern.net/tank">https://gwern.net/tank</a> — tellings traced to the early 1960s, no documented failure. The documented cases: Zech et al., <em>PLOS Medicine</em> 15(11): e1002683 (2018); Lapuschkin et al., <em>Unmasking Clever Hans predictors and assessing what machines really learn</em>, Nature Communications 10:1096 (2019); Winkler et al., <em>JAMA Dermatology</em> 155(10) (2019).</p>
+<h3 id="s-4-4">4.4 Two things to take with you</h3>
+<ul>
+<li>On this data, a line is as good as it gets — and it is never right on every day. About nine days in ten is the ceiling, and the ceiling is a measurement, not a guess. That is partly the line’s fault and partly the data’s, and no amount of care removes the second part.</li>
+<li>The unit now says <em>how sure it is</em>. Its output is a probability, its boundary is still a line, and a wrong answer comes with the probability it gave the truth. What the unit does not do yet is find its own line — meeting 2’s open question, still open.</li>
+</ul>
+<aside class="note"><span class="lead">After this meeting.</span> <ul>
+<li>Run <em>The DS Excursion</em> yourself — from Canvas or the Colab link in §2.2 — top to bottom. Then change the \(120\) in the line and see how many days move; change \(T\) and watch which days’ probabilities move most.</li>
+<li>The three exercises of this meeting — the six-foot number, the surprising days, and sigma by hand — are on the meeting’s worksheet; do them on paper.</li>
+<li>Assignment Task 1, <em>Gates by hand</em>, is due as Canvas says; the week’s review quiz is on Canvas.</li>
+</ul>
+</aside>
+<footer>
+<span>CS 301 · Meeting 3 · <a href="index.html">all meetings</a></span>
+<span>generated from meeting-03.tex on 2026-09-10</span>
+</footer>
+</main>
+</body>
+</html>
