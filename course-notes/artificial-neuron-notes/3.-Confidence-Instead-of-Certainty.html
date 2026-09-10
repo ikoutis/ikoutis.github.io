@@ -111,7 +111,7 @@ footer a:hover { color: var(--njred); }
 <p>The dataset is the weather at Newark Liberty airport, one row per day from 2006 through 2024, taken from the record NOAA keeps for the station. Four numbers describe a day: the <strong>high</strong> and the <strong>low</strong> temperature, the average <strong>humidity</strong>, and the average sea-level <strong>pressure</strong> — the four numbers meeting 2 mentioned when it argued that measurements rarely arrive one or two at a time. Asked in class how many numbers a unit would receive for one day, the room said four; asked how many dimensions the data therefore has, the answer spelled itself: the data is four-dimensional. Meeting 2 showed that the picture runs out at three inputs. Here is a problem where it has already run out, and that is the everyday case, not the exception.</p>
 <p>There are 6,940 rows. Each carries a <strong>label</strong>: \(1\) if the day falls in the <em>warm half</em> of the year, May through October, and \(0\) if it falls in the <em>cold half</em>, November through April. The label is computed from the date, and for that reason the date is not one of the inputs — §4.3 says why this matters more than it seems. The question the unit is asked: from the four measurements alone, which half of the year is it?</p>
 <h3 id="s-2-2">2.2 A notebook, run top to bottom</h3>
-<p>The meeting’s data work lives in a notebook, <em>The DS Excursion</em>, which you can run yourself: it is on Canvas as a page of cells to paste into a notebook of your own, and it opens directly in Colab from this address:</p>
+<p>The meeting’s data work lives in a notebook, <em>The DS Excursion</em>, which you can run yourself: it is linked from Canvas, and it opens directly in Colab — where you can run it, change it, and keep a copy — from this address:</p>
 <p><a href="https://colab.research.google.com/github/ikoutis/ikoutis.github.io/blob/master/course-notes/artificial-neuron-notes/notebooks/the-ds-excursion.ipynb">https://colab.research.google.com/github/ikoutis/ikoutis.github.io/blob/master/course-notes/artificial-neuron-notes/notebooks/the-ds-excursion.ipynb</a></p>
 <p>What follows is what it does, step by step, because the steps are a small data-science workflow in themselves.</p>
 <p>The data starts life as a spreadsheet — a CSV file, one line per day — at a public address. Loading it takes four lines:</p>
@@ -272,7 +272,7 @@ df = df.dropna(subset=FEATURES)</pre>
 <li>The unit now says <em>how sure it is</em>. Its output is a probability, its boundary is still a line, and a wrong answer comes with the probability it gave the truth. What the unit does not do yet is find its own line — meeting 2’s open question, still open.</li>
 </ul>
 <aside class="note"><span class="lead">After this meeting.</span> <ul>
-<li>Run <em>The DS Excursion</em> yourself — from Canvas or the Colab link in §2.2 — top to bottom. Then change the \(120\) in the line and see how many days move; change \(T\) and watch which days’ probabilities move most.</li>
+<li>Run <em>The DS Excursion</em> yourself — the Colab link is on Canvas and in §2.2 — top to bottom. Then change the \(120\) in the line and see how many days move; change \(T\) and watch which days’ probabilities move most.</li>
 <li>The three exercises of this meeting — the six-foot number, the surprising days, and sigma by hand — are on the meeting’s worksheet; do them on paper.</li>
 <li>Assignment Task 1, <em>Gates by hand</em>, is due as Canvas says; the week’s review quiz is on Canvas.</li>
 </ul>
