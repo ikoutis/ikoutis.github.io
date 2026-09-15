@@ -1,0 +1,351 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CS 301 — Moving the line</title>
+<!--
+  CS 301, meeting 2. Companion to the "Gates by Hand" and "The Linear Score"
+  decks: move the weights and the threshold, watch the boundary move, and see
+  which of the four corners the unit gets right.
+
+  Self-contained on purpose. No CDN, no fonts, no network: it opens from a
+  Canvas file link, from a local copy, or from a USB stick, and it will still
+  open in five years. Palette matches slides/cs301-slides.sty.
+
+  It deliberately says nothing about which gates are reachable. Finding that
+  out is the point -- see the authoring note in
+  syllabus/working-notes/unit-1-arc.md.
+-->
+<style>
+  :root {
+    --red: #CC0033;
+    --gold: #F5A623;
+    --ink: #1A1A1A;
+    --muted: #555;
+    --faint: #DDD;
+    --paper: #F7F7F5;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    padding: 24px 20px 40px;
+    font-family: "DM Sans", -apple-system, BlinkMacSystemFont, "Segoe UI",
+                 Roboto, Helvetica, Arial, sans-serif;
+    color: var(--ink);
+    background: #fff;
+    line-height: 1.6;
+  }
+  .wrap { max-width: 880px; margin: 0 auto; }
+  header { border-top: 4px solid var(--red); padding-top: 16px; margin-bottom: 20px; }
+  .eyebrow {
+    font-size: 11px; font-weight: 700; letter-spacing: .12em;
+    text-transform: uppercase; color: var(--red); margin-bottom: 4px;
+  }
+  h1 { font-size: 22px; font-weight: 600; margin: 0 0 6px; }
+  header p { margin: 0; color: var(--muted); font-size: 14px; }
+
+  .panel { display: flex; flex-wrap: wrap; gap: 28px; align-items: flex-start; }
+  .left { flex: 0 0 auto; }
+  .right { flex: 1 1 280px; min-width: 260px; }
+
+  .gates { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 18px; }
+  .gates button {
+    font: inherit; font-size: 13px; font-weight: 600;
+    padding: 6px 14px; border: 1px solid var(--faint); background: #fff;
+    color: var(--muted); border-radius: 3px; cursor: pointer;
+  }
+  .gates button:hover { border-color: var(--muted); }
+  .gates button[aria-pressed="true"] {
+    background: var(--red); border-color: var(--red); color: #fff;
+  }
+
+  .slider { margin-bottom: 14px; }
+  .slider label {
+    display: flex; justify-content: space-between; align-items: baseline;
+    font-size: 13px; color: var(--muted); margin-bottom: 2px;
+  }
+  .slider .val {
+    font-family: ui-monospace, "JetBrains Mono", Menlo, Consolas, monospace;
+    font-size: 13px; color: var(--ink); font-weight: 600;
+  }
+  .slider input { width: 100%; accent-color: var(--red); }
+
+  table { border-collapse: collapse; margin-top: 18px; font-size: 13px; }
+  th, td {
+    padding: 4px 12px; text-align: center;
+    font-family: ui-monospace, "JetBrains Mono", Menlo, Consolas, monospace;
+  }
+  th { font-weight: 600; color: var(--muted); border-bottom: 1px solid var(--faint); }
+  td.sep, th.sep { border-left: 1px solid var(--faint); }
+  tr.bad td { color: var(--red); font-weight: 700; }
+
+  .score { margin-top: 14px; font-size: 14px; color: var(--muted); }
+  .score strong { color: var(--ink); }
+  .score.all-right strong { color: var(--red); }
+
+  .reset {
+    margin-top: 18px; font: inherit; font-size: 12px; padding: 5px 12px;
+    border: 1px solid var(--faint); background: #fff; color: var(--muted);
+    border-radius: 3px; cursor: pointer;
+  }
+  .reset:hover { border-color: var(--muted); }
+
+  footer {
+    margin-top: 32px; padding-top: 14px; border-top: 1px solid var(--faint);
+    font-size: 12.5px; color: var(--muted);
+  }
+  code {
+    font-family: ui-monospace, "JetBrains Mono", Menlo, Consolas, monospace;
+    background: var(--paper); padding: 1px 4px; border-radius: 2px;
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div class="eyebrow">CS 301 &middot; Meeting 2</div>
+    <h1>Moving the line</h1>
+    <p>The unit answers 1 when <code>w&#8321;x&#8321; + w&#8322;x&#8322; &ge; &theta;</code>. Move the three numbers and watch the boundary.</p>
+  </header>
+
+  <div class="panel">
+    <div class="left">
+      <svg id="plot" width="340" height="330" role="img"
+           aria-label="The unit square with the decision boundary drawn across it"></svg>
+    </div>
+
+    <div class="right">
+      <div class="gates" id="gates" role="group" aria-label="Choose a gate"></div>
+
+      <div class="slider">
+        <label for="w1">weight on x&#8321; <span class="val" id="w1v"></span></label>
+        <input type="range" id="w1" min="-3" max="3" step="0.1">
+      </div>
+      <div class="slider">
+        <label for="w2">weight on x&#8322; <span class="val" id="w2v"></span></label>
+        <input type="range" id="w2" min="-3" max="3" step="0.1">
+      </div>
+      <div class="slider">
+        <label for="th">threshold &theta; <span class="val" id="thv"></span></label>
+        <input type="range" id="th" min="-3" max="3" step="0.1">
+      </div>
+
+      <table id="tbl">
+        <thead>
+          <tr>
+            <th>x&#8321;</th><th>x&#8322;</th>
+            <th class="sep">sum</th>
+            <th>fires</th><th>want</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+
+      <div class="score" id="score"></div>
+      <button class="reset" id="reset">reset the sliders</button>
+    </div>
+  </div>
+
+  <footer>
+    Filled dot = the gate should answer 1 there. Open dot = it should answer 0.
+    The shaded side is where the unit fires; a dashed ring marks a corner it
+    gets wrong.
+  </footer>
+
+</div>
+
+<script>
+"use strict";
+
+var GATES = {
+  AND:  [0, 0, 0, 1],
+  OR:   [0, 1, 1, 1],
+  NAND: [1, 1, 1, 0],
+  XOR:  [0, 1, 1, 0]
+};
+// corner order used everywhere below: (0,0) (0,1) (1,0) (1,1)
+var CORNERS = [[0, 0], [0, 1], [1, 0], [1, 1]];
+var NS = "http://www.w3.org/2000/svg";
+
+var state = { gate: "AND", w1: 1, w2: 2, th: 1.5 };
+
+// --- geometry -----------------------------------------------------------
+var PAD_L = 52, SIDE = 200, TOP = 60;
+function sx(x) { return PAD_L + x * SIDE; }
+function sy(y) { return TOP + SIDE - y * SIDE; }
+
+function fires(x1, x2) {
+  return (state.w1 * x1 + state.w2 * x2 >= state.th) ? 1 : 0;
+}
+
+function el(name, attrs) {
+  var n = document.createElementNS(NS, name);
+  for (var k in attrs) n.setAttribute(k, attrs[k]);
+  return n;
+}
+
+// The firing half-plane as a polygon in data coordinates, built from a point
+// on the boundary plus the along-line and normal directions. Doing it this
+// way keeps a vertical boundary (w2 = 0) working, which solving for x2 would
+// not.
+function halfPlanePoints() {
+  var w1 = state.w1, w2 = state.w2, n2 = w1 * w1 + w2 * w2;
+  if (n2 < 1e-9) return null;
+  var px = state.th * w1 / n2, py = state.th * w2 / n2;   // closest point
+  var len = Math.sqrt(n2);
+  var ax = -w2 / len, ay = w1 / len;                      // along the line
+  var nx = w1 / len, ny = w2 / len;                       // toward "fires"
+  var L = 12, M = 24;
+  return [
+    [px + L * ax, py + L * ay],
+    [px - L * ax, py - L * ay],
+    [px - L * ax + M * nx, py - L * ay + M * ny],
+    [px + L * ax + M * nx, py + L * ay + M * ny]
+  ];
+}
+
+function draw() {
+  var svg = document.getElementById("plot");
+  while (svg.firstChild) svg.removeChild(svg.firstChild);
+
+  var defs = el("defs", {});
+  var clip = el("clipPath", { id: "area" });
+  clip.appendChild(el("rect", {
+    x: sx(-0.2), y: sy(1.22), width: SIDE * 1.42, height: SIDE * 1.42
+  }));
+  defs.appendChild(clip);
+  svg.appendChild(defs);
+
+  var g = el("g", { "clip-path": "url(#area)" });
+  var poly = halfPlanePoints();
+  if (poly) {
+    g.appendChild(el("polygon", {
+      points: poly.map(function (p) { return sx(p[0]) + "," + sy(p[1]); }).join(" "),
+      fill: "#CC0033", "fill-opacity": "0.09"
+    }));
+    g.appendChild(el("line", {
+      x1: sx(poly[0][0]), y1: sy(poly[0][1]),
+      x2: sx(poly[1][0]), y2: sy(poly[1][1]),
+      stroke: "#CC0033", "stroke-width": "2"
+    }));
+  }
+  svg.appendChild(g);
+
+  // grid
+  for (var i = 0; i <= 4; i++) {
+    var t = i / 4;
+    svg.appendChild(el("line", { x1: sx(t), y1: sy(0), x2: sx(t), y2: sy(1),
+      stroke: "#DDD", "stroke-width": "1" }));
+    svg.appendChild(el("line", { x1: sx(0), y1: sy(t), x2: sx(1), y2: sy(t),
+      stroke: "#DDD", "stroke-width": "1" }));
+  }
+
+  // axes
+  svg.appendChild(el("line", { x1: sx(0), y1: sy(0), x2: sx(1.18), y2: sy(0),
+    stroke: "#555", "stroke-width": "1.2" }));
+  svg.appendChild(el("line", { x1: sx(0), y1: sy(0), x2: sx(0), y2: sy(1.18),
+    stroke: "#555", "stroke-width": "1.2" }));
+
+  function text(x, y, s, anchor, size, color) {
+    var t = el("text", { x: x, y: y, "text-anchor": anchor || "middle",
+      "font-size": size || 12, fill: color || "#555",
+      "font-family": "inherit" });
+    t.textContent = s;
+    return t;
+  }
+  svg.appendChild(text(sx(1.18) + 12, sy(0) + 4, "x₁", "middle", 12));
+  svg.appendChild(text(sx(0), sy(1.18) - 10, "x₂", "middle", 12));
+  svg.appendChild(text(sx(0) - 18, sy(0) + 5, "0", "middle", 12));
+  svg.appendChild(text(sx(1), sy(0) + 20, "1", "middle", 12));
+  svg.appendChild(text(sx(0) - 18, sy(1) + 5, "1", "middle", 12));
+
+  // corners
+  var want = GATES[state.gate];
+  CORNERS.forEach(function (c, i) {
+    var got = fires(c[0], c[1]);
+    if (got !== want[i]) {
+      svg.appendChild(el("circle", {
+        cx: sx(c[0]), cy: sy(c[1]), r: 15, fill: "none",
+        stroke: "#CC0033", "stroke-width": "1.6", "stroke-dasharray": "4 3"
+      }));
+    }
+    svg.appendChild(el("circle", {
+      cx: sx(c[0]), cy: sy(c[1]), r: 6.5,
+      fill: want[i] === 1 ? "#CC0033" : "#fff",
+      stroke: want[i] === 1 ? "#CC0033" : "#1A1A1A", "stroke-width": "1.6"
+    }));
+  });
+}
+
+function refresh() {
+  document.getElementById("w1v").textContent = state.w1.toFixed(1);
+  document.getElementById("w2v").textContent = state.w2.toFixed(1);
+  document.getElementById("thv").textContent = state.th.toFixed(1);
+
+  var want = GATES[state.gate];
+  var body = document.querySelector("#tbl tbody");
+  body.textContent = "";
+  var right = 0;
+
+  CORNERS.forEach(function (c, i) {
+    var sum = state.w1 * c[0] + state.w2 * c[1];
+    var got = fires(c[0], c[1]);
+    if (got === want[i]) right++;
+    var tr = document.createElement("tr");
+    if (got !== want[i]) tr.className = "bad";
+    [c[0], c[1], sum.toFixed(1), got, want[i]].forEach(function (v, j) {
+      var td = document.createElement("td");
+      if (j === 2) td.className = "sep";
+      td.textContent = v;
+      tr.appendChild(td);
+    });
+    body.appendChild(tr);
+  });
+
+  var score = document.getElementById("score");
+  score.innerHTML = "<strong>" + right + " of 4</strong> rows correct.";
+  score.className = right === 4 ? "score all-right" : "score";
+
+  draw();
+}
+
+// --- wiring -------------------------------------------------------------
+var gatesBox = document.getElementById("gates");
+Object.keys(GATES).forEach(function (name) {
+  var b = document.createElement("button");
+  b.type = "button";
+  b.textContent = name;
+  b.setAttribute("aria-pressed", String(name === state.gate));
+  b.addEventListener("click", function () {
+    state.gate = name;
+    Array.prototype.forEach.call(gatesBox.children, function (o) {
+      o.setAttribute("aria-pressed", String(o.textContent === name));
+    });
+    refresh();
+  });
+  gatesBox.appendChild(b);
+});
+
+[["w1", "w1"], ["w2", "w2"], ["th", "th"]].forEach(function (pair) {
+  var input = document.getElementById(pair[0]);
+  input.value = state[pair[1]];
+  input.addEventListener("input", function () {
+    state[pair[1]] = parseFloat(input.value);
+    refresh();
+  });
+});
+
+document.getElementById("reset").addEventListener("click", function () {
+  state.w1 = 1; state.w2 = 2; state.th = 1.5;
+  document.getElementById("w1").value = 1;
+  document.getElementById("w2").value = 2;
+  document.getElementById("th").value = 1.5;
+  refresh();
+});
+
+refresh();
+</script>
+</body>
+</html>
