@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CS 675 Interactive Demos — Fall 2026</title>
+<meta name="description" content="Interactive companions to the CS 675 Machine Learning notes, NJIT, Fall 2026, section 1B1.">
+<style>
+:root { --red: #CC0033; --ink: #1A1A1A; --muted: #555555; --faint: #DDDDDD; --paper: #F7F7F5; }
+* { box-sizing: border-box; }
+html { background: #fff; }
+body { margin: 0; color: var(--ink); font-family: "DM Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  font-size: 16px; line-height: 1.55; }
+.page { max-width: 760px; margin: 0 auto; padding: 40px 24px 64px; }
+a { color: inherit; }
+header { border-top: 4px solid var(--red); padding-top: 16px; margin-bottom: 26px; }
+.eyebrow { font-size: 11px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: var(--red); margin: 0 0 6px; }
+h1 { font-size: 28px; font-weight: 600; line-height: 1.2; margin: 0 0 8px; }
+header p { margin: 0; color: var(--muted); font-size: 14.5px; }
+.intro { margin: 0 0 26px; color: var(--ink); }
+.week { font-size: 12.5px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); margin: 26px 0 6px; }
+ul.demos { list-style: none; padding: 0; margin: 0; }
+ul.demos li { border-top: 1px solid var(--faint); padding: 16px 0; margin: 0; }
+ul.demos li:last-child { border-bottom: 1px solid var(--faint); }
+ul.demos a.title { text-decoration: none; display: block; font-weight: 700; font-size: 19px; margin: 0 0 4px; }
+ul.demos a.title:hover { color: var(--red); }
+ul.demos .what { margin: 0 0 6px; }
+ul.demos .refs { font-size: 13px; color: var(--muted); margin: 0; }
+code { font-family: ui-monospace, "JetBrains Mono", Menlo, Consolas, monospace; background: var(--paper); padding: 1px 4px; border-radius: 2px; font-size: 92%; }
+.aside { background: var(--paper); padding: 12px 16px; margin: 28px 0 0; font-size: 14px; color: var(--ink); border-radius: 3px; }
+footer { margin-top: 48px; padding-top: 12px; border-top: 1px solid var(--faint); font-size: 12.5px; color: var(--muted);
+  display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+footer a { text-decoration: none; }
+footer a:hover { color: var(--red); }
+</style>
+</head>
+<body>
+<main class="page">
+<header>
+<p class="eyebrow">NJIT &middot; CS 675 &middot; Machine Learning &middot; Fall 2026 &middot; Section 1B1</p>
+<h1>Interactive demos</h1>
+<p>Companions to the <a href="https://ikoutis.github.io/mlnotes/">Machine Learning notes</a>. Each opens in the browser, needs nothing installed, and keeps working offline.</p>
+</header>
+
+<p class="intro">These pages let you move the things the notes describe: a line, its loss, the gradient under your feet, and the batch of data a single update looks at. Nothing here is graded. Use them alongside the module's reading, and bring what you notice to the discussion forum.</p>
+
+<p class="week">Week 2 &middot; Module 3 &middot; Linear regression and gradient descent</p>
+<ul class="demos">
+<li>
+  <a class="title" href="loss-landscape.html">The loss landscape</a>
+  <p class="what">The mean squared error of a line <code>y = ax + b</code> drawn as a surface over the plane of its two parameters. Turn it, click to stand somewhere, read the two partial derivatives, and step downhill with a step size you choose. Three landscapes: the toy line of the notes, and the Newark weather data in raw degrees and with the input scaled &mdash; the same bowl, stretched differently.</p>
+  <p class="refs">Notes &sect;3.2 (loss, MSE, why MSE), &sect;3.3 (gradient descent in a nutshell), &sect;3.5 (the update rules), &sect;3.7.2 (scaling features).</p>
+</li>
+<li>
+  <a class="title" href="batches.html">A batch stands in for the data</a>
+  <p class="what">Newark airport, 6,940 days: the daily low against the daily high. First, draw a random batch of <code>k</code> days and see how close its own least-squares line lands to the line of all the days; watch the scatter shrink as <code>k</code> grows. Then run gradient descent one batch per round, with the batch lit up, the line moving, and the step the batch chose drawn beside the step all the data would have taken.</p>
+  <p class="refs">Notes &sect;3.7 (epochs, the fit algorithm), &sect;3.7.1 (stochastic batch gradient descent, batch size as a hyperparameter).</p>
+</li>
+</ul>
+
+<div class="aside">
+<strong>The data.</strong> Daily high and low temperatures at Newark Liberty airport, 2006&ndash;2024, from NOAA's GHCN-Daily record for station USW00014734 &mdash; 6,940 days, real and local. The full table, with humidity, pressure, precipitation and wind, is at
+<a href="https://ikoutis.github.io/course-notes/artificial-neuron-notes/data/newark-weather.csv">newark-weather.csv</a>.
+</div>
+
+<footer>
+<span>CS 675 &middot; Interactive demos</span>
+<span><a href="https://ikoutis.github.io/mlnotes/">Machine Learning notes</a></span>
+</footer>
+</main>
+</body>
+</html>
