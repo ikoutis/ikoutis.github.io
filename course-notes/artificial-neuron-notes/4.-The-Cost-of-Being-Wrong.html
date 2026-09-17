@@ -191,10 +191,10 @@ footer a:hover { color: var(--njred); }
 <div class="math">\[ L \;=\; -\frac{1}{n}\sum_{i=1}^{n} \Big[\, y_i \log \sigma(s_i) \;+\; (1 - y_i)\log\big(1 - \sigma(s_i)\big) \Big]. \]</div>
 <p>The bracket deserves a second look, because it is the switch of §1.3 again, now inside the logarithm rather than outside it. There, one of two <em>probabilities</em> was selected; here, one of two <em>logarithms</em> is. On a row with \(y_i = 1\) the bracket is \(\log \sigma(s_i)\), and on a row with \(y_i = 0\) it is \(\log(1 - \sigma(s_i))\) — in both cases \(\log p_i\), which is what the sum needs.</p>
 <p>This step is safe for the same reason as before, and only for that reason: \(y\) is 0 or 1. It is not generally true that \(\log\big(yA + (1-y)B\big)\) equals \(y \log A + (1-y)\log B\); with, say, \(y = \tfrac12\) the left side is the logarithm of an average and the right side is an average of logarithms, and those differ. What rescues the identity is that \(y\) never takes such a value. At \(y = 1\) both sides are \(\log A\); at \(y = 0\) both are \(\log B\); and there is no third case to check.</p>
-<h3 id="s-2-3">2.3 One row’s bill</h3>
+<h3 id="s-2-3">2.3 One row’s contribution</h3>
 <p>Each row contributes \(-\log p_i\) to the loss. It is worth seeing that function on its own.</p>
 <figure><img src="images/row-bill.svg" alt="row-bill" width="464" height="255"></figure>
-<p>Read the curve as a price list for being wrong.</p>
+<p>The curve is the price of being wrong, read against how much probability the unit gave to the truth.</p>
 <ul>
 <li>\(p = 0.995\) costs \(0.01\). The unit was sure and right: almost free.</li>
 <li>\(p = 0.93\) costs \(0.07\); \(p = 0.5\) costs \(0.69\).</li>
@@ -202,14 +202,14 @@ footer a:hover { color: var(--njred); }
 <li>\(p = 0.027\) costs \(3.63\) — May 9, 2020.</li>
 <li>And as \(p\) approaches 0, the cost grows without bound.</li>
 </ul>
-<p>There is the moral of the sigmoid never quite reaching 0 or 1, stated as money. A wrong answer given with confidence costs a finite amount, and the more confident it was, the more it costs. A wrong answer given with <em>certainty</em> costs infinitely: the 0-or-1 unit, on that same November day, pays a bill no quantity of correct days can offset. This is the sense in which today’s title should be read — the loss is the price of being wrong, and the unit chooses how much to stake.</p>
+<p>This is what it costs that the sigmoid never quite reaches 0 or 1. A wrong answer given with confidence costs a finite amount, and the more confident it was, the more it costs. A wrong answer given with <em>certainty</em> costs infinitely: the 0-or-1 unit, on that same November day, pays a contribution no number of correct days can offset. This is the sense in which this meeting’s title should be read: the loss is the price of being wrong, and how confident the unit was sets the price.</p>
 <section class="worked" id="ex-2-1">
 <h4 class="example"><span class="label">Example 2.1</span> Cross-entropy by hand</h4>
 <p>The two settings of Example 1.2, now scored by the loss. This is the second task of the meeting’s sheet.</p>
 <p>For \(k = 1\) the probabilities were \(0.82, 0.62, 0.62, 0.62\). Their negative logarithms are \(0.20, 0.48, 0.48, 0.48\), and the loss is the average:</p>
 <div class="math">\[ L \;=\; \frac{0.20 + 0.48 + 0.48 + 0.48}{4} \;=\; \frac{1.64}{4} \;=\; 0.41 . \]</div>
-<p>For \(k = 2\) the probabilities were \(0.95, 0.73, 0.73, 0.73\), so the bills are \(0.05, 0.32, 0.32, 0.32\) and the loss is \(1.01/4 = 0.25\). Doubling the weights halved the price, roughly, and it did so without moving the line by a hair.</p>
-<p>Two mistakes are worth naming because they are the common ones. Dropping the minus sign gives a negative loss, which is impossible: every bill is the negative logarithm of a number below 1, hence positive. And skipping the division by 4 gives a number that cannot be compared with anything computed on a dataset of a different size.</p>
+<p>For \(k = 2\) the probabilities were \(0.95, 0.73, 0.73, 0.73\), so the contributions are \(0.05, 0.32, 0.32, 0.32\) and the loss is \(1.01/4 = 0.25\). Doubling the weights halved the price, roughly, and it did so without moving the line by a hair.</p>
+<p>Two mistakes are worth naming because they are the common ones. Dropping the minus sign gives a negative loss, which is impossible: every contribution is the negative logarithm of a number below 1, hence positive. And skipping the division by 4 gives a number that cannot be compared with anything computed on a dataset of a different size.</p>
 </section>
 <h3 id="s-2-4">2.4 Why the loss can reach zero on a truth table</h3>
 <p>Take the doubling further. The likelihoods of §1.5 correspond to these losses:</p>
@@ -220,12 +220,12 @@ footer a:hover { color: var(--njred); }
 <tr><td style="text-align:center">loss</td><td class="rule" style="text-align:center">0.41</td><td style="text-align:center">0.25</td><td style="text-align:center">0.096</td><td style="text-align:center">0.014</td></tr>
 </table>
 </div>
-<p>The loss falls toward zero, and the word “toward” is exact: since \(\sigma\) never attains 1, no \(p_i\) is ever exactly 1, no bill is ever exactly 0, and the loss is never exactly zero. But there is no lower bound short of zero either — name a small number and a large enough \(k\) gets under it.</p>
+<p>The loss falls toward zero, and the word “toward” is exact: since \(\sigma\) never attains 1, no \(p_i\) is ever exactly 1, no contribution is ever exactly 0, and the loss is never exactly zero. But there is no lower bound short of zero either — name a small number and a large enough \(k\) gets under it.</p>
 <p>This is a fact about truth tables, not about units. A truth table gives each input exactly one output, the same output every time, and the four rows of AND happen to be arranged so that a line can put all of them on their correct sides. Once that is true, confidence is free, and the price of being wrong can be driven to nothing because the unit is never wrong.</p>
 <h3 id="s-2-5">2.5 And never on the weather</h3>
 <p>On the weather data the same manoeuvre stops working, and it is worth seeing exactly where.</p>
 <p>There are 6,865 days and 1,878 distinct (high, low) pairs, so many days share an input with some other day. Of those pairs, <strong>337 occur with both labels</strong> — the same high and the same low, once in the warm half of the year and once in the cold. Those pairs cover 1,881 days, more than a quarter of the data.</p>
-<p>Take one of them. A high of 82° F with a low of 63° F occurs on 14 days: <strong>12 in the warm half and 2 in the cold half</strong>. The unit sees the same two numbers on all 14 days, so it returns the same probability on all 14 days — it has nothing to distinguish them with. Call that probability \(q\). Then 12 days pay \(-\ln q\) each and 2 days pay \(-\ln(1 - q)\) each, and the average bill over the 14 is</p>
+<p>Take one of them. A high of 82° F with a low of 63° F occurs on 14 days: <strong>12 in the warm half and 2 in the cold half</strong>. The unit sees the same two numbers on all 14 days, so it returns the same probability on all 14 days — it has nothing to distinguish them with. Call that probability \(q\). Then 12 days pay \(-\ln q\) each and 2 days pay \(-\ln(1 - q)\) each, and the average contribution over the 14 is</p>
 <div class="math">\[ \frac{12}{14}\big(-\ln q\big) + \frac{2}{14}\big(-\ln(1-q)\big). \]</div>
 <p>Choosing \(q\) to make this as small as possible gives \(q = 12/14 = 0.86\) — believe what the data does — and a cost of \(0.41\) per day. Not zero. Choosing any other \(q\) makes it worse, and choosing \(q\) close to 0 or 1 makes it far worse: the two cold days alone would pay \(-\ln(1-q)\) each, which grows without bound as \(q\) approaches 1.</p>
 <p>So there is a floor, and no setting can get under it. Here is the scale of the whole thing, for the weather:</p>
@@ -240,14 +240,14 @@ footer a:hover { color: var(--njred); }
 </div>
 <p>The floor is a little above \(0.21\), and it is a property of the data. April and October have nearly the same weather and opposite labels; no rule computed from four measurements can separate days that the measurements do not distinguish. Meeting 3 put it as <em>the question is hard</em>; this is the same statement with a number attached.</p>
 <h3 id="s-2-6">2.6 Temperature, seen by the loss</h3>
-<p>The loss also settles a question meeting 3 left open. There, \(T\) was a knob, and the value \(T = 10\) was chosen by hand with no reason given. With a loss in hand, the data can be asked which \(T\) it prefers. Keeping the hand-drawn line fixed and turning only \(T\):</p>
+<p>The loss also settles a question meeting 3 left open. There, the value \(T = 10\) was set by hand, with no reason given. With a loss in hand, the data can be asked which \(T\) it prefers. Keeping the hand-drawn line fixed and changing only \(T\):</p>
 <figure><img src="images/loss-temperature.svg" alt="loss-temperature" width="464" height="255"></figure>
 <p>There is a minimum, near \(T = 9\). Sharpening the unit below that value makes it worse, and blurring it above that value makes it worse.</p>
-<p>The reason is the competition §1.5 said was missing on a truth table. Lowering \(T\) makes every output more extreme. On the roughly 6,158 days that the line places correctly, that lowers the bill. On the 707 days it places wrongly, that raises the bill — and raises it steeply, since those bills sit on the expensive part of the curve in §2.3. The total falls while the first effect dominates and rises once the second does, and between them sits a best sharpness. On a truth table there is no second effect, which is why the same curve there just keeps falling.</p>
+<p>The reason is the competition §1.5 said was missing on a truth table. Lowering \(T\) makes every output more extreme. On the roughly 6,158 days that the line places correctly, that lowers its contribution. On the 707 days it places wrongly, that raises the contribution — and raises it steeply, since those rows sit on the expensive part of the curve in §2.3. The total falls while the first effect dominates and rises once the second does, and between them sits a best sharpness. On a truth table there is no second effect, which is why the same curve there just keeps falling.</p>
 <p>One consequence, worth noticing now: multiplying the weights and the bias by \(k\) has the same effect as dividing \(T\) by \(k\), since both multiply every score by the same factor. Sharpness is not a separate thing from the size of the weights. They are one quantity wearing two names.</p>
 <h3 id="s-2-7">2.7 Why it is called cross-entropy</h3>
 <p>The loss was built here out of a probability, a logarithm and an average, and nothing about that construction explains its name. The name is borrowed, and the thing it is borrowed from is worth a page.</p>
-<p>Start with a single number: if something you believed had probability \(p\) happens, then \(-\log p\) measures how <strong>surprised</strong> you should be. If you were certain (\(p = 1\)) the surprise is 0. The less probability you gave it, the more surprised you are, without limit. That is precisely the bill of §2.3 — so the cross-entropy loss is the <em>average surprise</em> of the unit, over the rows, at what actually happened. A unit that explains the data is a unit that is rarely surprised by it.</p>
+<p>Start with a single number: if something you believed had probability \(p\) happens, then \(-\log p\) measures how <strong>surprised</strong> you should be. If you were certain (\(p = 1\)) the surprise is 0. The less probability you gave it, the more surprised you are, without limit. That is precisely the contribution of §2.3 — so the cross-entropy loss is the <em>average surprise</em> of the unit, over the rows, at what actually happened. A unit that explains the data is a unit that is rarely surprised by it.</p>
 <p>Now suppose outcomes occur according to some distribution \(p\) — outcome \(i\) happening a fraction \(p_i\) of the time. The average surprise of someone who believes \(p\) and sees the world do \(p\) is</p>
 <div class="math">\[ H(p) \;=\; -\sum_i p_i \log p_i , \]</div>
 <p>and this quantity is the <strong>entropy</strong> of \(p\). It was defined by Claude Shannon in 1948, in the paper that created information theory, and it measures how uncertain the situation is in the first place: a coin that always lands heads has entropy 0 and there is nothing to learn; a fair coin has the largest entropy two outcomes can have.</p>
@@ -255,7 +255,7 @@ footer a:hover { color: var(--njred); }
 <p>Finally the “cross”. Suppose the world does \(p\) but you believe some other distribution \(q\). Your average surprise is then</p>
 <div class="math">\[ H(p, q) \;=\; -\sum_i p_i \log q_i , \]</div>
 <p>the <strong>cross-entropy</strong> of \(q\) relative to \(p\): the outcomes are weighted by how often they really happen, but the surprise of each is computed from what you believed. It is smallest when \(q = p\), and every departure of your beliefs from the truth costs you something.</p>
-<p>Our loss is exactly this, one row at a time. On a row, what the world does is not in doubt — the label happened — so the true distribution puts all of its weight on the observed label and none on the other. What the unit believes is \(\sigma(s_i)\) for label 1 and \(1 - \sigma(s_i)\) for label 0. Substituting those into the formula above leaves a single surviving term, \(-\log p_i\), which is the row’s bill; averaging over rows gives \(L\). The loss is the average cross-entropy between what happened and what the unit believed, and the name is a description rather than a decoration.</p>
+<p>Our loss is exactly this, one row at a time. On a row, what the world does is not in doubt — the label happened — so the true distribution puts all of its weight on the observed label and none on the other. What the unit believes is \(\sigma(s_i)\) for label 1 and \(1 - \sigma(s_i)\) for label 0. Substituting those into the formula above leaves a single surviving term, \(-\log p_i\), which is the row’s contribution; averaging over rows gives \(L\). The loss is the average cross-entropy between what happened and what the unit believed, and the name is a description rather than a decoration.</p>
 <p>The last line of §2.5 can now be said in bits. A unit that says \(\tfrac12\) everywhere pays 1 bit per day. The best unit on the four measurements pays \(0.212\) nats, which is \(0.31\) bits. The difference, about two-thirds of a bit per day, is what a day’s weather is worth when the question is which half of the year it fell in.</p>
 <p class="source">C.&nbsp;E.&nbsp;Shannon, <em>A Mathematical Theory of Communication</em>, Bell System Technical Journal 27 (1948), 379–423 and 623–656. Shannon appears in this course twice: his 1937 master’s thesis, <em>A Symbolic Analysis of Relay and Switching Circuits</em>, showed that Boolean algebra describes switching circuits, which is the reason the machine of meeting 1 is built out of logic gates at all. The principle of preferring the setting that makes the observed data most probable is older still, and is due to R.&nbsp;A.&nbsp;Fisher in the 1920s.</p>
 <aside class="note"><span class="lead">Beyond the lecture: cross-entropy in general.</span> <p>Nothing below is needed for this unit, and none of it is examined here. It is included because the quantity is much more general than the use made of it above, and the general form is the one you will meet elsewhere.</p>
@@ -271,11 +271,11 @@ footer a:hover { color: var(--njred); }
 <pre class="code">p = sigmoid(s)
 loss = -np.mean(y * np.log(p) + (1 - y) * np.log(1 - p))</pre>
 <p>On the AND table this reproduces the \(0.41\) and \(0.25\) of Example 2.1, and on the weather with the hand line at \(T = 10\) it gives \(0.245\).</p>
-<p>Run the same two lines at \(T = 1\), however, and the result is <code>inf</code> — although the true loss at \(T = 1\) is \(1.12\), a perfectly ordinary number. Two facts from earlier meet here. At \(T = 1\) the scores are ten times larger, and 804 of the days have a score above about 37. The sigmoid of 37 is not 1, but it is closer to 1 than a double-precision number can express, so it <em>is stored as</em> exactly \(1.0\) — the finite-precision remark of meeting 3, arriving with consequences. Then \(\log(1 - 1.0) = \log 0 = -\infty\), one bill is infinite, and the average of anything with an infinity in it is an infinity.</p>
+<p>Run the same two lines at \(T = 1\), however, and the result is <code>inf</code> — although the true loss at \(T = 1\) is \(1.12\), a perfectly ordinary number. Two facts from earlier meet here. At \(T = 1\) the scores are ten times larger, and 804 of the days have a score above about 37. The sigmoid of 37 is not 1, but it is closer to 1 than a double-precision number can express, so it <em>is stored as</em> exactly \(1.0\) — the finite-precision remark of meeting 3, arriving with consequences. Then \(\log(1 - 1.0) = \log 0 = -\infty\), one contribution is infinite, and the average of anything with an infinity in it is an infinity.</p>
 <p>Worse, the warning in Example 1.1 now matters: on such a row the infinite logarithm may be the term multiplied by \(y = 0\), and \(0 \times (-\infty)\) evaluates to <code>nan</code>, not to \(0\). The formula is correct; evaluating it in this order is not.</p>
 <p>The cure is to never form \(p\) at all. Writing \(z\) for the score divided by the temperature, a little algebra gives</p>
 <div class="math">\[ -\log \sigma(z) = \log\big(1 + e^{-z}\big), \qquad -\log\big(1 - \sigma(z)\big) = \log\big(1 + e^{z}\big), \]</div>
-<p>so each bill is \(\log(1 + e^{x})\) for a suitable \(x\). That function is computed safely as</p>
+<p>so each contribution is \(\log(1 + e^{x})\) for a suitable \(x\). That function is computed safely as</p>
 <div class="math">\[ \log\big(1 + e^{x}\big) \;=\; \max(x, 0) + \log\big(1 + e^{-|x|}\big), \]</div>
 <p>where the exponential is now of a negative number and cannot overflow. NumPy provides it as <code>np.logaddexp(0, x)</code>, and the whole loss becomes</p>
 <p></p>
@@ -293,7 +293,7 @@ loss = -np.mean(y * np.log(p) + (1 - y) * np.log(1 - p))</pre>
 </aside>
 <footer>
 <span>CS 301 · Meeting 4 · <a href="index.html">all meetings</a></span>
-<span>generated from meeting-04.tex on 2026-09-14</span>
+<span>generated from meeting-04.tex on 2026-09-16</span>
 </footer>
 </main>
 </body>
