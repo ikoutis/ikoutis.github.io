@@ -9,7 +9,9 @@
   cross-entropy loss of a two-input unit drawn as a surface over its two
   weights, with the threshold held. Drag to turn it, click the ground to
   stand somewhere, and read the slope under your feet. "Fog" hides all
-  but the ground nearby; "step downhill" follows the slope.
+  but the ground nearby; "step downhill" follows the slope by the learning
+  rate eta, which meeting 6 added a slider for (log scale, centred on each
+  landscape's own step size).
 
   Two landscapes. AND: theta = 1.5 held, T = 1; the bottom is w = (1, 1)
   at loss 0.406. Newark weather on (daily high, daily low): b = -12 held,
@@ -146,6 +148,11 @@
         <input type="range" id="w2">
       </div>
 
+      <div class="slider">
+        <label for="eta">learning rate (step size), &eta; <span class="val" id="etav"></span></label>
+        <input type="range" id="eta" min="0" max="100" step="1">
+      </div>
+
       <label class="toggle"><input type="checkbox" id="fog"> fog: show only the ground nearby</label>
       <label class="toggle"><input type="checkbox" id="arrow" checked> show the downhill direction, &minus;&nabla;L</label>
 
@@ -173,6 +180,9 @@
     Colour and height are the same thing, the loss: pale where it is low, dark red where it is high.
     The map on the floor is the surface seen from above. The dot is where you stand; the arrow is the
     direction in which the ground falls fastest from there, which is minus the gradient.
+    &ldquo;Step downhill&rdquo; moves against the gradient by the learning rate: the new position is the
+    old one minus &eta; times the slope. Raise &eta; far enough and a step crosses the valley and lands
+    higher than it started, which the log records as (up).
     On the AND landscape the threshold is held at &theta; = 1.5; on the weather landscape the bias is
     held at b = &minus;12, with the daily high and the daily low as the two inputs.
   </footer>
@@ -259,9 +269,18 @@ var LANDSCAPES = {
 // --- state ----------------------------------------------------------------
 var state = {
   name: "AND table", w: [1, 2],
-  az: -0.95, el: 0.55, zoom: 1.0, fog: false, arrow: true,
+  az: -0.95, el: 0.55, zoom: 1.0, fog: false, arrow: true, eta: null,
   guesses: 0, steps: 0, best: null, log: []
 };
+
+// The slider is logarithmic around each landscape's own step size: position 50 is
+// that default, 0 is a hundredth of it and 100 is a hundred times it. The two
+// landscapes differ by a factor of 2,000 in the size of a sensible step, so a
+// linear slider shared between them would be useless on one of the two.
+function etaFromSlider(v) { return L.stepSize * Math.pow(10, (v - 50) / 25); }
+function sliderFromEta(e) { return 50 + 25 * Math.log(e / L.stepSize) / Math.LN10; }
+function currentEta() { return state.eta === null ? L.stepSize : state.eta; }
+function fmtEta(e) { return e >= 0.1 ? e.toFixed(2) : e.toPrecision(2); }
 var L = LANDSCAPES[state.name];
 var surf = null;   // {z: Float64Array grid, zmin, zmax, zlo, zhi}
 
@@ -539,6 +558,11 @@ function refresh() {
   document.getElementById("w1v").textContent = L.fmt(state.w[0]);
   document.getElementById("w2v").textContent = L.fmt(state.w[1]);
 
+  var eta = currentEta(), es = document.getElementById("eta");
+  es.value = Math.max(0, Math.min(100, sliderFromEta(eta)));
+  document.getElementById("etav").textContent = fmtEta(eta)
+    + (state.eta === null ? " (the usual step here)" : "");
+
   var loss = L.loss(state.w[0], state.w[1]), g = L.grad(state.w[0], state.w[1]);
   document.getElementById("pos").textContent = "(" + L.fmt(state.w[0]) + ", " + L.fmt(state.w[1]) + ")";
   document.getElementById("loss").textContent = loss.toFixed(3);
@@ -570,6 +594,7 @@ Object.keys(LANDSCAPES).forEach(function (name) {
     Array.prototype.forEach.call(choices.children, function (o) { o.setAttribute("aria-pressed", String(o.textContent === name)); });
     buildSurface();
     state.w = L.start.slice(); state.guesses = 0; state.steps = 0; state.best = null; state.log = [];
+    state.eta = null;
     refresh();
   });
   choices.appendChild(b);
@@ -577,6 +602,10 @@ Object.keys(LANDSCAPES).forEach(function (name) {
 
 document.getElementById("w1").addEventListener("input", function (e) { state.w[0] = parseFloat(e.target.value); refresh(); });
 document.getElementById("w2").addEventListener("input", function (e) { state.w[1] = parseFloat(e.target.value); refresh(); });
+document.getElementById("eta").addEventListener("input", function (e) {
+  state.eta = etaFromSlider(parseFloat(e.target.value));
+  refresh();
+});
 document.getElementById("fog").addEventListener("change", function (e) { state.fog = e.target.checked; draw(); });
 document.getElementById("arrow").addEventListener("change", function (e) { state.arrow = e.target.checked; draw(); });
 
@@ -593,16 +622,18 @@ document.getElementById("guess").addEventListener("click", function () {
 document.getElementById("step").addEventListener("click", function () {
   var g = L.grad(state.w[0], state.w[1]);
   var before = L.loss(state.w[0], state.w[1]);
-  var next = clampToDomain([state.w[0] - L.stepSize * g[0], state.w[1] - L.stepSize * g[1]]);
+  var eta = currentEta();
+  var next = clampToDomain([state.w[0] - eta * g[0], state.w[1] - eta * g[1]]);
   state.w = next; state.steps++;
   var after = L.loss(state.w[0], state.w[1]);
-  note("step " + state.steps + ": loss " + before.toFixed(3) + " → " + after.toFixed(3) + "   now at (" + L.fmt(state.w[0]) + ", " + L.fmt(state.w[1]) + ")");
+  note("step " + state.steps + " at η = " + fmtEta(eta) + ": loss " + before.toFixed(3) + " → " + after.toFixed(3)
+       + (after > before ? " (up)" : "") + "   now at (" + L.fmt(state.w[0]) + ", " + L.fmt(state.w[1]) + ")");
   refresh();
 });
 
 document.getElementById("reset").addEventListener("click", function () {
   state.w = L.start.slice(); state.guesses = 0; state.steps = 0; state.best = null; state.log = [];
-  state.az = -0.95; state.el = 0.55; state.zoom = 1.0;
+  state.az = -0.95; state.el = 0.55; state.zoom = 1.0; state.eta = null;
   refresh();
 });
 
