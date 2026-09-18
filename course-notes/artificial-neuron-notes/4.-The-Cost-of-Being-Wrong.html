@@ -85,19 +85,26 @@ footer a:hover { color: var(--njred); }
 </aside>
 <p>Meeting 2 ended with a question that has been waiting ever since: you chose weights for AND by hand, and you wrote down how you did it — could something other than a person follow that procedure? Meeting 3 refused a smaller question. Shown a line that puts 707 of 6,865 days on the wrong side, we counted the wrong days and left it there.</p>
 <p>Neither question can be answered until one thing exists: a way to say how good a candidate setting is, as a single number. A search that cannot compare two guesses cannot prefer one. This meeting builds that number. Nothing is searched here — every setting compared below was chosen by hand — but by the end the unit has a score, and a wrong answer has a price.</p>
-<aside class="note"><span class="lead">The names so far.</span> <p>Everything in this meeting is built from the unit as meetings 2 and 3 left it.</p>
+<aside class="note"><span class="lead">The names so far.</span> <p>Everything in this meeting is built from the unit as meetings 2 and 3 left it. The meeting opened by going over the review-quiz answers, and these were the names that needed repeating.</p>
 <ul>
-<li>the <strong>score</strong> \(s = \mathbf{w}\cdot\mathbf{x} + b\): one number per input;</li>
-<li>the <strong>bias</strong> \(b = -\theta\), so that “fires when the sum reaches \(\theta\)” becomes “fires when \(s \geq 0\)”;</li>
+<li>the <strong>score</strong> \(s = \mathbf{w}\cdot\mathbf{x} + b\): one number per input. The unit multiplies each input by its weight, adds the results, and adds \(b\);</li>
+<li>the <strong>bias</strong> \(b = -\theta\), so that “fires when the sum reaches \(\theta\)” becomes “fires when \(s \geq 0\)”. Two names for one number: the threshold says how large the weighted sum must be, and the bias is that number with its sign reversed. The word <em>bias</em> fits because \(b\) is the unit’s own disposition: with a large \(b\) the unit fires at the slightest input, and with a very negative \(b\) it hardly fires at all;</li>
 <li>the <strong>sigmoid</strong> \(\sigma(s) = 1/(1 + e^{-s})\), which turns that score into a number strictly between 0 and 1;</li>
-<li>the <strong>temperature</strong> \(T\), a width in the units of the score: \(\sigma(s/T)\) is the output, and \(T\) says how far from the boundary an input must be before the unit is nearly sure;</li>
+<li>the <strong>temperature</strong> \(T\), a width in the units of the score: \(\sigma(s/T)\) is the output, and \(T\) says how far from the boundary an input must be before the unit is nearly sure. Changing \(T\) changes the probability and never the decision: a positive score divided by any positive \(T\) is still positive, so the day stays on the same side of the line;</li>
 <li>the <strong>label</strong> \(y\), which is 0 or 1 and nothing else.</li>
 </ul>
 </aside>
+<aside class="note"><span class="lead">Vectors, once more.</span> <p>Several quiz answers said that meeting 2’s notation was the least clear part so far, so it was repeated in class, and it is repeated here. It is all the linear algebra Unit&nbsp;I uses.</p>
+<p>The inputs \(x_1, x_2, \dots\) are numbers, one per input. Written side by side they form a <strong>row vector</strong> \(\mathbf{x}\). The weights \(w_1, w_2, \dots\) form a row vector \(\mathbf{w}\) in the same way. A vector can just as well be written as a column, and the <strong>transpose</strong>, written \(\mathbf{x}^{\mathsf T}\), is the operation that turns a row into a column or a column into a row. The same operation applies to a matrix: each row of \(A\) becomes a column of \(A^{\mathsf T}\), and each column becomes a row. One rule about it was stated in meeting 2 and is worth keeping: the transpose of a product is the product of the transposes in the reverse order, \((AB)^{\mathsf T} = B^{\mathsf T} A^{\mathsf T}\).</p>
+<p>The score is the simplest case of matrix multiplication: a row times a column. Multiply the entries that stand in the same position and add the products,</p>
+<div class="math">\[ \mathbf{x}\,\mathbf{w}^{\mathsf T} = x_1 w_1 + x_2 w_2 + \dots = \mathbf{w} \cdot \mathbf{x} . \]</div>
+<p>Meeting 2’s notes wrote the two vectors as columns, so the same sum appeared there as \(\mathbf{w}^{\mathsf T}\mathbf{x}\); in class it was written with rows, as above. Either way it is one number. The general rule, for matrices with many rows and columns, is the same rule applied row by row and column by column; it arrives in Unit&nbsp;II, by which point Math&nbsp;337 will have covered it for those taking the two courses together.</p>
+</aside>
 <h2 class="act" id="act-1">Act 1. Scoring a Guess: Likelihood</h2>
 <h3 id="s-1-1">1.1 Counting is a bad score</h3>
-<p>The obvious score is the one meeting 3 used: count the days the line puts on the wrong side, and prefer the line with fewer. It has two defects, and both matter.</p>
-<p><strong>It ignores confidence.</strong> Take two lines, both wrong about November 6, 2024. One gave that day a probability of 0.51 of being in the warm half; the other gave it 0.93. By the count they are equally wrong. They are not equally wrong: the second was confident and mistaken, which is worse than being mistaken while unsure.</p>
+<p>One word first, because it is about to be used in two ways. The unit computes a score for each input: \(s = \mathbf{w} \cdot \mathbf{x} + b\). What this meeting builds is a score <em>for the unit</em>, computed by us, from the data, to say how well the unit does on it. The first is one number per day; the second is one number per setting of \(\mathbf{w}\) and \(b\).</p>
+<p>The obvious score is the one meeting 3 used: count the days the line puts on the wrong side, and prefer the line with fewer. For the hand line high \(+\) low \(= 120\) that count is 707 of 6,865, and it does not depend on the temperature, because dividing every score by \(T\) moves no day across the line. The count has two defects, and both matter.</p>
+<p><strong>It ignores confidence.</strong> Take two lines, both wrong about November 6, 2024. One gave that day a probability of 0.51 of being in the warm half; the other gave it 0.93. By the count they are equally wrong. They are not equally wrong: the second was confident and mistaken, which is worse than being mistaken while unsure. Read the 0.93 as the claim it is. The unit is not only saying “warm half” about that November day; it is saying that of a hundred days that look like this one, seven will be in the cold half. The day was in the cold half, so the unit put it among the seven. A unit that said 0.51 made the same wrong call while admitting it was nearly a coin toss, and that admission is worth something.</p>
 <p><strong>It barely moves.</strong> Shift a line a little and, almost always, no day crosses to the other side — the days sit at scattered points, and a small move of the boundary steps over none of them. The count is therefore the same number for a whole neighbourhood of lines, and a score that cannot tell nearby candidates apart cannot guide a choice between them.</p>
 <p>What is wanted instead is a score that reads the unit’s probabilities rather than only its verdicts, and that changes whenever the setting changes.</p>
 <h3 id="s-1-2">1.2 What it means to explain the data</h3>
@@ -293,7 +300,7 @@ loss = -np.mean(y * np.log(p) + (1 - y) * np.log(1 - p))</pre>
 </aside>
 <footer>
 <span>CS 301 · Meeting 4 · <a href="index.html">all meetings</a></span>
-<span>generated from meeting-04.tex on 2026-09-16</span>
+<span>generated from meeting-04.tex on 2026-09-17</span>
 </footer>
 </main>
 </body>
