@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Meeting 5. The Neuron Feels Its Way — CS 301</title>
+<meta name="description" content="CS 301 Introduction to Data Science, NJIT. Course notes for meeting 5: The Neuron Feels Its Way.">
+<meta name="cs301-meeting" content="5">
+<meta name="cs301-title" content="The Neuron Feels Its Way">
+<meta name="cs301-acts" content="Act 1 Search Without Direction · Act 2 Search with Precision · Act 3 Search in the Fog">
+<style>
+@font-face { font-family: "Latin Modern Roman"; src: url(fonts/lmroman10-regular.otf); font-weight: normal; font-style: normal; }
+@font-face { font-family: "Latin Modern Roman"; src: url(fonts/lmroman10-italic.otf); font-weight: normal; font-style: italic; }
+@font-face { font-family: "Latin Modern Roman"; src: url(fonts/lmroman10-bold.otf); font-weight: bold; font-style: normal; }
+@font-face { font-family: "Latin Modern Roman"; src: url(fonts/lmroman10-bolditalic.otf); font-weight: bold; font-style: italic; }
+@font-face { font-family: "Latin Modern Sans"; src: url(fonts/lmsans10-regular.otf); font-weight: normal; }
+@font-face { font-family: "Latin Modern Sans"; src: url(fonts/lmsans10-bold.otf); font-weight: bold; }
+@font-face { font-family: "Latin Modern Mono"; src: url(fonts/lmmono10-regular.otf); }
+:root { --njred: #CC0033; --ink: #1A1A1A; --muted: #555555; --faint: #DDDDDD; --paper: #F7F7F5;
+  --serif: "Latin Modern Roman", "Computer Modern Serif", Georgia, "Times New Roman", serif;
+  --sans: "Latin Modern Sans", "Helvetica Neue", Arial, sans-serif;
+  --mono: "Latin Modern Mono", Consolas, "Courier New", monospace; }
+html { background: #fff; }
+body { margin: 0; color: var(--ink); font-family: var(--serif); font-size: 18px; line-height: 1.5;
+  -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; }
+.page { max-width: 720px; margin: 0 auto; padding: 44px 24px 72px; }
+a { color: inherit; }
+.titleblock { border-top: 3px solid var(--njred); border-bottom: 1px solid var(--faint); padding: 20px 0 16px; margin-bottom: 30px; }
+.kicker { font-family: var(--sans); font-weight: bold; font-size: 12.5px; color: var(--njred); margin: 0 0 14px; display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+.kicker .pdf { font-weight: normal; color: var(--muted); text-decoration: none; border: 1px solid var(--faint); border-radius: 3px; padding: 1px 8px; }
+.kicker .pdf:hover { color: var(--njred); border-color: var(--njred); }
+h1 { font-family: var(--sans); font-size: 30px; line-height: 1.2; margin: 0 0 10px; }
+.acts { font-family: var(--sans); font-size: 13px; color: var(--muted); margin: 0; }
+h2.act { font-family: var(--sans); font-size: 21px; color: var(--njred); margin: 48px 0 20px; padding-bottom: 9px; border-bottom: 1px solid var(--faint); }
+h3 { font-family: var(--sans); font-size: 15.5px; margin: 30px 0 8px; }
+h4.example { font-family: var(--sans); font-size: 15.5px; margin: 22px 0 6px; }
+h4.example .label { color: var(--njred); }
+.worked { margin: 0 0 22px; }
+p { margin: 0; }
+p + p { text-indent: 1.6em; }
+.note { background: var(--paper); padding: 14px 18px; margin: 24px 0; }
+.note .lead { font-family: var(--sans); font-weight: bold; font-size: 15.5px; }
+.note p { display: inline; }
+.note p + p { display: block; text-indent: 1.6em; margin-top: 0.4em; }
+.note ul { margin-top: 10px; }
+.source { font-size: 13px; color: var(--muted); margin-top: 6px; text-indent: 0 !important; }
+.pull { text-align: center; margin: 14px 0; text-indent: 0 !important; }
+.bigq { text-align: center; font-size: 22px; margin: 18px 0; text-indent: 0 !important; }
+.math { margin: 8px 0 14px; overflow-x: auto; }
+.red, .c-njred { color: var(--njred); }
+.muted { color: var(--muted); }
+ul, ol { margin: 10px 0 12px; padding-left: 2.2em; }
+li { margin: 0 0 5px; }
+li p { display: inline; }
+figure { margin: 22px 0; text-align: center; }
+figure img { max-width: 100%; height: auto; }
+.tables { display: flex; justify-content: center; align-items: flex-start; gap: 44px; flex-wrap: wrap; margin: 18px 0; }
+table { border-collapse: collapse; font-size: 16.5px; }
+table.tt th { font-weight: normal; border-bottom: 1px solid var(--ink); padding: 2px 11px 4px; }
+table.tt td { padding: 3px 11px 0; }
+table.tt .rule { border-left: 1px solid var(--ink); }
+table.trans td { padding: 6px 18px; }
+table.trans td:first-child { padding-left: 0; }
+table.trans td:last-child { padding-right: 0; }
+pre.code { font-family: var(--mono); font-size: 15px; line-height: 1.4; margin: 16px 0 16px 44px; white-space: pre; overflow-x: auto; }
+code { font-family: var(--mono); font-size: 92%; }
+footer { margin-top: 56px; padding-top: 12px; border-top: 1px solid var(--faint); font-family: var(--sans); font-size: 12.5px; color: var(--muted);
+  display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+footer a { text-decoration: none; }
+footer a:hover { color: var(--njred); }
+@media (max-width: 560px) { body { font-size: 17px; } .page { padding: 28px 18px 56px; } h1 { font-size: 25px; } pre.code { margin-left: 12px; } }
+@media print { .page { max-width: none; padding: 0; } .kicker .pdf { display: none; } h2.act, h3, h4 { break-after: avoid; } figure, .note, table { break-inside: avoid; } }
+</style>
+<script>window.MathJax = { tex: { inlineMath: [['\\(', '\\)']], displayMath: [['\\[', '\\]']] }, chtml: { scale: 1.02 } };</script>
+<script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+</head>
+<body>
+<main class="page">
+<header class="titleblock">
+<p class="kicker">NJIT · CS 301 · INTRODUCTION TO DATA SCIENCE · FALL 2026 <a class="pdf" href="5.-The-Neuron-Feels-Its-Way.pdf">PDF</a></p>
+<h1>Meeting 5. The Neuron Feels Its Way</h1>
+<p class="acts">Act 1 Search Without Direction · Act 2 Search with Precision · Act 3 Search in the Fog</p>
+</header>
+<aside class="note"><span class="lead">About these notes.</span> <p>There is no textbook to buy in CS&nbsp;301: these notes are the course’s text, written by the instructors and posted on Canvas as each meeting is reached. They follow the meetings themselves — including questions and examples that came up in class — and, together with the assignment notebook you build, they are what the exams are set from. Logistics, grading, and the schedule live in the syllabus.</p>
+</aside>
+<p>Meeting 2 asked whether a procedure, rather than a person, could find the weights of a unit. Meeting 4 gave us the number such a procedure needs: the loss of a setting, one number that says how well the setting explains the data. It did not choose a next setting. Every setting compared so far was chosen by hand.</p>
+<p>This meeting looks at three ways to choose the next setting. The first tries settings at random and keeps the best. The second turns the truth table into equations and solves them. The third computes, at the current setting, which direction makes the loss decrease. The third way is the gradient of the loss, and the meeting derives it, checks it by hand against a direct measurement, and reads it as the slope of a surface that, for a unit with many inputs, nobody can see.</p>
+<aside class="note"><span class="lead">Where the temperature went.</span> <p>A question from Review Quiz 4: why does \(T\) not appear in the loss formula — is it absorbed by the score? Yes. Dividing the score by \(T\) is the same as dividing all three of the unit’s numbers by \(T\):</p>
+<div class="math">\[ \sigma\!\left(\frac{\mathbf{w}\cdot\mathbf{x} + b}{T}\right) \;=\; \sigma\!\left(\frac{\mathbf{w}}{T}\cdot\mathbf{x} + \frac{b}{T}\right). \]</div>
+<p>A unit with temperature \(T\) is the same function as a unit with temperature \(1\) and weights \(\mathbf{w}/T\), \(b/T\). So \(T\) was never a fourth number; it was a convenient way to adjust the confidence of a line we had drawn by hand without changing the line.</p>
+<p>From this meeting on, \(T = 1\), and the weights carry the scale. The hand-drawn line high \(+\) low \(= 120\) at \(T = 10\) is the setting \(\mathbf{w} = (0.1, 0.1)\), \(b = -12\) at \(T = 1\). Its loss is \(0.245\) and it places 89.7 percent of the days correctly, the numbers meeting 4 quoted, because it is the same unit.</p>
+</aside>
+<aside class="note"><span class="lead">What you did at meeting 2.</span> <p>Review Quiz 2 asked how you found your weights for AND. Seventy people answered, and more than one answer was allowed:</p>
+<div class="tables">
+<table class="trans">
+<tr><td style="text-align:left">I reasoned from the truth table before drawing anything</td><td class="rule" style="text-align:center">35</td></tr>
+<tr><td style="text-align:left">I tried numbers until the table came out right</td><td class="rule" style="text-align:center">25</td></tr>
+<tr><td style="text-align:left">I looked at which corner was wrong and moved the line toward it</td><td class="rule" style="text-align:center">18</td></tr>
+<tr><td style="text-align:left">I started from a setting I already knew and checked it</td><td class="rule" style="text-align:center">16</td></tr>
+</table>
+</div>
+<p>Each of these is a method. The three acts of this meeting are the first three of them, made precise enough for a computer to carry out, and tested on a unit with forty inputs instead of two.</p>
+</aside>
+<h2 class="act" id="act-1">Act 1. Search Without Direction</h2>
+<h3 id="s-1-1">1.1 Where we stand</h3>
+<p>The numbers a unit has — its weights and its bias — are its <strong>parameters</strong>. A two-input unit has three of them. For any setting of the parameters and any dataset, meeting 4 gives one number, the loss \(L\): on the AND table it goes toward zero as the weights grow, and on the weather data it has a floor near \(0.21\). What we do not yet have is any way to move from one setting to a better one.</p>
+<h3 id="s-1-2">1.2 Random search</h3>
+<p>Twenty-five people tried numbers until the table came out right. As a procedure: pick \((w_1, w_2, \theta)\) at random inside a box, compute the loss, keep the setting if its loss is the best so far, and repeat. This is <strong>random search</strong>. Its only ingredient beyond meeting 4 is the box. We use \([-6, 6]\) for each of the three numbers, the range the meeting-2 interactive page used.</p>
+<p>On the AND table, one run gives the following best-so-far losses. After 1 guess, \(1.20\). After 10, \(0.43\). After 100, \(0.27\). After 1,000, \(0.11\), and at that point the best setting reproduces the table on all four rows. After 10,000, \(0.10\).</p>
+<p>It works, and it works quickly, for a reason we can measure: about 2 percent of the box consists of settings that reproduce AND, so a random guess has roughly one chance in fifty. Across fifty runs, the first guess that reproduces AND arrived at guess 44 on average, and anywhere between the 1st and the 197th.</p>
+<p>Notice the part the loss plays. It decides which guess to keep. Without a number that compares two settings there is no way to prefer one, and no search at all.</p>
+<h3 id="s-1-3">1.3 Grid search</h3>
+<p>The systematic version tries every combination of a fixed set of values per parameter: 25 values, \(-6, -5.5, \ldots, 6\), for each of the three numbers. This is <strong>grid search</strong>, and it costs \(25^3 = 15{,}625\) evaluations of the loss.</p>
+<p>The best setting on the grid is \(\mathbf{w} = (4, 4)\), \(\theta = 6\), with loss \(0.096\). This is setting B of the meeting-4 sheet with every number doubled — the \(k = 4\) row of meeting 4’s scaling table, at the loss quoted there. The grid found by exhaustion what scaling found by hand.</p>
+<h3 id="s-1-4">1.4 What each extra parameter costs</h3>
+<p>Grid search has a cost that can be computed before running it. On a laptop, NumPy evaluates the loss of one setting on the 6,865 days in about half a millisecond, so a grid search gets through roughly 2,000 settings per second. Keep 25 values per parameter and count the parameters of units of increasing size:</p>
+<div class="tables">
+<table class="tt">
+<tr><th style="text-align:left">unit</th><th style="text-align:right">parameters</th><th style="text-align:right">evaluations</th><th style="text-align:right">time</th></tr>
+<tr><td style="text-align:left">on (high, low)</td><td style="text-align:right">3</td><td style="text-align:right">\(25^3 \approx 16{,}000\)</td><td style="text-align:right">8 seconds</td></tr>
+<tr><td style="text-align:left">on all four measurements</td><td style="text-align:right">5</td><td style="text-align:right">\(25^5 \approx 10^{7}\)</td><td style="text-align:right">80 minutes</td></tr>
+<tr><td style="text-align:left">on all six columns of the file</td><td style="text-align:right">7</td><td style="text-align:right">\(25^7 \approx 6 \times 10^{9}\)</td><td style="text-align:right">35 days</td></tr>
+<tr><td style="text-align:left">a network of three units</td><td style="text-align:right">9</td><td style="text-align:right">\(25^9 \approx 4 \times 10^{12}\)</td><td style="text-align:right">60 years</td></tr>
+<tr><td style="text-align:left">forty inputs</td><td style="text-align:right">41</td><td style="text-align:right">\(25^{41} \approx 10^{57}\)</td><td style="text-align:right">\(10^{46}\) years</td></tr>
+</table>
+</div>
+<p>Each extra parameter multiplies the number of evaluations by 25. The rows of the table are two parameters apart, so each row costs 625 times the one above it. The unit on all four measurements is the one meeting 4 quoted the floor from, and a grid finds it in an hour and a half. Seven parameters is a month. Nine is a lifetime. The universe is about \(1.4 \times 10^{10}\) years old, and the last row does not fit in it.</p>
+<p>Two adjustments are natural to propose, and both only postpone the problem. A coarser grid, 10 values per parameter instead of 25, still costs \(10^{40}\) evaluations for forty parameters. A smaller box has to be chosen well, and choosing it is the search problem again.</p>
+<p>Random search has no grid to fill, and it fails more quietly. In forty dimensions the fraction of the box that reproduces the data is not one in fifty; it is one in a number with dozens of zeros, and a guess with that chance of success is not a method.</p>
+<h3 id="s-1-5">1.5 The same searches on the weather data</h3>
+<p>Random search over \((w_1, w_2, b)\), in the box \(w_1, w_2 \in [-0.5, 0.5]\) and \(b \in [-50, 50]\), best setting so far:</p>
+<div class="tables">
+<table class="tt">
+<tr><th style="text-align:right">guesses</th><th class="rule" style="text-align:center">best loss</th><th class="rule" style="text-align:center">days right</th></tr>
+<tr><th style="text-align:right">10</th><th class="rule" style="text-align:center">2.08</th><th class="rule" style="text-align:center">54%</th></tr>
+<tr><th style="text-align:right">100</th><th class="rule" style="text-align:center">0.257</th><th class="rule" style="text-align:center">90.5%</th></tr>
+<tr><th style="text-align:right">1,000</th><th class="rule" style="text-align:center">0.240</th><th class="rule" style="text-align:center">90.0%</th></tr>
+<tr><th style="text-align:right">10,000</th><th class="rule" style="text-align:center">0.219</th><th class="rule" style="text-align:center">91.0%</th></tr>
+<tr><td style="text-align:right">grid, 15,625</td><td class="rule" style="text-align:center">0.220</td><td class="rule" style="text-align:center">90.8%</td></tr>
+</table>
+<table class="trans">
+<tr><td style="text-align:left">the hand-drawn line</td><td class="rule" style="text-align:center">0.245</td></tr>
+<tr><td style="text-align:left">the best line on (high, low)</td><td class="rule" style="text-align:center">0.217</td></tr>
+</table>
+</div>
+<p>Ten thousand random settings reach a loss of \(0.219\), against the hand-drawn line’s \(0.245\) and the best line’s \(0.217\), at the price of ten thousand passes over the data. Read the first row as well. After ten guesses the best setting is right on 54 percent of the days, which is close to a coin flip. Most random settings in this box are poor, because the weights multiply temperatures in the tens of degrees and a weight of \(0.4\) makes every score very large. The box had to be chosen carefully for the search to work at all, and the search did not choose it; we did.</p>
+<h3 id="s-1-6">1.6 What these searches lack</h3>
+<p>The ten-thousandth guess uses nothing that the first guess found. A guess with loss \(2.08\) and a guess with loss \(0.257\) are treated the same way, kept or discarded, and the next guess is drawn from the same box as if neither had happened. Every guess ignores every guess before it.</p>
+<p>The eighteen people who moved the line toward the wrong corner were not guessing. They looked at where the line was and moved it in a direction. That is what random and grid search lack, and it is what Act 3 computes. Act 2 first, because thirty-five people did something else, and it is worth knowing exactly what it can and cannot do.</p>
+<h2 class="act" id="act-2">Act 2. Search with Precision</h2>
+<h3 id="s-2-1">2.1 Reasoning from the table</h3>
+<p>Thirty-five people reasoned from the truth table before drawing anything. In various words, they wrote conditions like these:</p>
+<div class="tables">
+<table class="tt">
+<tr><th style="text-align:center">\(x_1\)</th><th style="text-align:center">\(x_2\)</th><th class="rule" style="text-align:center">AND</th><th class="rule" style="text-align:left">so</th></tr>
+<tr><td style="text-align:center">0</td><td style="text-align:center">0</td><td class="rule" style="text-align:center">0</td><td class="rule" style="text-align:left">\(0 &lt; \theta\)</td></tr>
+<tr><td style="text-align:center">0</td><td style="text-align:center">1</td><td class="rule" style="text-align:center">0</td><td class="rule" style="text-align:left">\(w_2 &lt; \theta\)</td></tr>
+<tr><td style="text-align:center">1</td><td style="text-align:center">0</td><td class="rule" style="text-align:center">0</td><td class="rule" style="text-align:left">\(w_1 &lt; \theta\)</td></tr>
+<tr><td style="text-align:center">1</td><td style="text-align:center">1</td><td class="rule" style="text-align:center">1</td><td class="rule" style="text-align:left">\(w_1 + w_2 \geq \theta\)</td></tr>
+</table>
+</div>
+<p>The table became four conditions on the three numbers, and numbers were then found that satisfy all four. No guessing and no direction: the answer was computed from the requirements. Call this search with precision, and ask how far it goes.</p>
+<h3 id="s-2-2">2.2 Target scores make linear equations</h3>
+<p>The conditions above are inequalities: each says which side of zero a score must be on. Sharpen them into equations by asking each row not just for the right side but for a specific score — say \(-3\) on \((0,0)\), \(-1\) on \((0,1)\) and \((1,0)\), and \(+1\) on \((1,1)\). Each row is then one equation in the three unknowns:</p>
+<div class="math">\[ -\theta = -3, \qquad w_2 - \theta = -1, \qquad w_1 - \theta = -1, \qquad w_1 + w_2 - \theta = 1 . \]</div>
+<p>The unknowns appear multiplied by numbers and added, and nothing else is done to them. Equations of this form are <strong>linear</strong>, and linear equations can be solved in a fixed number of steps.</p>
+<section class="worked" id="ex-2-1">
+<h4 class="example"><span class="label">Example 2.1</span> Weights from target scores</h4>
+<p>This is the first task of the meeting’s sheet. Solve the first three equations, then check the fourth.</p>
+<p>The first equation gives \(\theta = 3\) directly. The second becomes \(w_2 - 3 = -1\), so \(w_2 = 2\). The third becomes \(w_1 - 3 = -1\), so \(w_1 = 2\). Now put these into the fourth: \(w_1 + w_2 - \theta = 2 + 2 - 3 = 1\), which is the target. All four equations hold. The setting is \((w_1, w_2, \theta) = (2, 2, 3)\), which is setting B of the meeting-4 sheet; its scores there were \(-3, -1, -1, 1\), and that is where these targets came from.</p>
+<p>Now change the last target to \(+3\) and leave the other three. The first three equations have not changed, so they give \((2, 2, 3)\) again. The fourth now reads \(2 + 2 - 3 = 3\), that is, \(1 = 3\), which is false. There is no setting that hits all four targets.</p>
+<p>Four equations in three unknowns usually have no exact solution. When they do not, they say only that no setting hits the targets. They do not say how close \((2, 2, 3)\) came, or whether some other setting comes closer. To ask “which setting comes closest” we need a measure of closeness, and the loss is one.</p>
+</section>
+<h3 id="s-2-3">2.3 What a linear system is</h3>
+<p>A <strong>linear system</strong> is a set of unknowns \(w_1, \ldots, w_n\) together with equations, each of which sets a weighted sum of the unknowns equal to a number. In matrix form the system is \(A\mathbf{w} = \mathbf{t}\): each row of \(A\) holds the weights of one equation, and \(\mathbf{t}\) holds the targets.</p>
+<p>When there are \(n\) equations in \(n\) unknowns and the equations are independent — none is a combination of the others — the system has exactly one solution, and a computer finds it by elimination, the method of MATH 337. In NumPy that is a single call:</p>
+<p></p>
+<pre class="code">w = np.linalg.solve(A, t)</pre>
+<p>No guessing and no loop. Three unknowns take no measurable time; three thousand take a fraction of a second. The cost grows as \(n^3\), the cube of the number of unknowns. When a problem can be written as a linear system, it is not searched. It is solved.</p>
+<h3 id="s-2-4">2.4 Why solving does not finish the job</h3>
+<p>Three reasons, in increasing order of seriousness.</p>
+<p><strong>The targets were invented.</strong> Nobody gave us \((-3, -1, -1, 1)\). A truth table gives labels, and a label says which side of zero the score should be on, not what number it should be. Meeting 4 showed that on a truth table the loss prefers scores as far from zero as possible, on the correct side, and “as far as possible” is not a target.</p>
+<p><strong>Even with targets, the weather data has no solution.</strong> It has 6,865 rows, hence 6,865 equations, in three unknowns, and no choice of targets makes them consistent: days with the same high and low occur in both halves of the year, and one setting gives such days one score. The question has to become “which setting comes closest,” and closest by what measure is what the loss was built to answer.</p>
+<p><strong>The condition we want is not linear.</strong> What we want is the setting at which the loss is smallest. Act 3 writes that condition as a set of equations in the weights. They are not linear, because the sigmoid sits between the weights and the loss, and there is no <code>solve</code> for them.</p>
+<aside class="note"><span class="lead">If you have met least squares.</span> <p>Measuring closeness by the sum of squared differences between the scores and the targets does lead to a linear system, the normal equations, and it gives a usable line on the weather data. This course does not take that road. The squared error is the wrong cost for a probability: a certain and wrong answer should cost without limit, as meeting 4 argued, and the squared error charges it at most \(1\). The gradient built in Act 3 handles the cross-entropy loss, and later in the unit it handles more than one unit at a time, which least squares does not.</p>
+</aside>
+<h2 class="act" id="act-3">Act 3. Search in the Fog</h2>
+<h3 id="s-3-1">3.1 The loss as a surface</h3>
+<p>A two-input unit has three parameters. Hold the threshold fixed and two remain, so the loss is a number for every point of the \((w_1, w_2)\) plane. A number over a plane is a surface, and it can be drawn.</p>
+<figure><img src="images/loss-surface-and.svg" alt="loss-surface-and" width="510" height="367"></figure>
+<p>This is the loss on the AND table with \(\theta = 1.5\) held. It is a bowl. Its lowest point is \(\mathbf{w} = (1, 1)\), at loss \(0.406\) — setting A of the meeting-4 sheet, which you computed as \(0.41\) without knowing it was the lowest point of anything. Meeting 2’s opening unit, \(\mathbf{w} = (1, 2)\), sits on the side of the bowl at \(0.463\).</p>
+<p>One thing about this picture needs to be reconciled with meeting 4. Meeting 4 said, correctly, that on a truth table the loss goes toward zero as all three parameters scale up together. The surface above has a lowest point at \(0.406\) because \(\theta\) is frozen at \(1.5\): with the threshold fixed, the weights can grow only so far before the rows \((0, 1)\) and \((1, 0)\) start to fire, and the loss rises again. Both statements are true. The surface is a two-dimensional slice of a three-dimensional landscape that has no lowest point, drawn as a slice so that it fits on a page.</p>
+<h3 id="s-3-2">3.2 The same surface on the weather data</h3>
+<figure><img src="images/loss-surface-newark.svg" alt="loss-surface-newark" width="510" height="408"></figure>
+<p>The loss on the weather data, over the weights for the high and the low, with \(b = -12\) held. The shape is different: a narrow valley running diagonally, with steep sides. The lowest point is near \(\mathbf{w} = (0.03, 0.20)\), at loss \(0.218\), where the unit places 91.0 percent of the days correctly. The hand-drawn line, \(\mathbf{w} = (0.1, 0.1)\), lies in the valley at \(0.245\). A setting like \((0.3, 0.3)\) is far up the side at loss \(6.8\), which is why the picture cuts the sides off.</p>
+<p>The valley has an explanation. A day’s high and its low rise and fall together, so every setting along the valley floor, where \(w_1 + w_2\) is about \(0.24\), draws nearly the same line through the (high, low) plane and gets nearly the same days right. Moving along the valley changes the loss slowly; moving across it changes the loss quickly.</p>
+<p>You can turn both surfaces with the mouse on the interactive page, <a href="https://ikoutis.github.io/course-notes/artificial-neuron-notes/interactive/loss-landscape.html"><em>The loss landscape</em></a>, linked from Canvas; the floor of the page shows the same loss as a map.</p>
+<h3 id="s-3-3">3.3 Slope, and the gradient</h3>
+<p>From the picture to a number. Stand at a point of the surface and move a small distance in the \(w_1\) direction only, holding \(w_2\) fixed. The loss changes by some amount. The ratio of the change in the loss to the distance moved, in the limit of small moves, is the slope of the surface in that direction. It is the derivative of \(L\) with respect to \(w_1\) with \(w_2\) held fixed, written \(\partial L / \partial w_1\) and called a <strong>partial derivative</strong>. It is the derivative of MATH 111, applied to one variable while the other is treated as a constant. The slope in the \(w_2\) direction, \(\partial L / \partial w_2\), is defined the same way with the roles exchanged.</p>
+<p>The vector of all the slopes,</p>
+<div class="math">\[ \nabla L \;=\; \left(\frac{\partial L}{\partial w_1},\; \frac{\partial L}{\partial w_2}\right), \]</div>
+<p>is the <strong>gradient</strong> of \(L\) at that point. One fact about it is the reason for this act: the gradient points in the direction in which the surface rises fastest from where you stand, so \(-\nabla L\) points in the direction in which it falls fastest. That direction is straight downhill.</p>
+<p>Two things a slope is not. It is not the count of wrongly placed days. Meeting 4 observed that the count does not change under small moves of the line, so the count is constant on each piece of the plane and its derivative is zero wherever it exists; a search following its slope would receive no direction at all. And a slope is not a fact about the whole surface. It is measured where you stand, and it says nothing about the surface anywhere else.</p>
+<h3 id="s-3-4">3.4 The slope of one row’s contribution</h3>
+<p>The loss is the mean of the contributions of the rows, so its slope is the mean of their slopes. Take one row and write \(\ell\) for its <strong>contribution to the loss</strong>, as a function of that row’s score \(s\). From meeting 4, with \(\hat y = \sigma(s)\) for the unit’s output on the row:</p>
+<div class="math">\[ \ell(s) \;=\; \begin{cases} -\ln \sigma(s) &amp; \text{if } y = 1, \\[2pt] -\ln\big(1 - \sigma(s)\big) &amp; \text{if } y = 0. \end{cases} \]</div>
+<p>One fact about the sigmoid does the work. Write \(\sigma(s) = (1 + e^{-s})^{-1}\) and differentiate:</p>
+<div class="math">\[ \sigma'(s) \;=\; \frac{e^{-s}}{(1 + e^{-s})^2} \;=\; \frac{1}{1 + e^{-s}} \cdot \frac{e^{-s}}{1 + e^{-s}} \;=\; \sigma(s)\,\big(1 - \sigma(s)\big), \]</div>
+<p>since \(e^{-s}/(1 + e^{-s}) = 1 - 1/(1 + e^{-s})\). The derivative of the sigmoid is the sigmoid times one minus the sigmoid.</p>
+<p>Now differentiate each case of \(\ell\) with the chain rule. For a row with label \(1\),</p>
+<div class="math">\[ \frac{d\ell}{ds} \;=\; -\frac{\sigma'(s)}{\sigma(s)} \;=\; -\big(1 - \sigma(s)\big) \;=\; \hat y - 1 . \]</div>
+<p>For a row with label \(0\),</p>
+<div class="math">\[ \frac{d\ell}{ds} \;=\; \frac{\sigma'(s)}{1 - \sigma(s)} \;=\; \sigma(s) \;=\; \hat y - 0 . \]</div>
+<p>In both cases,</p>
+<div class="math">\[ \frac{d\ell}{ds} \;=\; \hat y - y . \]</div>
+<p>Define the row’s <strong>error</strong> as its output minus its label, \(\hat y - y\). The slope of a row’s contribution to the loss, with respect to that row’s score, is the row’s error. The two cases of \(\ell\), which meeting 4 defined separately and then combined with the label as a switch, have a single derivative.</p>
+<h3 id="s-3-5">3.5 How large the error can be</h3>
+<p>Three facts about the error, in order.</p>
+<p>A row the unit already gets right with confidence has \(\hat y\) close to \(y\), so its error is close to \(0\), and its slope is close to \(0\). Such a row contributes almost nothing to the gradient.</p>
+<p>A row the unit gets wrong with confidence has \(\hat y\) close to \(1 - y\), so its error is close to \(+1\) if the label is \(0\) and close to \(-1\) if the label is \(1\). Such a row contributes the most.</p>
+<p>The output \(\hat y\) is strictly between \(0\) and \(1\), so the error satisfies \(|\hat y - y| &lt; 1\) on every row. The bound is approached but never reached. One row can never contribute a slope larger than \(1\) in absolute value.</p>
+<p>The consequence to carry forward: the rows the unit already handles well are nearly silent, and the rows it is confidently wrong about contribute the most. A move downhill is driven mostly by the unit’s own mistakes.</p>
+<h3 id="s-3-6">3.6 The gradient of the loss</h3>
+<p>The score is \(s = w_1 x_1 + w_2 x_2 + b\), so \(\partial s / \partial w_1 = x_1\), \(\partial s / \partial w_2 = x_2\), and \(\partial s / \partial b = 1\). The loss is the mean of the row contributions, \(L = \frac{1}{n}\sum_i \ell_i\). By the chain rule, the slope of \(L\) with respect to \(w_j\) is the mean over the rows of (slope of \(\ell_i\) with respect to \(s_i\)) times (slope of \(s_i\) with respect to \(w_j\)):</p>
+<div class="math">\[ \frac{\partial L}{\partial w_j} \;=\; \frac{1}{n}\sum_{i=1}^{n} (\hat y_i - y_i)\,x_{ij}, \qquad \frac{\partial L}{\partial b} \;=\; \frac{1}{n}\sum_{i=1}^{n} (\hat y_i - y_i). \]</div>
+<p>Here \(x_{ij}\) is the \(j\)-th input of row \(i\). In matrix form, with \(X\) the array whose rows are the inputs and \(\hat{\mathbf y} - \mathbf y\) the vector of errors,</p>
+<div class="math">\[ \nabla_{\mathbf{w}} L \;=\; \frac{1}{n}\,X^{\mathsf T}\,(\hat{\mathbf y} - \mathbf y), \]</div>
+<p>which is the transpose of meeting 2 doing its first real job. The factor \(1/n\) is there because the loss is a mean over the rows, so its gradient is a mean too.</p>
+<p>Read the formula in words. Each row contributes its own input vector \(\mathbf{x}_i\), multiplied by its error. A row with label \(1\) that the unit under-predicts has a negative error, so \(-\nabla L\) moves \(\mathbf{w}\) toward \(+\mathbf{x}_i\), which raises the score on that row. A row with label \(0\) that the unit over-predicts has a positive error, and \(-\nabla L\) moves \(\mathbf{w}\) toward \(-\mathbf{x}_i\), which lowers the score there. Rows the unit already has right contribute almost nothing. The gradient is the sum of these contributions, and moving against it lowers the loss.</p>
+<section class="worked" id="ex-3-1">
+<h4 class="example"><span class="label">Example 3.1</span> At meeting 2’s opening unit</h4>
+<p>Compute the gradient at \(\mathbf{w} = (1, 2)\), \(\theta = 1.5\), the unit that places the corner \((0, 1)\) on the wrong side. Sigmoid values are rounded to two decimals.</p>
+<div class="tables">
+<table class="tt">
+<tr><th style="text-align:center">row</th><th class="rule" style="text-align:center">label \(y\)</th><th class="rule" style="text-align:center">score \(s\)</th><th class="rule" style="text-align:center">output \(\hat y = \sigma(s)\)</th><th class="rule" style="text-align:center">error \(\hat y - y\)</th></tr>
+<tr><td style="text-align:center">\((0,0)\)</td><td class="rule" style="text-align:center">0</td><td class="rule" style="text-align:center">\(-1.5\)</td><td class="rule" style="text-align:center">0.18</td><td class="rule" style="text-align:center">\(+0.18\)</td></tr>
+<tr><td style="text-align:center">\((0,1)\)</td><td class="rule" style="text-align:center">0</td><td class="rule" style="text-align:center">\(+0.5\)</td><td class="rule" style="text-align:center">0.62</td><td class="rule" style="text-align:center">\(+0.62\)</td></tr>
+<tr><td style="text-align:center">\((1,0)\)</td><td class="rule" style="text-align:center">0</td><td class="rule" style="text-align:center">\(-0.5\)</td><td class="rule" style="text-align:center">0.38</td><td class="rule" style="text-align:center">\(+0.38\)</td></tr>
+<tr><td style="text-align:center">\((1,1)\)</td><td class="rule" style="text-align:center">1</td><td class="rule" style="text-align:center">\(+1.5\)</td><td class="rule" style="text-align:center">0.82</td><td class="rule" style="text-align:center">\(-0.18\)</td></tr>
+</table>
+</div>
+<p>For \(\partial L/\partial w_1\), multiply each error by that row’s \(x_1\) and average: only the rows \((1,0)\) and \((1,1)\) have \(x_1 = 1\), so</p>
+<div class="math">\[ \frac{\partial L}{\partial w_1} = \frac{0.38 - 0.18}{4} = 0.05 . \]</div>
+<p>For \(\partial L/\partial w_2\), the rows with \(x_2 = 1\) are \((0,1)\) and \((1,1)\):</p>
+<div class="math">\[ \frac{\partial L}{\partial w_2} = \frac{0.62 - 0.18}{4} = 0.11 . \]</div>
+<p>For the bias, every row has \(x = 1\) in the bias position, so \(\partial L/\partial b\) is the mean of all four errors, \((0.18 + 0.62 + 0.38 - 0.18)/4 = 0.25\). Since \(\theta = -b\), the slope with respect to \(\theta\) is the negative of this: \(\partial L/\partial\theta = -0.25\).</p>
+<p>Downhill is \(-\nabla L\): decrease \(w_2\) (the largest slope among the weights), decrease \(w_1\) a little, and increase \(\theta\). On the unit square of meeting 2, decreasing \(w_2\) and raising \(\theta\) move the line away from the origin on the \(x_2\) side — toward the corner \((0,1)\), the one that was wrong. Moving the line toward the wrong corner is what eighteen people wrote that they did at meeting 2. The formula is that instruction, made exact, and it applies when there is no picture to look at.</p>
+</section>
+<section class="worked" id="ex-3-2">
+<h4 class="example"><span class="label">Example 3.2</span> The slope, two ways</h4>
+<p>This is the second task of the meeting’s sheet, and the check that Task 3 of the assignment asks for in code. The same setting, \(\mathbf{w} = (1, 2)\), \(\theta = 1.5\), whose loss is \(0.46\). We want \(\partial L / \partial w_2\), and we compute it twice.</p>
+<p><em>As a finite difference.</em> Move \(w_2\) up to \(2.5\) and down to \(1.5\), leaving \(w_1 = 1\) and \(\theta = 1.5\), and compute the loss at each. The sheet supplies the sigmoid and logarithm values.</p>
+<p>At \(w_2 = 2.5\) the scores are \(-1.5, +1, -0.5, +2\). The probabilities of the observed labels are \(0.82, 0.27, 0.62, 0.88\) (on the second row the label is \(0\) and \(\sigma(1) = 0.73\), so \(p = 1 - 0.73 = 0.27\)). The contributions \(-\ln p\) are \(0.20, 1.31, 0.48, 0.13\), and the loss is their mean, \(2.12/4 = 0.53\).</p>
+<p>At \(w_2 = 1.5\) the scores are \(-1.5, 0, -0.5, +1\). The probabilities are \(0.82, 0.50, 0.62, 0.73\); the contributions are \(0.20, 0.69, 0.48, 0.32\); the loss is \(1.69/4 = 0.42\).</p>
+<p>The slope is approximately the change in the loss over the change in \(w_2\):</p>
+<div class="math">\[ \frac{\partial L}{\partial w_2} \;\approx\; \frac{0.53 - 0.42}{2.5 - 1.5} \;=\; 0.11 . \]</div>
+<p><em>By the formula.</em> At \(w_2 = 2\) the outputs are \(0.18, 0.62, 0.38, 0.82\), as in Example 3.1, and the rows with \(x_2 = 1\) are the second and the fourth: \((0.62 - 0.18)/4 = 0.11\).</p>
+<p>The two agree to two decimals. The finite difference is the definition of the slope, approximated with a step of size \(1\) in each direction; the formula is the same quantity computed exactly. Moving \(w_2\) only upward, to \(2.5\), and dividing by \(0.5\) gives \(0.13\); moving only downward gives \(0.08\); the two-sided estimate, \(0.11\), is the more accurate one.</p>
+<p>Why the formula is worth having when the finite difference gives the same number: a finite difference costs one extra evaluation of the loss <em>per parameter</em>. With forty parameters that is forty passes over the data for one gradient. The formula gives all forty slopes in a single pass, because every row’s error is computed once and then multiplied by that row’s inputs. In the assignment notebook the finite difference is the check on the formula, not the method.</p>
+</section>
+<h3 id="s-3-7">3.7 Why the minimum has no formula</h3>
+<p>Act 2 promised a reason. The lowest point of a bowl is where the surface is flat in every direction: \(\nabla L = 0\), that is,</p>
+<div class="math">\[ \sum_{i=1}^{n} (\hat y_i - y_i)\,x_{ij} \;=\; 0 \qquad \text{for every } j. \]</div>
+<p>These are equations in the parameters, and there are exactly as many equations as parameters. But \(\hat y_i = \sigma(w_1 x_{i1} + w_2 x_{i2} + b)\), and the unknowns sit inside the sigmoid. The equations are not weighted sums of the unknowns; they are not linear; elimination does not apply, and <code>np.linalg.solve</code> cannot be used. Search with precision is not available for this loss, and not for any quantity with a sigmoid between the parameters and the output.</p>
+<p>What we can compute, at any setting, is the gradient there.</p>
+<h3 id="s-3-8">3.8 Feeling the way down</h3>
+<figure><img src="images/loss-surface-fog.svg" alt="loss-surface-fog" width="510" height="367"></figure>
+<p>The picture above shows the AND surface as it would look from a point on it in thick fog: only the ground within a small radius of the point \((1, 2)\) is visible, with the downhill direction \(-\nabla L\) drawn as an arrow at that point. You cannot see the bowl or its lowest point. You can compute which way the ground falls, and that is what the gradient is: a measurement taken at the point where you stand, not a view of the landscape. Move a short distance downhill, compute the gradient at the new point, move again.</p>
+<p>This matters because the pictures in this act exist only because two weights fit on a page. A unit with forty inputs has forty-one parameters, its loss is a function of forty-one variables, and there is no surface to draw. The gradient formula does not depend on how many parameters there are: every row’s error, times that row’s inputs, averaged. It is computed the same way in two dimensions and in forty-one.</p>
+<p>On the interactive page, switch <strong>fog</strong> on. The surface disappears and a patch of ground around the marked point remains, with the downhill arrow on it. Press <strong>step downhill</strong>: the page moves the point a fixed distance in the direction \(-\nabla L\), a distance the page chose, and computes the gradient again at the new point. From \((1, 2)\) on the AND surface the loss goes \(0.463\), \(0.437\), \(0.424\), \(0.417\), \(0.413\), and the point moves toward \((1, 1)\) without the surface ever being shown. Switch the fog off afterwards and the path is where the eye would have gone. On the weather surface, from the hand-drawn line, the loss goes \(0.245\), \(0.232\), \(0.229\), \(0.229\), and then decreases slowly along the valley toward \(0.218\). Press <strong>random guess</strong> a few times on either surface for the contrast with Act 1: the point lands anywhere in the box, and the next guess uses nothing about where the last one landed.</p>
+<h3 id="s-3-9">3.9 What has been done, and what has not</h3>
+<p>Two results.</p>
+<p>A search that ignores what it has learned — random or grid — works for three parameters and is impractical long before forty, because each extra parameter multiplies its cost by a fixed factor. A search that solves for the answer works only when the requirements are linear in the unknowns, and the condition “the loss is smallest” is not.</p>
+<p>The gradient of the loss, \(\frac{1}{n}\sum_i (\hat y_i - y_i)\,\mathbf{x}_i\), is the slope of the surface at the current setting. It is computed from the data in one pass, it points in the direction of steepest increase, so \(-\nabla L\) points in the direction of steepest decrease, and on the AND table it is the direction that eighteen people found by eye at meeting 2.</p>
+<p>What has not been done: no step has been taken. Knowing which way is downhill is not the same as moving, and a single step is not yet a procedure — the gradient has to be computed again at the new point, and again after that, and something has to decide how far to move and when to stop.</p>
+<aside class="note"><span class="lead">After this meeting.</span> <ul>
+<li>Spend five minutes on <a href="https://ikoutis.github.io/course-notes/artificial-neuron-notes/interactive/loss-landscape.html"><em>The loss landscape</em></a>, linked from Canvas, with the fog switched on.</li>
+<li>Keep the meeting’s sheet: the linear system of Example 2.1 and the two slope computations of Example 3.2.</li>
+<li>Assignment Task 2, <em>From certainty to confidence</em>, is open on Canvas. No new task opens after this meeting.</li>
+<li>Review Quiz 5 is on Canvas.</li>
+</ul>
+</aside>
+<footer>
+<span>CS 301 · Meeting 5 · <a href="index.html">all meetings</a></span>
+<span>generated from meeting-05.tex on 2026-09-19</span>
+</footer>
+</main>
+</body>
+</html>
