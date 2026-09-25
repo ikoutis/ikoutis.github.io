@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Meeting 7. Deploying the Neuron — CS 301</title>
+<meta name="description" content="CS 301 Introduction to Data Science, NJIT. Course notes for meeting 7: Deploying the Neuron.">
+<meta name="cs301-meeting" content="7">
+<meta name="cs301-title" content="Deploying the Neuron">
+<meta name="cs301-acts" content="Review The Gradient and the Loss Act 1 Filters · Act 2 Cheaper Steps · Act 3 Held-Out Days">
+<style>
+@font-face { font-family: "Latin Modern Roman"; src: url(fonts/lmroman10-regular.otf); font-weight: normal; font-style: normal; }
+@font-face { font-family: "Latin Modern Roman"; src: url(fonts/lmroman10-italic.otf); font-weight: normal; font-style: italic; }
+@font-face { font-family: "Latin Modern Roman"; src: url(fonts/lmroman10-bold.otf); font-weight: bold; font-style: normal; }
+@font-face { font-family: "Latin Modern Roman"; src: url(fonts/lmroman10-bolditalic.otf); font-weight: bold; font-style: italic; }
+@font-face { font-family: "Latin Modern Sans"; src: url(fonts/lmsans10-regular.otf); font-weight: normal; }
+@font-face { font-family: "Latin Modern Sans"; src: url(fonts/lmsans10-bold.otf); font-weight: bold; }
+@font-face { font-family: "Latin Modern Mono"; src: url(fonts/lmmono10-regular.otf); }
+:root { --njred: #CC0033; --ink: #1A1A1A; --muted: #555555; --faint: #DDDDDD; --paper: #F7F7F5;
+  --serif: "Latin Modern Roman", "Computer Modern Serif", Georgia, "Times New Roman", serif;
+  --sans: "Latin Modern Sans", "Helvetica Neue", Arial, sans-serif;
+  --mono: "Latin Modern Mono", Consolas, "Courier New", monospace; }
+html { background: #fff; }
+body { margin: 0; color: var(--ink); font-family: var(--serif); font-size: 18px; line-height: 1.5;
+  -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; }
+.page { max-width: 720px; margin: 0 auto; padding: 44px 24px 72px; }
+a { color: inherit; }
+.titleblock { border-top: 3px solid var(--njred); border-bottom: 1px solid var(--faint); padding: 20px 0 16px; margin-bottom: 30px; }
+.kicker { font-family: var(--sans); font-weight: bold; font-size: 12.5px; color: var(--njred); margin: 0 0 14px; display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+.kicker .pdf { font-weight: normal; color: var(--muted); text-decoration: none; border: 1px solid var(--faint); border-radius: 3px; padding: 1px 8px; }
+.kicker .pdf:hover { color: var(--njred); border-color: var(--njred); }
+h1 { font-family: var(--sans); font-size: 30px; line-height: 1.2; margin: 0 0 10px; }
+.acts { font-family: var(--sans); font-size: 13px; color: var(--muted); margin: 0; }
+h2.act { font-family: var(--sans); font-size: 21px; color: var(--njred); margin: 48px 0 20px; padding-bottom: 9px; border-bottom: 1px solid var(--faint); }
+h3 { font-family: var(--sans); font-size: 15.5px; margin: 30px 0 8px; }
+h4.example { font-family: var(--sans); font-size: 15.5px; margin: 22px 0 6px; }
+h4.example .label { color: var(--njred); }
+.worked { margin: 0 0 22px; }
+p { margin: 0; }
+p + p { text-indent: 1.6em; }
+.note { background: var(--paper); padding: 14px 18px; margin: 24px 0; }
+.note .lead { font-family: var(--sans); font-weight: bold; font-size: 15.5px; }
+.note p { display: inline; }
+.note p + p { display: block; text-indent: 1.6em; margin-top: 0.4em; }
+.note ul { margin-top: 10px; }
+.source { font-size: 13px; color: var(--muted); margin-top: 6px; text-indent: 0 !important; }
+.pull { text-align: center; margin: 14px 0; text-indent: 0 !important; }
+.bigq { text-align: center; font-size: 22px; margin: 18px 0; text-indent: 0 !important; }
+.math { margin: 8px 0 14px; overflow-x: auto; }
+.red, .c-njred { color: var(--njred); }
+.muted { color: var(--muted); }
+ul, ol { margin: 10px 0 12px; padding-left: 2.2em; }
+li { margin: 0 0 5px; }
+li p { display: inline; }
+figure { margin: 22px 0; text-align: center; }
+figure img { max-width: 100%; height: auto; }
+.tables { display: flex; justify-content: center; align-items: flex-start; gap: 44px; flex-wrap: wrap; margin: 18px 0; }
+table { border-collapse: collapse; font-size: 16.5px; }
+table.tt th { font-weight: normal; border-bottom: 1px solid var(--ink); padding: 2px 11px 4px; }
+table.tt td { padding: 3px 11px 0; }
+table.tt .rule { border-left: 1px solid var(--ink); }
+table.trans td { padding: 6px 18px; }
+table.trans td:first-child { padding-left: 0; }
+table.trans td:last-child { padding-right: 0; }
+pre.code { font-family: var(--mono); font-size: 15px; line-height: 1.4; margin: 16px 0 16px 44px; white-space: pre; overflow-x: auto; }
+code { font-family: var(--mono); font-size: 92%; }
+footer { margin-top: 56px; padding-top: 12px; border-top: 1px solid var(--faint); font-family: var(--sans); font-size: 12.5px; color: var(--muted);
+  display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+footer a { text-decoration: none; }
+footer a:hover { color: var(--njred); }
+@media (max-width: 560px) { body { font-size: 17px; } .page { padding: 28px 18px 56px; } h1 { font-size: 25px; } pre.code { margin-left: 12px; } }
+@media print { .page { max-width: none; padding: 0; } .kicker .pdf { display: none; } h2.act, h3, h4 { break-after: avoid; } figure, .note, table { break-inside: avoid; } }
+</style>
+<script>window.MathJax = { tex: { inlineMath: [['\\(', '\\)']], displayMath: [['\\[', '\\]']] }, chtml: { scale: 1.02 } };</script>
+<script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+</head>
+<body>
+<main class="page">
+<header class="titleblock">
+<p class="kicker">NJIT · CS 301 · INTRODUCTION TO DATA SCIENCE · FALL 2026 <a class="pdf" href="7.-Deploying-the-Neuron.pdf">PDF</a></p>
+<h1>Meeting 7. Deploying the Neuron</h1>
+<p class="acts">Review The Gradient and the Loss Act 1 Filters · Act 2 Cheaper Steps · Act 3 Held-Out Days</p>
+</header>
+<p>Training a unit gives us weights and a bias. Using it on new data also requires a consistent way to prepare the inputs and evidence about how well its predictions generalize. This meeting studies input scaling, updates computed from small batches, and evaluation on days kept out of training.</p>
+<h2 class="act" id="act-0">Act 0. Review: the gradient and the loss</h2>
+<h3 id="s-0-1">0.1 Probabilities, row costs, and the mean loss</h3>
+<p>At temperature 1, the unit computes</p>
+<div class="math">\[ s_i=\mathbf{w}\cdot\mathbf{x}_i+b=\mathbf{w}\cdot\mathbf{x}_i-\theta, \qquad \hat y_i=\sigma(s_i)=\frac{1}{1+e^{-s_i}}. \]</div>
+<p>The bias and threshold are two ways to write the same parameter: \(b=-\theta\). We train one of them. The output \(\hat y_i\) estimates the probability of label 1. The probability assigned to the observed label is</p>
+<div class="math">\[ p_i=\begin{cases} \hat y_i &amp; \text{if } y_i=1,\\ 1-\hat y_i &amp; \text{if } y_i=0. \end{cases} \]</div>
+<p>This is the worksheet’s \(p\)(actual). When the label is 0, a small output gives the observed label a high probability.</p>
+<p>The model treats labels as independent given the inputs and parameters, so its likelihood is \(\mathcal{L}=\prod_i p_i\). Maximizing this product is equivalent to maximizing \(\sum_i\ln p_i\), because the logarithm is increasing. Computing a sum of log probabilities also avoids underflow from multiplying thousands of small probabilities. Taking the negative mean gives the binary cross-entropy loss:</p>
+<div class="math">\[ \ell_i=-\ln p_i =-y_i\ln\hat y_i-(1-y_i)\ln(1-\hat y_i), \qquad L=\frac1n\sum_{i=1}^n\ell_i. \]</div>
+<p>The signed error \(e_i=\hat y_i-y_i\) and the nonnegative cost \(\ell_i\) are different quantities. An error can be negative; a cross-entropy cost cannot.</p>
+<p>Using the mean makes \(L\) a cost per row. Duplicating every row leaves both the mean loss and its gradient unchanged. A unit that outputs \(1/2\) everywhere has mean loss \(\ln2\approx0.693\), whatever the number of rows. This normalization removes the direct scaling with dataset size, but the learning rate still depends on the inputs and loss function.</p>
+<h3 id="s-0-2">0.2 Why the derivative contains the error</h3>
+<p>For one row, suppress the subscript \(i\) and apply the chain rule:</p>
+<div class="math">\[ \begin{aligned} \frac{d\ell}{d\hat y} &amp;=-\frac{y}{\hat y}+\frac{1-y}{1-\hat y} =\frac{\hat y-y}{\hat y(1-\hat y)},\\ \frac{d\hat y}{ds} &amp;=\frac{e^{-s}}{(1+e^{-s})^2}=\hat y(1-\hat y),\\ \frac{d\ell}{ds} &amp;=\frac{d\ell}{d\hat y}\frac{d\hat y}{ds}=\hat y-y=e. \end{aligned} \]</div>
+<p>The sigmoid derivative cancels the denominator in the loss derivative. Since \(\partial s/\partial w_j=x_j\), \(\partial s/\partial b=1\), and \(\partial s/\partial\theta=-1\), the parameter derivatives are</p>
+<div class="math">\[ \frac{\partial\ell}{\partial w_j}=e x_j, \qquad \frac{\partial\ell}{\partial b}=e, \qquad \frac{\partial\ell}{\partial\theta}=-e. \]</div>
+<p>Differentiating the mean loss averages these row contributions:</p>
+<div class="math">\[ \boxed{\frac{\partial L}{\partial w_j} =\frac1n\sum_i e_i x_{ij}}, \qquad \frac{\partial L}{\partial b}=\frac1n\sum_i e_i, \qquad \frac{\partial L}{\partial\theta}=-\frac1n\sum_i e_i. \]</div>
+<p>The worksheet’s arithmetic evaluates these symbolic derivatives at particular weights and inputs. For \(d\) inputs there are \(d\) weight derivatives and one bias or threshold derivative.</p>
+<section class="worked" id="ex-0-1">
+<h4 class="example"><span class="label">Example 0.1</span> One row of the AND table</h4>
+<p>Use \(\mathbf{w}=(1,2)\) and \(\theta=1.5\). The row \((0,1)\) has label 0, score \(0.5\), and output \(\sigma(0.5)\approx0.6225\). Its cost is \(-\ln(1-\sigma(0.5))\approx0.9741\), while its error is approximately \(0.6225\). The weight derivatives are approximately \((0,0.6225)\) and the threshold derivative is approximately \(-0.6225\).</p>
+<p>Changing \(w_1\) cannot affect this row because \(x_1=0\). Increasing \(w_2\) increases its score and cost. Increasing the threshold decreases its score and cost. The derivative signs express these effects.</p>
+</section>
+<h3 id="s-0-3">0.3 Entropy and cross-entropy</h3>
+<p>For outcome probabilities \(p=(p_k)\) and model probabilities \(q=(q_k)\), define</p>
+<div class="math">\[ H(p)=-\sum_k p_k\ln p_k, \qquad H(p,q)=-\sum_k p_k\ln q_k. \]</div>
+<p>The surprise of outcome \(k\) under the model is \(-\ln q_k\). Cross-entropy averages that surprise using the outcome probabilities \(p_k\). Entropy is the case in which the model uses those same probabilities. For discrete probability distributions, \(H(p,q)\ge H(p)\), with equality when \(q=p\). Natural logarithms give units of <strong>nats</strong>; a zero-probability outcome contributes zero to entropy by the convention \(0\ln0=0\).</p>
+<p>For one observed binary label, in the order (label 0, label 1), \(p=(1-y,y)\) and \(q=(1-\hat y,\hat y)\). Then \(H(p,q)=-\ln p_i=\ell_i\). Here the vector \(p\) describes labels, whereas the scalar \(p_i\) is the probability the model assigned to the observed label on row \(i\).</p>
+<p>For an example with repeated inputs, 14 weather days have a high of \(82^\circ\)F and a low of \(63^\circ\)F. Twelve have label 1 and two have label 0. A model using only these two inputs must give all 14 the same output. Their mean cost is smallest at \(\hat y=12/14\):</p>
+<div class="math">\[ -\frac{12}{14}\ln\frac{12}{14} -\frac{2}{14}\ln\frac{2}{14}\approx0.410\text{ nats}. \]</div>
+<p>This lower bound applies to the mean cost of these 14 days. It is not the minimum loss of the entire dataset, which averages all its rows.</p>
+<h3 id="s-0-4">0.4 Temperature and confidence</h3>
+<p>For a fixed \(T&gt;0\), dividing both the weights and threshold by \(T\) preserves the output at temperature 1:</p>
+<div class="math">\[ \sigma\!\left(\frac{\mathbf{w}\cdot\mathbf{x}-\theta}{T}\right) =\sigma\!\left(\frac{\mathbf{w}}{T}\cdot\mathbf{x}-\frac{\theta}{T}\right). \]</div>
+<p>We therefore use \(T=1\) while training the parameters. Multiplying both \(\mathbf{w}\) and \(\theta\) by a positive factor \(k\) leaves the decision boundary in place and multiplies every score by \(k\). As \(k\) grows, a row strictly on the correct side has cost approaching zero. A row strictly on the wrong side has cost increasing without bound. A row on the boundary keeps output \(1/2\) and cost \(\ln2\).</p>
+<p>A line can strictly separate the AND labels, so scaling a separating unit drives its loss toward zero. Finite sigmoid parameters never attain zero loss. Conflicting labels at identical weather inputs prevent zero loss for a model using only those inputs. These observations concern scaling a fixed boundary; training can also move or rotate it.</p>
+<h2 class="act" id="act-1">Act 1. Filters</h2>
+<h3 id="s-1-1">1.1 Choosing and rescaling the inputs</h3>
+<p>An input filter determines what reaches the unit and in what numerical form. Our weather model uses the day’s high and low temperatures to classify the warm or cold half of the year. The date defines the label and the chronological split, but is never an input. We classify the season from observed temperatures; we do not forecast temperatures.</p>
+<p>Feature selection and rescaling are separate choices. Here we keep the same two features and change their scale. The biological comparison is that sensory systems select signals and adjust to their strength. Standardization is a mathematical preparation step for our unit, not a literal model of a sensory system.</p>
+<p>The experiments use 4,316 training days from 2006–2017. Later years are reserved for evaluation, so the numbers differ from the earlier runs on all 6,865 usable days. The dataset’s established complete-row filter determines which days are usable; this unit still uses only high and low as features.</p>
+<h3 id="s-1-2">1.2 Why raw temperatures make training slow</h3>
+<p>Each contribution to a weight derivative is \(e_i x_{ij}\). On raw temperatures, the numerical inputs are mostly in the tens, whereas the bias’s multiplier is 1. Starting from all-zero parameters gives approximately</p>
+<div class="math">\[ \frac{\partial L}{\partial w_{\rm high}}=-7.43, \qquad \frac{\partial L}{\partial w_{\rm low}}=-6.97, \qquad \frac{\partial L}{\partial b}=-0.0030. \]</div>
+<p>The largest of these magnitudes is about 2,500 times the smallest. One learning rate controls all three updates. A rate small enough to keep the weight updates stable moves the bias very slowly. After 1,000 steps at \(\eta=0.0005\), training loss is still \(0.5373\) and accuracy is \(72.7\%\).</p>
+<p>The bias’s small initial derivative also reflects the nearly balanced labels. Input scale is not the only determinant of a derivative’s size. Standardizing improves the geometry of this optimization problem; it does not force every derivative to have the same magnitude.</p>
+<h3 id="s-1-3">1.3 Standardization</h3>
+<p>For each feature, calculate its mean \(\mu\) and standard deviation \(\sigma\) using only the training rows, then transform</p>
+<div class="math">\[ \boxed{z=\frac{x-\mu}{\sigma}.} \]</div>
+<p>Here \(\sigma\) denotes a standard deviation, while \(\sigma(s)\) denotes the sigmoid. A \(z\)-score measures how many standard deviations a value lies above or below the training mean. On the training data the transformed feature has mean 0 and standard deviation 1. This does not imply a normal distribution or restrict all values to \([-2,2]\).</p>
+<p>The training values, rounded for hand calculations, are</p>
+<div class="tables">
+<table class="tt">
+<tr><th style="text-align:left">Feature</th><th style="text-align:right">Mean (\(^\circ\)F)</th><th style="text-align:right">Standard deviation (\(^\circ\)F)</th></tr>
+<tr><td style="text-align:left">Daily high</td><td style="text-align:right">64.8</td><td style="text-align:right">18.6</td></tr>
+<tr><td style="text-align:left">Daily low</td><td style="text-align:right">48.0</td><td style="text-align:right">16.9</td></tr>
+</table>
+</div>
+<p>For example, a high of \(83^\circ\)F becomes \((83-64.8)/18.6\approx0.98\). A high of \(30^\circ\)F becomes approximately \(-1.87\). The transformed values have no units because numerator and denominator both have units of degrees Fahrenheit.</p>
+<section class="worked" id="ex-1-1">
+<h4 class="example"><span class="label">Example 1.1</span> Three days through the filter</h4>
+<p>Using the rounded training statistics above gives</p>
+<div class="tables">
+<table class="tt">
+<tr><th style="text-align:left">Day</th><th style="text-align:right">High</th><th style="text-align:right">Low</th><th style="text-align:right">\(z_{\rm high}\)</th><th style="text-align:right">\(z_{\rm low}\)</th></tr>
+<tr><td style="text-align:left">January 7, 2014</td><td style="text-align:right">16.2</td><td style="text-align:right">3.2</td><td style="text-align:right">\(-2.61\)</td><td style="text-align:right">\(-2.65\)</td></tr>
+<tr><td style="text-align:left">July 22, 2011</td><td style="text-align:right">108.0</td><td style="text-align:right">86.0</td><td style="text-align:right">\(+2.32\)</td><td style="text-align:right">\(+2.25\)</td></tr>
+<tr><td style="text-align:left">November 6, 2024</td><td style="text-align:right">82.9</td><td style="text-align:right">63.0</td><td style="text-align:right">\(+0.97\)</td><td style="text-align:right">\(+0.89\)</td></tr>
+</table>
+</div>
+<p>The January high is the most unusual of the three relative to the training distribution: its absolute \(z\)-score is largest. The November day uses exactly the same filter, even though it is outside the training years. Refitting the filter on that day or on the test years would change the input scale and use held-out information.</p>
+</section>
+<h3 id="s-1-4">1.4 What standardization changes</h3>
+<p>Starting from zero on standardized inputs gives weight derivatives approximately \(-0.389\) and \(-0.403\). At \(\eta=1\), one step already classifies \(90.6\%\) of the training days correctly. By step 500, the training loss is approximately \(0.2217\).</p>
+<figure><img src="images/filter-descent.svg" alt="Training loss from zero parameters falls slowly on raw temperatures at learning rate 0.0005 and quickly on standardized temperatures at learning rate 1." width="482" height="251"></figure>
+<p>These runs use different learning rates appropriate to their input scales. On standardized inputs, rates of 1, 5, and 20 all reach a loss near \(0.2217\) within 100 steps in this experiment. Standardization widens the useful range; arbitrarily large rates can still fail. The high and low remain strongly correlated, so the loss surface can still be much flatter in some directions than in others.</p>
+<p>The filter changes the parameter coordinates, while preserving which linear boundaries the unit can represent. If</p>
+<div class="math">\[ s=a_1\frac{h-\mu_h}{\sigma_h} +a_2\frac{l-\mu_l}{\sigma_l}+c, \]</div>
+<p>then in the original temperature units,</p>
+<div class="math">\[ s=\frac{a_1}{\sigma_h}h+\frac{a_2}{\sigma_l}l +\left(c-\frac{a_1\mu_h}{\sigma_h} -\frac{a_2\mu_l}{\sigma_l}\right). \]</div>
+<p>For the fitted unit, the boundary in degrees is approximately</p>
+<div class="math">\[ 0.0469h+0.2042l-12.91=0. \]</div>
+<p>The deployed model includes both the fitted parameters and the four training statistics. Every new day passes through that same filter.</p>
+<h2 class="act" id="act-2">Act 2. Cheaper steps</h2>
+<h3 id="s-2-1">2.1 A few questions before the next adjustment</h3>
+<p>Suppose you are studying from 100 practice questions. You could answer all 100 before reviewing anything. Another approach is to try 10, review the errors, then try the next 10. You adjust your understanding several times before finishing the full set. Going through all 100 questions once is one pass; repeating them makes another pass.</p>
+<p>Mini-batch training uses this idea. The current parameters may already show how they need to change after a few examples. A full-batch update waits for every training row before changing anything. A mini-batch update uses a smaller sample to estimate the gradient, updates the parameters, and continues with another batch. One example can supply useful information even when the overall model is still inaccurate.</p>
+<h3 id="s-2-2">2.2 Batches and epochs</h3>
+<p>A <strong>batch</strong> is the set of rows used for one gradient computation. Full-batch descent uses the entire training set for each update. Mini-batch descent uses a smaller set, such as 32 rows. We use <strong>stochastic gradient descent</strong>, or SGD, for one randomly selected row per update, although the term also commonly includes mini-batches.</p>
+<p>An <strong>epoch</strong> is one pass over the training set. In these experiments, we shuffle the rows before each epoch and visit them in successive batches, using each row once. With \(n\) rows and batch size \(m\), one epoch contains \(\lceil n/m\rceil\) updates. A final batch may contain fewer than \(m\) rows; its gradient averages over its actual size. For 4,316 days and batches of 32, that is 134 complete batches and one batch of 28, for 135 updates.</p>
+<p>For a batch \(B\), let \(|B|\) denote its number of rows. Its mean loss and gradient are</p>
+<div class="math">\[ L_B=\frac1{|B|}\sum_{i\in B}\ell_i, \qquad \frac{\partial L_B}{\partial w_j} =\frac1{|B|}\sum_{i\in B}e_i x_{ij}, \qquad \frac{\partial L_B}{\partial b} =\frac1{|B|}\sum_{i\in B}e_i. \]</div>
+<p>The update subtracts the learning rate times this batch gradient. For a threshold parameter, use the negative mean error instead of the mean error.</p>
+<h3 id="s-2-3">2.3 A mini-batch gradient by hand</h3>
+<section class="worked" id="ex-2-1">
+<h4 class="example"><span class="label">Example 2.1</span> Rows \((0,1)\) and \((1,1)\)</h4>
+<p>Keep \(\mathbf{w}=(1,2)\) and \(\theta=1.5\) fixed. The selected AND rows have rounded errors \(+0.62\) and \(-0.18\). Calculate each row’s contribution to each weight derivative:</p>
+<div class="tables">
+<table class="tt">
+<tr><th style="text-align:center">\(x_1\)</th><th style="text-align:center">\(x_2\)</th><th style="text-align:right">\(e\)</th><th class="rule" style="text-align:right">\(e x_1\)</th><th style="text-align:right">\(e x_2\)</th></tr>
+<tr><th style="text-align:center">0</th><th style="text-align:center">1</th><th style="text-align:right">\(+0.62\)</th><th class="rule" style="text-align:right">\(0\)</th><th style="text-align:right">\(+0.62\)</th></tr>
+<tr><th style="text-align:center">1</th><th style="text-align:center">1</th><th style="text-align:right">\(-0.18\)</th><th class="rule" style="text-align:right">\(-0.18\)</th><th style="text-align:right">\(-0.18\)</th></tr>
+<tr><td colspan="3" style="text-align:right">Mean</td><td class="rule" style="text-align:right">\(-0.09\)</td><td style="text-align:right">\(+0.22\)</td></tr>
+</table>
+</div>
+<p>Thus the batch weight gradient is approximately</p>
+<div class="math">\[ \left(\frac{0-0.18}{2},\frac{0.62-0.18}{2}\right) =(-0.09,0.22). \]</div>
+<p>The mean error is \(0.22\), giving threshold derivative \(-0.22\). With learning rate \(\eta\), this batch would increase \(w_1\) by \(0.09\eta\), decrease \(w_2\) by \(0.22\eta\), and increase \(\theta\) by \(0.22\eta\).</p>
+</section>
+<aside class="note"><span class="lead">Multiply within each row, then average.</span> <p>The entries \(e_i x_{ij}\) are contributions to a derivative, not losses. The weight gradient is the average of the products. Averaging the errors first and then multiplying by an input loses the pairing between each error and its own input. In general,</p>
+<div class="math">\[ \operatorname{mean}(e x_j)\ne \operatorname{mean}(e)\operatorname{mean}(x_j). \]</div>
+</aside>
+<p>For the other half, \((0,0)\) and \((1,0)\), the rounded errors are \(+0.18\) and \(+0.38\). Its weight gradient is approximately \((0.19,0)\). Averaging the two equal-size batch gradients gives</p>
+<div class="math">\[ \frac{(-0.09,0.22)+(0.19,0)}2=(0.05,0.11), \]</div>
+<p>the full-table weight gradient. The first batch disagrees with the full gradient even in the sign of its \(w_1\) component. That is possible: a batch estimates the full gradient and need not point in exactly the same direction.</p>
+<p>At fixed parameters, uniformly sampled batches give the full gradient on average. If batches partition the data, their gradients average exactly to the full gradient when weighted by batch size. This statement requires evaluating them at the same parameters. During training we update after each batch, so later gradients come from different places on the loss surface. An epoch of small updates is generally different from one full-batch update.</p>
+<h3 id="s-2-4">2.4 Two experiments with the interactive page</h3>
+<p>The companion page <a href="https://ikoutis.github.io/course-notes/artificial-neuron-notes/interactive/batch-lines.html"><em>A few days stand in for all of them</em></a> shows two distinct experiments on the Newark training days.</p>
+<p>In the first view, a new unit trains on one selected sample alone. Its red boundary is compared with the black boundary fitted using all 4,316 training days. Drawing several samples shows that the fitted lines vary. One sample of 32 days produced a unit with about \(90.1\%\) accuracy across all the training days, compared with \(90.9\%\) for the reference unit. That was one random sample, not a guarantee for every group of 32. A very small sample can give a poor line, and a sample containing just one label provides no examples of the other class.</p>
+<p>In the second view, successive batches update <em>one continuing unit</em>. Each press of <em>next batch</em> selects the next group of days and takes one step from the current parameters. Finishing an epoch uses the remaining rows. Small batches give more updates during that pass, but individual updates vary more. Trying batch sizes 32, 2, and 1 makes that variation visible.</p>
+<p>The plot axes show temperatures in degrees Fahrenheit. The page’s training calculations nevertheless use standardized inputs, and it converts each boundary back to degrees for display. A boundary that moves slowly is not evidence that the inputs were left unstandardized. The learning rate, batch size, and curvature of the loss all affect how the line moves.</p>
+<h3 id="s-2-5">2.5 Computational cost and noisy updates</h3>
+<p>The following runs start from zero on standardized training inputs. Each row contributes once to updates during the first epoch:</p>
+<div class="tables">
+<table class="tt">
+<tr><th style="text-align:right">Batch size</th><th style="text-align:right">Learning rate</th><th style="text-align:right">Updates</th><th style="text-align:right">Training loss</th></tr>
+<tr><td style="text-align:right">4,316</td><td style="text-align:right">1</td><td style="text-align:right">1</td><td style="text-align:right">0.4519</td></tr>
+<tr><td style="text-align:right">256</td><td style="text-align:right">1</td><td style="text-align:right">17</td><td style="text-align:right">0.2411</td></tr>
+<tr><td style="text-align:right">32</td><td style="text-align:right">0.5</td><td style="text-align:right">135</td><td style="text-align:right">0.2262</td></tr>
+<tr><td style="text-align:right">1</td><td style="text-align:right">0.1</td><td style="text-align:right">4,316</td><td style="text-align:right">0.2222</td></tr>
+</table>
+</div>
+<p>Smaller batches allow the parameters to change before all rows have been visited. Here that gives much better loss after one pass. The learning rates also differ, so the table does not isolate batch size as the only cause. It compares practical runs with the same number of row contributions to updates.</p>
+<p>Fewer rows per update do not by themselves establish a proportional reduction in elapsed time or energy. Hardware can process large batches in parallel, and many small updates carry overhead. Evaluating loss over the full dataset for a plot also adds computation beyond the updates counted in the table.</p>
+<p>With a fixed learning rate, different batches can keep moving the unit around a minimum. Over the last five of twenty epochs, the one-row run at \(\eta=0.1\) has losses from \(0.2219\) to \(0.2229\). Batches of 32 at \(\eta=0.5\) give \(0.2217\) to \(0.2218\). A decreasing learning rate reduces the effect of batch variation late in training. The tested one-row schedule gives five losses that all round to \(0.2217\), rather than five exactly equal losses.</p>
+<h3 id="s-2-6">2.6 Momentum</h3>
+<p>Momentum retains part of the previous update. Let \(\mathbf{u}\) collect the weights and bias, and initialize an update vector \(\mathbf{v}=0\). For the current gradient \(g\), use</p>
+<div class="math">\[ \mathbf{v}\leftarrow\beta\mathbf{v}-\eta g, \qquad \mathbf{u}\leftarrow\mathbf{u}+\mathbf{v}, \qquad 0\le\beta&lt;1. \]</div>
+<p>Directions that persist across updates accumulate; alternating directions can partly cancel. Older updates retain influence with successive factors of \(\beta\). In the standardized full-batch experiment at \(\eta=0.2\), loss after 10 steps is \(0.3952\) without momentum and \(0.2318\) with \(\beta=0.9\). This illustrates a possible improvement; momentum does not guarantee a loss decrease at every step.</p>
+<h2 class="act" id="act-3">Act 3. Held-out days</h2>
+<h3 id="s-3-1">3.1 Training, validation, and test data</h3>
+<p>A low loss on the training days describes how well the unit fits those days. Deployment requires predictions on other days. We therefore separate data used to fit the parameters from data used to evaluate them and guide choices:</p>
+<div class="tables">
+<table class="tt">
+<tr><th style="text-align:left">Set</th><th style="text-align:left">Years</th><th style="text-align:right">Days</th><th style="text-align:left">Purpose</th></tr>
+<tr><td style="text-align:left">Training</td><td style="text-align:left">2006–2017</td><td style="text-align:right">4,316</td><td style="text-align:left">Fit parameters and input filter</td></tr>
+<tr><td style="text-align:left">Validation</td><td style="text-align:left">2018–2021</td><td style="text-align:right">1,457</td><td style="text-align:left">Choose settings and stopping time</td></tr>
+<tr><td style="text-align:left">Test</td><td style="text-align:left">2022–2024</td><td style="text-align:right">1,092</td><td style="text-align:left">Evaluate the final chosen model</td></tr>
+</table>
+</div>
+<p>Validation rows do not contribute to gradient updates. Their loss can guide the learning rate or the choice of which saved parameters to keep. Repeated choices can make validation results optimistic, so we reserve a separate test set for the final report.</p>
+<p>The split follows time because the intended use is on later observations. Neighbouring days often resemble each other, and a random split would mix nearby days across sets. The training years alone determine the filter’s means and standard deviations. Validation and test days use those stored values. Shuffling the training rows for mini-batches is compatible with a chronological split: shuffling happens only within the training set.</p>
+<h3 id="s-3-2">3.2 When training and validation losses level off</h3>
+<p>Using all 4,316 training days, full-batch descent from zero at \(\eta=1\) gives the following losses:</p>
+<div class="tables">
+<table class="tt">
+<tr><th style="text-align:right">Step</th><th style="text-align:right">Training loss</th><th style="text-align:right">Validation loss</th></tr>
+<tr><td style="text-align:right">1</td><td style="text-align:right">0.4519</td><td style="text-align:right">0.4445</td></tr>
+<tr><td style="text-align:right">10</td><td style="text-align:right">0.2569</td><td style="text-align:right">0.2376</td></tr>
+<tr><td style="text-align:right">100</td><td style="text-align:right">0.2248</td><td style="text-align:right">0.1989</td></tr>
+<tr><td style="text-align:right">500</td><td style="text-align:right">0.2217</td><td style="text-align:right">0.1930</td></tr>
+<tr><td style="text-align:right">5,000</td><td style="text-align:right">0.2217</td><td style="text-align:right">0.1923</td></tr>
+</table>
+</div>
+<figure><img src="images/heldout-full.svg" alt="Training and validation losses decrease and level off when the unit trains on all 4316 training days. Validation loss remains below training loss in this run." width="482" height="251"></figure>
+<p>Further steps bring little improvement after about step 500. Validation loss can be lower than training loss: the sets contain different days, and there is no rule requiring one loss to exceed the other. These scores alone do not explain why one period is easier for the model. The plateau also does not determine what additional features or a different model could achieve.</p>
+<h3 id="s-3-3">3.3 Overfitting twenty days</h3>
+<p>Now use only 20 randomly selected training-year days for the gradient updates, with the same validation set. This particular sample contains nine label-1 days and eleven label-0 days. To keep the comparison on the same input scale, the filter still uses statistics from all 4,316 training-year days. No validation or test day fits that filter.</p>
+<p>These 20 points are linearly separable. As with AND, the training loss can approach zero while the parameter magnitudes grow. The validation set contains mistakes, however, and increasing confidence in those mistakes raises their costs. This is <strong>overfitting</strong>: a closer fit to the training sample produces worse predictions on held-out data, as measured here by cross-entropy.</p>
+<figure><img src="images/heldout-small.svg" alt="On a sample of 20 training days, training loss keeps falling while validation loss reaches a minimum near step 28 and then increases." width="482" height="251"></figure>
+<section class="worked" id="ex-3-1">
+<h4 class="example"><span class="label">Example 3.1</span> Choosing a saved step</h4>
+<p>The table reports selected checkpoints from this run:</p>
+<div class="tables">
+<table class="tt">
+<tr><th style="text-align:right">Step</th><th style="text-align:right">Train loss</th><th style="text-align:right">Train accuracy</th><th style="text-align:right">Validation loss</th><th style="text-align:right">Val. accuracy</th></tr>
+<tr><td style="text-align:right">1</td><td style="text-align:right">0.4342</td><td style="text-align:right">95%</td><td style="text-align:right">0.4412</td><td style="text-align:right">91.0%</td></tr>
+<tr><td style="text-align:right">10</td><td style="text-align:right">0.1766</td><td style="text-align:right">95%</td><td style="text-align:right">0.2257</td><td style="text-align:right">90.9%</td></tr>
+<tr><td style="text-align:right">20</td><td style="text-align:right">0.1349</td><td style="text-align:right">95%</td><td style="text-align:right"><strong>0.2079</strong></td><td style="text-align:right">90.9%</td></tr>
+<tr><td style="text-align:right">50</td><td style="text-align:right">0.0937</td><td style="text-align:right">100%</td><td style="text-align:right">0.2116</td><td style="text-align:right">91.2%</td></tr>
+<tr><td style="text-align:right">200</td><td style="text-align:right">0.0513</td><td style="text-align:right">100%</td><td style="text-align:right">0.2736</td><td style="text-align:right">91.1%</td></tr>
+<tr><td style="text-align:right">1,000</td><td style="text-align:right">0.0215</td><td style="text-align:right">100%</td><td style="text-align:right">0.4448</td><td style="text-align:right">90.9%</td></tr>
+<tr><td style="text-align:right">20,000</td><td style="text-align:right">0.0016</td><td style="text-align:right">100%</td><td style="text-align:right">1.0687</td><td style="text-align:right">90.5%</td></tr>
+</table>
+</div>
+<p>Among the steps listed, keep step 20 because it has the lowest validation loss. Training loss alone would always favor the later step. Checking every step instead gives a minimum near step 28, about \(0.206\), as shown in the figure. The best listed checkpoint and the best of all checked steps are different comparisons.</p>
+</section>
+<p>Validation accuracy stays near \(91\%\) even as its loss increases more than fivefold. Accuracy only asks which side of the threshold an output falls on. Cross-entropy also measures confidence. For a row with label 0, outputs \(0.6\) and \(0.99\) are both wrong, but their costs are about \(0.916\) and \(4.605\). Increasing confidence can greatly increase loss without changing the predicted label. Similar accuracies alone do not prove that exactly the same individual days have the same predictions.</p>
+<h3 id="s-3-4">3.4 Early stopping</h3>
+<p>Early stopping uses the validation loss to decide when further fitting has stopped helping. At each chosen checkpoint, evaluate validation loss and save the parameters if they are the best seen so far. Stop after a chosen number of checks without meaningful improvement, then restore the best saved parameters. A tolerance specifies what counts as meaningful, and a patience value specifies how long to wait.</p>
+<p>The lowest checkpoint is identified by comparison, not known in advance. In the 20-day example, we cannot know at step 20 that the later checkpoints in the table will be worse. Saving parameters lets us return to that setting after continuing far enough to decide. The all-days run instead shows a plateau with only small improvements; the same rule can stop it without waiting for a large increase in loss.</p>
+<h3 id="s-3-5">3.5 A final test and the limits of the result</h3>
+<p>For the run using all training days, the saved parameters at step 5,000 give</p>
+<div class="tables">
+<table class="tt">
+<tr><th style="text-align:left">Set</th><th style="text-align:right">Loss</th><th style="text-align:right">Accuracy</th></tr>
+<tr><td style="text-align:left">Training years</td><td style="text-align:right">0.2217</td><td style="text-align:right">90.9%</td></tr>
+<tr><td style="text-align:left">Validation years</td><td style="text-align:right">0.1923</td><td style="text-align:right">91.8%</td></tr>
+<tr><td style="text-align:left">Test years</td><td style="text-align:right">0.2303</td><td style="text-align:right">89.7%</td></tr>
+</table>
+</div>
+<p>The test accuracy describes performance on 2022–2024. It helps estimate performance on later days if their relationship between inputs and labels remains similar; it is not a guarantee about every future period.</p>
+<p>There is a limitation to this course example. The earlier whole-dataset experiments and warm November examples already used days from the test years. This training run excludes them from fitting and selection, but they are not entirely untouched data in the course’s development. In a new project, reserve the test set before exploring the data or making model choices. Revising the model in response to test results makes those results part of model selection.</p>
+<p>A truth table enumerates every possible input of a Boolean gate, so checking every row verifies the gate on its entire domain. Weather observations are a sample. We cannot check all future days, and taking more training steps cannot resolve conflicting labels at identical inputs. The fitted filter, the training procedure, and the evaluation split all matter when interpreting what a trained unit can do.</p>
+<footer>
+<span>CS 301 · Meeting 7 · <a href="index.html">all meetings</a></span>
+<span>generated from meeting-07.tex on 2026-09-24</span>
+</footer>
+</main>
+</body>
+</html>
