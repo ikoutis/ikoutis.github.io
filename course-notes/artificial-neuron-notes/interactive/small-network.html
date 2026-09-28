@@ -156,8 +156,12 @@
         <p><strong>What to look at.</strong> Three units were trained separately, each on its own truth table: OR, NAND
            and AND. They are wired so that the AND unit reads the outputs of the other two. Move the slider: it sets how
            many steps <em>each part</em> was trained for.</p>
-        <p>With few steps, the parts' outputs are far from 0 and 1. On the small plane the four rows sit near the middle,
-           and the AND unit, which was trained on exact 0 and 1 inputs, puts some on the wrong side of its line. Find the
+        <p>The small plane is a different plane from the large one. Its two axes are the outputs of the OR unit and
+           of the NAND unit, and each row of the table is drawn where those two outputs put it. Exact gates would send
+           row (0,0) to the upper left corner, rows (0,1) and (1,0) to the upper right corner, and row (1,1) to the
+           lower right corner.</p>
+        <p>With few steps, the parts' outputs are far from 0 and 1. On the small plane the four rows sit away from
+           those corners, and the AND unit, which was trained on exact 0 and 1 inputs, puts some on the wrong side of its line. Find the
            smallest number of steps at which the network is right on all four rows, and compare it with the number of
            steps at which every part passes its own table.</p>
       </div>
@@ -211,8 +215,9 @@
 
       <table class="readout" id="readout"></table>
       <table class="tt" id="tt"></table>
-      <canvas id="hid" width="330" height="290" role="img"
-              aria-label="The plane of the two hidden outputs, which is what the output unit reads, with the output unit's line"></canvas>
+      <canvas id="hid" width="330" height="336" role="img"
+              aria-label="The plane of the two hidden outputs, which is what the output unit reads: each row of the table, or each day, drawn at the two hidden outputs it gets, with the output unit's line"></canvas>
+      <div class="hint" id="hidHint"></div>
       <canvas id="curve" width="330" height="120" role="img" aria-label="The loss after each step"></canvas>
       <div class="log" id="log"></div>
     </div>
@@ -452,14 +457,17 @@ function drawPlot() {
       pc.fillText("(" + XOR.x1[i] + "," + XOR.x2[i] + ")", px(XOR.x1[i]), py(XOR.x2[i]) + (XOR.x2[i] ? -16 : 26));
     }
   }
-  // key
+  // key, on a white ground so that a line passing behind it does not strike through the words
   pc.font = "12px sans-serif"; pc.textAlign = "left"; pc.setLineDash([]);
   var one = view === 3 && s3.model === "one";
   var lx = view === 3 ? px(70) : PL + 12, ly = view === 3 ? py(13) : PT + 16;          // where no days are
+  var first = one ? "the unit's line: its output is one half here" : (view === 1 ? "the OR unit's line" : "hidden unit 1's line");
+  pc.fillStyle = "rgba(255,255,255,0.88)";
+  pc.fillRect(lx - 6, ly - 12, 34 + pc.measureText(one ? first : (view === 1 ? "the NAND unit's line" : "hidden unit 2's line")).width + 14, one ? 24 : 42);
   pc.strokeStyle = "#1A1A1A"; pc.lineWidth = 2.2;
   pc.beginPath(); pc.moveTo(lx, ly); pc.lineTo(lx + 26, ly); pc.stroke();
   pc.fillStyle = "#1A1A1A";
-  pc.fillText(one ? "the unit's line: its output is one half here" : (view === 1 ? "the OR unit's line" : "hidden unit 1's line"), lx + 34, ly + 4);
+  pc.fillText(first, lx + 34, ly + 4);
   if (!one) {
     ly += 18; pc.setLineDash([7, 5]);
     pc.beginPath(); pc.moveTo(lx, ly); pc.lineTo(lx + 26, ly); pc.stroke(); pc.setLineDash([]);
@@ -467,39 +475,39 @@ function drawPlot() {
   }
 }
 
-// --- the small plane: what the output unit reads ---------------------------------------------------
+// --- the small plane: where the first layer sends each row, which is what the output unit reads -----
+// Its axes are the two hidden outputs, so every point lies inside the square from 0 to 1. A point is
+// named after the row it belongs to ("row (0,1)"), and the name is written outside the square with a
+// leader, so that it cannot be read as the point's position in this plane. (Revised 2026-09-28: the
+// names were written beside the points as "(0,1)", and read in class as misplaced coordinates.)
 var hid = el("hid"), hc = hid.getContext("2d");
 var SAMPLE = [];
 (function () { for (var i = 0; i < TRAIN.n; i += 7) SAMPLE.push(i); })();          // every seventh training day
 function drawHidden() {
-  var W = hid.width, H = hid.height, L = 40, R = 12, T = 22, B = 34, cell = 6;
-  function hx(a) { return L + (a + 0.08) / 1.16 * (W - L - R); }
-  function hy(b) { return T + (1.08 - b) / 1.16 * (H - T - B); }
+  var W = hid.width, H = hid.height, L = 46, R = 14, T = 40, B = 26, cell = 5;
+  var LO = -0.2, SPAN = 1.4;                                                       // room around the square for the names
+  function hx(a) { return L + (a - LO) / SPAN * (W - L - R); }
+  function hy(b) { return T + (LO + SPAN - b) / SPAN * (H - T - B); }
   hc.clearRect(0, 0, W, H);
   hc.fillStyle = "#555"; hc.font = "11px sans-serif"; hc.textAlign = "left";
   if (view === 3 && s3.model === "one") {
     hc.fillText("One unit has no first layer,", 12, 40); hc.fillText("so there is nothing to show here.", 12, 56); return;
   }
-  var net = currentNet();
-  for (var u = L; u < W - R; u += cell) {
-    for (var v = T; v < H - B; v += cell) {
-      var a = (u + cell / 2 - L) / (W - L - R) * 1.16 - 0.08, b = 1.08 - (v + cell / 2 - T) / (H - T - B) * 1.16;
+  var net = currentNet(), x0 = hx(0), x1 = hx(1), y0 = hy(0), y1 = hy(1);
+  hc.fillStyle = "#CC0033"; hc.font = "bold 11px sans-serif";
+  hc.fillText(view === 3 ? "where the first layer sends each day" : "where the first layer sends each row", 10, 14);
+  hc.fillStyle = "#555"; hc.font = "11px sans-serif";
+  hc.fillText("red line: the output unit's line", 10, 29);
+
+  // shading and the output unit's line v1*a + v2*b + c = 0, inside the square only
+  hc.save(); hc.beginPath(); hc.rect(x0, y1, x1 - x0, y0 - y1); hc.clip();
+  for (var u = x0; u < x1; u += cell) {
+    for (var v = y1; v < y0; v += cell) {
+      var a = (u + cell / 2 - x0) / (x1 - x0), b = 1 - (v + cell / 2 - y1) / (y0 - y1);
       hc.fillStyle = "rgba(204,0,51," + (0.34 * sigmoid(net.v[0] * a + net.v[1] * b + net.c)).toFixed(3) + ")";
       hc.fillRect(u, v, cell, cell);
     }
   }
-  hc.strokeStyle = "#BBB"; hc.lineWidth = 1; hc.strokeRect(hx(0), hy(1), hx(1) - hx(0), hy(0) - hy(1));
-  hc.fillStyle = "#555"; hc.textAlign = "center";
-  hc.fillText("0", hx(0), H - B + 14); hc.fillText("1", hx(1), H - B + 14);
-  hc.textAlign = "right"; hc.fillText("0", L - 5, hy(0) + 4); hc.fillText("1", L - 5, hy(1) + 4);
-  hc.textAlign = "center"; hc.font = "bold 11px sans-serif";
-  hc.fillText(view === 1 ? "the OR unit's output" : "hidden unit 1's output", (L + W - R) / 2, H - 6);
-  hc.save(); hc.translate(12, (T + H - B) / 2); hc.rotate(-Math.PI / 2);
-  hc.fillText(view === 1 ? "the NAND unit's output" : "hidden unit 2's output", 0, 0); hc.restore();
-  hc.textAlign = "left"; hc.font = "11px sans-serif"; hc.fillStyle = "#CC0033";
-  hc.fillText("what the output unit reads, and its line", L, 14);
-  // the output unit's line v1*a + v2*b + c = 0
-  hc.save(); hc.beginPath(); hc.rect(L, T, W - L - R, H - T - B); hc.clip();
   hc.strokeStyle = "#CC0033"; hc.lineWidth = 2;
   if (Math.abs(net.v[1]) > 1e-9) {
     hc.beginPath(); hc.moveTo(hx(-1), hy(-(net.v[0] * -1 + net.c) / net.v[1])); hc.lineTo(hx(2), hy(-(net.v[0] * 2 + net.c) / net.v[1])); hc.stroke();
@@ -507,22 +515,71 @@ function drawHidden() {
     hc.beginPath(); hc.moveTo(hx(-net.c / net.v[0]), hy(-1)); hc.lineTo(hx(-net.c / net.v[0]), hy(2)); hc.stroke();
   }
   hc.restore();
+  hc.strokeStyle = "#999"; hc.lineWidth = 1; hc.strokeRect(x0, y1, x1 - x0, y0 - y1);
+
+  // axes: the two hidden outputs
+  var n1 = view === 1 ? "the OR unit's output" : "hidden unit 1's output", n2 = view === 1 ? "the NAND unit's output" : "hidden unit 2's output";
+  hc.fillStyle = "#555"; hc.font = "11px sans-serif"; hc.textAlign = "center";
+  hc.fillText("0", x0, y0 + 13); hc.fillText("1", x1, y0 + 13);
+  hc.textAlign = "right"; hc.fillText("0", x0 - 6, y0 + 4); hc.fillText("1", x0 - 6, y1 + 4);
+  hc.textAlign = "center"; hc.font = "bold 11px sans-serif";
+  hc.fillText(n1, (x0 + x1) / 2, H - 6);
+  hc.save(); hc.translate(13, (y0 + y1) / 2); hc.rotate(-Math.PI / 2); hc.fillText(n2, 0, 0); hc.restore();
+
   if (view === 3) {
     for (var q = 0; q < SAMPLE.length; q++) {
       var i = SAMPLE[q], f = forward(net, TRAIN.x1[i], TRAIN.x2[i]);
       hc.fillStyle = TRAIN.y[i] ? "rgba(204,0,51,0.55)" : "rgba(26,26,26,0.40)";
       hc.beginPath(); hc.arc(hx(f[0]), hy(f[1]), 1.8, 0, 2 * Math.PI); hc.fill();
     }
-  } else {
-    for (var k = 0; k < 4; k++) {
-      var g = forward(net, XOR.x1[k], XOR.x2[k]);
-      hc.beginPath(); hc.arc(hx(g[0]), hy(g[1]), 7, 0, 2 * Math.PI);
-      hc.fillStyle = XOR.y[k] ? "#CC0033" : "#fff"; hc.fill();
-      hc.strokeStyle = "#1A1A1A"; hc.lineWidth = 1.6; hc.stroke();
-      hc.fillStyle = "#1A1A1A"; hc.font = "10px sans-serif"; hc.textAlign = "center";
-      hc.fillText("(" + XOR.x1[k] + "," + XOR.x2[k] + ")", hx(g[0]) + (k === 2 ? 20 : (k === 1 ? -20 : 0)), hy(g[1]) + (k === 0 || k === 3 ? 19 : 4));
-    }
+    return;
   }
+
+  // the four rows; rows that land on the same place are drawn side by side and share one name
+  var groups = [];
+  for (var k = 0; k < 4; k++) {
+    var g = forward(net, XOR.x1[k], XOR.x2[k]), p = { k: k, u: hx(g[0]), v: hy(g[1]) }, home = null;
+    for (var j = 0; j < groups.length; j++) if (!home && Math.abs(groups[j].u - p.u) < 12 && Math.abs(groups[j].v - p.v) < 12) home = groups[j];
+    if (home) home.rows.push(p); else groups.push({ u: p.u, v: p.v, rows: [p] });
+  }
+  hc.font = "11px sans-serif";
+  groups.forEach(function (G) {
+    G.text = (G.rows.length > 1 ? "rows " : "row ") + G.rows.map(function (r) { return "(" + XOR.x1[r.k] + "," + XOR.x2[r.k] + ")"; }).join(", ");
+    G.w = hc.measureText(G.text).width;
+    G.top = G.v < (y0 + y1) / 2;                                                   // the name goes outside the nearer of the top and bottom edges
+    G.x = Math.max(x0 + 22, Math.min(x1 - 22, G.u));                                // and a little inward, clear of the 0 and 1 of the axis
+  });
+  [true, false].forEach(function (top) {                                           // names on the same edge must not overlap
+    var row = groups.filter(function (G) { return G.top === top; }).sort(function (A, Bq) { return A.x - Bq.x; });
+    var m;
+    for (m = 1; m < row.length; m++) row[m].x = Math.max(row[m].x, row[m - 1].x + (row[m - 1].w + row[m].w) / 2 + 8);
+    for (m = row.length - 1; m >= 0; m--) {
+      var limit = m === row.length - 1 ? W - 4 - row[m].w / 2 : row[m + 1].x - (row[m + 1].w + row[m].w) / 2 - 8;
+      row[m].x = Math.max(4 + row[m].w / 2, Math.min(row[m].x, limit));
+    }
+  });
+  groups.forEach(function (G) {
+    var ty = G.top ? y1 - 10 : y0 + 29;                                            // the baseline of the name
+    hc.strokeStyle = "#999"; hc.lineWidth = 1;
+    hc.beginPath(); hc.moveTo(G.u, G.v); hc.lineTo(G.x, G.top ? ty + 3 : ty - 11); hc.stroke();
+    G.rows.forEach(function (r, i) {
+      hc.beginPath(); hc.arc(G.u + (i - (G.rows.length - 1) / 2) * 9, G.v, 6.5, 0, 2 * Math.PI);
+      hc.fillStyle = XOR.y[r.k] ? "#CC0033" : "#fff"; hc.fill();
+      hc.strokeStyle = "#1A1A1A"; hc.lineWidth = 1.6; hc.stroke();
+    });
+    hc.fillStyle = "#1A1A1A"; hc.textAlign = "center"; hc.fillText(G.text, G.x, ty);
+  });
+}
+// what the small plane shows, in words, with one row as the example
+function hiddenHint() {
+  if (view === 3) {
+    return s3.model === "one" ? "" : "Each dot is a training day (every seventh is drawn), placed at what the two hidden units give on that day. " +
+      "Red: a day in spring or fall. Every dot is inside the square, because a hidden output is between 0 and 1.";
+  }
+  var net = currentNet(), g = forward(net, 0, 0), names = view === 1 ? ["the OR unit", "the NAND unit"] : ["hidden unit 1", "hidden unit 2"];
+  return "Each point is one row of the table. Its name says which row; its position is what the two hidden units give on that row, " +
+    "the two middle columns of the table. On row (0,0), " + names[0] + " gives " + g[0].toFixed(2) + " and " + names[1] + " gives " +
+    g[1].toFixed(2) + ", so the point is " + g[0].toFixed(2) + " across and " + g[1].toFixed(2) + " up.";
 }
 
 // --- the loss curve ---------------------------------------------------------------------------------
@@ -627,6 +684,7 @@ function refresh() {
   }
   el("log").textContent = log.length ? log.slice(-4).join("\n") : "what happens is listed here";
   el("log").hidden = view !== 2; el("curve").hidden = view === 1;
+  el("hidHint").textContent = hiddenHint();
   drawPlot(); drawHidden(); drawCurve();
   document.documentElement.setAttribute("data-state", "v=" + view + ";" + state);
 }

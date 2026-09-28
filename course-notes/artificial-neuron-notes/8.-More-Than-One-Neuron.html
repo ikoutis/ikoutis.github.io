@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Meeting 8. More Than One Neuron — CS 301</title>
+<meta name="description" content="CS 301 Introduction to Data Science, NJIT. Course notes for meeting 8: More Than One Neuron.">
+<meta name="cs301-meeting" content="8">
+<meta name="cs301-title" content="More Than One Neuron">
+<meta name="cs301-acts" content="Review Cheaper Steps and Held-Out Days Act 1 Units Side by Side · Act 2 Units in Layers · Act 3 Units Trained Together">
+<style>
+@font-face { font-family: "Latin Modern Roman"; src: url(fonts/lmroman10-regular.otf); font-weight: normal; font-style: normal; }
+@font-face { font-family: "Latin Modern Roman"; src: url(fonts/lmroman10-italic.otf); font-weight: normal; font-style: italic; }
+@font-face { font-family: "Latin Modern Roman"; src: url(fonts/lmroman10-bold.otf); font-weight: bold; font-style: normal; }
+@font-face { font-family: "Latin Modern Roman"; src: url(fonts/lmroman10-bolditalic.otf); font-weight: bold; font-style: italic; }
+@font-face { font-family: "Latin Modern Sans"; src: url(fonts/lmsans10-regular.otf); font-weight: normal; }
+@font-face { font-family: "Latin Modern Sans"; src: url(fonts/lmsans10-bold.otf); font-weight: bold; }
+@font-face { font-family: "Latin Modern Mono"; src: url(fonts/lmmono10-regular.otf); }
+:root { --njred: #CC0033; --ink: #1A1A1A; --muted: #555555; --faint: #DDDDDD; --paper: #F7F7F5;
+  --serif: "Latin Modern Roman", "Computer Modern Serif", Georgia, "Times New Roman", serif;
+  --sans: "Latin Modern Sans", "Helvetica Neue", Arial, sans-serif;
+  --mono: "Latin Modern Mono", Consolas, "Courier New", monospace; }
+html { background: #fff; }
+body { margin: 0; color: var(--ink); font-family: var(--serif); font-size: 18px; line-height: 1.5;
+  -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; }
+.page { max-width: 720px; margin: 0 auto; padding: 44px 24px 72px; }
+a { color: inherit; }
+.titleblock { border-top: 3px solid var(--njred); border-bottom: 1px solid var(--faint); padding: 20px 0 16px; margin-bottom: 30px; }
+.kicker { font-family: var(--sans); font-weight: bold; font-size: 12.5px; color: var(--njred); margin: 0 0 14px; display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+.kicker .pdf { font-weight: normal; color: var(--muted); text-decoration: none; border: 1px solid var(--faint); border-radius: 3px; padding: 1px 8px; }
+.kicker .pdf:hover { color: var(--njred); border-color: var(--njred); }
+h1 { font-family: var(--sans); font-size: 30px; line-height: 1.2; margin: 0 0 10px; }
+.acts { font-family: var(--sans); font-size: 13px; color: var(--muted); margin: 0; }
+h2.act { font-family: var(--sans); font-size: 21px; color: var(--njred); margin: 48px 0 20px; padding-bottom: 9px; border-bottom: 1px solid var(--faint); }
+h3 { font-family: var(--sans); font-size: 15.5px; margin: 30px 0 8px; }
+h4.example { font-family: var(--sans); font-size: 15.5px; margin: 22px 0 6px; }
+h4.example .label { color: var(--njred); }
+.worked { margin: 0 0 22px; }
+p { margin: 0; }
+p + p { text-indent: 1.6em; }
+.note { background: var(--paper); padding: 14px 18px; margin: 24px 0; }
+.note .lead { font-family: var(--sans); font-weight: bold; font-size: 15.5px; }
+.note p { display: inline; }
+.note p + p { display: block; text-indent: 1.6em; margin-top: 0.4em; }
+.note ul { margin-top: 10px; }
+.source { font-size: 13px; color: var(--muted); margin-top: 6px; text-indent: 0 !important; }
+.pull { text-align: center; margin: 14px 0; text-indent: 0 !important; }
+.bigq { text-align: center; font-size: 22px; margin: 18px 0; text-indent: 0 !important; }
+.math { margin: 8px 0 14px; overflow-x: auto; }
+.red, .c-njred { color: var(--njred); }
+.muted { color: var(--muted); }
+ul, ol { margin: 10px 0 12px; padding-left: 2.2em; }
+li { margin: 0 0 5px; }
+li p { display: inline; }
+figure { margin: 22px 0; text-align: center; }
+figure img { max-width: 100%; height: auto; }
+.tables { display: flex; justify-content: center; align-items: flex-start; gap: 44px; flex-wrap: wrap; margin: 18px 0; }
+table { border-collapse: collapse; font-size: 16.5px; }
+table.tt th { font-weight: normal; border-bottom: 1px solid var(--ink); padding: 2px 11px 4px; }
+table.tt td { padding: 3px 11px 0; }
+table.tt .rule { border-left: 1px solid var(--ink); }
+table.trans td { padding: 6px 18px; }
+table.trans td:first-child { padding-left: 0; }
+table.trans td:last-child { padding-right: 0; }
+pre.code { font-family: var(--mono); font-size: 15px; line-height: 1.4; margin: 16px 0 16px 44px; white-space: pre; overflow-x: auto; }
+code { font-family: var(--mono); font-size: 92%; }
+footer { margin-top: 56px; padding-top: 12px; border-top: 1px solid var(--faint); font-family: var(--sans); font-size: 12.5px; color: var(--muted);
+  display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+footer a { text-decoration: none; }
+footer a:hover { color: var(--njred); }
+@media (max-width: 560px) { body { font-size: 17px; } .page { padding: 28px 18px 56px; } h1 { font-size: 25px; } pre.code { margin-left: 12px; } }
+@media print { .page { max-width: none; padding: 0; } .kicker .pdf { display: none; } h2.act, h3, h4 { break-after: avoid; } figure, .note, table { break-inside: avoid; } }
+</style>
+<script>window.MathJax = { tex: { inlineMath: [['\\(', '\\)']], displayMath: [['\\[', '\\]']] }, chtml: { scale: 1.02 } };</script>
+<script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+</head>
+<body>
+<main class="page">
+<header class="titleblock">
+<p class="kicker">NJIT · CS 301 · INTRODUCTION TO DATA SCIENCE · FALL 2026 <a class="pdf" href="8.-More-Than-One-Neuron.pdf">PDF</a></p>
+<h1>Meeting 8. More Than One Neuron</h1>
+<p class="acts">Review Cheaper Steps and Held-Out Days Act 1 Units Side by Side · Act 2 Units in Layers · Act 3 Units Trained Together</p>
+</header>
+<p>Meetings 2 to 7 built, trained and evaluated one unit. One unit answers one yes-or-no question, and its boundary is one line. This meeting puts several units together in three ways. Side by side, they choose among more than two classes. In layers, they compute XOR, which no single unit computes. Training all units on a shared loss determines the intermediate functions that each unit computes.</p>
+<h2 class="act" id="act-0">Act 0. Review: cheaper steps and held-out days</h2>
+<h3 id="s-0-1">0.1 Batches, updates and epochs</h3>
+<p>A <strong>batch</strong> is the set of rows used for one gradient computation and one update. A <strong>mini-batch</strong> is a batch smaller than the training set. An <strong>epoch</strong> is one pass over the training set, in which every row is used once. The number of updates in an epoch is the number of batches:</p>
+<div class="tables">
+<table class="tt">
+<tr><th style="text-align:right">Batch size</th><th style="text-align:right">Learning rate</th><th style="text-align:right">Updates per epoch</th><th style="text-align:right">Loss after one epoch</th></tr>
+<tr><td style="text-align:right">4,316</td><td style="text-align:right">1</td><td style="text-align:right">1</td><td style="text-align:right">0.4519</td></tr>
+<tr><td style="text-align:right">256</td><td style="text-align:right">1</td><td style="text-align:right">17</td><td style="text-align:right">0.2411</td></tr>
+<tr><td style="text-align:right">32</td><td style="text-align:right">0.5</td><td style="text-align:right">135</td><td style="text-align:right">0.2262</td></tr>
+<tr><td style="text-align:right">1</td><td style="text-align:right">0.1</td><td style="text-align:right">4,316</td><td style="text-align:right">0.2222</td></tr>
+</table>
+</div>
+<p>Each run processes all 4,316 training days. With batches of 32, the product of batch size and number of updates is \(32\times135= 4{,}320\), because the last batch has only 28 days. Each run therefore uses every day once and does about the same amount of arithmetic. The runs differ in how that arithmetic is divided into updates. More updates let the unit adjust its parameters more often, and in these runs the loss after one epoch is lower when the batches are smaller.</p>
+<p>Frequent updates are similar to frequent quizzes: each provides feedback before the next part of the work, rather than only at the end.</p>
+<p>Smaller batches also produce noisier gradient estimates. With a fixed learning rate, the one-row run does not settle: over the last five of twenty epochs its loss moves between \(0.2219\) and \(0.2229\). With a learning rate that decreases during training, the five losses all round to \(0.2217\).</p>
+<p><strong>Momentum</strong> keeps part of the previous update and adds it to the current one. The unit then moves in a direction that several recent batches agree on, and single batches that disagree have less effect. Meeting 7’s notes give the update.</p>
+<h3 id="s-0-2">0.2 Held-out days</h3>
+<p>We need to estimate how well a model trained on past records will perform on new days. Some weather models use physical equations for the motion of air and water; others learn from past observations, as our unit does. To evaluate our unit, we reserve some later records and exclude them from training:</p>
+<div class="tables">
+<table class="tt">
+<tr><th style="text-align:left">Set</th><th style="text-align:left">Years</th><th style="text-align:right">Days</th><th style="text-align:left">Used for</th></tr>
+<tr><td style="text-align:left">Training</td><td style="text-align:left">2006–2017</td><td style="text-align:right">4,316</td><td style="text-align:left">the gradient updates</td></tr>
+<tr><td style="text-align:left">Validation</td><td style="text-align:left">2018–2021</td><td style="text-align:right">1,457</td><td style="text-align:left">choosing between models, and when to stop</td></tr>
+<tr><td style="text-align:left">Test</td><td style="text-align:left">2022–2024</td><td style="text-align:right">1,092</td><td style="text-align:left">one final measurement</td></tr>
+</table>
+</div>
+<p>Validation days are used to compare models, not to compute parameter updates. For example, train one unit at learning rate \(0.1\) and another at \(0.2\), or one on standardized inputs and one on raw inputs: after the same number of steps the two have different parameters. We choose the model with lower validation loss. If validation loss stops improving, we can stop training and use the parameters from the best validation step.</p>
+<h3 id="s-0-3">0.3 Which step to keep</h3>
+<p>Suppose only 20 training days are available. The training loss falls toward zero: the unit comes to classify all 20 days correctly and then grows more confident with every step. On the validation days the loss falls to about \(0.206\) near step 28 and then rises, to \(0.4448\) at step 1,000 and \(1.0687\) at step 20,000. A closer fit to the training sample that gives worse predictions on held-out data is <strong>overfitting</strong>.</p>
+<p>A student who has every question of a practice quiz, with its answer, can memorize them and make no mistakes on that quiz. The score says little about new questions. To estimate that, the student sets some questions aside before studying and answers them afterwards.</p>
+<p>Each training step produces a new set of parameters. We keep the set with the lowest validation loss, which in this run occurs near step 28.</p>
+<h2 class="act" id="act-1">Act 1. Units side by side</h2>
+<h3 id="s-1-1">1.1 More than two answers</h3>
+<p>One sigmoid unit answers one yes-or-no question, such as whether a day is in the warm half of the year. Its output is one probability. Many questions have more than two possible answers:</p>
+<ul>
+<li>Which of the four seasons is this day in?</li>
+<li>A cash machine reads the amount written on a deposited check. For each character it must decide which of the ten digits it is.</li>
+<li>A language model continues a sentence. At each step it decides which word, or piece of a word, comes next, out of many thousands.</li>
+</ul>
+<p>Each possible answer is a <strong>class</strong>, and \(K\) is the number of classes. The first question has \(K=4\) and the second has \(K=10\). The same data can be used for different classification tasks: with records from many places, the class could be the region the record came from.</p>
+<h3 id="s-1-2">1.2 One unit for each season</h3>
+<p>The label is the season of the day: winter is December to February, spring March to May, summer June to August, and fall September to November. We use the date to determine the label and exclude it from the inputs. We use the daily high and low, with the same standardization and split by years as in meeting 7. The training years have 1,054 winter days, 1,104 spring days, 1,101 summer days and 1,057 fall days.</p>
+<figure><img src="images/seasons-panels.svg" alt="Four small scatter plots of daily low against daily high, one per season: winter, spring, summer and fall, each season&#x27;s days in its own colour against all days in grey, with the mean high and low noted under each panel." width="334" height="307"></figure>
+<p>Winter days are at the lower left and summer days at the upper right. Spring and fall days overlap in the middle: the mean high is \(63.1\) in spring and \(67.1\) in fall, and the mean low is \(44.8\) and \(50.3\).</p>
+<p>We first train four units independently. <strong>One-vs-rest</strong> gives each class its own unit and its own yes-or-no question. The winter unit is trained on “is this day in winter?”, with label 1 for the winter days and label 0 for all the others, the <em>rest</em>. The spring, summer and fall units are trained in the same way on their own questions. Each is meeting 7’s unit with a different column of labels, trained from all-zero parameters at \(\eta=1\) for 3,000 steps. On the 1,457 validation days:</p>
+<div class="tables">
+<table class="tt">
+<tr><th style="text-align:left">Unit</th><th style="text-align:right">Accuracy</th><th style="text-align:right">Predicts 1 on</th><th style="text-align:right">Always-0 accuracy</th></tr>
+<tr><td style="text-align:left">winter</td><td style="text-align:right">85.4%</td><td style="text-align:right">339 days</td><td style="text-align:right">75.3%</td></tr>
+<tr><td style="text-align:left">spring</td><td style="text-align:right">74.8%</td><td style="text-align:right">13 days</td><td style="text-align:right">74.9%</td></tr>
+<tr><td style="text-align:left">summer</td><td style="text-align:right">90.1%</td><td style="text-align:right">403 days</td><td style="text-align:right">74.8%</td></tr>
+<tr><td style="text-align:left">fall</td><td style="text-align:right">75.0%</td><td style="text-align:right">0 days</td><td style="text-align:right">75.0%</td></tr>
+</table>
+</div>
+<p>About three days in four are not in any given season. A unit that answers “no” on every day is therefore right on about 75% of the days. This gives a baseline for classification accuracy. The winter and summer units exceed it; the spring and fall units do not. The fall unit never predicts 1, and its outputs stay between \(0.16\) and \(0.32\). The figure shows a limitation of these classifiers. Spring days lie between winter days and summer days. One unit draws one line, and no line has the spring days on one side and all the other days on the other side.</p>
+<h3 id="s-1-3">1.3 Predicting by argmax</h3>
+<p>To predict a day’s season, evaluate all four units and choose the class whose unit has the largest output. The <strong>argmax</strong> of a list is the <em>position</em> of its largest value, not the value.</p>
+<div class="tables">
+<table class="tt">
+<tr><th style="text-align:left">Day</th><th style="text-align:center">winter</th><th style="text-align:center">spring</th><th style="text-align:center">summer</th><th style="text-align:center">fall</th><th style="text-align:center">sum</th></tr>
+<tr><td style="text-align:left">November 6, 2024 (fall)</td><td style="text-align:center">0.00</td><td style="text-align:center">0.23</td><td style="text-align:center"><strong>0.56</strong></td><td style="text-align:center">0.27</td><td style="text-align:center">1.06</td></tr>
+<tr><td style="text-align:left">January 7, 2014 (winter)</td><td style="text-align:center"><strong>0.99</strong></td><td style="text-align:center">0.37</td><td style="text-align:center">0.00</td><td style="text-align:center">0.17</td><td style="text-align:center">1.53</td></tr>
+<tr><td style="text-align:left">October 15, 2019 (fall)</td><td style="text-align:center">0.05</td><td style="text-align:center">0.22</td><td style="text-align:center">0.05</td><td style="text-align:center"><strong>0.25</strong></td><td style="text-align:center">0.57</td></tr>
+</table>
+</div>
+<p>For November 6, 2024 the largest output is \(0.56\), in the third position, so the prediction is summer. The day was in fall. It had a high of \(82.9\) and a low of \(63.0\), and it is the warm November day that the single unit of meeting 3 also misclassified.</p>
+<p>This prediction rule has accuracy \(61.4\%\) on the training days and \(58.1\%\) on the validation days. Always predicting the same season would give about \(25\%\) accuracy.</p>
+<p>The argmax compares the four outputs with each other, not with one half. On October 15, 2019 no unit says yes, and fall is predicted with an output of \(0.25\). The fall unit never exceeds \(0.32\), yet fall is the prediction on 188 validation days, and 73 of those are fall days. Combining the four units with argmax creates a prediction region in the middle of the plot that a single unit cannot define.</p>
+<p>The four outputs of one day need not add to 1. In the table they add to \(1.06\), \(1.53\) and \(0.57\), and over the validation days the sum runs from \(0.53\) to \(1.72\). Each unit was trained alone on its own question. Their losses impose no constraint on the sum of their outputs. On January 7, 2014 the winter unit gives \(0.99\) and the spring unit still gives \(0.37\). A day is in exactly one season, so probabilities of the four seasons must add to 1. These independent estimates therefore do not form a probability distribution over the seasons.</p>
+<h3 id="s-1-4">1.4 Softmax</h3>
+<p>Each unit computes a score from the same inputs, with its own weights and bias:</p>
+<div class="math">\[ s_k=\mathbf{w}_k\cdot\mathbf{x}+b_k,\qquad k=1,\dots,K. \]</div>
+<p>The <strong>softmax</strong> turns the \(K\) scores into \(K\) probabilities:</p>
+<div class="math">\[ \boxed{p_k=\frac{e^{s_k}}{e^{s_1}+e^{s_2}+\dots+e^{s_K}}.} \]</div>
+<p>Every probability has the same denominator, the sum of all \(K\) exponentials. The numerator of \(p_k\) is the one exponential that belongs to unit \(k\). Four properties follow from the formula.</p>
+<ul>
+<li><strong>Every \(p_k\) is positive.</strong> The exponential \(e^{s}\) is positive for every \(s\), so \(p_k\) is a positive number divided by a sum of positive numbers.</li>
+<li><strong>Every \(p_k\) is below 1.</strong> The numerator \(e^{s_k}\) is one of the terms of the denominator, and the other terms are positive.</li>
+<li><strong>The \(p_k\) add to 1.</strong> They share one denominator, so their sum has the numerator \(e^{s_1}+\dots+e^{s_K}\) over that same expression.</li>
+<li><strong>The order of the scores is kept.</strong> A larger score gives a larger exponential and the denominator is shared, so the largest score receives the largest probability. The argmax of the probabilities is the argmax of the scores they were computed from.</li>
+</ul>
+<p>The sigmoid is a special case of softmax. With two classes and scores \((s,0)\),</p>
+<div class="math">\[ p_1=\frac{e^{s}}{e^{s}+e^{0}}=\frac{e^{s}}{e^{s}+1} =\frac{1}{1+e^{-s}}=\sigma(s). \]</div>
+<p>Adding the same number \(c\) to every score multiplies every exponential by \(e^{c}\), which cancels between numerator and denominator. The probabilities depend only on the differences between the scores. This is why two classes need only one score.</p>
+<p>Softmax has a useful relationship with cross-entropy. The logarithm in the loss simplifies the exponential in the numerator:</p>
+<div class="math">\[ -\ln p_k=\ln\!\left(e^{s_1}+\dots+e^{s_K}\right)-s_k . \]</div>
+<section class="worked" id="ex-1-1">
+<h4 class="example"><span class="label">Example 1.1</span> A softmax by hand</h4>
+<p>Suppose a softmax model gives a warm November day the scores \(-1\), \(0\), \(2\) and \(1\) for winter, spring, summer and fall. The exponentials, rounded to two decimals, are \(e^{-1}\approx0.37\), \(e^{0}=1\), \(e^{2}\approx7.39\) and \(e^{1}\approx2.72\). Their sum is</p>
+<div class="math">\[ 0.37+1+7.39+2.72=11.48 . \]</div>
+<p>Divide each exponential by this sum:</p>
+<div class="tables">
+<table class="tt">
+<tr><th style="text-align:left"></th><th class="rule" style="text-align:center">winter</th><th style="text-align:center">spring</th><th style="text-align:center">summer</th><th style="text-align:center">fall</th><th class="rule" style="text-align:center">sum</th></tr>
+<tr><td style="text-align:left">score \(s_k\)</td><td class="rule" style="text-align:center">\(-1\)</td><td style="text-align:center">\(0\)</td><td style="text-align:center">\(2\)</td><td style="text-align:center">\(1\)</td><td class="rule" style="text-align:center"></td></tr>
+<tr><td style="text-align:left">\(e^{s_k}\)</td><td class="rule" style="text-align:center">0.37</td><td style="text-align:center">1</td><td style="text-align:center">7.39</td><td style="text-align:center">2.72</td><td class="rule" style="text-align:center">11.48</td></tr>
+<tr><td style="text-align:left">\(p_k\)</td><td class="rule" style="text-align:center">0.03</td><td style="text-align:center">0.09</td><td style="text-align:center">0.64</td><td style="text-align:center">0.24</td><td class="rule" style="text-align:center">1.00</td></tr>
+</table>
+</div>
+<p>For winter, \(0.37/11.48\approx0.03\). The largest probability is \(0.64\), so the model predicts summer. The largest score was also summer’s.</p>
+<p>The loss of the day is \(-\ln\) of the probability given to its true season. The day was in fall, so its loss is \(-\ln0.24\approx1.43\). Had the day been in summer, the loss would have been \(-\ln0.64\approx0.45\). With unrounded values the two losses are \(1.44\) and \(0.44\), approximately \(\ln 11.475-1\) and \(\ln 11.475-2\), respectively.</p>
+</section>
+<aside class="note"><span class="lead">Three errors to avoid.</span> <p>Divide by the sum of the exponentials, not by the number of classes. Put \(e^{s_k}\) in the numerator, not the score \(s_k\): a score can be negative and a probability cannot. Take the logarithm of the probability of the <em>true</em> class, not of the predicted class.</p>
+</aside>
+<h3 id="s-1-5">1.5 The label as a list, and the loss for \(K\) classes</h3>
+<p>As in meeting 4, the loss of a row is the negative logarithm of the probability assigned to its true class. We now use a vector to represent the label. With two classes the label was one number, 0 or 1. With \(K\) classes, write the label of a row as \(K\) numbers:</p>
+<div class="math">\[ y_k=\begin{cases} 1 &amp; \text{if the row's true class is } k,\\ 0 &amp; \text{otherwise.} \end{cases} \]</div>
+<p>In the order winter, spring, summer, fall, the label of a fall day is \((0,0,0,1)\). A list with one entry equal to 1 and all others equal to 0 is called a <strong>one-hot vector</strong>. The loss of a row is</p>
+<div class="math">\[ \boxed{\ell=-\sum_{k=1}^{K}y_k\ln p_k=-\ln p_{\text{true class}}.} \]</div>
+<p>Every term with \(y_k=0\) is zero, and one term remains. The sum is a way to write “take the probability of the true class”.</p>
+<section class="worked" id="ex-1-2">
+<h4 class="example"><span class="label">Example 1.2</span> The loss of November 6, 2024</h4>
+<p>The softmax model trained in the next section gives this day the probabilities below. The day was in fall.</p>
+<div class="tables">
+<table class="tt">
+<tr><th style="text-align:left"></th><th class="rule" style="text-align:center">winter</th><th style="text-align:center">spring</th><th style="text-align:center">summer</th><th style="text-align:center">fall</th><th class="rule" style="text-align:center">sum</th></tr>
+<tr><td style="text-align:left">output \(p_k\)</td><td class="rule" style="text-align:center">0.002</td><td style="text-align:center">0.162</td><td style="text-align:center">0.561</td><td style="text-align:center">0.275</td><td class="rule" style="text-align:center">1</td></tr>
+<tr><td style="text-align:left">label \(y_k\)</td><td class="rule" style="text-align:center">0</td><td style="text-align:center">0</td><td style="text-align:center">0</td><td style="text-align:center">1</td><td class="rule" style="text-align:center">1</td></tr>
+</table>
+</div>
+<div class="math">\[ \ell=-\left(0\times\ln0.002+0\times\ln0.162+0\times\ln0.561 +1\times\ln0.275\right)=-\ln0.275\approx1.29 . \]</div>
+<p>The model predicts summer with probability \(0.561\), but the loss uses the probability \(0.275\) assigned to the true class, fall.</p>
+</section>
+<p>The label and the output are both lists of \(K\) nonnegative numbers that add to 1, so both are probability distributions over the classes. The label puts all of its probability on the true class. The loss compares the two distributions. It is the <strong>cross-entropy</strong> of meeting 7’s review, with the label as the outcome probabilities and the model’s output as the model probabilities.</p>
+<p>With \(K=2\) the lists are \((y,1-y)\) and \((\hat y,1-\hat y)\), and the sum is meeting 4’s formula, \(-y\ln\hat y-(1-y)\ln(1-\hat y)\).</p>
+<p>The loss of a model is the average of \(\ell\) over its rows. A model that gives \(1/4\) to every season on every day has loss \(\ln4\approx1.386\). That is the reference value for four classes, as \(\ln2\approx0.693\) was for two.</p>
+<h3 id="s-1-6">1.6 Training the four units together</h3>
+<p>The softmax model has four units, each with two weights and a bias: twelve parameters. It has one loss, the average of \(-\ln p_{\text{true class}}\) over the training days. Gradient descent changes all twelve parameters at every step.</p>
+<p>The gradient has the form it had in meeting 6. For the weight of unit \(k\) on input \(j\), the derivative of the loss is the average over the rows of</p>
+<div class="math">\[ \boxed{(p_k-y_k)\times x_j ,} \]</div>
+<p>and for the bias of unit \(k\) it is the average of \(p_k-y_k\). This is (error) \(\times\) (input), with one error per unit. For a fall day with output \((0.002,0.162,0.561,0.275)\) the four errors are \(+0.002\), \(+0.162\), \(+0.561\) and \(-0.725\): the scores of winter, spring and summer should come down, and the score of fall should go up. The training loop is meeting 6’s loop with four errors per row.</p>
+<p>In the softmax model, the error of unit \(k\) is \(p_k-y_k\), and \(p_k\) is computed from all four scores. If the summer unit’s score for a day rises, the probabilities of the other three seasons for that day fall, and their errors change. A separately trained unit has the error \(\sigma(s_k)-y_k\), which depends on that unit’s own score. In the softmax model no unit reads another unit’s output, but each unit’s update depends on all four scores through the shared loss.</p>
+<p>From all-zero parameters at \(\eta=1\):</p>
+<div class="tables">
+<table class="tt">
+<tr><th style="text-align:right"></th><th class="rule" colspan="2" style="text-align:center">Training days</th><th class="rule" colspan="2" style="text-align:center">Validation days</th></tr>
+<tr><th style="text-align:right">Step</th><th class="rule" style="text-align:right">loss</th><th style="text-align:right">accuracy</th><th class="rule" style="text-align:right">loss</th><th style="text-align:right">accuracy</th></tr>
+<tr><td style="text-align:right">1</td><td class="rule" style="text-align:right">1.1378</td><td style="text-align:right">50.0%</td><td class="rule" style="text-align:right">1.1381</td><td style="text-align:right">49.7%</td></tr>
+<tr><td style="text-align:right">10</td><td class="rule" style="text-align:right">0.9251</td><td style="text-align:right">59.0%</td><td class="rule" style="text-align:right">0.9270</td><td style="text-align:right">57.4%</td></tr>
+<tr><td style="text-align:right">100</td><td class="rule" style="text-align:right">0.8359</td><td style="text-align:right">62.0%</td><td class="rule" style="text-align:right">0.8384</td><td style="text-align:right">58.7%</td></tr>
+<tr><td style="text-align:right">1,000</td><td class="rule" style="text-align:right">0.8309</td><td style="text-align:right">61.5%</td><td class="rule" style="text-align:right">0.8352</td><td style="text-align:right">59.3%</td></tr>
+<tr><td style="text-align:right">5,000</td><td class="rule" style="text-align:right">0.8309</td><td style="text-align:right">61.5%</td><td class="rule" style="text-align:right">0.8352</td><td style="text-align:right">59.3%</td></tr>
+</table>
+</div>
+<p>At all-zero parameters every score is zero and every probability is \(1/4\), so the loss starts at \(\ln4\approx1.386\). On the test years the trained model has loss \(0.8186\) and is right on \(61.0\%\) of the days.</p>
+<h3 id="s-1-7">1.7 Two models, trained differently</h3>
+<p>The two season classifiers differ in how they are trained:</p>
+<div class="tables">
+<table class="tt">
+<tr><th style="text-align:left"></th><th class="rule" style="text-align:left">Four separate units</th><th style="text-align:left">Softmax model</th></tr>
+<tr><td style="text-align:left">Output of unit \(k\)</td><td class="rule" style="text-align:left">\(\sigma(s_k)\)</td><td style="text-align:left">\(p_k\)</td></tr>
+<tr><td style="text-align:left">Computed from</td><td class="rule" style="text-align:left">the unit’s own score</td><td style="text-align:left">all four scores</td></tr>
+<tr><td style="text-align:left">Outputs of one day</td><td class="rule" style="text-align:left">need not add to 1</td><td style="text-align:left">add to 1</td></tr>
+<tr><td style="text-align:left">Loss</td><td class="rule" style="text-align:left">one for each unit</td><td style="text-align:left">one for the model</td></tr>
+<tr><td style="text-align:left">Trained</td><td class="rule" style="text-align:left">one unit at a time</td><td style="text-align:left">all four units together</td></tr>
+<tr><td style="text-align:left">Prediction</td><td class="rule" style="text-align:left">argmax of the outputs</td><td style="text-align:left">argmax of the outputs</td></tr>
+<tr><td style="text-align:left">Validation accuracy</td><td class="rule" style="text-align:left">58.1%</td><td style="text-align:left">59.3%</td></tr>
+</table>
+</div>
+<p><strong>Softmax preserves the argmax of fixed scores.</strong> The sigmoid and the softmax both keep the order of the scores. If the scores of the four separate units were passed through a softmax, the outputs would add to 1 and the argmax would be the same on every day. For November 6, 2024 the separate units’ scores are \(-5.43\), \(-1.20\), \(+0.23\) and \(-0.99\). Their sigmoids are \(0.00\), \(0.23\), \(0.56\) and \(0.27\). Their softmax is \(0.00\), \(0.16\), \(0.65\) and \(0.19\). Summer is the largest in all three lists.</p>
+<p><strong>Separate training produces different scores.</strong> The models were trained on different losses and have different weights. For the same day the softmax model’s scores are \(-3.71\), \(+0.65\), \(+1.89\) and \(+1.18\). Both models name summer on that day. On 160 of the 1,457 validation days, \(11.0\%\) of them, the two models name different seasons.</p>
+<section class="worked" id="ex-1-3">
+<h4 class="example"><span class="label">Example 1.3</span> One day, two predictions</h4>
+<p>October 1, 2018 was a fall day with a high of \(79\) and a low of \(59\).</p>
+<div class="tables">
+<table class="tt">
+<tr><th style="text-align:left"></th><th class="rule" style="text-align:center">winter</th><th style="text-align:center">spring</th><th style="text-align:center">summer</th><th style="text-align:center">fall</th><th class="rule" style="text-align:left">prediction</th></tr>
+<tr><td style="text-align:left">four separate units</td><td class="rule" style="text-align:center">0.01</td><td style="text-align:center">0.25</td><td style="text-align:center"><strong>0.32</strong></td><td style="text-align:center">0.26</td><td class="rule" style="text-align:left">summer</td></tr>
+<tr><td style="text-align:left">softmax model</td><td class="rule" style="text-align:center">0.01</td><td style="text-align:center">0.28</td><td style="text-align:center">0.32</td><td style="text-align:center"><strong>0.39</strong></td><td class="rule" style="text-align:left">fall</td></tr>
+</table>
+</div>
+<p>The summer output is \(0.32\) in both models. The fall output is \(0.26\) in one and \(0.39\) in the other, and that decides the argmax. The outputs of the four separate units add to \(0.83\) before rounding, and the softmax model’s add to \(1.00\).</p>
+</section>
+<figure><img src="images/seasons-two-models.svg" alt="Two plots of daily low against daily high, each divided into four regions labelled winter, spring, summer and fall. Left: the regions of the four separately trained units with an argmax, with 58.1 percent validation accuracy. Right: the regions of the softmax model, with 59.3 percent validation accuracy. The boundaries are straight lines in both panels and lie in different places. The 160 validation days on which the two predictions differ are drawn as dark dots along the boundaries, and October 1, 2018 is ringed." width="566" height="255"></figure>
+<p>The figure colours each point of the plane by the season a model predicts there. The dark dots are the 160 days, and they lie along the boundaries, where a small change in the scores changes the argmax. Of these days, 49 are named summer by the separate units and fall by the softmax model, 41 spring and then fall, 39 winter and then spring, 19 fall and then spring, and 12 winter and then fall.</p>
+<p>In both panels every boundary is straight. The boundary between two classes \(j\) and \(k\) is where their scores are equal,</p>
+<div class="math">\[ (\mathbf{w}_j-\mathbf{w}_k)\cdot\mathbf{x}+(b_j-b_k)=0 , \]</div>
+<p>which is the equation of a line. The resulting regions have boundaries made of straight line segments.</p>
+<p>The two models have similar accuracies. We can also compare their cross-entropy losses by passing the separate units’ scores through a softmax. The cross-entropy on the validation days is \(0.8639\). The softmax model’s is \(0.8352\). The softmax model was trained to make this number small, whereas the separate units minimized four binary losses.</p>
+<h3 id="s-1-8">1.8 The interactive page, and temperature</h3>
+<p>The page <a href="https://ikoutis.github.io/course-notes/artificial-neuron-notes/interactive/softmax-seasons.html"><em>Four units, one answer</em></a> shows both models. The plane is coloured by the predicted season, and the dots are the validation days.</p>
+<ol>
+<li>Click on the plane: at the lower left, at the upper right, and then in the middle, where the spring and fall probabilities are nearly equal. The page shows the four scores of the point, the four outputs and the predicted season for the selected high and low, even if that combination does not occur in the data.</li>
+<li>Choose November 6, 2024 from the named days. The probabilities are \(0.002\), \(0.162\), \(0.561\) and \(0.275\), and the loss is \(1.29\).</li>
+<li>Switch the model to <em>four separate units</em>. The outputs of the same day add to \(1.06\), and some of the coloured regions change because the two models have different weights. Under each bar the page now shows that unit’s own loss, because each of the four units has its own loss and there is no one loss of the four.</li>
+<li>Press <em>other model’s boundaries</em>. The boundaries of the model that is not selected are drawn as dashed lines over the plane, so both sets of boundaries can be compared. The readout names the season the other model predicts for the chosen point. Choose October 1, 2018: the softmax model predicts fall and the four separate units predict summer.</li>
+<li>Switch back to softmax and move the temperature slider.</li>
+</ol>
+<p>The page divides every score by a temperature \(T&gt;0\) before the softmax. This is meeting 3’s \(T\). For November 6, 2024:</p>
+<div class="tables">
+<table class="tt">
+<tr><th style="text-align:right">\(T\)</th><th class="rule" style="text-align:center">0.25</th><th style="text-align:center">1</th><th style="text-align:center">4</th><th style="text-align:center">10</th></tr>
+<tr><td style="text-align:right">probability of summer</td><td class="rule" style="text-align:center">0.939</td><td style="text-align:center">0.561</td><td style="text-align:center">0.355</td><td style="text-align:center">below 0.30</td></tr>
+</table>
+</div>
+<p>At \(T=10\) the four probabilities all lie between \(0.17\) and \(0.30\). The predicted season does not change, and the coloured regions do not move, because dividing by a positive number keeps the order of the scores. As \(T\) approaches zero, a unique largest score receives a probability approaching 1 and the others approach 0.</p>
+<p>When a language model produces text, it computes a score for every token in its vocabulary, turns the scores into probabilities with a softmax, and samples the next token from those probabilities. A token may be a word or part of a word. The “temperature” setting of such a model is this \(T\). A low temperature concentrates probability on the most likely tokens. A high temperature makes less likely tokens more probable.</p>
+<p>We hold \(T\) fixed during training. Changing it afterwards rescales the scores. With the trained weights fixed, the validation loss of the softmax model is \(1.4664\) at \(T=0.25\), \(0.9644\) at \(T=0.5\), \(0.8352\) at \(T=1\), \(0.9044\) at \(T=2\) and \(1.0436\) at \(T=4\).</p>
+<h3 id="s-1-9">1.9 Season classification results</h3>
+<p>The table counts the validation days by true season and predicted season, for the softmax model. A table of this kind is a <strong>confusion matrix</strong>.</p>
+<div class="tables">
+<table class="tt">
+<tr><th style="text-align:left"></th><th class="rule" colspan="4" style="text-align:center">Predicted</th><th class="rule" style="text-align:right"></th></tr>
+<tr><th style="text-align:left">True season</th><th class="rule" style="text-align:right">winter</th><th style="text-align:right">spring</th><th style="text-align:right">summer</th><th style="text-align:right">fall</th><th class="rule" style="text-align:right">correct</th></tr>
+<tr><td style="text-align:left">winter (360 days)</td><td class="rule" style="text-align:right">280</td><td style="text-align:right">67</td><td style="text-align:right">0</td><td style="text-align:right">13</td><td class="rule" style="text-align:right">77.8%</td></tr>
+<tr><td style="text-align:left">spring (366)</td><td class="rule" style="text-align:right">93</td><td style="text-align:right">137</td><td style="text-align:right">25</td><td style="text-align:right">111</td><td class="rule" style="text-align:right">37.4%</td></tr>
+<tr><td style="text-align:left">summer (367)</td><td class="rule" style="text-align:right">0</td><td style="text-align:right">5</td><td style="text-align:right">331</td><td style="text-align:right">31</td><td class="rule" style="text-align:right">90.2%</td></tr>
+<tr><td style="text-align:left">fall (364)</td><td class="rule" style="text-align:right">52</td><td style="text-align:right">103</td><td style="text-align:right">93</td><td style="text-align:right">116</td><td class="rule" style="text-align:right">31.9%</td></tr>
+</table>
+</div>
+<p>Of the 366 spring days, 137 were called spring, 111 fall, 93 winter and 25 summer. No summer day was called winter and no winter day was called summer. The mistakes are between seasons with neighbouring temperatures, and most of all between spring and fall.</p>
+<p>The errors reflect limitations in both the inputs and the model.</p>
+<p><strong>A limit in the inputs.</strong> An April day and an October day can have the same high and the same low. No model that reads only these two temperatures can give them different answers.</p>
+<p><strong>A limit in the unit.</strong> Spring lies between winter and summer, and one line cannot enclose a band. Side by side with an argmax, four units did mark out a middle region. The question also changed, from yes-or-no to which-of-four. For a yes-or-no question whose “yes” days lie between two groups of “no” days, one unit still fails.</p>
+<h2 class="act" id="act-2">Act 2. Units in layers</h2>
+<h3 id="s-2-1">2.1 Why one unit cannot compute XOR</h3>
+<p>XOR gives 1 when exactly one of its two inputs is 1.</p>
+<figure><img src="images/xor-corners.svg" alt="The unit square with the corners (0,1) and (1,0) filled and (0,0) and (1,1) open, the XOR pattern, with no line drawn." width="232" height="226"></figure>
+<p>Meeting 2 ended with an attempt to place a line for this table. Of the 70 students who answered Review Quiz 2, 47 reported that three of the four rows was the most they got right. A search agrees: on a grid of 531,441 settings, with each of \(w_1\), \(w_2\) and \(\theta\) running from \(-10\) to \(10\) in steps of \(0.25\), the most rows any setting gets right is three.</p>
+<p>The grid search covers only a finite set of parameters. A working setting could lie between its points or outside its range, so we need a proof that covers all parameter values. Meeting 5 turned the AND table into conditions on the three parameters, and the same method gives the proof for XOR.</p>
+<section class="worked" id="ex-2-1">
+<h4 class="example"><span class="label">Example 2.1</span> Four conditions that cannot all hold</h4>
+<p>A threshold unit fires when \(w_1x_1+w_2x_2\ge\theta\). Substitute the inputs of each row and write what the row requires. A row with output 1 requires the unit to fire. A row with output 0 requires it <em>not</em> to fire, so its score must be below \(\theta\).</p>
+<div class="tables">
+<table class="tt">
+<tr><th style="text-align:center">\(x_1\)</th><th style="text-align:center">\(x_2\)</th><th class="rule" style="text-align:center">XOR</th><th class="rule" style="text-align:left">score</th><th class="rule" style="text-align:left">condition</th></tr>
+<tr><td style="text-align:center">0</td><td style="text-align:center">0</td><td class="rule" style="text-align:center">0</td><td class="rule" style="text-align:left">\(0\)</td><td class="rule" style="text-align:left">\(0&lt;\theta\)</td></tr>
+<tr><td style="text-align:center">0</td><td style="text-align:center">1</td><td class="rule" style="text-align:center">1</td><td class="rule" style="text-align:left">\(w_2\)</td><td class="rule" style="text-align:left">\(w_2\ge\theta\)</td></tr>
+<tr><td style="text-align:center">1</td><td style="text-align:center">0</td><td class="rule" style="text-align:center">1</td><td class="rule" style="text-align:left">\(w_1\)</td><td class="rule" style="text-align:left">\(w_1\ge\theta\)</td></tr>
+<tr><td style="text-align:center">1</td><td style="text-align:center">1</td><td class="rule" style="text-align:center">0</td><td class="rule" style="text-align:left">\(w_1+w_2\)</td><td class="rule" style="text-align:left">\(w_1+w_2&lt;\theta\)</td></tr>
+</table>
+</div>
+<p>Add the conditions of the two middle rows:</p>
+<div class="math">\[ w_1+w_2\ge2\theta . \]</div>
+<p>The first row says \(\theta&gt;0\), so \(2\theta&gt;\theta\), and therefore</p>
+<div class="math">\[ w_1+w_2&gt;\theta . \]</div>
+<p>The last row says \(w_1+w_2&lt;\theta\). Both cannot be true. No setting of \((w_1,w_2,\theta)\) satisfies the four conditions, so no threshold unit computes XOR.</p>
+</section>
+<p>The first row is where the conditions are most often written wrongly, as \(0\ge\theta\). That is the condition for the unit to fire on \((0,0)\), and the table requires the opposite. Any setting tried in meeting 2 can be tested against the four conditions: it breaks at least one of them, and the broken condition names the row it gets wrong.</p>
+<h3 id="s-2-2">2.2 A property of the unit</h3>
+<p>This limitation follows from the unit’s linear decision boundary and holds regardless of the training method. A sigmoid unit’s output is at least one half exactly where its score is at least zero, which is the same side of the same line.</p>
+<p>Gradient descent shows the same limit. At all-zero parameters a sigmoid unit gives \(0.5\) on every row of the XOR table. Its errors are \(+0.5\), \(-0.5\), \(-0.5\) and \(+0.5\), every derivative is zero, and descent does not move. From five random starts, 20,000 steps at \(\eta=1\) bring the parameters close to zero each time. Every output is near \(0.5\) and the loss is near \(\ln2\approx0.6931\). The lowest loss a single sigmoid unit reaches on this table is the loss of answering one half on every row.</p>
+<p>Along the direction \(x_1+x_2\) the rows have the sums 0, 1, 1 and 2, and their labels read 0, 1, 1, 0. The rows labelled 1 lie between the rows labelled 0. This is the spring unit’s difficulty of Act 1, with four rows in place of four thousand days.</p>
+<p class="source">The limits of single units were studied by Minsky and Papert, <a href="https://mitpress.mit.edu/9780262130431/perceptrons/"><em>Perceptrons</em></a> (1969). Rumelhart, Hinton and Williams (1986) showed that the method of Act 3 can train hidden units to compute useful intermediate results.</p>
+<h3 id="s-2-3">2.3 XOR from three gates</h3>
+<p>Meeting 1 built circuits out of gates. XOR has a circuit too:</p>
+<div class="math">\[ \mathrm{XOR}(a,b)=\mathrm{AND}\big(\mathrm{OR}(a,b),\; \mathrm{NAND}(a,b)\big). \]</div>
+<p>In words: at least one input is on, and not both are on.</p>
+<figure><img src="images/xor-from-gates.svg" alt="A circuit computing XOR from three gates: inputs a and b feed both an OR gate and a NAND gate, and the outputs of those two feed an AND gate whose output is labelled XOR." width="386" height="148"></figure>
+<p>The gates are in two <strong>layers</strong>. The OR gate and the NAND gate form the first layer: both read the inputs \(a\) and \(b\). Neither reads the other’s output, so neither has to wait for the other, and the two can be computed at the same time. The AND gate is the second layer. It reads the two outputs of the first layer and can be computed only after them. The cerebral cortex is also arranged in layers of neurons.</p>
+<p>Meeting 2 set a threshold unit’s weights by hand for AND, and the same was done for OR and NAND. The circuit can therefore be built from three units.</p>
+<section class="worked" id="ex-2-2">
+<h4 class="example"><span class="label">Example 2.2</span> Through two layers</h4>
+<p>The three units below have weights and thresholds set by hand. The numbers under each unit are \((w_1,w_2,\theta)\), and each unit fires when \(w_1\times(\text{first input})+w_2\times(\text{second input}) \ge\theta\). The first input of the AND unit is the output of the OR unit, and its second input is the output of the NAND unit.</p>
+<figure><img src="images/xor-network.svg" alt="A two-layer network of threshold units: inputs x1 and x2 feed two first-layer units, OR and NAND, whose outputs feed the second-layer unit AND. The numbers under each unit are its weights and threshold: under OR: (1, 1, 0.5); under NAND: (-1, -1, -1.5); under AND: (1, 1, 1.5)." width="453" height="237"></figure>
+<p>Take the row \((x_1,x_2)=(0,1)\). The two first-layer units are computed first:</p>
+<div class="math">\[ \begin{aligned} \text{OR:}\quad &amp; 1\times0+1\times1=1\ \ge\ 0.5, &amp;&amp; \text{so the output is 1;}\\ \text{NAND:}\quad &amp; (-1)\times0+(-1)\times1=-1\ \ge\ -1.5, &amp;&amp; \text{so the output is 1.} \end{aligned} \]</div>
+<p>Their outputs are the inputs of the AND unit:</p>
+<div class="math">\[ \text{AND:}\quad 1\times1+1\times1=2\ \ge\ 1.5, \quad\text{so the output is 1.} \]</div>
+<p>The network gives 1 on the row \((0,1)\), as XOR does. The four rows:</p>
+<div class="tables">
+<table class="tt">
+<tr><th style="text-align:center"></th><th style="text-align:center"></th><th class="rule" colspan="2" style="text-align:center">OR unit</th><th class="rule" colspan="2" style="text-align:center">NAND unit</th><th class="rule" colspan="2" style="text-align:center">AND unit</th></tr>
+<tr><th style="text-align:center">\(x_1\)</th><th style="text-align:center">\(x_2\)</th><th class="rule" style="text-align:right">sum</th><th style="text-align:center">output</th><th class="rule" style="text-align:right">sum</th><th style="text-align:center">output</th><th class="rule" style="text-align:right">sum</th><th style="text-align:center">output</th></tr>
+<tr><td style="text-align:center">0</td><td style="text-align:center">0</td><td class="rule" style="text-align:right">\(0\)</td><td style="text-align:center">0</td><td class="rule" style="text-align:right">\(0\)</td><td style="text-align:center">1</td><td class="rule" style="text-align:right">\(1\)</td><td style="text-align:center">0</td></tr>
+<tr><td style="text-align:center">0</td><td style="text-align:center">1</td><td class="rule" style="text-align:right">\(1\)</td><td style="text-align:center">1</td><td class="rule" style="text-align:right">\(-1\)</td><td style="text-align:center">1</td><td class="rule" style="text-align:right">\(2\)</td><td style="text-align:center">1</td></tr>
+<tr><td style="text-align:center">1</td><td style="text-align:center">0</td><td class="rule" style="text-align:right">\(1\)</td><td style="text-align:center">1</td><td class="rule" style="text-align:right">\(-1\)</td><td style="text-align:center">1</td><td class="rule" style="text-align:right">\(2\)</td><td style="text-align:center">1</td></tr>
+<tr><td style="text-align:center">1</td><td style="text-align:center">1</td><td class="rule" style="text-align:right">\(2\)</td><td style="text-align:center">1</td><td class="rule" style="text-align:right">\(-2\)</td><td style="text-align:center">0</td><td class="rule" style="text-align:right">\(1\)</td><td style="text-align:center">0</td></tr>
+</table>
+</div>
+<p>The last column is 0, 1, 1, 0, which is XOR. In the NAND unit’s last row the sum is \(-2\), which is below \(-1.5\), so the unit does not fire. Each unit has two weights and a threshold, so the network has nine parameters.</p>
+</section>
+<h3 id="s-2-4">2.4 The same wiring, with trained units</h3>
+<p>A <strong>network</strong> is a set of units in which some units read the outputs of other units. A <strong>layer</strong> is a group of units at the same stage of the network. Here the first layer is the OR unit and the NAND unit, which read \(x_1\) and \(x_2\), and the second layer is the AND unit, which reads their outputs. The AND unit is the <strong>output unit</strong>: its output is the network’s answer. The OR unit and the NAND unit are <strong>hidden units</strong>: their outputs are intermediate results, passed to the next layer. The four units of Act 1 were side by side and read the same inputs, and none of them read another’s output. They were not a network in this sense.</p>
+<p>Now replace each hand-set unit by the sigmoid unit that meeting 6 trained from its truth table, 200 steps from all-zero parameters at \(\eta=4\). In the form \((w_1,w_2,\theta)\) the trained units are</p>
+<div class="math">\[ \text{OR }(8.22,\ 8.22,\ 3.64),\qquad \text{NAND }(-6.98,\ -6.98,\ -10.64),\qquad \text{AND }(6.98,\ 6.98,\ 10.64). \]</div>
+<div class="tables">
+<table class="tt">
+<tr><th style="text-align:left">Row</th><th class="rule" style="text-align:center">\((0,0)\)</th><th style="text-align:center">\((0,1)\)</th><th style="text-align:center">\((1,0)\)</th><th style="text-align:center">\((1,1)\)</th></tr>
+<tr><td style="text-align:left">the network’s output</td><td class="rule" style="text-align:center">0.030</td><td style="text-align:center">0.956</td><td style="text-align:center">0.956</td><td style="text-align:center">0.032</td></tr>
+</table>
+</div>
+<p>The outputs on the two middle rows are above one half and the other two are below, so the trained network classifies all four XOR inputs correctly.</p>
+<p>The hidden units pass their outputs on as they are, as probabilities. They are not rounded to 0 or 1 before the output unit reads them. Only the final output is compared with one half. A circuit of gates passes zeros and ones between its layers. A network of sigmoid units passes real numbers.</p>
+<p>Nine parameters are too many for a grid. With 25 values for each parameter there are \(25^9\approx4\times10^{12}\) settings.</p>
+<h3 id="s-2-5">2.5 What the second layer receives</h3>
+<figure><img src="images/xor-two-planes.svg" alt="Two panels. Left: the unit square with the XOR corners (0,1) and (1,0) filled, cut by the OR unit&#x27;s line and the NAND unit&#x27;s line, with the strip between them shaded. Right: the plane of the two first-layer outputs, the OR unit&#x27;s on the horizontal axis and the NAND unit&#x27;s on the vertical; each point is named after its row of the table; rows (0,1) and (1,0) land together near the upper right corner, and one line, the AND unit&#x27;s, separates them from row (0,0) near the upper left corner and row (1,1) near the lower right corner." width="547" height="241"></figure>
+<p>The left panel is the plane of the inputs. The OR unit’s line is \(x_1+x_2=0.44\) and the NAND unit’s line is \(x_1+x_2=1.52\). The two rows labelled 1 lie between the two lines.</p>
+<p>The right panel is the plane of the two hidden outputs, \(h_1\) from the OR unit and \(h_2\) from the NAND unit. This is what the AND unit reads. It is a different plane from the left one. Each row of the table is drawn at its two hidden outputs and named after its inputs. The name “row \((0,0)\)” says which row of the table the point is; the point’s position in this plane is \((h_1,h_2)\):</p>
+<div class="tables">
+<table class="tt">
+<tr><th style="text-align:center">Row \((x_1,x_2)\)</th><th class="rule" style="text-align:center">\((h_1,h_2)\)</th><th class="rule" style="text-align:center">XOR</th></tr>
+<tr><td style="text-align:center">\((0,0)\)</td><td class="rule" style="text-align:center">\((0.03,\ 1.00)\)</td><td class="rule" style="text-align:center">0</td></tr>
+<tr><td style="text-align:center">\((0,1)\)</td><td class="rule" style="text-align:center">\((0.99,\ 0.97)\)</td><td class="rule" style="text-align:center">1</td></tr>
+<tr><td style="text-align:center">\((1,0)\)</td><td class="rule" style="text-align:center">\((0.99,\ 0.97)\)</td><td class="rule" style="text-align:center">1</td></tr>
+<tr><td style="text-align:center">\((1,1)\)</td><td class="rule" style="text-align:center">\((1.00,\ 0.04)\)</td><td class="rule" style="text-align:center">0</td></tr>
+</table>
+</div>
+<p>The row \((0,0)\) is near the upper left corner of this plane, because on that row the OR unit gives a value near 0 and the NAND unit a value near 1. The two rows labelled 1 are at the same point, near the upper right corner. One line separates them from the other two rows: the AND unit’s line, \(h_1+h_2=1.52\).</p>
+<p>The first layer transforms the original inputs into two new inputs that a single line can separate. Meeting 7’s filter also transformed the inputs, but used a rule we specified. The first layer’s transformation has parameters that can be trained.</p>
+<h3 id="s-2-6">2.6 Errors when combining separately trained units</h3>
+<p>The three units were trained separately, each on its own truth table. Train each of them for the same number of steps, wire them together, and vary that number:</p>
+<div class="tables">
+<table class="tt">
+<tr><th style="text-align:right"></th><th class="rule" colspan="2" style="text-align:center">On row \((0,1)\)</th><th class="rule" style="text-align:center">AND alone</th><th class="rule" colspan="4" style="text-align:center">The network on</th><th class="rule" style="text-align:center">Rows</th></tr>
+<tr><th style="text-align:right">Steps</th><th class="rule" style="text-align:center">OR</th><th style="text-align:center">NAND</th><th class="rule" style="text-align:center">on \((1,1)\)</th><th class="rule" style="text-align:center">\((0,0)\)</th><th style="text-align:center">\((0,1)\)</th><th style="text-align:center">\((1,0)\)</th><th style="text-align:center">\((1,1)\)</th><th class="rule" style="text-align:center">right</th></tr>
+<tr><td style="text-align:right">5</td><td class="rule" style="text-align:center">0.84</td><td style="text-align:center">0.72</td><td class="rule" style="text-align:center">0.54</td><td class="rule" style="text-align:center">0.369</td><td style="text-align:center">0.420</td><td style="text-align:center">0.420</td><td style="text-align:center">0.387</td><td class="rule" style="text-align:center">2</td></tr>
+<tr><td style="text-align:right">10</td><td class="rule" style="text-align:center">0.88</td><td style="text-align:center">0.77</td><td class="rule" style="text-align:center">0.65</td><td class="rule" style="text-align:center">0.342</td><td style="text-align:center">0.493</td><td style="text-align:center">0.493</td><td style="text-align:center">0.360</td><td class="rule" style="text-align:center">2</td></tr>
+<tr><td style="text-align:right">20</td><td class="rule" style="text-align:center">0.92</td><td style="text-align:center">0.83</td><td class="rule" style="text-align:center">0.76</td><td class="rule" style="text-align:center">0.261</td><td style="text-align:center">0.612</td><td style="text-align:center">0.612</td><td style="text-align:center">0.280</td><td class="rule" style="text-align:center">4</td></tr>
+<tr><td style="text-align:right">50</td><td class="rule" style="text-align:center">0.96</td><td style="text-align:center">0.91</td><td class="rule" style="text-align:center">0.88</td><td class="rule" style="text-align:center">0.129</td><td style="text-align:center">0.802</td><td style="text-align:center">0.802</td><td style="text-align:center">0.142</td><td class="rule" style="text-align:center">4</td></tr>
+<tr><td style="text-align:right">200</td><td class="rule" style="text-align:center">0.99</td><td style="text-align:center">0.97</td><td class="rule" style="text-align:center">0.96</td><td class="rule" style="text-align:center">0.030</td><td style="text-align:center">0.956</td><td style="text-align:center">0.956</td><td style="text-align:center">0.032</td><td class="rule" style="text-align:center">4</td></tr>
+<tr><td style="text-align:right">2,000</td><td class="rule" style="text-align:center">1.00</td><td style="text-align:center">1.00</td><td class="rule" style="text-align:center">1.00</td><td class="rule" style="text-align:center">0.003</td><td style="text-align:center">0.996</td><td style="text-align:center">0.996</td><td style="text-align:center">0.003</td><td class="rule" style="text-align:center">4</td></tr>
+</table>
+</div>
+<figure><img src="images/xor-parts-steps.svg" alt="The network&#x27;s output on the four XOR rows against the number of steps each part was trained for, 1 to 2,000 on a log scale: the outputs for rows (0,1) and (1,0) rise toward 1 and those for (0,0) and (1,1) fall toward 0, crossing 0.5 near the shaded band where every part passes its own table." width="325" height="240"></figure>
+<p>From step 5 on, every part classifies the four rows of its own truth table correctly. The network is right on all four rows of XOR only from step 11 on. From step 5 to step 10, every part passes its own test and the network is wrong on two rows.</p>
+<p>Consider the row for 10 steps. The AND unit was trained on inputs that are exactly 0 or 1. After 10 steps its parameters are \((1.81,1.81,3.00)\), so its output reaches one half when its two inputs add to \(3.00/1.81\approx1.66\). On the exact row \((1,1)\) the inputs add to 2 and the unit gives \(0.65\). In the network, on the row \((0,1)\), it receives \(0.88\) and \(0.77\), which add to \(1.65\). That is below \(1.66\). The AND unit gives \(0.493\) and the network’s answer is 0.</p>
+<p>The network is also less confident than its parts. After 50 steps the OR and NAND units give \(0.96\) and \(0.91\) on the row \((0,1)\), and the AND unit alone gives \(0.88\) on exact inputs. The network gives \(0.802\). Each layer passes on values that are not exactly 0 or 1, and the next layer was not trained on such values.</p>
+<p>Each part was trained on its own table with its own loss. Nothing in the training of a part measured how the network does.</p>
+<h3 id="s-2-7">2.7 The interactive page: parts trained separately</h3>
+<p>The page <a href="https://ikoutis.github.io/course-notes/artificial-neuron-notes/interactive/small-network.html"><em>Three units, two layers</em></a> has three views of this network. The first view is the experiment of the previous section. Its slider sets the number of steps each part was trained for. The large plane is the plane of the inputs, with the OR unit’s line and the NAND unit’s line. The table gives the outputs of the two hidden units and of the network on each row, with the rows the network gets wrong in red.</p>
+<p>The small plane at the lower right is the right-hand panel of the figure in section 2.5: its axes are the OR unit’s output and the NAND unit’s output, and the red line is the output unit’s line. Every point lies inside the square from 0 to 1, because a hidden output is between 0 and 1. Each point is placed at the <em>hidden outputs</em> of its row and named after the row, as “row \((0,0)\)”. The names are written outside the square, each joined to its point by a thin line. Two rows that land on the same place are drawn side by side and share one name. The position of a point can be read from the table beside the plane: its two middle columns are the point’s distance across and its height.</p>
+<p>Exact gates would send row \((0,0)\) to the upper left corner of the square, rows \((0,1)\) and \((1,0)\) to the upper right corner, and row \((1,1)\) to the lower right corner. With few steps the four points are away from these corners, and the output unit’s line has the two rows labelled 1 on its wrong side. After 10 steps, for example, row \((0,0)\) is at \((0.34,0.95)\) and rows \((0,1)\) and \((1,0)\) are at \((0.88,0.77)\). As the slider moves up, the points move toward the three corners. The smallest number of steps at which the network is right on all four rows is 11.</p>
+<h2 class="act" id="act-3">Act 3. Units trained together</h2>
+<h3 id="s-3-1">3.1 One loss for the whole network</h3>
+<p>In Act 2 we knew what each unit should compute, because logic gave us the circuit. Each unit had its own truth table and was trained on it. Now give the network only the XOR table: the inputs and the final labels. The hidden units get no labels. There is one loss, the cross-entropy of the network’s output, and gradient descent changes all nine parameters at every step. None of the three units is asked to be OR, NAND or AND.</p>
+<p>Write \(h_1\) and \(h_2\) for the outputs of the hidden units, \(v_1\) and \(v_2\) for the output unit’s weights on them, and \(\hat y\) for the network’s output. The output unit uses the gradient formula from meeting 6. Its inputs are \(h_1\) and \(h_2\), so the derivative of the loss with respect to \(v_j\) is the average over the rows of</p>
+<div class="math">\[ (\hat y-y)\times h_j , \]</div>
+<p>which is (error) \(\times\) (input). For the weight of hidden unit \(j\) on the input \(x_i\), the derivative is the average of</p>
+<div class="math">\[ \underbrace{(\hat y-y)\times v_j\times h_j(1-h_j)}_{\text{error signal of hidden unit } j}\times\ x_i . \]</div>
+<p>This is again a signal times an input. The signal is the output error, times the weight \(v_j\) that connects the hidden unit to the output unit, times \(h_j(1-h_j)\), which is the derivative of the hidden unit’s own sigmoid. The formula is the chain rule applied twice, and we state it without deriving it. Computing the derivatives in this order, from the output back toward the inputs, is called <strong>backpropagation</strong>.</p>
+<p>The training loop is meeting 6’s loop. It has nine parameters instead of three.</p>
+<h3 id="s-3-2">3.2 A random start</h3>
+<p><strong>Identical initialization keeps hidden units identical.</strong> On the XOR table, at all-zero parameters, every one of the nine derivatives is exactly zero, and descent does not move. There is a more general reason. Two hidden units that start with the same weights, the same bias and the same weight to the output unit receive the same update at every step, and they stay equal. In one such run, 5,000 steps at \(\eta=4\) end with both hidden units at the weights \((9.02,-9.68)\), a loss of \(0.4779\) and outputs \(0.334\), \(0.333\), \(1.000\) and \(0.333\). Two hidden units that are identical provide the same intermediate output. Starting at random values makes the hidden units different from the first step. Here each of the nine parameters starts at a number drawn uniformly between \(-1\) and \(1\).</p>
+<p><strong>Results depend on initialization.</strong> Every run of a single unit on the weather data approached the same lowest loss. Runs of the network do not.</p>
+<h3 id="s-3-3">3.3 Results from 100 random starts</h3>
+<p>One hundred random starts, each run for 5,000 full-batch steps at \(\eta=4\) on the four rows of XOR:</p>
+<div class="tables">
+<table class="tt">
+<tr><th style="text-align:right">Starts</th><th style="text-align:left">Result after 5,000 steps</th></tr>
+<tr><td style="text-align:right">74</td><td style="text-align:left">all four rows right, loss below \(0.05\)</td></tr>
+<tr><td style="text-align:right">25</td><td style="text-align:left">loss \(0.35\); outputs such as \(0.5,\ 1.0,\ 0.5,\ 0.0\)</td></tr>
+<tr><td style="text-align:right">1</td><td style="text-align:left">loss \(0.48\); outputs \(0.00,\ 0.67,\ 0.67,\ 0.67\)</td></tr>
+</table>
+</div>
+<figure><img src="images/xor-together.svg" alt="Loss on the XOR table against training step, on a log scale up to 5,000 steps, for 100 random starts: 74 runs reach loss below 0.05 and classify all XOR inputs correctly; 26 runs remain at higher loss." width="325" height="240"></figure>
+<p>The 74 successful runs first have all four rows right after a median of about 123 steps; the quickest takes 48 and the slowest 305. The other 26 still fail after 5,000 steps, with two or three outputs nearly equal. The same happened when the page was run in class. The first start stalled: the two hidden units’ lines had settled, and the output unit’s line had not reached a place that separates the rows. A new start reached XOR quickly.</p>
+<p>On a task with data, train from several starts and keep the run with the lowest validation loss. For XOR the four rows are all the inputs there are, and every run can be checked on all of them.</p>
+<p>The table below reads each hidden output as 1 when it is at least one half, and names what the two hidden units compute in the 74 successful runs:</p>
+<div class="tables">
+<table class="tt">
+<tr><th style="text-align:right">Runs</th><th style="text-align:left">The two hidden units compute</th></tr>
+<tr><td style="text-align:right">17</td><td style="text-align:left">“\(x_1\) and not \(x_2\)” with “\(x_1\) or not \(x_2\)”</td></tr>
+<tr><td style="text-align:right">13</td><td style="text-align:left">“\(x_1\) and not \(x_2\)” with “\(x_2\) and not \(x_1\)”</td></tr>
+<tr><td style="text-align:right">10</td><td style="text-align:left">AND with NOR</td></tr>
+<tr><td style="text-align:right">10</td><td style="text-align:left">AND with OR</td></tr>
+<tr><td style="text-align:right">9</td><td style="text-align:left">“\(x_2\) and not \(x_1\)” with “\(x_2\) or not \(x_1\)”</td></tr>
+<tr><td style="text-align:right">7</td><td style="text-align:left">NAND with NOR</td></tr>
+<tr><td style="text-align:right">4</td><td style="text-align:left">“\(x_1\) or not \(x_2\)” with “\(x_2\) or not \(x_1\)”</td></tr>
+<tr><td style="text-align:right">4</td><td style="text-align:left">NAND with OR, the wiring of Act 2</td></tr>
+</table>
+</div>
+<p>Only 4 of the 74 runs produced OR and NAND. The hidden units were trained without individual labels. Several pairs of hidden functions allow the output unit to separate the classes with one line. In one run a hidden unit computes AND, the other computes NOR, and the output unit fires when neither of them fires: not both inputs on, and not both off. Joint training thus finds a working network without a truth table for each hidden unit.</p>
+<h3 id="s-3-4">3.4 A question one line cannot answer</h3>
+<p>Move the same three-unit network to the Newark days, with a yes-or-no question: is this day in spring or fall? The label is 1 for March to May and September to November, and \(50.1\%\) of the days in each of the three sets have it. The inputs, the filter and the split by years are unchanged. In the plane, the “yes” days lie between the winter days and the summer days, as XOR’s rows labelled 1 lie between \((0,0)\) and \((1,1)\).</p>
+<div class="tables">
+<table class="tt">
+<tr><th style="text-align:left"></th><th class="rule" colspan="2" style="text-align:center">Accuracy</th></tr>
+<tr><th style="text-align:left">Model</th><th class="rule" style="text-align:right">training days</th><th style="text-align:right">validation days</th></tr>
+<tr><td style="text-align:left">answering “yes” every day</td><td class="rule" style="text-align:right">50.1%</td><td style="text-align:right">50.1%</td></tr>
+<tr><td style="text-align:left">one sigmoid unit, trained as in meeting 7</td><td class="rule" style="text-align:right">56.1%</td><td style="text-align:right">53.0%</td></tr>
+<tr><td style="text-align:left">the best single line found by a search</td><td class="rule" style="text-align:right">65.5%</td><td style="text-align:right">65.1%</td></tr>
+<tr><td style="text-align:left">two hidden units and an output unit, trained together</td><td class="rule" style="text-align:right">77.3%</td><td style="text-align:right">75.1%</td></tr>
+</table>
+</div>
+<figure><img src="images/mild-network.svg" alt="Two scatter plots of daily low against daily high with decision lines. Left, one unit: right on 53.0 percent of validation days, with a single line that cannot pick out the mild days. Right, three units: right on 75.1 percent, where two lines cut out a band of mild days between the cold side and the hot side." width="566" height="238"></figure>
+<p>The single sigmoid unit ends with a training loss of \(0.6851\), against \(\ln2\approx0.6931\) for answering one half on every day, and its outputs run only from \(0.34\) to \(0.77\). The best line of the search was chosen for its accuracy on the training days, over 360 directions and every position of the line. The selected line separates the summer days from the rest and calls everything else spring or fall, including every winter day. The sigmoid unit minimizes cross-entropy, which is a different goal, and the two need not choose the same line.</p>
+<p>The network was trained from one random start at \(\eta=2\) for 3,000 full-batch steps. Its training loss is \(0.4905\). On the test years it is right on \(77.9\%\) of the days, with a loss of \(0.4762\).</p>
+<p>In the right-hand panel the shading is the network’s output, and the two lines belong to the two hidden units. Say that a hidden unit <em>fires</em> when its output is at least \(0.5\); the output unit still receives the outputs themselves. In degrees, the hidden units are:</p>
+<div class="tables">
+<table class="tt">
+<tr><th style="text-align:left">Hidden unit</th><th class="rule" style="text-align:left">fires when</th><th class="rule" style="text-align:right">fires on, training days</th></tr>
+<tr><td style="text-align:left">1 (solid line)</td><td class="rule" style="text-align:left">\(0.50\times\text{high}+0.50\times\text{low}\le44.9\)</td><td class="rule" style="text-align:right">29.8%</td></tr>
+<tr><td style="text-align:left">2 (dashed line)</td><td class="rule" style="text-align:left">\(0.21\times\text{high}+0.79\times\text{low}\le63.2\)</td><td class="rule" style="text-align:right">68.4%</td></tr>
+</table>
+</div>
+<p>Hidden unit 1 fires on cold days. Hidden unit 2 fires on days that are not hot. The output unit’s weights on them are \(-6.41\) and \(+5.90\), with bias \(-2.03\), so its output is high when unit 2 fires and unit 1 does not, selecting a band of moderate temperatures. The two lines divide the training days into three groups:</p>
+<div class="tables">
+<table class="tt">
+<tr><th style="text-align:left">Region</th><th style="text-align:right">Training days</th><th style="text-align:right">In spring or fall</th></tr>
+<tr><td style="text-align:left">cold side: both units fire</td><td style="text-align:right">1,286</td><td style="text-align:right">31.1%</td></tr>
+<tr><td style="text-align:left">between the lines: only unit 2 fires</td><td style="text-align:right">1,667</td><td style="text-align:right">84.0%</td></tr>
+<tr><td style="text-align:left">hot side: neither unit fires</td><td style="text-align:right">1,363</td><td style="text-align:right">26.4%</td></tr>
+</table>
+</div>
+<section class="worked" id="ex-3-1">
+<h4 class="example"><span class="label">Example 3.1</span> Placing two days</h4>
+<p>April 15, 2019 had a high of 70 and a low of 46. For unit 1, \(0.50\times70+0.50\times46=58\), which is above \(44.9\), so it does not fire. For unit 2, \(0.21\times70+0.79\times46\approx51.0\), which is below \(63.2\), so it fires. The day is between the lines, and the network’s output is \(0.93\). The day was in spring.</p>
+<p>November 6, 2024 had a high of \(82.9\) and a low of \(63.0\). For unit 1 the sum is about \(73.0\) and for unit 2 it is about \(67.2\). Both are above their limits, so neither unit fires. The day is on the hot side and the network’s output is \(0.37\). The day was in fall, and the network places it wrongly, as the single unit of meeting 3 and the softmax model of Act 1 did. Its high and low are close to the means of the summer days, 85 and 67.</p>
+</section>
+<p>Training produced an arrangement similar to Act 2: two hidden units define a band, and the output unit assigns high probabilities to days within it.</p>
+<h3 id="s-3-5">3.5 The interactive page: units trained together</h3>
+<p>The second and third views of <a href="https://ikoutis.github.io/course-notes/artificial-neuron-notes/interactive/small-network.html"><em>Three units, two layers</em></a> train the network together.</p>
+<p><strong>Second view: XOR.</strong> Press <em>new start</em> and then <em>run</em>. On the large plane the two hidden units’ lines move. On the small plane the four rows move, and in a successful run the output unit’s line ends with the two rows labelled 1 on one side. The line under the table names what each hidden unit computes. Try several starts. The page draws its starts with its own generator: of its first hundred starts, 22 do not reach XOR within 3,000 steps. Start 1 reaches XOR with hidden units that compute AND and OR. Start 2 stalls. Start 3 reaches XOR at step 127 with “\(x_1\) and not \(x_2\)” and “\(x_1\) or not \(x_2\)”; its rows labelled 1 are outside the two lines, not between them, and the output unit fires when the two hidden units agree.</p>
+<p><strong>Third view: the Newark days.</strong> Press <em>run</em>. With start 1 the loss stays near \(\ln2\) for about a hundred steps, \(0.6869\) at step 75, and then drops, to \(0.5936\) at step 125 and \(0.5021\) at step 200, while the two lines move to the two sides of the spring and fall days. After 3,000 steps the loss is \(0.4905\). On the small plane the days lie along two edges of the square, and the spring and fall days gather at one corner, where the output unit can separate them. The initial period of slow progress varies: start 3 stays near \(\ln2\) for more than 600 steps. Switch the page to <em>one unit</em> and run again: the single line turns, the share of days it gets right stays near \(56\%\), and the loss stays at \(0.6851\).</p>
+<h3 id="s-3-6">3.6 Where extra units add little</h3>
+<p>The effect of adding hidden units depends on the task:</p>
+<div class="tables">
+<table class="tt">
+<tr><th style="text-align:left">Validation accuracy</th><th class="rule" style="text-align:right">One unit</th><th style="text-align:right">2 hidden units</th><th style="text-align:right">8 hidden units</th></tr>
+<tr><td style="text-align:left">spring or fall?</td><td class="rule" style="text-align:right">53.0%</td><td style="text-align:right">75.1%</td><td style="text-align:right">74.9 to 75.2%</td></tr>
+<tr><td style="text-align:left">warm half or cold half?</td><td class="rule" style="text-align:right">91.8%</td><td style="text-align:right">91.9%</td><td style="text-align:right">92.0%</td></tr>
+</table>
+</div>
+<p>On the spring-or-fall question, two hidden units change the result and more hidden units change almost nothing. With three hidden units, five random starts give between \(74.9\%\) and \(75.3\%\). A rule that divides the plane into cells of 4 degrees and predicts the majority of the training days in each cell is right on \(77.7\%\) of the training days and \(73.7\%\) of the validation days. In the training years, 190 days had a high between 58 and 62 degrees: 88 of them were in spring, 70 in fall, 28 in winter and 4 in summer. This range of daily highs occurs in all four seasons.</p>
+<p>On the warm-half question of meetings 3 to 7, the network improves little on the single unit. One unit is right on \(91.8\%\) of the validation days with a validation loss of \(0.1923\). Two hidden units give \(91.9\%\) and \(0.1922\), and eight give \(92.0\%\) and \(0.1922\).</p>
+<p>Additional units can produce more flexible decision boundaries, but cannot distinguish examples with identical inputs and different labels. We use validation data to evaluate whether the extra parameters help. These measurements compare the models that were tried. They do not establish the best accuracy that any model could reach.</p>
+<h3 id="s-3-7">3.7 Larger networks</h3>
+<p>The network of this meeting has 9 parameters. Many classifiers and language models are built from the same parts. They have several layers and end in a softmax, as the model of Act 1 does: an image classifier has one output for each kind of object, and a language model has one output for each token in its vocabulary. They are trained together on a cross-entropy loss by mini-batch gradient descent, often with momentum, and they are judged on held-out data. A large language model can have billions of parameters. As in our small network, earlier layers transform the inputs for later layers, and joint training determines those transformations.</p>
+<footer>
+<span>CS 301 · Meeting 8 · <a href="index.html">all meetings</a></span>
+<span>generated from meeting-08.tex on 2026-09-28</span>
+</footer>
+</main>
+</body>
+</html>
