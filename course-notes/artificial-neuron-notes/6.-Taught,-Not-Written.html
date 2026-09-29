@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Meeting 6. Taught, Not Written — CS 301</title>
+<meta name="description" content="CS 301 Introduction to Data Science, NJIT. Course notes for meeting 6: Taught, Not Written.">
+<meta name="cs301-meeting" content="6">
+<meta name="cs301-title" content="Taught, Not Written">
+<meta name="cs301-acts" content="Act 1 The Slope Again · Act 2 The Update Rule · Act 3 The Learning Rate">
+<style>
+@font-face { font-family: "Latin Modern Roman"; src: url(fonts/lmroman10-regular.otf); font-weight: normal; font-style: normal; }
+@font-face { font-family: "Latin Modern Roman"; src: url(fonts/lmroman10-italic.otf); font-weight: normal; font-style: italic; }
+@font-face { font-family: "Latin Modern Roman"; src: url(fonts/lmroman10-bold.otf); font-weight: bold; font-style: normal; }
+@font-face { font-family: "Latin Modern Roman"; src: url(fonts/lmroman10-bolditalic.otf); font-weight: bold; font-style: italic; }
+@font-face { font-family: "Latin Modern Sans"; src: url(fonts/lmsans10-regular.otf); font-weight: normal; }
+@font-face { font-family: "Latin Modern Sans"; src: url(fonts/lmsans10-bold.otf); font-weight: bold; }
+@font-face { font-family: "Latin Modern Mono"; src: url(fonts/lmmono10-regular.otf); }
+:root { --njred: #CC0033; --ink: #1A1A1A; --muted: #555555; --faint: #DDDDDD; --paper: #F7F7F5;
+  --serif: "Latin Modern Roman", "Computer Modern Serif", Georgia, "Times New Roman", serif;
+  --sans: "Latin Modern Sans", "Helvetica Neue", Arial, sans-serif;
+  --mono: "Latin Modern Mono", Consolas, "Courier New", monospace; }
+html { background: #fff; }
+body { margin: 0; color: var(--ink); font-family: var(--serif); font-size: 18px; line-height: 1.5;
+  -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; }
+.page { max-width: 720px; margin: 0 auto; padding: 44px 24px 72px; }
+a { color: inherit; }
+.titleblock { border-top: 3px solid var(--njred); border-bottom: 1px solid var(--faint); padding: 20px 0 16px; margin-bottom: 30px; }
+.kicker { font-family: var(--sans); font-weight: bold; font-size: 12.5px; color: var(--njred); margin: 0 0 14px; display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+.kicker .pdf { font-weight: normal; color: var(--muted); text-decoration: none; border: 1px solid var(--faint); border-radius: 3px; padding: 1px 8px; }
+.kicker .pdf:hover { color: var(--njred); border-color: var(--njred); }
+h1 { font-family: var(--sans); font-size: 30px; line-height: 1.2; margin: 0 0 10px; }
+.acts { font-family: var(--sans); font-size: 13px; color: var(--muted); margin: 0; }
+h2.act { font-family: var(--sans); font-size: 21px; color: var(--njred); margin: 48px 0 20px; padding-bottom: 9px; border-bottom: 1px solid var(--faint); }
+h3 { font-family: var(--sans); font-size: 15.5px; margin: 30px 0 8px; }
+h4.example { font-family: var(--sans); font-size: 15.5px; margin: 22px 0 6px; }
+h4.example .label { color: var(--njred); }
+.worked { margin: 0 0 22px; }
+p { margin: 0; }
+p + p { text-indent: 1.6em; }
+.note { background: var(--paper); padding: 14px 18px; margin: 24px 0; }
+.note .lead { font-family: var(--sans); font-weight: bold; font-size: 15.5px; }
+.note p { display: inline; }
+.note p + p { display: block; text-indent: 1.6em; margin-top: 0.4em; }
+.note ul { margin-top: 10px; }
+.source { font-size: 13px; color: var(--muted); margin-top: 6px; text-indent: 0 !important; }
+.pull { text-align: center; margin: 14px 0; text-indent: 0 !important; }
+.bigq { text-align: center; font-size: 22px; margin: 18px 0; text-indent: 0 !important; }
+.math { margin: 8px 0 14px; overflow-x: auto; }
+.red, .c-njred { color: var(--njred); }
+.muted { color: var(--muted); }
+ul, ol { margin: 10px 0 12px; padding-left: 2.2em; }
+li { margin: 0 0 5px; }
+li p { display: inline; }
+figure { margin: 22px 0; text-align: center; }
+figure img { max-width: 100%; height: auto; }
+.tables { display: flex; justify-content: center; align-items: flex-start; gap: 44px; flex-wrap: wrap; margin: 18px 0; }
+table { border-collapse: collapse; font-size: 16.5px; }
+table.tt th { font-weight: normal; border-bottom: 1px solid var(--ink); padding: 2px 11px 4px; }
+table.tt td { padding: 3px 11px 0; }
+table.tt .rule { border-left: 1px solid var(--ink); }
+table.trans td { padding: 6px 18px; }
+table.trans td:first-child { padding-left: 0; }
+table.trans td:last-child { padding-right: 0; }
+pre.code { font-family: var(--mono); font-size: 15px; line-height: 1.4; margin: 16px 0 16px 44px; white-space: pre; overflow-x: auto; }
+code { font-family: var(--mono); font-size: 92%; }
+footer { margin-top: 56px; padding-top: 12px; border-top: 1px solid var(--faint); font-family: var(--sans); font-size: 12.5px; color: var(--muted);
+  display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+footer a { text-decoration: none; }
+footer a:hover { color: var(--njred); }
+@media (max-width: 560px) { body { font-size: 17px; } .page { padding: 28px 18px 56px; } h1 { font-size: 25px; } pre.code { margin-left: 12px; } }
+@media print { .page { max-width: none; padding: 0; } .kicker .pdf { display: none; } h2.act, h3, h4 { break-after: avoid; } figure, .note, table { break-inside: avoid; } }
+</style>
+<script>window.MathJax = { tex: { inlineMath: [['\\(', '\\)']], displayMath: [['\\[', '\\]']] }, chtml: { scale: 1.02 } };</script>
+<script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+</head>
+<body>
+<main class="page">
+<header class="titleblock">
+<p class="kicker">NJIT · CS 301 · INTRODUCTION TO DATA SCIENCE · FALL 2026 <a class="pdf" href="6.-Taught,-Not-Written.pdf">PDF</a></p>
+<h1>Meeting 6. Taught, Not Written</h1>
+<p class="acts">Act 1 The Slope Again · Act 2 The Update Rule · Act 3 The Learning Rate</p>
+</header>
+<p>A unit’s weights and bias determine its predictions. The labeled data let us measure how those predictions go wrong, and the gradient tells us how the loss responds to a small change in each parameter. We can use that information to change the parameters, make new predictions, and repeat. This procedure is <strong>gradient descent</strong>.</p>
+<h2 class="act" id="act-1">Act 1. The Slope Again</h2>
+<h3 id="s-1-1">1.1 Finding a direction in the fog</h3>
+<p>Imagine standing on a hillside in thick fog. You cannot see the valley, but you can feel the slope under your feet. A small step downhill gives you a new place to stand. There you check the slope again: the direction that was downhill a few steps ago need not still be downhill here.</p>
+<p>For the unit, a place on the hillside is a setting of its parameters, and height is the loss. The gradient supplies the local slopes. This lets the unit adjust its parameters without first drawing the whole loss surface or testing every setting on a grid.</p>
+<figure><img src="images/loss-surface-fog.svg" alt="The AND loss surface hidden in fog: only a small patch of the surface around the point w = (1, 2), loss 0.46, is visible, with an arrow labelled downhill pointing away from it." width="510" height="367"></figure>
+<p>This picture varies two weights while holding the bias fixed. The height is the loss, not a third parameter. Training the bias as well means moving in three parameter coordinates; drawing their loss would require a fourth axis.</p>
+<p>The <strong>gradient points uphill</strong>, in the direction of steepest local increase in the loss, measured in the chosen parameter coordinates. We move against it to go downhill. Each partial derivative gives the slope along one coordinate. Together, these components form one gradient vector. Thinking of them as east–west and north–south components can help; the speed of the actual movement also depends on the learning rate.</p>
+<h3 id="s-1-2">1.2 What one row contributes</h3>
+<p>We use temperature \(T=1\). On row \(i\), the unit computes</p>
+<div class="math">\[ s_i = \mathbf{w}\cdot\mathbf{x}_i+b = \mathbf{w}\cdot\mathbf{x}_i-\theta, \qquad \hat y_i = \sigma(s_i) = \frac{1}{1+e^{-s_i}}. \]</div>
+<p>The label \(y_i\) is either 0 or 1. We call</p>
+<div class="math">\[ e_i = \hat y_i-y_i \]</div>
+<p>the row’s <strong>error</strong>. It is a signed difference between a probability and a label. It is not the row’s loss, and it is not just a mark saying whether the 0-or-1 prediction was correct.</p>
+<p>For example, an output of \(0.82\) with label 1 gives error \(-0.18\). The classification is correct, but increasing the probability would still improve the fit to that label. With label 0, an output of \(0.62\) gives error \(+0.62\): the probability needs to come down.</p>
+<p>For the mean binary cross-entropy loss from meeting 4,</p>
+<div class="math">\[ L = \frac{1}{n}\sum_{i=1}^n \left[-y_i\log\hat y_i-(1-y_i)\log(1-\hat y_i)\right], \]</div>
+<p>the derivative with respect to weight \(w_j\) is</p>
+<div class="math">\[ \boxed{\displaystyle \frac{\partial L}{\partial w_j} = \frac{1}{n}\sum_{i=1}^n e_i x_{ij}.} \]</div>
+<p>Multiply each row’s error by that row’s \(j\)-th input, then average the products. Here \(n\) is the number of rows and \(x_{ij}\) is input \(j\) on row \(i\).</p>
+<p>Why multiply? The error tells us how the row’s loss changes with its score. The input tells us how that score changes with the weight: changing \(w_j\) by a small amount \(h\) changes this row’s score by \(h x_{ij}\). If \(x_{ij}=0\), changing \(w_j\) cannot affect this row’s score at all. Its contribution to this weight’s derivative is zero, even if its prediction is badly wrong.</p>
+<p>Getting a question wrong on a short quiz and getting it wrong on a heavily weighted exam can have different effects on a course grade. That is a useful way to remember the multiplication: the size of the error is only part of its effect. In the unit, the multiplier is the input value. A large numerical input does not by itself mean an important feature. Measuring the same length in centimeters instead of meters changes its numerical size without making it more important.</p>
+<p>The bias contributes to every score with multiplier 1, so</p>
+<div class="math">\[ \frac{\partial L}{\partial b} = \frac{1}{n}\sum_i e_i. \qquad \frac{\partial L}{\partial\theta} = -\frac{1}{n}\sum_i e_i. \]</div>
+<p>The threshold’s minus sign comes from \(s_i=\mathbf{w}\cdot\mathbf{x}_i-\theta\). The bias and threshold describe the same parameter, with \(b=-\theta\); we train one or the other, not both independently.</p>
+<h3 id="s-1-3">1.3 Averaging conflicting feedback</h3>
+<p>Suppose course evaluations say both “too hard” and “too easy.” Changing the difficulty in response to one comment may move against another. A unit faces a similar problem: one row may call for a weight to increase while another calls for it to decrease. The average combines those requests, including their sizes.</p>
+<p>Or consider a haircut. Half your friends love it; half think it is terrible. There is no obvious adjustment suggested by the head count alone. For the unit, each contribution has a numerical size, so equal numbers of positive and negative contributions need not cancel. Their magnitudes matter too.</p>
+<p>A student could say, “Keep teaching the same way, but change your haircut.” Those comments concern different things you might change. Similarly, each weight gets its own average \(\frac{1}{n}\sum_i e_i x_{ij}\). We do not average all the inputs together and make every weight react in the same way.</p>
+<aside class="note"><span class="lead">A small average can hide disagreement.</span> <p>Two rows have identical inputs but opposite labels. At output \(0.5\), their errors are \(+0.5\) and \(-0.5\). The errors cancel, and so do their contributions to every weight derivative. Both predictions remain uncertain. A small gradient does not mean that every row has a small error, or that every classification is correct.</p>
+</aside>
+<h2 class="act" id="act-2">Act 2. The Update Rule</h2>
+<h3 id="s-2-1">2.1 Taking a step</h3>
+<p>Choose a positive <strong>learning rate</strong> \(\eta\) (the Greek letter eta). For each weight, subtract the learning rate times its derivative:</p>
+<div class="math">\[ \boxed{\displaystyle w_j^{\mathrm{new}} = w_j^{\mathrm{old}} -\eta\,\frac{\partial L}{\partial w_j}.} \]</div>
+<p>For the bias, use the same rule:</p>
+<div class="math">\[ b^{\mathrm{new}}=b^{\mathrm{old}} -\eta\,\frac{\partial L}{\partial b}. \]</div>
+<p>All derivatives are evaluated at the same old setting. Compute the gradient first, then update the parameters together. Recomputing a derivative halfway through the update would give a different procedure.</p>
+<p>If a derivative is positive, increasing that parameter locally raises the loss, so the update decreases it. If the derivative is negative, the update increases the parameter. The minus sign handles both cases. At a setting with a nonzero gradient, a sufficiently small positive learning rate decreases the loss. A large step can overshoot the region where the local slope is a useful guide.</p>
+<p>In threshold notation, the rule becomes</p>
+<div class="math">\[ \boxed{\displaystyle \theta^{\mathrm{new}} = \theta^{\mathrm{old}} +\eta\,\frac{1}{n}\sum_i e_i.} \]</div>
+<p>The plus sign is worth checking against the score. A positive mean error means that the mean predicted probability exceeds the mean label. Raising \(\theta\) lowers every score, with the weights held fixed, and therefore lowers every predicted probability.</p>
+<h3 id="s-2-2">2.2 One complete update on AND</h3>
+<section class="worked" id="ex-2-1">
+<h4 class="example"><span class="label">Example 2.1</span> From three correct rows to four</h4>
+<p>Start at \(\mathbf{w}=(1,2)\), \(\theta=1.5\). The unit predicts 1 when its score is at least zero. Its initial scores on the four AND rows are \(-1.5\), \(+0.5\), \(-0.5\), and \(+1.5\), so it gets \((0,1)\) wrong. The loss is about \(0.4627\).</p>
+<p>Using the probabilities rounded to two decimal places gives this calculation:</p>
+<div class="tables">
+<table class="tt">
+<tr><th style="text-align:center">\(x_1\)</th><th style="text-align:center">\(x_2\)</th><th class="rule" style="text-align:center">\(y\)</th><th class="rule" style="text-align:center">\(\hat y\)</th><th class="rule" style="text-align:right">\(e=\hat y-y\)</th><th class="rule" style="text-align:right">\(e x_1\)</th><th class="rule" style="text-align:right">\(e x_2\)</th></tr>
+<tr><th style="text-align:center">0</th><th style="text-align:center">0</th><th class="rule" style="text-align:center">0</th><th class="rule" style="text-align:center">0.18</th><th class="rule" style="text-align:right">\(+0.18\)</th><th class="rule" style="text-align:right">\(0.00\)</th><th class="rule" style="text-align:right">\(0.00\)</th></tr>
+<tr><th style="text-align:center">0</th><th style="text-align:center">1</th><th class="rule" style="text-align:center">0</th><th class="rule" style="text-align:center">0.62</th><th class="rule" style="text-align:right">\(+0.62\)</th><th class="rule" style="text-align:right">\(0.00\)</th><th class="rule" style="text-align:right">\(+0.62\)</th></tr>
+<tr><th style="text-align:center">1</th><th style="text-align:center">0</th><th class="rule" style="text-align:center">0</th><th class="rule" style="text-align:center">0.38</th><th class="rule" style="text-align:right">\(+0.38\)</th><th class="rule" style="text-align:right">\(+0.38\)</th><th class="rule" style="text-align:right">\(0.00\)</th></tr>
+<tr><th style="text-align:center">1</th><th style="text-align:center">1</th><th class="rule" style="text-align:center">1</th><th class="rule" style="text-align:center">0.82</th><th class="rule" style="text-align:right">\(-0.18\)</th><th class="rule" style="text-align:right">\(-0.18\)</th><th class="rule" style="text-align:right">\(-0.18\)</th></tr>
+<tr><td colspan="4" style="text-align:right">mean</td><td class="rule" style="text-align:right">\(+0.25\)</td><td class="rule" style="text-align:right">\(+0.05\)</td><td class="rule" style="text-align:right">\(+0.11\)</td></tr>
+</table>
+</div>
+<p>Every mean divides by four, including the zero entries. The gradient with respect to \((w_1,w_2,\theta)\) is approximately \((0.05,0.11,-0.25)\).</p>
+<p>At learning rate \(\eta=2\), the update is</p>
+<div class="math">\[ \begin{aligned} w_1^{\mathrm{new}} &amp;= 1-2(0.05)=0.90,\\ w_2^{\mathrm{new}} &amp;= 2-2(0.11)=1.78,\\ \theta^{\mathrm{new}} &amp;= 1.5-2(-0.25)=2.00. \end{aligned} \]</div>
+<p>The updated score is \(s=0.90x_1+1.78x_2-2.00\):</p>
+<div class="tables">
+<table class="tt">
+<tr><th style="text-align:center">\(x_1\)</th><th style="text-align:center">\(x_2\)</th><th class="rule" style="text-align:center">label</th><th class="rule" style="text-align:right">new score</th><th class="rule" style="text-align:center">prediction</th></tr>
+<tr><td style="text-align:center">0</td><td style="text-align:center">0</td><td class="rule" style="text-align:center">0</td><td class="rule" style="text-align:right">\(-2.00\)</td><td class="rule" style="text-align:center">0</td></tr>
+<tr><td style="text-align:center">0</td><td style="text-align:center">1</td><td class="rule" style="text-align:center">0</td><td class="rule" style="text-align:right">\(-0.22\)</td><td class="rule" style="text-align:center">0</td></tr>
+<tr><td style="text-align:center">1</td><td style="text-align:center">0</td><td class="rule" style="text-align:center">0</td><td class="rule" style="text-align:right">\(-1.10\)</td><td class="rule" style="text-align:center">0</td></tr>
+<tr><td style="text-align:center">1</td><td style="text-align:center">1</td><td class="rule" style="text-align:center">1</td><td class="rule" style="text-align:right">\(+0.68\)</td><td class="rule" style="text-align:center">1</td></tr>
+</table>
+</div>
+<p>All four classifications are now correct. The loss has fallen to about \(0.3533\). Using unrounded probabilities changes the new weights slightly, to approximately \((0.90244,1.77998)\), and gives the same loss to four decimal places.</p>
+<p>The threshold changed the most: it rose by \(0.50\), while the weights fell by \(0.10\) and \(0.22\). Its direction comes from the positive mean error. This is a statement about the probabilities: three of the four classifications were already correct before the update.</p>
+</section>
+<p>One step need not fix every classification. From this same starting setting, \(\eta=0.5\) still leaves \((0,1)\) on the wrong side of the line. The update aims to reduce the mean loss; it makes no promise to correct a particular row in one step.</p>
+<h3 id="s-2-3">2.3 Putting the update in a loop</h3>
+<p>After changing the parameters, recompute the predictions and the gradient. The repeated calculation is:</p>
+<ol>
+<li>Compute each row’s probability \(\hat y_i\) at the current setting.</li>
+<li>Compute each error \(e_i=\hat y_i-y_i\).</li>
+<li>For each weight, average \(e_i x_{ij}\); for the bias, average \(e_i\).</li>
+<li>Subtract \(\eta\) times each derivative from its parameter.</li>
+<li>Repeat until the chosen stopping condition is met.</li>
+</ol>
+<p>This is <strong>full-batch gradient descent</strong>: every update uses every training row. It is like completing the whole practice quiz before using its feedback to adjust how you study.</p>
+<p>With NumPy arrays, the loop can be written as follows. Here <code>X</code> has one row per example and one column per input; <code>y</code> is a one-dimensional array of labels. <code>unit.probability(X)</code> returns the corresponding one-dimensional array of probabilities at \(T=1\), and <code>unit.w</code> holds the weights.</p>
+<pre class="code">import numpy as np
+
+unit.w = np.asarray(unit.w, dtype=float)
+for step in range(n_steps):
+    p = unit.probability(X)
+    err = p - y
+    grad_w = (X.T @ err) / len(y)
+    grad_theta = -err.mean()
+    unit.w -= eta * grad_w
+    unit.theta -= eta * grad_theta</pre>
+<p>For arrays, <code>p - y</code> subtracts corresponding entries. If <code>p</code> contains \([0.18,0.62,0.38,0.82]\) and <code>y</code> contains \([0,0,0,1]\), the result contains \([0.18,0.62,0.38,-0.18]\). Plain Python lists do not support this subtraction.</p>
+<p>The expression <code>X.T @ err</code> computes a dot product for each input column. Its \(j\)-th entry is \(\sum_i x_{ij}e_i\). Dividing by <code>len(y)</code> gives the required average. It is the <em>average of the products</em>, not the product of the average input and the average error. NumPy performs the row arithmetic inside its array operations; writing one line does not remove that work.</p>
+<p>Both gradients are computed before either parameter update, so they use the same predictions. The last line could equivalently be written <code>unit.theta += eta * err.mean()</code>.</p>
+<p>If there are 100 practice questions, you might instead review your mistakes after each group of ten. Training can also update from a subset of rows: <strong>mini-batch gradient descent</strong> uses the mean gradient contribution from a small batch. A randomly sampled batch gives an estimate of the full gradient. It costs less per update, but its direction varies with the sample and an individual update can increase the full-dataset loss.</p>
+<h3 id="s-2-4">2.4 Watching the unit learn a gate</h3>
+<p>Start a fresh AND unit with all parameters zero and use \(\eta=4\). Every initial probability is \(0.5\). The errors are \(+0.5,+0.5,+0.5,-0.5\). For either weight, the positive and negative contributions cancel; the mean error is \(0.25\). The first step therefore leaves both weights at zero and raises the threshold to 1.</p>
+<p>At this point every score is \(-1\). The unit predicts 0 on all four rows, which matches the three zero labels. It has no decision line yet: with both weights zero, changing the inputs cannot change its prediction. Later steps give the weights nonzero values and allow the unit to distinguish the corners.</p>
+<figure><img src="images/boundary-moves.svg" alt="Four panels of the unit square at steps 1, 10, 50 and 200 of descent, with losses 0.563, 0.252, 0.080 and 0.022: at step 1 there is no line yet; afterwards a line appears and moves until it separates the corner (1,1), on the shaded firing side, from the other three." width="547" height="197"></figure>
+<p>The line separates predictions 0 and 1; the shading shows the probabilities. AND treats its two inputs symmetrically. Starting with equal weights and applying the same rule to each keeps them equal.</p>
+<div class="tables">
+<table class="tt">
+<tr><th style="text-align:right">updates</th><th class="rule" style="text-align:right">loss</th><th class="rule" style="text-align:left">\((w_1,w_2,\theta)\)</th></tr>
+<tr><td style="text-align:right">1</td><td class="rule" style="text-align:right">0.5633</td><td class="rule" style="text-align:left">\((0.000,\ 0.000,\ 1.000)\)</td></tr>
+<tr><td style="text-align:right">10</td><td class="rule" style="text-align:right">0.2523</td><td class="rule" style="text-align:left">\((1.812,\ 1.812,\ 3.002)\)</td></tr>
+<tr><td style="text-align:right">50</td><td class="rule" style="text-align:right">0.0801</td><td class="rule" style="text-align:left">\((4.277,\ 4.277,\ 6.607)\)</td></tr>
+<tr><td style="text-align:right">200</td><td class="rule" style="text-align:right">0.0216</td><td class="rule" style="text-align:left">\((6.976,\ 6.976,\ 10.637)\)</td></tr>
+<tr><td style="text-align:right">2,000</td><td class="rule" style="text-align:right">0.0021</td><td class="rule" style="text-align:left">\((11.628,\ 11.628,\ 17.610)\)</td></tr>
+</table>
+</div>
+<p>The unit first classifies all four rows correctly after four updates. The later updates keep reducing the loss by making the correct predictions more confident. The boundary can change very little while the probabilities continue to change substantially.</p>
+<p>The same loop can train separate units on OR and NAND. Keep the inputs, zero initialization, and learning rate 4; change the labels:</p>
+<div class="tables">
+<table class="tt">
+<tr><th style="text-align:left">table</th><th class="rule" style="text-align:center">first all-correct step</th><th class="rule" style="text-align:center">loss at step 200</th><th class="rule" style="text-align:center">all rows correct?</th></tr>
+<tr><td style="text-align:left">AND</td><td class="rule" style="text-align:center">4</td><td class="rule" style="text-align:center">0.0216</td><td class="rule" style="text-align:center">yes</td></tr>
+<tr><td style="text-align:left">OR</td><td class="rule" style="text-align:center">5</td><td class="rule" style="text-align:center">0.0116</td><td class="rule" style="text-align:center">yes</td></tr>
+<tr><td style="text-align:left">NAND</td><td class="rule" style="text-align:center">4</td><td class="rule" style="text-align:center">0.0216</td><td class="rule" style="text-align:center">yes</td></tr>
+</table>
+</div>
+<p>Each run learns its own parameters. The labels specify which function the run should fit; we do not supply a separate hand-chosen update rule for each gate.</p>
+<h3 id="s-2-5">2.5 When to stop</h3>
+<p>For AND, a finite sigmoid score always gives a probability strictly between 0 and 1. Once every row has a score strictly on the correct side of zero, scaling up all three parameters makes every probability closer to its label. The loss approaches zero but never reaches zero at finite parameter values. With all three parameters free, this problem has no finite loss-minimizing setting.</p>
+<p>Waiting for the gradient to become exactly zero would therefore give no mathematical stopping point for this AND run. We can instead choose a number of updates, a tolerance for the gradient’s size, or a tolerance for the improvement in loss. The condition should match what we need: reproducing a truth table and fitting its probabilities to high confidence are different requirements.</p>
+<p>On other datasets, a zero gradient can occur at finite parameters, including when individual errors cancel. Also, tiny parameter changes may simply mean that the learning rate is tiny. Neither observation by itself proves that every prediction is good.</p>
+<h3 id="s-2-6">2.6 Cost and the weather example</h3>
+<p>Computing all components of the gradient takes a pass over the data. For \(n\) rows with \(d\) inputs, the direct calculation uses work proportional to \(nd\), as does computing all predictions and the loss. The gradient does not require a separate dataset pass for each parameter. The total training cost also depends on how many updates are needed.</p>
+<p>On AND, 50 gradient updates from zero at \(\eta=4\) reach loss \(0.080\). For comparison, the meeting-5 grid tests \(25^3=15{,}625\) settings and finds loss \(0.096\); the displayed random-search run reaches about \(0.11\) after 1,000 guesses. Counting data passes gives an approximate cost comparison. These are results for the specified runs: the grid and random search use a bounded search box, while this gradient run is not restricted to that box.</p>
+<p>For the Newark weather data, the inputs are daily high and low temperatures, and the label says whether the date falls in the warm half of the year, May through October. We use the same 6,865 complete rows as before; the date itself is not an input. Start from the hand line high \(+\) low \(=120\), expressed at \(T=1\) as \(\mathbf{w}=(0.1,0.1)\) and \(b=-12\). Updating all three parameters at \(\eta=0.002\) gives:</p>
+<div class="tables">
+<table class="tt">
+<tr><th style="text-align:right">updates</th><th class="rule" style="text-align:center">loss</th><th class="rule" style="text-align:center">days classified correctly</th></tr>
+<tr><td style="text-align:right">0</td><td class="rule" style="text-align:center">0.2447</td><td class="rule" style="text-align:center">89.7%</td></tr>
+<tr><td style="text-align:right">100</td><td class="rule" style="text-align:center">0.2234</td><td class="rule" style="text-align:center">90.6%</td></tr>
+<tr><td style="text-align:right">500</td><td class="rule" style="text-align:center">0.2181</td><td class="rule" style="text-align:center">90.8%</td></tr>
+<tr><td style="text-align:right">40,000</td><td class="rule" style="text-align:center">0.2174</td><td class="rule" style="text-align:center">91.0%</td></tr>
+</table>
+</div>
+<p>Much of the measured improvement arrives in the first few hundred updates. Here the loss settles near \(0.22\), well above zero. The dataset contains identical high–low pairs with opposite labels, so these two inputs cannot determine every label correctly, regardless of how long we train. The reported percentages are measured on the training rows; they do not measure performance on unseen days.</p>
+<h2 class="act" id="act-3">Act 3. The Learning Rate</h2>
+<h3 id="s-3-1">3.1 How far does a step go?</h3>
+<p>The gradient gives a direction and a magnitude. The learning rate scales the change. If \(\boldsymbol{q}\) contains all the parameters being trained, then</p>
+<div class="math">\[ \Delta\boldsymbol{q}=-\eta\nabla L, \qquad \|\Delta\boldsymbol{q}\|=\eta\|\nabla L\|. \]</div>
+<p>Here \(\nabla L\) includes the derivatives for every component of \(\boldsymbol{q}\), including the bias or threshold if it is free. A learning rate of 2 does not mean moving a distance of 2. At a fixed rate, the steps shrink when the gradient shrinks.</p>
+<p>The slope is local. In the fog analogy, feeling downhill under one foot does not tell you how the ground behaves fifty meters away. For a small step, the first-order estimate is</p>
+<div class="math">\[ L(\boldsymbol{q}-\eta\nabla L) \approx L(\boldsymbol{q})-\eta\|\nabla L\|^2. \]</div>
+<p>If the gradient is nonzero, this predicts a decrease. The approximation becomes less reliable as the step grows.</p>
+<p>A very small learning rate can make progress slow. On AND, starting at \((1,2,1.5)\) with \(\eta=0.01\), the loss goes from \(0.4627\) to \(0.4482\) after 20 steps and \(0.4037\) after 100. The unit still misclassifies \((0,1)\) at step 100.</p>
+<h3 id="s-3-2">3.2 Overshooting</h3>
+<p>An excessive rate can send the unit across a valley and up the other side. The next gradient may point back, producing repeated large swings. A direction that is downhill locally can still lead to a higher loss if followed too far.</p>
+<p>The weather example makes this visible. From the same hand-line starting setting, \(\eta=0.002\) gives a steady decrease in the plotted run. At \(\eta=0.005\) the loss oscillates, and at \(\eta=0.01\) the swings are much larger.</p>
+<figure><img src="images/descent-rates.svg" alt="Cross-entropy loss against update step, 0 to 25, for three learning rates starting from the hand-drawn line: eta = 0.002 decreases steadily and stays down, eta = 0.005 oscillates, and eta = 0.01 swings far up. A dashed line marks 0.69, the loss of a unit that says one half every day." width="482" height="270"></figure>
+<p>For \(\eta=0.01\), the first two updates take the loss from about \(0.245\) to \(0.505\) and then \(3.821\). The gradient formula has not changed; the step is too large for this setting and scale of inputs. A rate that works on the 0-or-1 inputs of AND need not work on temperatures measured in degrees.</p>
+<h3 id="s-3-3">3.3 Reducing the rate during training</h3>
+<p>We often make larger adjustments while exploring a problem, then smaller adjustments while refining an answer. A <strong>learning-rate schedule</strong> implements a specified change in the rate over time. One schedule used on the weather example is</p>
+<div class="math">\[ \eta_k=\frac{0.01}{1+k/50},\qquad k=1,2,3,\ldots \]</div>
+<p>where \(k\) counts updates. The first rate is about \(0.0098\); at update 50 it is \(0.005\), and at update 200 it is \(0.002\).</p>
+<figure><img src="images/descent-decay.svg" alt="Cross-entropy loss against update step, 0 to 200, for a fixed small rate of 0.002, a smooth decrease; a fixed large rate of 0.01, large oscillations that never settle; and a rate that starts at 0.01 and is divided by 1 + k/50, whose early oscillations die out." width="482" height="270"></figure>
+<p>The scheduled run initially overshoots too, but the oscillations subside as the rate decreases. After 200 updates its loss is about \(0.2201\), compared with \(0.2207\) for the fixed rate \(0.002\). The fixed small rate already works well here; the schedule shows how reducing a rate can stabilize a run that begins with overly large steps. A decreasing schedule does not automatically outperform a well-chosen constant rate.</p>
+<aside class="note"><span class="lead">Trying the interactive landscape.</span> <p>Reset to the same starting point when comparing rates. Take several steps, watch the loss, and check how the direction changes after each step. A single successful step is not enough to judge a rate.</p>
+<p>The two-dimensional interactive fixes \(\theta=1.5\) for AND and \(b=-12\) for weather. It updates only the two weights. The hand calculation and training runs above update all three parameters, so their paths and final losses need not match the interactive.</p>
+</aside>
+<h3 id="s-3-4">3.4 Learning analogies</h3>
+<p>The phrase “the neuron reacts to its mistakes” describes a computation: form errors, average their gradient contributions, and update the parameters. It is a useful way to talk about the loop. It does not establish that biological neurons or people learn by this exact rule.</p>
+<p>Other intuitions from studying can suggest changes to training. Keeping some of the previous direction resembles <strong>momentum</strong>, which carries information from earlier updates into the next one. Working from easier examples toward harder ones suggests <strong>curriculum learning</strong>. To tell whether such a change helps, we need a specified algorithm and a comparison of its results.</p>
+<p class="source">For curriculum learning: Bengio et al., <a href="https://doi.org/10.1145/1553374.1553380"><em>Curriculum Learning</em></a> (2009).</p>
+<p>In a larger network, <strong>dropout</strong> randomly omits units during training, temporarily removing their contributions and associated connections. The network is thus trained with different subsets of units present. Dropout does not mean discarding difficult rows or removing outliers from the data.</p>
+<p class="source">For the method and its motivation: Srivastava et al., <a href="https://www.jmlr.org/papers/v15/srivastava14a.html"><em>Dropout: A Simple Way to Prevent Neural Networks from Overfitting</em></a> (2014).</p>
+<p>Attention gives another comparison. A teacher trying to follow every conversation in a room has to distribute attention somehow. In a Transformer’s attention mechanism, each position in a sequence can assign different numerical weights to information from the available positions. Within one such calculation, the weights are nonnegative and add to one, and the output is a weighted sum. The model forms many of these combinations, each with its own weights. The classroom comparison helps us picture distributing emphasis; the model’s “attention” is this numerical operation.</p>
+<p class="source">For the attention calculation: Vaswani et al., <a href="https://arxiv.org/abs/1706.03762"><em>Attention Is All You Need</em></a> (2017), Section 3.2.</p>
+<footer>
+<span>CS 301 · Meeting 6 · <a href="index.html">all meetings</a></span>
+<span>generated from meeting-06.tex on 2026-09-28</span>
+</footer>
+</main>
+</body>
+</html>
