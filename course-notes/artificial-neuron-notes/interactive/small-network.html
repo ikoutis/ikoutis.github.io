@@ -480,6 +480,7 @@ function drawPlot() {
 // named after the row it belongs to ("row (0,1)"), and the name is written outside the square with a
 // leader, so that it cannot be read as the point's position in this plane. (Revised 2026-09-28: the
 // names were written beside the points as "(0,1)", and read in class as misplaced coordinates.)
+// Keep marker centres at the computed outputs. Coincident rows share a marker; never jitter them.
 var hid = el("hid"), hc = hid.getContext("2d");
 var SAMPLE = [];
 (function () { for (var i = 0; i < TRAIN.n; i += 7) SAMPLE.push(i); })();          // every seventh training day
@@ -515,13 +516,17 @@ function drawHidden() {
     hc.beginPath(); hc.moveTo(hx(-net.c / net.v[0]), hy(-1)); hc.lineTo(hx(-net.c / net.v[0]), hy(2)); hc.stroke();
   }
   hc.restore();
+  hc.save(); hc.strokeStyle = "rgba(85,85,85,0.18)"; hc.lineWidth = 0.6;
+  hc.beginPath(); hc.moveTo(hx(0.5), y1); hc.lineTo(hx(0.5), y0);
+  hc.moveTo(x0, hy(0.5)); hc.lineTo(x1, hy(0.5)); hc.stroke(); hc.restore();
   hc.strokeStyle = "#999"; hc.lineWidth = 1; hc.strokeRect(x0, y1, x1 - x0, y0 - y1);
 
   // axes: the two hidden outputs
   var n1 = view === 1 ? "the OR unit's output" : "hidden unit 1's output", n2 = view === 1 ? "the NAND unit's output" : "hidden unit 2's output";
   hc.fillStyle = "#555"; hc.font = "11px sans-serif"; hc.textAlign = "center";
-  hc.fillText("0", x0, y0 + 13); hc.fillText("1", x1, y0 + 13);
-  hc.textAlign = "right"; hc.fillText("0", x0 - 6, y0 + 4); hc.fillText("1", x0 - 6, y1 + 4);
+  [0, 0.5, 1].forEach(function (value) { hc.fillText(String(value), hx(value), y0 + 13); });
+  hc.textAlign = "right";
+  [0, 0.5, 1].forEach(function (value) { hc.fillText(String(value), x0 - 6, hy(value) + 4); });
   hc.textAlign = "center"; hc.font = "bold 11px sans-serif";
   hc.fillText(n1, (x0 + x1) / 2, H - 6);
   hc.save(); hc.translate(13, (y0 + y1) / 2); hc.rotate(-Math.PI / 2); hc.fillText(n2, 0, 0); hc.restore();
@@ -535,11 +540,11 @@ function drawHidden() {
     return;
   }
 
-  // the four rows; rows that land on the same place are drawn side by side and share one name
+  // Group only identical plotted positions. Nearby rows retain their own coordinates and leaders.
   var groups = [];
   for (var k = 0; k < 4; k++) {
     var g = forward(net, XOR.x1[k], XOR.x2[k]), p = { k: k, u: hx(g[0]), v: hy(g[1]) }, home = null;
-    for (var j = 0; j < groups.length; j++) if (!home && Math.abs(groups[j].u - p.u) < 12 && Math.abs(groups[j].v - p.v) < 12) home = groups[j];
+    for (var j = 0; j < groups.length; j++) if (!home && groups[j].u === p.u && groups[j].v === p.v) home = groups[j];
     if (home) home.rows.push(p); else groups.push({ u: p.u, v: p.v, rows: [p] });
   }
   hc.font = "11px sans-serif";
@@ -558,16 +563,29 @@ function drawHidden() {
       row[m].x = Math.max(4 + row[m].w / 2, Math.min(row[m].x, limit));
     }
   });
+  // Draw all leaders first so that they do not cover another row's marker.
   groups.forEach(function (G) {
     var ty = G.top ? y1 - 10 : y0 + 29;                                            // the baseline of the name
     hc.strokeStyle = "#999"; hc.lineWidth = 1;
     hc.beginPath(); hc.moveTo(G.u, G.v); hc.lineTo(G.x, G.top ? ty + 3 : ty - 11); hc.stroke();
-    G.rows.forEach(function (r, i) {
-      hc.beginPath(); hc.arc(G.u + (i - (G.rows.length - 1) / 2) * 9, G.v, 6.5, 0, 2 * Math.PI);
-      hc.fillStyle = XOR.y[r.k] ? "#CC0033" : "#fff"; hc.fill();
-      hc.strokeStyle = "#1A1A1A"; hc.lineWidth = 1.6; hc.stroke();
-    });
     hc.fillStyle = "#1A1A1A"; hc.textAlign = "center"; hc.fillText(G.text, G.x, ty);
+  });
+  groups.forEach(function (G) {
+    // If coincident rows have different XOR labels, show both colours at the same centre.
+    var label = XOR.y[G.rows[0].k];
+    if (G.rows.every(function (r) { return XOR.y[r.k] === label; })) {
+      hc.beginPath(); hc.arc(G.u, G.v, 6.5, 0, 2 * Math.PI);
+      hc.fillStyle = label ? "#CC0033" : "#fff"; hc.fill();
+    } else {
+      G.rows.forEach(function (r, i) {
+        hc.beginPath(); hc.moveTo(G.u, G.v);
+        hc.arc(G.u, G.v, 6.5, -Math.PI / 2 + i * 2 * Math.PI / G.rows.length,
+               -Math.PI / 2 + (i + 1) * 2 * Math.PI / G.rows.length);
+        hc.closePath(); hc.fillStyle = XOR.y[r.k] ? "#CC0033" : "#fff"; hc.fill();
+      });
+    }
+    hc.beginPath(); hc.arc(G.u, G.v, 6.5, 0, 2 * Math.PI);
+    hc.strokeStyle = "#1A1A1A"; hc.lineWidth = 1.6; hc.stroke();
   });
 }
 // what the small plane shows, in words, with one row as the example
@@ -578,7 +596,7 @@ function hiddenHint() {
   }
   var net = currentNet(), g = forward(net, 0, 0), names = view === 1 ? ["the OR unit", "the NAND unit"] : ["hidden unit 1", "hidden unit 2"];
   return "Each point is one row of the table. Its name says which row; its position is what the two hidden units give on that row, " +
-    "the two middle columns of the table. On row (0,0), " + names[0] + " gives " + g[0].toFixed(2) + " and " + names[1] + " gives " +
+    "the two middle columns of the table. Rows with identical hidden outputs share one marker. On row (0,0), " + names[0] + " gives " + g[0].toFixed(2) + " and " + names[1] + " gives " +
     g[1].toFixed(2) + ", so the point is " + g[0].toFixed(2) + " across and " + g[1].toFixed(2) + " up.";
 }
 
