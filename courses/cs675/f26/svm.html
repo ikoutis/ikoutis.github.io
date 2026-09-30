@@ -1,0 +1,550 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CS 675 — The widest street</title>
+<!--
+  CS 675 Machine Learning, week 5 (Module 7: support vector classifiers).
+  Companion to sections 7.1, 7.3, 7.5 and 7.6 of the notes. Two classes of
+  points on a plane; the classifier puts the widest street between them
+  (the margin, 2/|w|) with the boundary down the middle, and the only
+  points that matter are the ones on the curb, the support vectors. Drag
+  points, add points, remove points, and watch.
+
+  Two modes. Without slacks (the hard margin) every point must stay off
+  the street, so one stray point can narrow it or make it impossible.
+  With slacks, a point may step onto the street, or across it, and pays C
+  per unit of trespass zeta_i; the slider moves C over five decades and the
+  street trades width for trespassers. Slacks are drawn as the segment from
+  the point to where its class's curb is, and their sum is shown.
+
+  Solvers. The hard margin is solved exactly: in the plane the optimal
+  street rests on two points (one per class, the boundary their
+  perpendicular bisector) or on three (two of one class and one of the
+  other, the curbs parallel to the pair), so the page tries every such
+  candidate, keeps the valid ones and takes the widest; no valid candidate
+  means the classes are not linearly separable. The soft margin is solved
+  by Platt's SMO on the dual, with the linear kernel. Both are instant for
+  the hundred-odd points a hand can place.
+
+  Two of the presets are real: 30 January-February days against 30
+  July-August days (separable), and 30 March-April days against 30
+  September-October days (not), drawn at random from the Newark training
+  years 2006-2017, in degrees Fahrenheit. Self-contained on purpose: no
+  CDN, no fonts, no network.
+-->
+<style>
+  :root {
+    --red: #CC0033;
+    --blue: #1F5FA8;
+    --gold: #F5A623;
+    --ink: #1A1A1A;
+    --muted: #555;
+    --faint: #DDD;
+    --paper: #F7F7F5;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    padding: 24px 20px 40px;
+    font-family: "DM Sans", -apple-system, BlinkMacSystemFont, "Segoe UI",
+                 Roboto, Helvetica, Arial, sans-serif;
+    color: var(--ink);
+    background: #fff;
+    line-height: 1.6;
+  }
+  .wrap { max-width: 1040px; margin: 0 auto; }
+  header { border-top: 4px solid var(--red); padding-top: 16px; margin-bottom: 18px; }
+  .eyebrow {
+    font-size: 11px; font-weight: 700; letter-spacing: .12em;
+    text-transform: uppercase; color: var(--red); margin-bottom: 4px;
+  }
+  h1 { font-size: 22px; font-weight: 600; margin: 0 0 6px; }
+  header p { margin: 0; color: var(--muted); font-size: 14px; }
+
+  .panel { display: flex; flex-wrap: wrap; gap: 28px; align-items: flex-start; }
+  .left { flex: 1 1 520px; min-width: 300px; }
+  .right { flex: 0 1 330px; min-width: 270px; }
+  canvas.plot { width: 100%; height: auto; display: block; border: 1px solid var(--faint); border-radius: 3px; background: #fff; touch-action: none; cursor: crosshair; }
+  .hint { font-size: 12.5px; color: var(--muted); margin-top: 6px; }
+  .story { font-size: 13.5px; color: var(--ink); margin-top: 14px; background: var(--paper); padding: 10px 14px; border-radius: 3px; }
+  .story p { margin: 0 0 6px; }
+  .story p:last-child { margin: 0; }
+
+  .label { font-size: 12px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); margin: 0 0 6px; }
+  .choices { display: flex; gap: 5px; flex-wrap: wrap; margin-bottom: 14px; }
+  .choices button {
+    font: inherit; font-size: 13px; font-weight: 600;
+    padding: 5px 10px; border: 1px solid var(--faint); background: #fff;
+    color: var(--muted); border-radius: 3px; cursor: pointer;
+  }
+  .choices button:hover { border-color: var(--muted); }
+  .choices button[aria-pressed="true"] { background: var(--ink); border-color: var(--ink); color: #fff; }
+  .choices.cls button[data-c="1"][aria-pressed="true"] { background: var(--red); border-color: var(--red); }
+  .choices.cls button[data-c="-1"][aria-pressed="true"] { background: var(--blue); border-color: var(--blue); }
+  .choices.mode button[aria-pressed="true"] { background: var(--red); border-color: var(--red); }
+
+  .slider { margin-bottom: 12px; }
+  .slider label { display: flex; justify-content: space-between; align-items: baseline; font-size: 13px; color: var(--muted); margin-bottom: 2px; }
+  .val { font-family: ui-monospace, "JetBrains Mono", Menlo, Consolas, monospace; font-size: 13px; color: var(--ink); font-weight: 600; }
+  .slider input { width: 100%; accent-color: var(--red); }
+  .slider.off { opacity: 0.45; }
+
+  .toggle { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--muted); margin: 8px 0; }
+  .toggle input { accent-color: var(--red); width: 16px; height: 16px; }
+
+  table.readout { border-collapse: collapse; margin-top: 6px; font-size: 13px; width: 100%; }
+  table.readout th, table.readout td { padding: 3px 8px; text-align: left; vertical-align: top; }
+  table.readout th { font-weight: 500; color: var(--muted); width: 54%; }
+  table.readout td { font-family: ui-monospace, "JetBrains Mono", Menlo, Consolas, monospace; font-weight: 600; }
+  table.readout tr.red td { color: var(--red); }
+
+  footer { margin-top: 32px; padding-top: 14px; border-top: 1px solid var(--faint); font-size: 12.5px; color: var(--muted); }
+  footer a { color: inherit; }
+  code { font-family: ui-monospace, "JetBrains Mono", Menlo, Consolas, monospace; background: var(--paper); padding: 1px 4px; border-radius: 2px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div class="eyebrow">CS 675 &middot; Machine Learning &middot; Week 5</div>
+    <h1>The widest street</h1>
+    <p>A support vector classifier puts the widest possible street between two classes, with the decision boundary down
+       the middle, and keeps every point off it. Drag the points. Then let a few of them onto the street, at a price.</p>
+  </header>
+
+  <div class="panel">
+    <div class="left">
+      <canvas id="plot" class="plot" width="660" height="470" role="img"
+              aria-label="Two classes of points on a plane with the maximum-margin boundary, its two margin lines, the support vectors ringed, and the slack of each violating point drawn as a segment"></canvas>
+      <div class="hint">Drag a point to move it &middot; click on empty space to add a point of the chosen class &middot; shift-click a point to remove it.</div>
+      <div class="story">
+        <p><strong>What to look at.</strong> Drag a point that is not ringed: the street does not move. Drag a ringed
+           one, a <strong>support vector</strong>, and the whole street turns. Only the points on the curb matter; the
+           rest could be deleted and nothing would change.</p>
+        <p>Choose <strong>one stray point</strong>. Without slacks the street must squeeze past it: narrow and tilted,
+           decided by a single point. Switch <strong>slacks</strong> on. The stray point may now stand on the street, or
+           across it, and pays a fine of <em>C</em> per unit of trespass &zeta;. At a small <em>C</em> the fine is cheap,
+           the street stays wide and the point is ignored; raise <em>C</em> and the street narrows again to avoid paying.</p>
+        <p>Choose <strong>overlap</strong>. Without slacks there is no street at all; with them there is always one.
+           Move <em>C</em> across its range and watch the trade: a wide street with many trespassers, or a narrow one
+           with few. The two Newark presets are the same story in degrees Fahrenheit; there the weights are small
+           numbers, so the interesting prices are the small ones, below 0.01.</p>
+      </div>
+    </div>
+
+    <div class="right">
+      <div class="label">the data</div>
+      <div class="choices" id="data" role="group" aria-label="Choose a data set">
+        <button type="button" data-d="clouds" aria-pressed="true">two clouds</button>
+        <button type="button" data-d="stray">one stray point</button>
+        <button type="button" data-d="overlap">overlap</button>
+        <button type="button" data-d="winterSummer">Newark: Jan&ndash;Feb vs Jul&ndash;Aug</button>
+        <button type="button" data-d="springFall">Newark: Mar&ndash;Apr vs Sep&ndash;Oct</button>
+        <button type="button" data-d="empty">empty plane</button>
+      </div>
+
+      <div class="label">click adds a point of this class</div>
+      <div class="choices cls" id="cls" role="group" aria-label="Class of a new point">
+        <button type="button" data-c="1" aria-pressed="true">red, y = +1</button>
+        <button type="button" data-c="-1" aria-pressed="false">blue, y = &minus;1</button>
+      </div>
+
+      <div class="label">slacks</div>
+      <div class="choices mode" id="mode" role="group" aria-label="Hard or soft margin">
+        <button type="button" data-m="hard" aria-pressed="true">none: every point off the street</button>
+        <button type="button" data-m="soft" aria-pressed="false">allowed, at a price <em>C</em></button>
+      </div>
+      <div class="slider off" id="cbox">
+        <label for="logC"><span>the price of slack, <em>C</em> (log scale)</span> <span class="val" id="cv"></span></label>
+        <input type="range" id="logC" min="-4" max="3" step="0.05" value="0">
+      </div>
+      <label class="toggle"><input type="checkbox" id="showSlack" checked> draw each slack &zeta;<sub>i</sub></label>
+
+      <table class="readout">
+        <tr><th>points, red / blue</th><td id="rn"></td></tr>
+        <tr class="red"><th>width of the street, 2/&#8214;w&#8214;</th><td id="rwidth"></td></tr>
+        <tr><th>support vectors</th><td id="rsv"></td></tr>
+        <tr><th>points on the street (0 &lt; &zeta; &le; 1)</th><td id="ron"></td></tr>
+        <tr><th>points across it (&zeta; &gt; 1)</th><td id="racross"></td></tr>
+        <tr><th>total slack, &Sigma; &zeta;<sub>i</sub></th><td id="rslack"></td></tr>
+        <tr><th>objective, &frac12;&#8214;w&#8214;&sup2; + C &Sigma; &zeta;<sub>i</sub></th><td id="robj"></td></tr>
+        <tr><th>the boundary</th><td id="req"></td></tr>
+      </table>
+    </div>
+  </div>
+
+  <footer>
+    The classifier solves <code>min &frac12;&#8214;w&#8214;&sup2; + C &Sigma; &zeta;<sub>i</sub></code> subject to
+    <code>y<sub>i</sub>(w&middot;x<sub>i</sub> + b) &ge; 1 &minus; &zeta;<sub>i</sub></code> and <code>&zeta;<sub>i</sub> &ge; 0</code>.
+    The curbs are the lines <code>w&middot;x + b = &plusmn;1</code>, so the street is <code>2/&#8214;w&#8214;</code> wide, and a
+    point's slack is <code>&zeta;<sub>i</sub> = max(0, 1 &minus; y<sub>i</sub>(w&middot;x<sub>i</sub> + b))</code>, the hinge loss
+    of section 7.6; a slack of 1 puts the point on the boundary. Without slacks (<em>C</em> = &infin;) the street exists
+    only when the classes are linearly separable, and the page then solves it exactly: in the plane the widest street
+    rests on two points or on three, so every such candidate is tried and the widest valid one kept. With slacks the
+    dual is solved by Platt's SMO with the linear kernel; a support vector is a point whose dual weight is not zero.
+    The notes write the objective as <code>&#8214;w&#8214;&sup2; + C &Sigma; &zeta;<sub>i</sub></code>, without the half; the
+    street is the same up to a rescaling of <em>C</em>. The Newark presets are 60 days each, drawn at random from the
+    training years 2006&ndash;2017 of the daily high and low at Newark Liberty airport (NOAA GHCN-Daily, station USW00014734),
+    in degrees Fahrenheit. Notes: sections 7.1, 7.3, 7.5 and 7.6 of the
+    <a href="https://ikoutis.github.io/mlnotes/">Machine Learning notes</a>. Back to <a href="index.html">the demos</a>.
+  </footer>
+
+</div>
+
+<script>
+"use strict";
+
+// --- real days for two presets: [high, low, y] -----------------------------------------------
+var REAL = {"winterSummer":[[48.9,43.0,-1],[33.1,19.0,-1],[42.1,29.1,-1],[46.0,30.9,-1],[51.1,36.0,-1],[41.0,25.2,-1],[39.0,28.0,-1],[35.1,22.1,-1],[37.0,24.1,-1],[53.1,37.9,-1],[42.1,25.0,-1],[34.0,24.1,-1],[52.0,37.0,-1],[39.9,28.0,-1],[39.9,30.2,-1],[42.1,30.0,-1],[30.0,14.0,-1],[57.9,42.1,-1],[66.0,45.0,-1],[33.1,23.0,-1],[34.0,24.1,-1],[30.2,18.1,-1],[52.0,34.0,-1],[37.9,28.0,-1],[61.0,33.1,-1],[43.0,30.0,-1],[45.0,30.2,-1],[39.9,32.0,-1],[46.0,28.9,-1],[42.1,21.9,-1],[89.1,64.9,1],[99.0,82.0,1],[82.9,66.0,1],[84.9,63.0,1],[84.0,64.0,1],[93.0,72.0,1],[96.1,75.0,1],[72.0,64.0,1],[91.9,73.0,1],[79.0,71.1,1],[89.1,73.0,1],[97.0,73.0,1],[98.1,75.9,1],[80.1,72.0,1],[95.0,71.1,1],[95.0,70.0,1],[87.1,68.0,1],[81.0,63.0,1],[88.0,71.1,1],[89.1,69.1,1],[84.9,68.0,1],[82.0,64.0,1],[93.0,71.1,1],[91.9,72.0,1],[88.0,72.0,1],[91.0,66.9,1],[93.0,70.0,1],[81.0,66.0,1],[81.0,70.0,1],[90.0,75.9,1]],"springFall":[[37.9,26.1,-1],[54.0,48.9,-1],[90.0,53.1,-1],[55.0,33.1,-1],[43.0,28.2,-1],[68.0,39.9,-1],[41.0,19.2,-1],[60.1,37.9,-1],[55.0,42.1,-1],[57.9,33.1,-1],[60.1,46.0,-1],[57.9,37.0,-1],[48.9,35.1,-1],[57.9,41.0,-1],[54.0,39.0,-1],[64.0,32.0,-1],[41.0,25.0,-1],[55.9,39.0,-1],[81.0,50.0,-1],[59.0,46.0,-1],[62.1,43.0,-1],[64.0,44.1,-1],[61.0,39.0,-1],[54.0,48.9,-1],[86.0,55.0,-1],[55.0,42.1,-1],[64.9,36.0,-1],[77.0,53.1,-1],[31.1,15.3,-1],[55.9,37.0,-1],[59.0,41.0,1],[73.9,48.9,1],[84.0,60.1,1],[64.9,48.9,1],[66.0,50.0,1],[69.1,48.0,1],[66.0,46.9,1],[84.0,55.9,1],[75.9,69.1,1],[71.1,46.9,1],[70.0,54.0,1],[75.0,71.1,1],[71.1,53.1,1],[63.0,57.0,1],[79.0,73.0,1],[72.0,45.0,1],[75.9,55.0,1],[73.9,55.0,1],[70.0,62.1,1],[66.9,52.0,1],[77.0,57.9,1],[79.0,66.9,1],[64.9,48.0,1],[57.0,39.0,1],[71.1,60.1,1],[73.0,55.0,1],[70.0,55.9,1],[64.0,37.0,1],[66.9,46.9,1],[70.0,54.0,1]]};
+
+function mulberry32(seed) {
+  return function () {
+    seed |= 0; seed = seed + 0x6D2B79F5 | 0;
+    var t = Math.imul(seed ^ seed >>> 15, 1 | seed);
+    t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t;
+    return ((t ^ t >>> 14) >>> 0) / 4294967296;
+  };
+}
+function gauss(rnd) { var u = 1 - rnd(), v = rnd(); return Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * v); }
+function cloud(rnd, cx, cy, sd, n, y) {
+  var out = [];
+  for (var i = 0; i < n; i++) out.push({ x: cx + sd * gauss(rnd), y: cy + sd * gauss(rnd), c: y });
+  return out;
+}
+var TOY = { xr: [-6, 6], yr: [-4.5, 4.5], axis: ["x₁", "x₂"], ticks: [-6, -4, -2, 0, 2, 4, 6], yticks: [-4, -2, 0, 2, 4] };
+var DEG = { xr: [10, 110], yr: [0, 90], axis: ["daily high (°F)", "daily low (°F)"], ticks: [20, 40, 60, 80, 100], yticks: [0, 20, 40, 60, 80] };
+var PRESETS = {
+  clouds: function () { var r = mulberry32(11); return { frame: TOY, pts: cloud(r, -3, 2.2, 0.85, 22, 1).concat(cloud(r, 3, -2.2, 0.85, 22, -1)) }; },
+  stray: function () { var r = mulberry32(11); var p = cloud(r, -3, 2.2, 0.85, 22, 1).concat(cloud(r, 3, -2.2, 0.85, 22, -1)); p.push({ x: 0.9, y: -0.9, c: 1 }); return { frame: TOY, pts: p }; },
+  overlap: function () { var r = mulberry32(5); return { frame: TOY, pts: cloud(r, -1.4, 1.1, 1.35, 26, 1).concat(cloud(r, 1.4, -1.1, 1.35, 26, -1)) }; },
+  winterSummer: function () { return { frame: DEG, pts: REAL.winterSummer.map(function (d) { return { x: d[0], y: d[1], c: d[2] }; }) }; },
+  springFall: function () { return { frame: DEG, pts: REAL.springFall.map(function (d) { return { x: d[0], y: d[1], c: d[2] }; }) }; },
+  empty: function () { return { frame: TOY, pts: [] }; }
+};
+
+// --- state ---------------------------------------------------------------------------------------
+var state = { pts: [], frame: TOY, mode: "hard", C: 1, newClass: 1, showSlack: true, sol: null, drag: null, moved: false };
+
+// --- the hard margin, exactly ---------------------------------------------------------------------
+// In the plane the widest street rests on two points (one per class) or on three (two of one class
+// and one of the other). Try every such candidate, keep the ones that keep every point off the
+// street, and return the widest. Returns null when no street exists.
+function hardMargin(pts) {
+  var pos = [], neg = [];
+  pts.forEach(function (p, i) { (p.c > 0 ? pos : neg).push(i); });
+  if (!pos.length || !neg.length) return null;
+  var best = null;
+  function consider(u, mid, half, sv) {          // unit normal u toward the red side, a midpoint, half the width
+    if (!(half > 1e-9)) return;
+    if (best && half <= best.half) return;
+    for (var i = 0; i < pts.length; i++) {
+      var d = (pts[i].x - mid[0]) * u[0] + (pts[i].y - mid[1]) * u[1];
+      if (pts[i].c > 0 ? d < half - 1e-9 : d > -half + 1e-9) return;
+    }
+    best = { u: u, mid: mid, half: half, sv: sv };
+  }
+  var i, j, k, p, q, r, dx, dy, len, u, nrm, dp;
+  for (i = 0; i < pos.length; i++) for (j = 0; j < neg.length; j++) {
+    p = pts[pos[i]]; q = pts[neg[j]]; dx = p.x - q.x; dy = p.y - q.y; len = Math.hypot(dx, dy);
+    if (len < 1e-9) return null;                  // a red and a blue point coincide: nothing separates them
+    consider([dx / len, dy / len], [(p.x + q.x) / 2, (p.y + q.y) / 2], len / 2, [pos[i], neg[j]]);
+  }
+  function triples(pair, other, sign) {          // two of one class, the curbs parallel to them
+    for (var a = 0; a < pair.length; a++) for (var b = a + 1; b < pair.length; b++) {
+      var p1 = pts[pair[a]], p2 = pts[pair[b]], ex = p2.x - p1.x, ey = p2.y - p1.y, el = Math.hypot(ex, ey);
+      if (el < 1e-9) continue;
+      var n0 = [-ey / el, ex / el];                // a normal to the pair
+      for (var c = 0; c < other.length; c++) {
+        var o = pts[other[c]], dist = (o.x - p1.x) * n0[0] + (o.y - p1.y) * n0[1];
+        if (Math.abs(dist) < 1e-9) continue;
+        // orient the normal toward the red side: from the pair toward o if o is red, away if o is blue
+        var s = (dist > 0 ? 1 : -1) * sign, uu = [n0[0] * s, n0[1] * s], half = Math.abs(dist) / 2;
+        var mid = [p1.x + n0[0] * dist / 2, p1.y + n0[1] * dist / 2];
+        consider(uu, mid, half, [pair[a], pair[b], other[c]]);
+      }
+    }
+  }
+  triples(pos, neg, -1);                          // the pair is red: o is blue, so the red side is away from o
+  triples(neg, pos, 1);                           // the pair is blue: o is red, so the red side is toward o
+  if (!best) return null;
+  // w . x + b = +1 on the red curb, -1 on the blue curb: |w| = 1 / half
+  var w = [best.u[0] / best.half, best.u[1] / best.half];
+  var b = -(w[0] * best.mid[0] + w[1] * best.mid[1]);
+  var sv = {}; best.sv.forEach(function (idx) { sv[idx] = true; });
+  return { w: w, b: b, sv: sv, feasible: true };
+}
+
+// --- the soft margin, by SMO ------------------------------------------------------------------------
+function softMargin(pts, C0) {
+  var n = pts.length;
+  if (n < 2) return null;
+  // Solve on centred points divided by their root-mean-square radius, with C scaled by the
+  // square of that radius: the same problem (margins are unchanged, the weight norm scales by
+  // the radius squared), and the kernel values are of order one whether the inputs are in
+  // degrees or not. The solution is mapped back at the end.
+  var mx = 0, my = 0, i0;
+  for (i0 = 0; i0 < n; i0++) { mx += pts[i0].x; my += pts[i0].y; }
+  mx /= n; my /= n;
+  var rms = 0;
+  for (i0 = 0; i0 < n; i0++) rms += (pts[i0].x - mx) * (pts[i0].x - mx) + (pts[i0].y - my) * (pts[i0].y - my);
+  rms = Math.sqrt(rms / n) || 1;
+  var C = C0 * rms * rms;
+  var X = pts.map(function (p) { return [(p.x - mx) / rms, (p.y - my) / rms]; }), Y = pts.map(function (p) { return p.c; });
+  var alpha = new Array(n).fill(0), w = [0, 0], b = 0, tol = 1e-3, eps = 1e-4, rnd = mulberry32(97), work = 0;
+  var K = function (i, j) { return X[i][0] * X[j][0] + X[i][1] * X[j][1]; };
+  var f = function (i) { return w[0] * X[i][0] + w[1] * X[i][1] + b; };
+  function takeStep(i1, i2) {
+    if (i1 === i2) return 0;
+    var a1 = alpha[i1], a2 = alpha[i2], y1 = Y[i1], y2 = Y[i2], E1 = f(i1) - y1, E2 = f(i2) - y2, s = y1 * y2, L, H;
+    if (y1 !== y2) { L = Math.max(0, a2 - a1); H = Math.min(C, C + a2 - a1); } else { L = Math.max(0, a2 + a1 - C); H = Math.min(C, a2 + a1); }
+    if (L >= H - 1e-12) return 0;
+    var k11 = K(i1, i1), k12 = K(i1, i2), k22 = K(i2, i2), eta = 2 * k12 - k11 - k22, a2new;
+    if (eta < -1e-12) {
+      a2new = a2 - y2 * (E1 - E2) / eta;
+      if (a2new < L) a2new = L; else if (a2new > H) a2new = H;
+    } else {
+      var f1 = y1 * (E1 + b) - a1 * k11 - s * a2 * k12, f2 = y2 * (E2 + b) - s * a1 * k12 - a2 * k22;
+      var L1 = a1 + s * (a2 - L), H1 = a1 + s * (a2 - H);
+      var Lobj = L1 * f1 + L * f2 + 0.5 * L1 * L1 * k11 + 0.5 * L * L * k22 + s * L * L1 * k12;
+      var Hobj = H1 * f1 + H * f2 + 0.5 * H1 * H1 * k11 + 0.5 * H * H * k22 + s * H * H1 * k12;
+      if (Lobj < Hobj - eps) a2new = L; else if (Lobj > Hobj + eps) a2new = H; else a2new = a2;
+    }
+    if (Math.abs(a2new - a2) < eps * 1e-4 * (C + 1)) return 0;     // no progress worth booking
+    var a1new = a1 + s * (a2 - a2new);
+    var b1 = b - E1 - y1 * (a1new - a1) * k11 - y2 * (a2new - a2) * k12;
+    var b2 = b - E2 - y1 * (a1new - a1) * k12 - y2 * (a2new - a2) * k22;
+    if (a1new > 0 && a1new < C) b = b1; else if (a2new > 0 && a2new < C) b = b2; else b = (b1 + b2) / 2;
+    w[0] += y1 * (a1new - a1) * X[i1][0] + y2 * (a2new - a2) * X[i2][0];
+    w[1] += y1 * (a1new - a1) * X[i1][1] + y2 * (a2new - a2) * X[i2][1];
+    alpha[i1] = a1new; alpha[i2] = a2new;
+    return 1;
+  }
+  function examine(i2) {
+    work++;
+    var y2 = Y[i2], a2 = alpha[i2], E2 = f(i2) - y2, r2 = E2 * y2;
+    if ((r2 < -tol && a2 < C) || (r2 > tol && a2 > 0)) {
+      var nb = [], i;
+      for (i = 0; i < n; i++) if (alpha[i] > 0 && alpha[i] < C) nb.push(i);
+      if (nb.length > 1) {                        // second choice: the largest |E1 - E2|
+        var best = -1, bestGap = -1;
+        for (i = 0; i < nb.length; i++) { var gap = Math.abs(f(nb[i]) - Y[nb[i]] - E2); if (gap > bestGap) { bestGap = gap; best = nb[i]; } }
+        if (best >= 0 && takeStep(best, i2)) return 1;
+      }
+      var start = Math.floor(rnd() * n), k;
+      for (k = 0; k < nb.length; k++) { i = nb[(k + start) % nb.length]; if (takeStep(i, i2)) return 1; }
+      for (k = 0; k < n; k++) { i = (k + start) % n; if (takeStep(i, i2)) return 1; }
+    }
+    return 0;
+  }
+  var numChanged = 0, examineAll = true, guard = 0;
+  while ((numChanged > 0 || examineAll) && guard < 1000 && work < 600000) {
+    numChanged = 0; guard++;
+    for (var i = 0; i < n; i++) if (examineAll || (alpha[i] > 0 && alpha[i] < C)) numChanged += examine(i);
+    if (examineAll) examineAll = false; else if (numChanged === 0) examineAll = true;
+  }
+  var sv = {};
+  for (var j = 0; j < n; j++) if (alpha[j] > 1e-7 * Math.max(1, C)) sv[j] = true;
+  // back to the original coordinates: w'.(x - m)/r + b' = (w'/r).x + (b' - w'.m/r); alpha scales by 1/r^2
+  var wOut = [w[0] / rms, w[1] / rms], bOut = b - (w[0] * mx + w[1] * my) / rms;
+  return { w: wOut, b: bOut, sv: sv, alpha: alpha.map(function (a) { return a / (rms * rms); }), feasible: true,
+           passes: guard, work: work };
+}
+
+function solve() {
+  var pts = state.pts, hasBoth = pts.some(function (p) { return p.c > 0; }) && pts.some(function (p) { return p.c < 0; });
+  if (!hasBoth) { state.sol = null; return; }
+  state.sol = state.mode === "hard" ? hardMargin(pts) : softMargin(pts, state.C);
+  if (state.sol) {
+    var s = state.sol, nw = Math.hypot(s.w[0], s.w[1]);
+    s.width = 2 / nw; s.slack = pts.map(function (p) { return Math.max(0, 1 - p.c * (s.w[0] * p.x + s.w[1] * p.y + s.b)); });
+    s.sumSlack = s.slack.reduce(function (a, v) { return a + v; }, 0);
+    s.on = s.slack.filter(function (v) { return v > 1e-6 && v <= 1; }).length;
+    s.across = s.slack.filter(function (v) { return v > 1; }).length;
+    s.nsv = Object.keys(s.sv).length;
+  }
+}
+
+// --- drawing ---------------------------------------------------------------------------------------------
+var canvas = document.getElementById("plot"), ctx = canvas.getContext("2d");
+var PAD = { L: 46, R: 14, T: 12, B: 34 };
+function toX(v) { var F = state.frame; return PAD.L + (v - F.xr[0]) / (F.xr[1] - F.xr[0]) * (canvas.width - PAD.L - PAD.R); }
+function toY(v) { var F = state.frame; return PAD.T + (F.yr[1] - v) / (F.yr[1] - F.yr[0]) * (canvas.height - PAD.T - PAD.B); }
+function fromX(px) { var F = state.frame; return F.xr[0] + (px - PAD.L) / (canvas.width - PAD.L - PAD.R) * (F.xr[1] - F.xr[0]); }
+function fromY(py) { var F = state.frame; return F.yr[1] - (py - PAD.T) / (canvas.height - PAD.T - PAD.B) * (F.yr[1] - F.yr[0]); }
+function unitsPerPx() { var F = state.frame; return (F.xr[1] - F.xr[0]) / (canvas.width - PAD.L - PAD.R); }
+
+// the segment of the line w.x + b = c inside the frame
+function lineEnds(w, b, c) {
+  var F = state.frame, pts = [];
+  function add(x, y) { if (x >= F.xr[0] - 1e-9 && x <= F.xr[1] + 1e-9 && y >= F.yr[0] - 1e-9 && y <= F.yr[1] + 1e-9) pts.push([x, y]); }
+  if (Math.abs(w[1]) > 1e-12) { add(F.xr[0], (c - b - w[0] * F.xr[0]) / w[1]); add(F.xr[1], (c - b - w[0] * F.xr[1]) / w[1]); }
+  if (Math.abs(w[0]) > 1e-12) { add((c - b - w[1] * F.yr[0]) / w[0], F.yr[0]); add((c - b - w[1] * F.yr[1]) / w[0], F.yr[1]); }
+  if (pts.length < 2) return null;
+  // the two most distant of the candidates
+  var best = [pts[0], pts[1]], bd = -1;
+  for (var i = 0; i < pts.length; i++) for (var j = i + 1; j < pts.length; j++) {
+    var d = Math.hypot(pts[i][0] - pts[j][0], pts[i][1] - pts[j][1]);
+    if (d > bd) { bd = d; best = [pts[i], pts[j]]; }
+  }
+  return best;
+}
+
+function draw() {
+  var W = canvas.width, H = canvas.height, F = state.frame, s = state.sol;
+  ctx.clearRect(0, 0, W, H);
+  ctx.save(); ctx.beginPath(); ctx.rect(PAD.L, PAD.T, W - PAD.L - PAD.R, H - PAD.T - PAD.B); ctx.clip();
+  if (s) {
+    // the street: the band between the two curbs, shaded
+    var a = lineEnds(s.w, s.b, 1), c = lineEnds(s.w, s.b, -1);
+    var nw = Math.hypot(s.w[0], s.w[1]), ux = s.w[0] / nw, uy = s.w[1] / nw;
+    // build the band as a polygon: offset the boundary line far enough in both directions
+    var mid = lineEnds(s.w, s.b, 0);
+    if (mid) {
+      var h = 1 / nw;           // half width in world units
+      var ex = 4 * (F.xr[1] - F.xr[0]);
+      var dx = mid[1][0] - mid[0][0], dy = mid[1][1] - mid[0][1], dl = Math.hypot(dx, dy); dx /= dl; dy /= dl;
+      var cx = (mid[0][0] + mid[1][0]) / 2, cy = (mid[0][1] + mid[1][1]) / 2;
+      var p1 = [cx - dx * ex + ux * h, cy - dy * ex + uy * h], p2 = [cx + dx * ex + ux * h, cy + dy * ex + uy * h];
+      var p3 = [cx + dx * ex - ux * h, cy + dy * ex - uy * h], p4 = [cx - dx * ex - ux * h, cy - dy * ex - uy * h];
+      ctx.beginPath(); ctx.moveTo(toX(p1[0]), toY(p1[1])); ctx.lineTo(toX(p2[0]), toY(p2[1])); ctx.lineTo(toX(p3[0]), toY(p3[1])); ctx.lineTo(toX(p4[0]), toY(p4[1])); ctx.closePath();
+      ctx.fillStyle = "rgba(26,26,26,0.07)"; ctx.fill();
+      // the red side and the blue side, faintly
+      var far = [cx + ux * ex * 2, cy + uy * ex * 2];
+      ctx.beginPath(); ctx.moveTo(toX(p1[0]), toY(p1[1])); ctx.lineTo(toX(p2[0]), toY(p2[1]));
+      ctx.lineTo(toX(p2[0] + ux * ex), toY(p2[1] + uy * ex)); ctx.lineTo(toX(p1[0] + ux * ex), toY(p1[1] + uy * ex)); ctx.closePath();
+      ctx.fillStyle = "rgba(204,0,51,0.05)"; ctx.fill();
+      ctx.beginPath(); ctx.moveTo(toX(p3[0]), toY(p3[1])); ctx.lineTo(toX(p4[0]), toY(p4[1]));
+      ctx.lineTo(toX(p4[0] - ux * ex), toY(p4[1] - uy * ex)); ctx.lineTo(toX(p3[0] - ux * ex), toY(p3[1] - uy * ex)); ctx.closePath();
+      ctx.fillStyle = "rgba(31,95,168,0.05)"; ctx.fill();
+      void far;
+    }
+    // the curbs and the boundary
+    [[a, "#CC0033", [6, 4], 1.4], [c, "#1F5FA8", [6, 4], 1.4], [mid, "#1A1A1A", [], 2.2]].forEach(function (L) {
+      if (!L[0]) return;
+      ctx.beginPath(); ctx.moveTo(toX(L[0][0][0]), toY(L[0][0][1])); ctx.lineTo(toX(L[0][1][0]), toY(L[0][1][1]));
+      ctx.strokeStyle = L[1]; ctx.setLineDash(L[2]); ctx.lineWidth = L[3]; ctx.stroke(); ctx.setLineDash([]);
+    });
+    // the slacks: from each trespasser to its own curb, along the normal
+    if (state.showSlack) {
+      state.pts.forEach(function (p, i) {
+        var z = s.slack[i]; if (z <= 1e-6) return;
+        var foot = [p.x + p.c * z * ux / nw, p.y + p.c * z * uy / nw];
+        ctx.beginPath(); ctx.moveTo(toX(p.x), toY(p.y)); ctx.lineTo(toX(foot[0]), toY(foot[1]));
+        ctx.strokeStyle = p.c > 0 ? "#CC0033" : "#1F5FA8"; ctx.lineWidth = 1.6; ctx.setLineDash([2, 3]); ctx.stroke(); ctx.setLineDash([]);
+        ctx.fillStyle = p.c > 0 ? "#CC0033" : "#1F5FA8"; ctx.font = "600 11px ui-monospace, Menlo, Consolas, monospace";
+        ctx.textAlign = "left"; ctx.textBaseline = "bottom";
+        ctx.fillText("ζ = " + z.toFixed(2), toX(p.x) + 7, toY(p.y) - 5);
+      });
+    }
+  }
+  ctx.restore();
+  // axes
+  ctx.strokeStyle = "rgba(0,0,0,0.10)"; ctx.lineWidth = 1; ctx.fillStyle = "#555";
+  ctx.font = "11px ui-monospace, Menlo, Consolas, monospace"; ctx.textAlign = "center"; ctx.textBaseline = "top";
+  F.ticks.forEach(function (t) { ctx.beginPath(); ctx.moveTo(toX(t), PAD.T); ctx.lineTo(toX(t), H - PAD.B); ctx.stroke(); ctx.fillText(t, toX(t), H - PAD.B + 4); });
+  ctx.textAlign = "right"; ctx.textBaseline = "middle";
+  F.yticks.forEach(function (t) { ctx.beginPath(); ctx.moveTo(PAD.L, toY(t)); ctx.lineTo(W - PAD.R, toY(t)); ctx.stroke(); ctx.fillText(t, PAD.L - 4, toY(t)); });
+  ctx.textAlign = "center"; ctx.textBaseline = "bottom"; ctx.fillText(F.axis[0], PAD.L + (W - PAD.L - PAD.R) / 2, H - 2);
+  ctx.save(); ctx.translate(10, PAD.T + (H - PAD.T - PAD.B) / 2); ctx.rotate(-Math.PI / 2); ctx.textBaseline = "top"; ctx.fillText(F.axis[1], 0, 0); ctx.restore();
+  // the points
+  state.pts.forEach(function (p, i) {
+    var px = toX(p.x), py = toY(p.y);
+    if (s && s.sv[i]) { ctx.beginPath(); ctx.arc(px, py, 10, 0, 2 * Math.PI); ctx.strokeStyle = "#1A1A1A"; ctx.lineWidth = 2; ctx.stroke(); }
+    ctx.beginPath(); ctx.arc(px, py, 5.5, 0, 2 * Math.PI);
+    ctx.fillStyle = p.c > 0 ? "#CC0033" : "#1F5FA8"; ctx.fill(); ctx.strokeStyle = "#fff"; ctx.lineWidth = 1.5; ctx.stroke();
+  });
+  // messages
+  ctx.font = "700 14px -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif"; ctx.textAlign = "left"; ctx.textBaseline = "top";
+  if (!state.pts.length) { ctx.fillStyle = "#555"; ctx.fillText("Click to place points. Pick the class on the right.", PAD.L + 12, PAD.T + 10); }
+  else if (!s && state.mode === "hard") {
+    ctx.fillStyle = "#CC0033";
+    var both = state.pts.some(function (p) { return p.c > 0; }) && state.pts.some(function (p) { return p.c < 0; });
+    ctx.fillText(both ? "No street: the classes are not linearly separable. Allow slacks." : "Both classes are needed for a street.", PAD.L + 12, PAD.T + 10);
+  } else if (!s) { ctx.fillStyle = "#555"; ctx.fillText("Both classes are needed for a street.", PAD.L + 12, PAD.T + 10); }
+}
+
+// --- readouts -----------------------------------------------------------------------------------------------
+function $(id) { return document.getElementById(id); }
+function fmtC(C) { return C >= 100 ? C.toFixed(0) : C >= 10 ? C.toFixed(1) : C >= 1 ? C.toFixed(2) : C >= 0.001 ? C.toPrecision(2) : C.toExponential(1); }
+function readout() {
+  var s = state.sol, red = state.pts.filter(function (p) { return p.c > 0; }).length, F = state.frame;
+  $("rn").textContent = red + " / " + (state.pts.length - red);
+  $("cv").textContent = "C = " + fmtC(state.C) + (state.mode === "hard" ? "  (unused: C = ∞)" : "");
+  $("cbox").classList.toggle("off", state.mode === "hard");
+  var unit = F === DEG ? " °F" : "";
+  if (!s) {
+    ["rwidth", "rsv", "ron", "racross", "rslack", "robj", "req"].forEach(function (id) { $(id).textContent = "—"; });
+    return;
+  }
+  $("rwidth").textContent = s.width.toFixed(F === DEG ? 1 : 2) + unit;
+  $("rsv").textContent = s.nsv + " (ringed)";
+  $("ron").textContent = s.on;
+  $("racross").textContent = s.across;
+  $("rslack").textContent = s.sumSlack.toFixed(2);
+  var nw2 = (s.w[0] * s.w[0] + s.w[1] * s.w[1]) / 2;
+  $("robj").textContent = state.mode === "hard" ? nw2.toPrecision(3) + " + 0" : nw2.toPrecision(3) + " + " + (state.C * s.sumSlack).toPrecision(3);
+  $("req").textContent = s.w[0].toPrecision(3) + "·x₁ " + (s.w[1] < 0 ? "− " : "+ ") + Math.abs(s.w[1]).toPrecision(3) + "·x₂ " + (s.b < 0 ? "− " : "+ ") + Math.abs(s.b).toPrecision(3) + " = 0";
+}
+function update() { solve(); draw(); readout(); }
+
+// --- interaction --------------------------------------------------------------------------------------------
+function pointer(e) {
+  var r = canvas.getBoundingClientRect();
+  return [(e.clientX - r.left) * canvas.width / r.width, (e.clientY - r.top) * canvas.height / r.height];
+}
+function hit(px, py) {
+  var best = -1, bd = 12;
+  state.pts.forEach(function (p, i) { var d = Math.hypot(toX(p.x) - px, toY(p.y) - py); if (d < bd) { bd = d; best = i; } });
+  return best;
+}
+canvas.addEventListener("pointerdown", function (e) {
+  var q = pointer(e), i = hit(q[0], q[1]);
+  if (i >= 0 && e.shiftKey) { state.pts.splice(i, 1); update(); return; }
+  if (i >= 0) { state.drag = i; state.moved = false; try { canvas.setPointerCapture(e.pointerId); } catch (err) { /* synthetic events have no capture */ } return; }
+  if (q[0] < PAD.L || q[0] > canvas.width - PAD.R || q[1] < PAD.T || q[1] > canvas.height - PAD.B) return;
+  state.pts.push({ x: fromX(q[0]), y: fromY(q[1]), c: state.newClass });
+  clearPreset(); update();
+});
+canvas.addEventListener("pointermove", function (e) {
+  if (state.drag === null) return;
+  var q = pointer(e), F = state.frame;
+  var x = Math.max(F.xr[0], Math.min(F.xr[1], fromX(q[0]))), y = Math.max(F.yr[0], Math.min(F.yr[1], fromY(q[1])));
+  state.pts[state.drag].x = x; state.pts[state.drag].y = y; state.moved = true;
+  update();
+});
+function endDrag(e) { if (state.drag !== null) { state.drag = null; if (state.moved) clearPreset(); update(); } }
+canvas.addEventListener("pointerup", endDrag); canvas.addEventListener("pointercancel", endDrag);
+
+function pressOnly(groupId, attr, value) {
+  var bs = $(groupId).querySelectorAll("button");
+  for (var i = 0; i < bs.length; i++) bs[i].setAttribute("aria-pressed", bs[i].getAttribute(attr) === value ? "true" : "false");
+}
+function clearPreset() { pressOnly("data", "data-d", "__none__"); }
+$("data").addEventListener("click", function (e) {
+  var b = e.target.closest("button"); if (!b) return;
+  var d = b.getAttribute("data-d"), P = PRESETS[d]();
+  state.pts = P.pts; state.frame = P.frame; pressOnly("data", "data-d", d); update();
+});
+$("cls").addEventListener("click", function (e) {
+  var b = e.target.closest("button"); if (!b) return;
+  state.newClass = parseInt(b.getAttribute("data-c"), 10); pressOnly("cls", "data-c", b.getAttribute("data-c"));
+});
+$("mode").addEventListener("click", function (e) {
+  var b = e.target.closest("button"); if (!b) return;
+  state.mode = b.getAttribute("data-m"); pressOnly("mode", "data-m", state.mode); update();
+});
+$("logC").addEventListener("input", function () {
+  state.C = Math.pow(10, parseFloat(this.value));
+  if (state.mode === "hard") { state.mode = "soft"; pressOnly("mode", "data-m", "soft"); }
+  update();
+});
+$("showSlack").addEventListener("change", function () { state.showSlack = this.checked; draw(); });
+
+var first = PRESETS.clouds(); state.pts = first.pts; state.frame = first.frame;
+update();
+</script>
+</body>
+</html>

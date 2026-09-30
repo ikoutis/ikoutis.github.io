@@ -1,0 +1,167 @@
+% CS 675 Machine Learning, Fall 2026, section 1B1. Three short slides for a
+% live session: a question about hyperparameters (blank below, for the
+% discussion); one-vs-rest units side by side against a softmax layer, with
+% the link to the Newark seasons demo where the two models disagree; and
+% nearest-neighbour regression written as softmax attention, with a worked
+% picture from eight Newark days. The numbers of the third slide come from
+% attention-data.tex, written by prep.py; the figure of the second is the
+% CS 301 figure seasons-two-models.pdf (fig-networks.py in that repo).
+% Build: pdflatex three-pictures.tex  (run twice)
+\DocumentMetadata{lang=en-US,pdfversion=1.7,tagging=on}
+\documentclass[aspect-ratio=16:9,11pt,frame-title-arg]{ltx-talk}
+\usepackage{cs675-talk}
+\input{attention-data}
+
+% ---------- the two multiclass pictures ----------
+\tikzset{
+  inp/.style={circle,fill=ink,inner sep=0pt,minimum size=1.8mm},
+  unit/.style={circle,draw=ink,fill=paper,line width=0.6pt,minimum size=5.2mm,inner sep=0pt,font=\scriptsize},
+  act/.style={circle,draw=njred,fill=njred!12,line width=0.6pt,minimum size=4.6mm,inner sep=0pt,font=\scriptsize},
+  lossbox/.style={draw=muted,rounded corners=1pt,fill=white,font=\tiny,inner sep=1.6pt,minimum width=9mm,minimum height=3.6mm},
+  lbl/.style={font=\scriptsize,color=muted},
+  wire/.style={line width=0.35pt,color=faint},
+  arr/.style={-{Latex[length=1.4mm]},line width=0.45pt,color=muted}}
+
+\newcommand{\ovrpic}{%
+\begin{tikzpicture}[x=1mm,y=1mm]
+  \node[inp] (x1) at (0,19) {}; \node[inp] (x2) at (0,9) {};
+  \node[lbl,anchor=east] at (-1.5,19) {$x_1$}; \node[lbl,anchor=east] at (-1.5,9) {$x_2$};
+  \foreach \k/\yy in {1/26,2/18,3/10,4/2} {
+    \node[unit] (u\k) at (20,\yy) {$s_\k$};
+    \draw[wire] (x1) -- (u\k); \draw[wire] (x2) -- (u\k);
+    \node[act] (p\k) at (35,\yy) {$\sigma$};
+    \draw[arr] (u\k) -- (p\k);
+    \node[lossbox] (l\k) at (52,\yy) {loss$_\k$};
+    \draw[arr] (p\k) -- (l\k);
+  }
+  \node[lbl,anchor=south] at (20,30.5) {score};
+  \node[lbl,anchor=south] at (35,30.5) {$\hat y_k=\sigma(s_k)$};
+  \node[lbl,anchor=south] at (52,30.5) {four losses};
+  \node[lbl,anchor=north,align=center] at (35,-2.5) {trained \alert{one at a time}, each on ``is it class $k$?''\\
+    outputs need not add to 1; predict by argmax};
+\end{tikzpicture}}
+
+\newcommand{\softmaxpic}{%
+\begin{tikzpicture}[x=1mm,y=1mm]
+  \node[inp] (x1) at (0,19) {}; \node[inp] (x2) at (0,9) {};
+  \node[lbl,anchor=east] at (-1.5,19) {$x_1$}; \node[lbl,anchor=east] at (-1.5,9) {$x_2$};
+  \foreach \k/\yy in {1/26,2/18,3/10,4/2} {
+    \node[unit] (u\k) at (20,\yy) {$s_\k$};
+    \draw[wire] (x1) -- (u\k); \draw[wire] (x2) -- (u\k);
+  }
+  \node[draw=njred,fill=njred!8,rounded corners=1.2pt,line width=0.6pt,minimum width=6mm,minimum height=32mm,inner sep=0pt] (sm) at (34,14) {};
+  \node[font=\scriptsize,color=njred,rotate=90] at (34,14) {softmax};
+  \foreach \k/\yy in {1/26,2/18,3/10,4/2} {
+    \draw[arr] (u\k) -- (31,\yy);
+    \node[act] (p\k) at (46,\yy) {$p_\k$};
+    \draw[arr] (37,\yy) -- (p\k);
+  }
+  \node[lossbox,minimum height=7mm] (l) at (60,14) {one loss};
+  \foreach \k in {1,2,3,4} { \draw[arr] (p\k) -- (l); }
+  \node[lbl,anchor=south] at (20,30.5) {score};
+  \node[lbl,anchor=south] at (46,30.5) {$p_k=\dfrac{e^{s_k}}{\sum_j e^{s_j}}$};
+  \node[lbl,anchor=north,align=center] at (35,-2.5) {trained \alert{together} on the cross-entropy $-\ln p_{\text{true}}$\\
+    outputs add to 1; predict by argmax};
+\end{tikzpicture}}
+
+\begin{document}
+\deckcard{Three pictures}{hyperparameters \,--\, one-vs-rest against softmax \,--\, nearest neighbours as attention}
+
+% ---------------------------------------------------------------- 1
+\questionslide{Hyperparameters}{\bigq{What is a hyperparameter?}}
+
+% ---------------------------------------------------------------- 2
+\begin{frame}[t]{Four units side by side, or one softmax layer}
+  \vspace{1mm}
+  \begin{columns}[c]
+    \begin{column}{0.49\textwidth}
+      \centering
+      {\small\alert{One-vs-rest}: $k$ independent units}\par\vspace{0.5mm}
+      \figalt{Two inputs feed four separate units. Each unit's score goes through its own sigmoid to its own loss box, so there are four losses. Caption: trained one at a time, each on the question is it class k; outputs need not add to 1; predict by argmax.}
+      \scalebox{0.8}{\ovrpic}
+    \end{column}
+    \begin{column}{0.49\textwidth}
+      \centering
+      {\small\alert{Softmax}: $k$ units linked by one layer}\par\vspace{0.5mm}
+      \figalt{The same two inputs feed four units, whose four scores enter one softmax box together. The four outputs p one to p four all feed a single loss box. Caption: trained together on the cross-entropy; outputs add to 1; predict by argmax.}
+      \scalebox{0.8}{\softmaxpic}
+    \end{column}
+  \end{columns}
+  \vspace{2.5mm}
+  \begin{columns}[c]
+    \begin{column}{0.46\textwidth}
+      \ttab{\scriptsize\setlength{\tabcolsep}{4pt}\renewcommand{\arraystretch}{1.1}
+      \begin{tabular}{l|ll}
+        & separate units & softmax layer \\ \hline
+        output & $\sigma(s_k)$ & $p_k$ \\
+        computed from & its own score & all $k$ scores \\
+        loss & one per unit & one for the model \\
+        trained & separately & jointly \\
+      \end{tabular}}
+    \end{column}
+    \begin{column}{0.52\textwidth}
+      {\small Same inputs, same units, \alert{different weights}: on the Newark seasons the two models name a different season on 160 of 1{,}457 validation days.}
+      \par\vspace{1mm}
+      {\scriptsize\muteds{Notes: 5.5 (one-vs-rest), 16.2 and 16.3 (softmax, cross-entropy).}}
+    \end{column}
+  \end{columns}
+  \vspace{1.5mm}
+  {\footnotesize\muteds{A day the two disagree on:}\ \scriptsize\url{https://ikoutis.github.io/courses/cs675/f26/four-units.html}\par}
+\end{frame}
+
+% ---------------------------------------------------------------- 3
+\begin{frame}[t]{Nearest neighbours, as attention}
+  \vspace{1mm}
+  \begin{columns}[c]
+    \begin{column}{0.54\textwidth}
+      \centering
+      \figalt{A scatter of eight remembered Newark days, daily low against daily high, with a dashed vertical line at the query high of \AttQuery\ degrees and a red diamond at the predicted low of \AttYhat. Under the axis, a bar at each remembered day shows its attention weight; the bars near the query are tall and the far ones vanish.}
+      \begin{tikzpicture}[x=1mm,y=1mm,line width=0.4pt]
+        % highs 25..100 over 72 mm; lows 10..80 over 34 mm; a strip of weight bars underneath
+        \pgfmathsetmacro{\xzero}{25}\pgfmathsetmacro{\xscale}{72/75}
+        \pgfmathsetmacro{\yzero}{10}\pgfmathsetmacro{\yscale}{34/70}\pgfmathsetmacro{\ybase}{20}
+        % the plot frame and its ticks
+        \draw[faint] (0,\ybase) rectangle (72,{\ybase+34});
+        \foreach \t in {30,50,70,90} { \draw[faint] ({(\t-\xzero)*\xscale},\ybase) -- ++(0,-1);
+          \node[font=\tiny,color=muted,anchor=north] at ({(\t-\xzero)*\xscale},{\ybase-1.2}) {\t}; }
+        \node[font=\tiny,color=muted,anchor=north] at (36,{\ybase-4.2}) {daily high ($^\circ$F)};
+        \foreach \t in {20,40,60,80} { \node[font=\tiny,color=muted,anchor=east] at (-1,{\ybase+(\t-\yzero)*\yscale}) {\t}; }
+        \node[font=\tiny,color=muted,rotate=90,anchor=south] at (-6,{\ybase+17}) {daily low ($^\circ$F)};
+        % the weights, as bars under the plot
+        \draw[faint] (0,8) -- (72,8);
+        \node[font=\tiny,color=njred,anchor=east] at (-1,9.5) {weight $\alpha_i$};
+        \foreach \x/\y/\a/\d in \AttDays {
+          \fill[njred!75] ({(\x-\xzero)*\xscale-1.3},8) rectangle ({(\x-\xzero)*\xscale+1.3},{8+\a*8});
+          \pgfmathparse{\a>0.05 ? 1 : 0}
+          \ifnum\pgfmathresult=1 \node[font=\tiny,color=njred,anchor=north] at ({(\x-\xzero)*\xscale},7.4) {\a}; \fi }
+        % the query
+        \draw[dashed,njred,line width=0.5pt] ({(\AttQuery-\xzero)*\xscale},8) -- ({(\AttQuery-\xzero)*\xscale},{\ybase+34});
+        \node[font=\tiny,color=njred,anchor=south] at ({(\AttQuery-\xzero)*\xscale},{\ybase+34.3}) {new day: high \AttQuery};
+        % the remembered days, labelled by their lows
+        \foreach \x/\y/\a/\d in \AttDays {
+          \fill[ink] ({(\x-\xzero)*\xscale},{\ybase+(\y-\yzero)*\yscale}) circle (0.9);
+          \node[font=\tiny,color=muted,anchor=south] at ({(\x-\xzero)*\xscale},{\ybase+(\y-\yzero)*\yscale+1}) {\y}; }
+        % the answer
+        \node[diamond,fill=njred,draw=white,line width=0.4pt,inner sep=0pt,minimum size=2.6mm] at ({(\AttQuery-\xzero)*\xscale},{\ybase+(\AttYhat-\yzero)*\yscale}) {};
+        \node[font=\tiny,color=njred,anchor=west] at ({(\AttQuery-\xzero)*\xscale+2},{\ybase+(\AttYhat-\yzero)*\yscale}) {$\hat y=\AttYhat$};
+      \end{tikzpicture}
+    \end{column}
+    \begin{column}{0.44\textwidth}
+      {\small A regression by memory: eight remembered days $(x_i, y_i)$ and a new day with high $x$.}
+      \par\vspace{2mm}
+      {\small\begin{tabular}{@{}l@{\quad}l@{}}
+        score, from the distance & $s_i = -\dfrac{d(x, x_i)^2}{2\tau^2}$ \\[3mm]
+        \alert{softmax}: weights & $\alpha_i = \dfrac{e^{s_i}}{\sum_j e^{s_j}}$ \\[3mm]
+        answer & $\hat y = \sum_i \alpha_i\, y_i$
+      \end{tabular}}
+      \par\vspace{2mm}
+      {\footnotesize
+      $k$-NN regression: $\alpha_i = 1/k$ for the $k$ nearest days and $0$ for the rest.
+      Attention: every remembered day votes, with a weight that falls with its distance; $\tau$ plays the role of $k$.}
+      \par\vspace{1.5mm}
+      {\scriptsize\muteds{Here $\tau = \AttTau$. The three nearest days average \AttKnn; the least-squares line says \AttLine. Notes: 2.4, 2.12, 16.2.}}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\end{document}

@@ -1,0 +1,185 @@
+% cs675-talk.sty — ltx-talk style for CS 675 slides (Fall 2026, section 1B1)
+%
+% The CS 301 deck style (YWCC-NJIT-Course-Repo/CS-301/slides/cs301-talk.sty
+% and cs301-common.sty) rebranded for CS 675: same palette as the course's
+% interactive demos at ikoutis.github.io/courses/cs675/f26, sparse slides,
+% top-aligned, NJIT-red accent, no chrome, and the tagging conventions that
+% make the PDF pass Canvas's Ally check (title, language, headings, alt text
+% on figures, a description on every formula).
+%
+% A deck opens with
+%   \DocumentMetadata{lang=en-US,pdfversion=1.7,tagging=on}
+%   \documentclass[aspect-ratio=16:9,11pt,frame-title-arg]{ltx-talk}
+%   \usepackage{cs675-talk}
+% Frames with verbatim material are frame* (no [fragile]); every frame has a
+% braced title, {} if none; \figalt{...} on the line before a figure gives it
+% its description. Build: pdflatex deck.tex (twice). TeX Live 2025 or later.
+\ProvidesPackage{cs675-talk}[2026/09/30 CS 675 slide style for ltx-talk]
+
+\RequirePackage[T1]{fontenc}
+\RequirePackage{lmodern}
+\RequirePackage{amsmath,amssymb}
+\RequirePackage{graphicx}
+\RequirePackage{tikz}
+\RequirePackage{xcolor}
+\RequirePackage{alltt}
+\RequirePackage{geometry}
+\RequirePackage{url}
+\usetikzlibrary{positioning,calc,arrows.meta,shapes.geometric}
+\graphicspath{{figures/}}
+
+% ---------- palette (the demos' palette) ----------
+\definecolor{njred}{HTML}{CC0033}
+\definecolor{njblue}{HTML}{1F5FA8}
+\definecolor{gold}{HTML}{9A6700}
+\definecolor{ink}{HTML}{1A1A1A}
+\definecolor{muted}{HTML}{555555}
+\definecolor{faint}{HTML}{DDDDDD}
+\definecolor{paper}{HTML}{F7F7F5}
+\providecommand{\alert}[1]{\textcolor{njred}{#1}}
+
+% ---------- small helpers ----------
+\newcommand{\airyitems}{\setlength{\itemsep}{0.9em}}
+\newcommand{\muteds}[1]{{\color{muted}#1}}
+\newcommand{\bigq}[1]{{\Large #1}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\vx}{\mathbf{x}}
+\newcommand{\vw}{\mathbf{w}}
+\newcommand{\ttab}[1]{{\renewcommand{\arraystretch}{1.25}\small #1}}
+\newcommand{\figcredit}[1]{\par\vspace{1.5mm}{\scriptsize\muteds{#1}}}
+
+% ---------- colours and fonts ----------
+\DeclareColor{structure}{njred}
+\DeclareColor{alert}{njred}
+\AddToHook{begindocument/end}{\color{ink}}
+
+% ---------- frame options in beamer's spelling ----------
+\ExplSyntaxOn
+\keys_define:nn { talk / frame }
+  {
+    t .meta:n = { vertical-alignment = top } ,
+    t .value_forbidden:n = true ,
+    c .meta:n = { vertical-alignment = center } ,
+    c .value_forbidden:n = true ,
+    plain .code:n = { \thispagestyle { plain } } ,
+    plain .value_forbidden:n = true ,
+  }
+\ExplSyntaxOff
+
+% ---------- frame title: red, bold, a faint rule under it ----------
+\ExplSyntaxOn
+\DeclareTemplateInterface { frametitle } { cs675 } { 1 } { }
+\DeclareTemplateCode { frametitle } { cs675 } { 1 } { }
+  {
+    \vbox_top:n
+      {
+        \hsize = \textwidth
+        \vspace { 2.5mm }
+        \noindent
+        \group_begin:
+          \color_select:n { njred } \Large \bfseries
+          \tl_if_blank:nF {#1} { \__talk_frame_title:n {#1} }
+          \par
+        \group_end:
+        \vspace { 1mm }
+        { \color_select:n { faint } \hrule height 0.6pt }
+      }
+  }
+\DeclareInstance { frametitle } { header } { cs675 } { }
+\ExplSyntaxOff
+
+% ---------- footline: left = course and deck, right = frame number ----------
+\gdef\DeckTitle{}
+\gdef\DeckWhen{Fall 2026}
+\ExplSyntaxOn
+\clist_new:N \l__cs_talk_ignored_clist
+\DeclareTemplateInterface { footer } { cs675 } { 0 }
+  { element-order : commalist = }
+\DeclareTemplateCode { footer } { cs675 } { 0 }
+  { element-order = \l__cs_talk_ignored_clist }
+  {
+    \noindent
+    \skip_horizontal:n { -\Gm@lmargin }
+    \hbox_to_wd:nn { \paperwidth }
+      {
+        \skip_horizontal:n { 5mm }
+        \scriptsize \color_select:n { muted }
+        CS~675 \,{\color{faint}\vrule height 1.5ex depth 0pt width 0.6pt}\, \DeckWhen
+        \ifx\DeckTitle\empty\else\ \,{\color{faint}\vrule height 1.5ex depth 0pt width 0.6pt}\, \DeckTitle\fi
+        \hfill
+        \theframe
+        \skip_horizontal:n { 5mm }
+      }
+  }
+\DeclareInstance { footer } { std } { cs675 } { }
+\ExplSyntaxOff
+
+% ---------- lists ----------
+\renewcommand{\labelitemi}{\textcolor{njred}{\raisebox{0.28ex}{\rule{0.85ex}{0.85ex}}}}
+\renewcommand{\labelitemii}{\textcolor{muted}{\raisebox{0.28ex}{\rule{0.7ex}{0.7ex}}}}
+\AddToHook{begindocument/before}{%
+  \EditInstance{item}{basic}{label-format=\color{structure}\bfseries #1}}
+\setlength{\leftmargini}{1.4em}
+
+% ---------- verbatim-ish code (beamer's semiverbatim), inside frame* only ----------
+\newenvironment{semiverbatim}{\alltt}{\endalltt}
+
+% ---------- tagging: figures, tables, formulas ----------
+\makeatletter
+\newcommand{\figalt}[1]{\gdef\cs@figalt{#1}}
+\def\cs@figalt{}
+\newcommand{\headerrow}{\tagpdfsetup{table/header-rows={1}}}
+\ExplSyntaxOn
+\cs_new_protected:Npn \csFigaltGraphic #1 { \pdf_purify:nN {#1} \l__tag_graphic_alt_tl }
+\cs_new_protected:Npn \csFigaltGraphicClear { \tl_clear:N \l__tag_graphic_alt_tl }
+\ExplSyntaxOff
+\renewcommand{\figalt}[1]{\gdef\cs@figalt{#1}\csFigaltGraphic{#1}}
+\AddToHook{env/tikzpicture/before}{\ifx\cs@figalt\@empty\else
+  \ifvmode\leavevmode\fi
+  \edef\cs@tmp{\noexpand\tikzset{alt={\cs@figalt}}}\cs@tmp\fi}
+\AddToHook{env/tikzpicture/after}{\ifx\cs@figalt\@empty\else
+  \tikzset{tagging-setup=text}\global\let\cs@figalt\@empty\fi}
+\AddToHook{env/center/end}{\csFigaltGraphicClear\global\let\cs@figalt\@empty}
+\AddToHook{env/frame/end}{\csFigaltGraphicClear\global\let\cs@figalt\@empty}
+\renewcommand{\ttab}[1]{{\tagpdfsetup{table/header-rows={1}}%
+  \renewcommand{\arraystretch}{1.25}\small #1}}
+\tagpdfsetup{math/alt/use=true}
+\ExplSyntaxOn
+\tl_if_exist:NT \l__math_content_template_tl
+  { \tl_set:Nn \l__math_content_template_tl { \exp_not:V \g__math_grabbed_math_tl } }
+\ExplSyntaxOff
+% Headings: the deck's title card is H1, frame titles H2.
+\tagpdfsetup{role/new-tag=frametitle/H2}
+\newcommand{\cs@heading}[2]{\begingroup\tagpdfparaOff\noindent
+  \tagstructbegin{tag=#1}\tagmcbegin{tag=#1}#2\tagmcend\tagstructend\par\endgroup}
+\makeatother
+
+% ---------- the deck's title card ----------
+% \deckcard{Title}{subtitle (may be empty)}
+\makeatletter
+\newcommand{\deckcard}[2]{%
+  \gdef\DeckTitle{#1}%
+  \hypersetup{pdftitle={CS 675 Machine Learning: #1}}%
+  \pdfbookmark[1]{#1}{deck}%
+  \begin{frame}[plain]{}
+    \thispagestyle{plain}%
+    \vspace{15mm}
+    {\color{muted}\small NJIT \,--\, CS 675 Machine Learning \,--\, \DeckWhen\par}
+    \vspace{7mm}
+    {\color{faint}\hrule height 1pt width 30mm}\vspace{4mm}
+    \cs@heading{H1}{\bfseries\fontsize{22}{27}\selectfont #1}
+    \vspace{4mm}
+    \ifx\relax#2\relax\else{\color{muted}\normalsize #2\par}\fi
+  \end{frame}}
+\makeatother
+
+% ---------- a question slide: the question on top, the rest blank ----------
+% \questionslide{Title}{question}
+\newcommand{\questionslide}[2]{%
+  \begin{frame}[t]{#1}
+    \vspace{4mm}
+    #2
+  \end{frame}}
+
+% explicit blank vertical room inside a content slide
+\newcommand{\inkspace}[1]{\par\vspace*{#1}}

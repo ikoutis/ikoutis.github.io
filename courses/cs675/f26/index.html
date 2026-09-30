@@ -56,6 +56,43 @@ footer a:hover { color: var(--red); }
   <p class="what">Newark airport, 6,940 days: the daily low against the daily high. First, draw a random batch of <code>k</code> days and see how close its own least-squares line lands to the line of all the days; watch the scatter shrink as <code>k</code> grows. Then run gradient descent one batch per round, with the batch lit up, the line moving, and the step the batch chose drawn beside the step all the data would have taken.</p>
   <p class="refs">Notes &sect;3.7 (epochs, the fit algorithm), &sect;3.7.1 (stochastic batch gradient descent, batch size as a hyperparameter).</p>
 </li>
+<li>
+  <a class="title" href="standardize.html">Standardize, and the bowl turns round</a>
+  <p class="what">Two maps of the same loss, the mean squared error of <code>low = a&middot;x + b</code> on the Newark days: on the left <code>x</code> is the high in degrees, on the right it has been shifted by <em>c</em> and divided by <em>s</em>, with the mean and the standard deviation one button away. Gradient descent walks both maps from zero and counts its steps: a canyon of tens of thousands of steps against a circle of a few. Both axes of a map have the same scale, so the shape you see is the shape the walker feels.</p>
+  <p class="refs">Notes &sect;3.3 (gradient descent), &sect;3.5 (the update rules), &sect;3.7.2 (scaling features for faster learning).</p>
+</li>
+</ul>
+
+<p class="week">Weeks 2 and 4 &middot; Modules 3 to 5 &middot; Feature engineering, logistic regression</p>
+<ul class="demos">
+<li>
+  <a class="title" href="features.html">A feature the line was missing</a>
+  <p class="what">Two views. Regression: the daily high against the day of the year; a line explains 6% of it, a sine and a cosine of the day 78%, with the same least-squares fit. Classification: is this day in spring or fall? One logistic neuron on <code>(high, low)</code> is right on about half of the validation days; give it the squares and the product of its inputs and it reaches about three quarters. Also the two rings of &sect;4.7 and an XOR cloud. Tick the features and watch the boundary bend.</p>
+  <p class="refs">Notes &sect;3.10&ndash;3.11 (feature engineering, polynomial regression), &sect;4.7 (feature engineering revisited), &sect;5.1&ndash;5.3 (the logistic neuron and its loss).</p>
+</li>
+<li>
+  <a class="title" href="four-units.html">Four units, one answer</a>
+  <p class="what">Which season is this day in? Four units read the day's high and low, one per season. Compare four sigmoid units trained one at a time, one-vs-rest, whose outputs need not add to 1, with the same four units linked by a softmax layer and trained together on one loss. The two models have different weights and name different seasons on 160 of 1,457 validation days; a button shows both sets of boundaries, and a temperature slider sharpens or flattens the softmax.</p>
+  <p class="refs">Notes &sect;5.5 (one-vs-rest), &sect;16.2&ndash;16.3 (softmax, cross-entropy). Built for CS 301, shared here with its text addressed to this course.</p>
+</li>
+</ul>
+
+<p class="week">Week 5 &middot; Module 7 &middot; Support vector classifiers</p>
+<ul class="demos">
+<li>
+  <a class="title" href="svm.html">The widest street</a>
+  <p class="what">Two classes on a plane and the widest street between them, with the support vectors ringed. Drag a point that is not ringed and nothing moves; drag a ringed one and the street turns. Then allow slacks: a point may step onto the street, or across it, at a price <em>C</em> per unit of trespass, drawn as a segment to its own curb. Move <em>C</em> over five decades and watch the street trade width for trespassers. Two presets are real Newark days: one separable pair of seasons, one not.</p>
+  <p class="refs">Notes &sect;7.1 (the inductive bias), &sect;7.3 (the objective), &sect;7.5 (slacks), &sect;7.6 (the hinge loss).</p>
+</li>
+</ul>
+
+<p class="week">Slides</p>
+<ul class="demos">
+<li>
+  <a class="title" href="slides/three-pictures.pdf">Three pictures</a>
+  <p class="what">Three slides for a live session: a question about hyperparameters, with the rest of the slide left blank; four units side by side against one softmax layer, with the link to the seasons demo above; and nearest-neighbour regression written as softmax attention, worked on eight remembered Newark days.</p>
+  <p class="refs">Notes &sect;2.4&ndash;2.5 and &sect;2.12 (nearest neighbours, hyperparameters, <em>k</em>-NN regression), &sect;5.5, &sect;9, &sect;16.2. PDF, 4 pages; the LaTeX source is beside it.</p>
+</li>
 </ul>
 
 <div class="aside">
