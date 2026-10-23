@@ -7605,7 +7605,7 @@ $$ \mu_j \: \leftarrow \:  \frac{1}{|X^{(j)}|} \sum_{x\in X^{(j)}} x \, .$$</li>
 <li>Repeat Steps 1 and 2 until convergence.</li>
 </ol>
 <br/>
-<p><img alt="No description has been provided for this image" src="images/14__Unsupervised_Clustering_image_1_1VTxp2Rw.png" width="500"/></p>
+<p><img alt="Frame 'Iteration #0' of the k-means convergence animation: a scatter of orange plus signs and yellow crosses in the unit square, split by two black lines that meet at the initial cluster centers, which are marked by small circles." src="images/14__Unsupervised_Clustering_image_1_1VTxp2Rw.png" width="500"/></p>
 <p><font size="1">From Wikipedia (<a href="https://en.wikipedia.org/wiki/File:K-means_convergence.gif">https://en.wikipedia.org/wiki/File:K-means_convergence.gif</a>)</font></p>
 <br/>
 <p>The standard algorithm has a number of advantages and disadvantages.</p>
@@ -7659,8 +7659,8 @@ $$</li>
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
 <hr/>
 <h2 id="14.2-Agglomerative-Hierarchical-Clustering-%E2%AC%A4-"><strong>14.2 Agglomerative Hierarchical Clustering<font color="#008DFF"> ⬤ </font></strong><a class="anchor-link" href="#14.2-Agglomerative-Hierarchical-Clustering-%E2%AC%A4-">¶</a></h2><p>Another way of producing a clustering is through <em>agglomeration</em> — that is, by building up larger clusters through successive merging of smaller clusters. To do this, we need a policy by which we can decide which clusters should be merged at any given step. The way this is managed is through some notion of a <em>distance</em> between clusters.</p>
-<p><img alt="No description has been provided for this image" src="images/14__Unsupervised_Clustering_image_2_1LaSLHOd.png" width="420"/>
-<img alt="No description has been provided for this image" src="images/14__Unsupervised_Clustering_image_3_1n19LM2f.png" width="350"/></p>
+<p><img alt="Diagram of hierarchical clustering on five items A to E. Agglomerative steps (AGNES) run left to right: A and B merge at 0.1, D and E at 0.2, C joins DE at 0.3, and AB joins CDE at 0.5. Divisive steps (DIANA) traverse the same tree right to left." src="images/14__Unsupervised_Clustering_image_2_1LaSLHOd.png" width="420"/>
+<img alt="Table of pairwise distances d between items A, B, C, D and E: d(A,B) = 0.1, d(A,C) = 0.8, d(A,D) = 0.7, d(A,E) = 1.0, d(B,C) = 0.5, d(B,D) = 0.6, d(B,E) = 0.9, d(C,D) = 0.3, d(C,E) = 0.4, d(D,E) = 0.2; every item is at distance 0 from itself." src="images/14__Unsupervised_Clustering_image_3_1n19LM2f.png" width="350"/></p>
 <h3 id="14.2.1-Linkage-Policies"><strong>14.2.1 Linkage Policies</strong><a class="anchor-link" href="#14.2.1-Linkage-Policies">¶</a></h3><p>At each step of agglomerative clustering, two clusters are merged. Of all the candidate pairs, the one with smallest inter-cluster distance is chosen.</p>
 <p>There are several common ways in which the distance between two clusters $A$ and $B$ can be defined. These include:</p>
 <ul>
@@ -7707,13 +7707,13 @@ $$</li>
 </ul>
 <br/>
 <p><font size="2">Before merging:</font></p>
-<p><img alt="No description has been provided for this image" src="images/14__Unsupervised_Clustering_image_4_1WZNlSh9.png" width="500"/></p>
+<p><img alt="Before merging: five clusters of colored points, each outlined in magenta. A large red cluster at the left, a yellow cluster above a small blue cluster in the middle left, a green cluster in the middle right, and an orange cluster at the right." src="images/14__Unsupervised_Clustering_image_4_1WZNlSh9.png" width="500"/></p>
 <br/>
 <p><font size="2">After single-linkage merge:</font></p>
-<p><img alt="No description has been provided for this image" src="images/14__Unsupervised_Clustering_image_5_1bX6T8_J.png" width="500"/></p>
+<p><img alt="After a single-linkage merge: the yellow and green clusters, which have one pair of points almost touching at their boundary, are merged into a single cluster, highlighted in cyan and yellow." src="images/14__Unsupervised_Clustering_image_5_1bX6T8_J.png" width="500"/></p>
 <br/>
 <p><font size="2">After complete-linkage merge:</font></p>
-<p><img alt="No description has been provided for this image" src="images/14__Unsupervised_Clustering_image_6_10DNk2IS.png" width="500"/></p>
+<p><img alt="After a complete-linkage merge: the yellow cluster and the small blue cluster below it, whose farthest pair of points is the closest among all cluster pairs, are merged into a single cluster, highlighted in cyan and yellow and joined by a magenta line." src="images/14__Unsupervised_Clustering_image_6_10DNk2IS.png" width="500"/></p>
 </div>
 </div>
 </div>
@@ -7738,8 +7738,8 @@ $$</li>
 </ul>
 <p>Often, the algorithm is run until all points are members of a single cluster. In this case, the history consists of a single merge tree (called a <strong>dendrogram</strong>) that can be analyzed to determine an appropriate number of clusters $k$.</p>
 <br/>
-<p><img alt="No description has been provided for this image" src="images/14__Unsupervised_Clustering_image_7_1LaSLHOd.png" width="350"/>
-<img alt="No description has been provided for this image" src="images/14__Unsupervised_Clustering_image_8_1n19LM2f.png" width="350"/></p>
+<p><img alt="Diagram of hierarchical clustering on five items A to E. Agglomerative steps (AGNES) run left to right: A and B merge at 0.1, D and E at 0.2, C joins DE at 0.3, and AB joins CDE at 0.5. Divisive steps (DIANA) traverse the same tree right to left." src="images/14__Unsupervised_Clustering_image_7_1LaSLHOd.png" width="350"/>
+<img alt="Table of pairwise distances d between items A, B, C, D and E: d(A,B) = 0.1, d(A,C) = 0.8, d(A,D) = 0.7, d(A,E) = 1.0, d(B,C) = 0.5, d(B,D) = 0.6, d(B,E) = 0.9, d(C,D) = 0.3, d(C,E) = 0.4, d(D,E) = 0.2; every item is at distance 0 from itself." src="images/14__Unsupervised_Clustering_image_8_1n19LM2f.png" width="350"/></p>
 <br/>
 <p>During the execution of the algorithm, the merge distance never decreases, since the smallest available inter-cluster distance is always chosen. This fact can be used by an algorithm to organize the data for more efficient merge handling and updating.</p>
 <p>Agglomerative clustering is computationally expensive. As originally designed, AGNES requires time proportional to $n^3$, where $n$ is the number of data points. Since then, more efficient implementations have been developed (particularly for single-linkage clustering), but none can do better than $O(n^2)$.</p>
@@ -7785,7 +7785,7 @@ $$</li>
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
 <hr/>
 <br/>
-<p><img alt="No description has been provided for this image" src="images/14__Unsupervised_Clustering_image_9_1nDHYif1.png" width="800"/></p>
+<p><img alt="Network graph of world cities joined by many thin edges. The layout groups the cities into colored clusters: pink for North America, green for continental Europe, cyan for the United Kingdom and Ireland, blue for Spain and Portugal, and yellow for Asia and Australia. Hubs such as New York, London and Paris are drawn larger." src="images/14__Unsupervised_Clustering_image_9_1nDHYif1.png" width="800"/></p>
 <p><font size="1">Social network graph (2011), from Wikipedia (<a href="https://commons.wikimedia.org/wiki/File:The_true_continents_of_the_world_(version_2)_(5923004341).jpg">https://commons.wikimedia.org/wiki/File:The_true_continents_of_the_world_(version_2)_(5923004341).jpg</a>)</font></p>
 <br/>
 <h2 id="14.3-Graph-based-Clustering-%E2%AC%A4-"><strong>14.3 Graph-based Clustering<font color="#008DFF"> ⬤ </font></strong><a class="anchor-link" href="#14.3-Graph-based-Clustering-%E2%AC%A4-">¶</a></h2><p>Let's now consider a different kind of clustering, where the input data is not represented by points in space, but instead as the nodes and edges of a graph or network. Here, the clustering task is to partition the nodes into $k$ groups for which:</p>
@@ -7800,7 +7800,7 @@ $$</li>
 <li>a value of $A_{ij} = 1$ indicates that an edge exists between node $i$ and node $j$, and</li>
 <li>a value of $A_{ij} = 0$ indicates that no such edge exists.</li>
 </ul>
-<p><img alt="No description has been provided for this image" src="images/14__Unsupervised_Clustering_image_10_1v_wnm2R.png" width="400"/></p>
+<p><img alt="Two small graphs on the nodes A, B, C, D with their adjacency matrices. Undirected graph with edges A-B, A-D, B-C, B-D: the matrix is symmetric, with rows A: 0 1 0 1, B: 1 0 1 1, C: 0 1 0 0, D: 1 1 0 0. Directed graph with arrows A to B, B to C, B to D, D to A: rows are starting points and columns are ending points, with rows A: 0 1 0 0, B: 0 0 1 1, C: 0 0 0 0, D: 1 0 0 0." src="images/14__Unsupervised_Clustering_image_10_1v_wnm2R.png" width="400"/></p>
 <p>To this, we introduce the notion of a <em>diagonal matrix</em> $D$, in which:</p>
 <ul>
 <li>Every entry $D_{ii}$ on the diagonal is equal to the <em>degree</em> of node $i$ — that is, it equals the number of edges in which the node participates.</li>
@@ -7866,7 +7866,7 @@ $$</p>
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
 <h3 id="14.3.2-Spectral-Clustering"><strong>14.3.2 Spectral Clustering</strong><a class="anchor-link" href="#14.3.2-Spectral-Clustering">¶</a></h3><p>Next, we will see how spectral graph clustering can be used to help us with difficult clustering problems involving our familiar representations of data as points in space.</p>
 <p>For data in which the natural groupings are non-convex and highly interwoven, many (if not most) of the standard clustering techniques fail spectacularly. Consider the dataset in the left-hand image below. We as humans can easily judge it to be composed of two natural clusters in the form of interwoven spirals. However, applying a representative-based clustering method such as $k$-means would be disastrous, cutting through these clusters as in the middle image.</p>
-<p><img alt="No description has been provided for this image" src="images/14__Unsupervised_Clustering_image_11_19taBTHK.png" width="700"/></p>
+<p><img alt="Three panels of a two-spiral data set. Left: the raw points, all black. Middle, labeled K-means: the points are split into red and black halves by a straight cut that runs across both spirals. Right, labeled Spectral clustering: each spiral is colored as its own cluster." src="images/14__Unsupervised_Clustering_image_11_19taBTHK.png" width="700"/></p>
 <p>One way of dealing with such cases is to impose a graph structure on the data, by connecting each point to its $K$ nearest neighbors. In doing so, we use this graph as a way of discovering the shape of the data. Once we have the graph, we can then use spectral graph clustering to extract these shapes, as shown in the right-hand image. We usually call this method <em>spectral clustering</em> instead of 'spectral graph clustering', to emphasize the fact that the input is unstructured point data instead of a graph.</p>
 <p>Spectral clustering is somewhat related to single-linkage hierarchical clustering, in that simple neighborhood information can be used to find long chains as clusters. However, with a good choice of $K$ (usually small), spectral clustering can be far more robust. This is because the local connections for choices of $K&gt;1$ are denser than can be achieved using single linkage clustering.</p>
 </div>

@@ -7760,7 +7760,7 @@ $$</p>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
 <h2 id="3.6-Generalization-to-Higher-Dimensions-%E2%AC%A4-"><strong>3.6 Generalization to Higher Dimensions<font color="#008DFF"> ⬤ </font></strong><a class="anchor-link" href="#3.6-Generalization-to-Higher-Dimensions-%E2%AC%A4-">¶</a></h2><p>The analogue of a line in $2$ dimensions is the plane, and in higher dimensions we call it a <em>hyperplane</em>. We thus can use linear regression when we hypothesize that the data follows approximately a plane, as shown in the picture for the case when $d=2$.</p>
-<img alt="No description has been provided for this image" height="250" src="images/3__Linear_Regression__polynomial_regression__feature_engineering_image_4_1EVS7t97.png" width="400"/>
+<img alt="A three-dimensional plot with axes X1, X2 and Y. Red data points are scattered above and below a tilted plane, and a vertical red line joins each point to the plane, showing its error." height="250" src="images/3__Linear_Regression__polynomial_regression__feature_engineering_image_4_1EVS7t97.png" width="400"/>
 <p>The equation of a hyperplane is</p>
 <p>$$
      y = b + w_1 x_1 + \ldots w_d x_d \, ,
@@ -7919,7 +7919,7 @@ $$</p>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
 <h2 id="3.9--RANSAC:-Random-Sample-Consensus-for-Outliers-%E2%AC%A4-"><strong>3.9  RANSAC: Random Sample Consensus for Outliers<font color="#008DFF"> ⬤ </font></strong><a class="anchor-link" href="#3.9--RANSAC:-Random-Sample-Consensus-for-Outliers-%E2%AC%A4-">¶</a></h2><p>The existence of outliers can 'fool' a regression model, as illustrated in the following picture. There are many ways of handling outliers and their detection is a continuous research topic.</p>
-<img alt="No description has been provided for this image" height="300" src="images/3__Linear_Regression__polynomial_regression__feature_engineering_image_5_1jr0b9Zb.png" width="400"/>
+<img alt="Scatter plot of inliers (green points) that lie along a steep straight line, and a group of outliers (yellow points) off to the right near y = 0. The RANSAC regressor (light blue line) follows the inliers, while the ordinary linear regressor (dark blue line) is pulled toward the outliers and is less steep." height="300" src="images/3__Linear_Regression__polynomial_regression__feature_engineering_image_5_1jr0b9Zb.png" width="400"/>
 <p>RANSAC is a simple but effective method for treating outliers.
 Here are its steps:</p>
 <hr/>
@@ -7947,7 +7947,7 @@ $n''$: inlier number threshold</p>
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
 <h2 id="3.10--Feature-Engineering-%E2%AC%A4-"><strong>3.10  Feature Engineering<font color="#FFCC00"> ⬤ </font></strong><a class="anchor-link" href="#3.10--Feature-Engineering-%E2%AC%A4-">¶</a></h2><p>Fitting hyperplanes to data seems to have very limited power. However, transforming the data may render them explainable by linear models, i.e. make them amenable to linear regression. The transformation can be as simple as <em><strong>adding features</strong></em> to the data points, and working with engineered data sets that 'live' in higher dimensions.</p>
 <p>As an example, consider the following picture.</p>
-<img alt="No description has been provided for this image" height="550" src="images/3__Linear_Regression__polynomial_regression__feature_engineering_image_6_1-6d0vrP.png" width="1100"/>
+<img alt="Yahoo Finance chart of the SPDR S&amp;P 500 ETF (SPY) from May 2021 to February 2022. The blue line is the daily closing price, the orange line is the 20-day moving average, and a shaded orange band around it shows the Bollinger bands, the moving average plus and minus the 20-day standard deviation. Daily trading volume is shown as bars along the bottom." height="550" src="images/3__Linear_Regression__polynomial_regression__feature_engineering_image_6_1-6d0vrP.png" width="1100"/>
 <p>The blue line is the daily price of the S&amp;P stock index, and the orange line is the average over the previous 20 days, which is a <em><strong>linear</strong></em> function of the 20 previous points. The upper and lower orange lines are computed by adding and subtracting the standard deviation of the values of the 20 previous points. Standard deviation involves calculations with the squares of the values, so these upper and lower bands are <em><strong>quadratic</strong></em> features, and a visual inspection can reveal that adding these features may be informative in making investment decisions.</p>
 </div>
 </div>
