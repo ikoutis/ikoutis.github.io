@@ -23,7 +23,7 @@
   5000 Forbes Avenue            & \\
   Pittsburgh, PA 15213          & \\
  \end{ncolumn}
- \end{comment}
+\end{comment}
 
 
 
@@ -94,7 +94,7 @@ Gallopoulos.\\
 	
 \item 2018-2021: ``NSF: Practice-Friendly Theory and Algorithms for Linear Regression Problems'' [\$250K]	
 
-\item 2012-2018: ``NSF CAREER: Fast algorithms via a spectral theory for graphs with a prescribed cut structure (NSF)''
+\item 2012-2018: ``NSF CAREER: Fast algorithms via a spectral theory for graphs with a prescribed cut structure''
 [\$500K]
 
 
@@ -151,7 +151,7 @@ Engineering, ICDE 2021}
 {{\bf [22]}} I. Koutis and H. Le, {Spectral Graph Modification for Improved Spectral Clustering,}.\\ In {\em 33rd  Conference on Neural Information Processing Systems,  NeurIPS 2019
 }
 
-{{\bf [21]}} D. Calandriello, I. Koutis, A. Lazaric, M. Valco, {Improved Large-Scale Graph Learning through Ridge Spectral Sparsification}.
+{{\bf [21]}} D. Calandriello, I. Koutis, A. Lazaric, M. Valko, {Improved Large-Scale Graph Learning through Ridge Spectral Sparsification}.
   In: {\em 35th International Conference on Machine Learning, ICML 2018}
 
 {{\bf [20]}} A. Kolla, I. Koutis, V. Madan, A. K. Sinop, {Spectrally Robust Graph Isomorphism}. \\ In: {\em 45th  International Colloquium on Automata, Languages, and Programming, ICALP 2018} 
@@ -217,7 +217,7 @@ matrix  pseudospectra. In: {\em Proceedings of the
 \section{\bf \color {Blue}{\large Journal Publications}}
 \vspace{0.3cm}
 
-{{\bf [18]}}   S. Rajendra Patil, A. Parmanand Pandey, I. Koutis, M. Xu, Hierarchical Mamba Meets Hyperbolic Geometry: A New Paradigm for Structured Language Embeddings, In {\em Transactions of Machine Learning Research, 2026}
+{{\bf [18]}}   S. Rajendra Patil, A. Parmanand Pandey, I. Koutis, M. Xu, Hierarchical Mamba Meets Hyperbolic Geometry: A New Paradigm for Structured Language Embeddings, In {\em Transactions on Machine Learning Research, 2026}
 
 {{\bf [17]}} N. Aghaieabiane, I. Koutis: SGCP: A spectral self-learning method for clustering genes in co-expression networks, In {\em BMC Bioinformatics, 2024}
 
@@ -234,7 +234,7 @@ In {\em IEEE Transactions on Computer-Aided Design of Integrated Circuits and Sy
 
 {{\bf [11]}} I. Koutis, Multilinear Monomial Detection, \\Invited In: {\em Encyclopedia of Algorithms, 2016}
 
-{{\bf [10]}} I. Koutis, R. Williams, Algebraic Fingerprints for faster algorithms. \\In: {\em Communications of the ACM, 2016, January 2016}.
+{{\bf [10]}} I. Koutis, R. Williams, Algebraic Fingerprints for faster algorithms. \\In: {\em Communications of the ACM, January 2016}.
 
 {{\bf [9]}} I. Koutis, A. Levin, R. Peng, Faster spectral sparsification and numerical algorithms for SDD matrices. \\ In: {\em ACM Transactions on Algorithms (TALG), 2015}.
 
@@ -277,7 +277,7 @@ Z}_p^d$}, 2007, \\ {\newblock \em CMU-CS-07-103 Technical Report}.
 
 
 {\bf {\bf [2]}} I. Koutis, {Spectrum through pseudospectrum}, 2001,
-\\ \newblock {\em Arxiv Report No 0701368}.
+\\ \newblock {\em arXiv Report No. 0701368}.
 
 
 {\bf [1]} I. Koutis and E. Gallopoulos, Iterations on domains for computing the
@@ -341,7 +341,7 @@ for solving weighted planar graphs. US 8711146.   }
 
 {\em Spectral Graph Modification for Improved Spectral Clustering}
 \newline The New York Colloquium on Algorithms and Complexity
-\newline CUNY University, N, November 15, 2019
+\newline CUNY, New York, NY, November 15, 2019
 
 
 {\em  Pragmatic Ridge Spectral Sparsification for Large-Scale Graph Learning}
@@ -350,7 +350,7 @@ for solving weighted planar graphs. US 8711146.   }
 
 
 {\em Spectrally Robust Graph Isomorphism}
-\newline Simons Institute of Technology
+\newline Simons Institute
 \newline Berkeley, CA, September 25, 2018
 
 
@@ -367,11 +367,11 @@ for solving weighted planar graphs. US 8711146.   }
 \newline Randomization in Parameterized Complexity
 \newline Schloss Dagstuhl, Germany, January 2017
 
-{\em On full dynamic graph sparsifiers}
+{\em On fully dynamic graph sparsifiers}
 \newline Algebraic and Spectral Graph Theory, Banff International Research Station
 \newline Banff, Canada, August 04, 2016 
 
-{\em On full dynamic graph sparsifiers}
+{\em On fully dynamic graph sparsifiers}
 \newline Recent Advances on Randomized Numerical Linear Algebra, NII Shonan Meeting
 \newline Shonan Village, Japan, July 26, 2016
 
@@ -458,8 +458,8 @@ Computational and Methodological Statistics (2013)
 \newline The $14^{th}$ Copper Mountain Conference on Multigrid Methods (2009)
 
 {\em Unassisted segmentation of multiple retinal layers via spectral rounding}
-\newline [with D. Tolliver, I. Koutis, H. Ishikawa, J.S. Schuman, and G.L. Miller]
-\newline Association of Research in Vision and Opthalmology, ARVO 2008 Annual Meeting,
+\newline [with D. Tolliver, H. Ishikawa, J.S. Schuman, and G.L. Miller]
+\newline Association for Research in Vision and Ophthalmology, ARVO 2008 Annual Meeting,
 
 
 
@@ -498,13 +498,13 @@ Computational and Methodological Statistics (2013)
 
 \item European Research Council (ERC)
 
-\item Program Committee Member, PKDD-Nectar 2014,2015, WSDM 2016, WWW 2015--2018, WebConf 2019--2022, KDD 2017, KDD-Applied Track 2018, LATIN 2018, CIKM 2018, AAAI 2019--2020, ICCAD 2024--2026, DAC 2025--2026
+\item Program Committee Member, PKDD-Nectar 2014,2015, WSDM 2016, WWW 2015--2018, WebConf 2019--2022, KDD 2017, KDD-Applied Track 2018, LATIN 2018, CIKM 2018, AAAI 2019--2020, ICCAD 2024--2026, DAC 2025--2027, SOSFEM 2027, ACDA 2027
 
 \item Referee for CS conferences (STOC, FOCS, SODA, SPAA, STACS, ESA, MFCS)
 
 \item Referee for journals including (JACM, ACM TALG, JCSS, Algorithmica, TOPC, IPL, SIMAX)
 
-\item Workshop Organizer, “Electrical Flows, Graphs Laplacians and Algorithms: Spectral Theory and Beyond”, ICERM, 2014 
+\item Workshop Organizer, ``Electrical Flows, Graph Laplacians and Algorithms: Spectral Theory and Beyond'', ICERM, 2014
 
 
 
@@ -522,15 +522,19 @@ Computational and Methodological Statistics (2013)
 	
 \item {\bf Online Course Design:} NJIT Machine Learning (DS 675), Deep Learning (DS 677)
 	
-\item Machine Learning (CS/DS 675), NJIT, S20, F20, F21, Su21, F22, S22, Su22, S23, S24 
+\item Machine Learning (CS/DS 675), NJIT, S20, F20, F21, Su21, F22, S22, Su22, S23, S24, S26 
 
-\item Deep Learning (CS/DS 677), NJIT, F21, S21, F22, S23, Su23, F23, S24, Sum24
+\item Deep Learning (CS/DS 677), NJIT, F21, S21, F22, S23, Su23, F23, S24, Su24, Su25, Su26
 	
 \item Data Structures and Algorithms (CS 610), NJIT, F19, Su20, Su21, S26
 
 \item Computational Complexity (CS 611), NJIT, S18, S19, S20, S21
 	
-\item Advanced Data Structures and Algorithm Design (CS 435), NJIT, F17, F18	
+\item Advanced Data Structures and Algorithm Design (CS 435), NJIT, F17, F18
+
+\item Introduction to Data Science (CS 301), NJIT, F26
+
+\item Foundations of Computer Science I (CS 241), NJIT, F26	
 	
 \item Theory of Computability, UPRRP, F15, F16
 
@@ -550,7 +554,7 @@ Computational and Methodological Statistics (2013)
 
 \item Teaching Assistant, Principles of Programming, CMU, S02
 
-\item Teaching Assistant, Formal Languages Automata and Computation, CMU, S01
+\item Teaching Assistant, Formal Languages, Automata and Computation, CMU, S01
 
 \item Teaching Assistant, Advanced Scientific Computing, University of Patras, F99
 
@@ -574,7 +578,7 @@ $\bullet$ Niloofar Aghaieabiane, 2023 [first position: JP Morgan] \\
 $\bullet$ Huong Le, 2021 [first position: Lecturer at NJIT]
 
 
-\item \textbf{PhD Committee Member (NJIT) current:}   Mehtab Sidhu, Yupeng Xu, Chunhui Xu, Hongyang Zhang, Mohammad Dindoost, Zhibo Ye, Swastik Biswas, Zhenduo Wang
+\item \textbf{PhD Committee Member (NJIT) current:}   Mehtab Sidhu, Yupeng Xu, Chunhui Xu, Hongyang Zhang, Mohammad Dindoost, Zhibo Ye, Swastik Biswas, Zhenduo Wang, Hamideh Sabaei, Yiran Huang
 
 \item \textbf{Awarded PhDs - Committee Member (NJIT):} 2019: Abdulrhman Fahad Aljouie , 2020: Xin Yin, 2021: Zhihang Hu, Yunzhe Xue, Dong Wei, 2022: Shibo Yao, Cavidan Yakupoglu, Gerges Firas, Yasser Abduallah, 2023: Mojtaba Zaheri, Mahsa Asadi, Hessam Mohammadi, Sepideh Nikookar, Md Moinul Islam, Xiang Lin, 2024: Wenlu Du, Minjuan Zhang, 2025: Oliver Alvarado Rodriguez, Fuhuan Li, Jingyi Gu, Haoran Liu, 2026: Shen Fan, Haotian Yin, Siqi Jiang
 
@@ -600,10 +604,10 @@ $\bullet$ Huong Le, 2021 [first position: Lecturer at NJIT]
 
 \item \textbf{2022-present: Associate Chair of Graduate Studies, Department of Computer Science}
 \begin{itemize}
-\item Established Barclays–NJIT MS in Computer Science partnership program (2025)
+\item Established Barclays--NJIT MS in Computer Science partnership program (2025)
 \item Co-designed three BS program concentrations: AI: Learning and Reasoning, AI: Systems and Infrastructure, and Cybersecurity and Privacy (2026)
 \item Developed merit-based faculty salary framework, adopted by CS Department (Spring 2024), advancing fairness and transparency in compensation decisions
-\item Redesigned department workflows for course assignments, scheduling, and TA allocation (2023–2026); developed supporting software adopted college-wide for all scheduling operations
+\item Redesigned department workflows for course assignments, scheduling, and TA allocation (2023--2026); developed supporting software adopted college-wide for all scheduling operations
 \item Updated graduate program catalogs and created Certificate-to-MS pathways
 \item Established Graduate Certificate in Hyperscale Computing
 \end{itemize}
@@ -616,13 +620,13 @@ $\bullet$ Huong Le, 2021 [first position: Lecturer at NJIT]
 
 \begin{itemize}
 
-\item 2024–present: Committee on Lecturers
+\item 2024--present: Committee on Lecturers
 
-\item 2023–2024: Co-Administered the Data Structures \& Algorithms PhD Qual Exam
+\item 2023--2024: Co-Administered the Data Structures \& Algorithms PhD Qual Exam
 
-\item 2022–present: Organizer of Spring Department Retreats (2023, 2024, 2025)
+\item 2022--present: Organizer of Spring Department Retreats (2023, 2024, 2025)
 
-\item 2018–2022: Administered the Computational Complexity PhD Qual Exam
+\item 2018--2022: Administered the Computational Complexity PhD Qual Exam
 
 \item 2022: CAREER Mentoring Committee Member
 

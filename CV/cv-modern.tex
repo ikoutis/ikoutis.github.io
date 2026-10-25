@@ -1,0 +1,531 @@
+% Curriculum Vitae -- Yiannis Koutis
+% Self-contained; compiles with xelatex / lualatex / tectonic.
+\documentclass[11pt,letterpaper]{article}
+
+\usepackage[letterpaper,left=0.85in,right=0.85in,top=0.8in,bottom=0.85in,headsep=16pt,footskip=28pt]{geometry}
+\usepackage{amsmath}
+\usepackage{libertinus}
+\usepackage{xcolor}
+\usepackage[explicit]{titlesec}
+\usepackage{enumitem}
+\usepackage{fancyhdr}
+\usepackage{lastpage}
+\usepackage[hidelinks]{hyperref}
+\usepackage{microtype}
+
+% ---------------------------------------------------------------- colors
+\definecolor{accent}{HTML}{1F4E79}
+\definecolor{accentlight}{HTML}{E4ECF5}
+\definecolor{muted}{HTML}{6B7280}
+\definecolor{rulec}{HTML}{B8C4D2}
+\definecolor{grayfill}{HTML}{EEF0F3}
+
+% ---------------------------------------------------------------- spacing
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0pt}
+\widowpenalty=10000
+\clubpenalty=10000
+\raggedbottom
+
+% ---------------------------------------------------------------- headings
+\titleformat{\section}{\large\scshape\color{accent}}{}{0pt}
+  {#1\hspace{0.7em}{\color{rulec}\leaders\hrule height 3.6pt depth -3.0pt\hfill}}
+\titlespacing*{\section}{0pt}{15pt}{7pt}
+
+\titleformat{\subsection}{\normalsize\bfseries}{}{0pt}{#1}
+\titlespacing*{\subsection}{\datecol}{7pt}{3pt}
+
+% ---------------------------------------------------------------- entries
+% Every entry hangs from a fixed left column holding a date or label.
+\newlength{\datecol}\setlength{\datecol}{1.06in}
+\setlength{\emergencystretch}{1em}
+\newlength{\entrysep}\setlength{\entrysep}{4pt}
+
+\newcommand{\datefont}{\small\color{muted}}
+\newcommand{\entry}[2]{%
+  \par\noindent\hangindent=\datecol\hangafter=1
+  \makebox[\datecol][l]{\datefont #1}#2\par\vspace{\entrysep}}
+% tight variant, for table-like runs (teaching)
+\newcommand{\tentry}[2]{{\setlength{\entrysep}{1.5pt}\entry{#1}{#2}}}
+
+% right-aligned trailing text that drops to its own line if needed
+\newcommand{\rightpart}[1]{{\unskip\nobreak\hfil\penalty50\hskip1.5em\hbox{}\nobreak\hfil
+  #1\parfillskip=0pt\finalhyphendemerits=0\par}}
+
+\newcommand{\badge}[1]{\,{\setlength{\fboxsep}{1.4pt}%
+  \colorbox{accentlight}{\textcolor{accent}{\footnotesize\textsc{#1}}}}}
+\newcommand{\graybadge}[1]{\,{\setlength{\fboxsep}{1.4pt}%
+  \colorbox{grayfill}{\textcolor{muted}{\footnotesize\textsc{#1}}}}}
+
+\newcommand{\note}[1]{\textcolor{muted}{#1}}
+\newcommand{\me}{I.~Koutis}
+% publication: number, authors, title, venue. The paragraph is left open so
+% trailing text (pages, year, badges) joins it; the next \pub or \section closes it.
+\newcommand{\pub}[4]{\par\addvspace{\entrysep}\noindent\hangindent=\datecol\hangafter=1
+  \makebox[\datecol][l]{\datefont [#1]}#2. #3. \textit{#4}}
+% grant: years, title, amount in a fixed right column
+\newcommand{\grant}[3]{\entry{#1}{\parbox[t]{\dimexpr\linewidth-\datecol-0.8in}{\raggedright #2}%
+  \hfill\makebox[0.65in][r]{#3}}}
+\hyphenation{Xiang}
+
+\setlist[itemize]{leftmargin=\dimexpr\datecol+1.1em\relax,labelsep=0.5em,
+  itemsep=1.5pt,topsep=2pt,label={\color{muted}\textbullet}}
+
+% ---------------------------------------------------------------- page style
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\small\color{muted}Yiannis Koutis \,·\, Curriculum Vitae}
+\fancyfoot[C]{\small\color{muted}\thepage\ of \pageref*{LastPage}}
+\renewcommand{\headrulewidth}{0pt}
+\fancypagestyle{first}{\fancyhf{}\fancyfoot[C]{\small\color{muted}\thepage\ of \pageref*{LastPage}}}
+
+\begin{document}
+\thispagestyle{first}
+
+% ================================================================ header
+{\fontsize{26}{30}\selectfont\color{accent}Yiannis Koutis}\par
+\vspace{5pt}
+{\large Professor of Computer Science}\hfill
+\href{mailto:ikoutis@njit.edu}{ikoutis@njit.edu}\par
+\vspace{1pt}
+New Jersey Institute of Technology\hfill
+\href{https://ikoutis.github.io/}{ikoutis.github.io}\par
+\vspace{6pt}
+{\color{accent}\rule{\linewidth}{0.8pt}}
+\vspace{-6pt}
+
+% ================================================================ education
+\section{Education}
+
+\entry{2007}{\textbf{PhD}, Carnegie Mellon University, Pittsburgh\\
+  Thesis: \textit{Combinatorial and algebraic tools for optimal multilevel algorithms}\\
+  Advisor: Gary L. Miller}
+
+\entry{1998}{\textbf{BSc/Diploma}, Computer Engineering and Informatics Department, University of Patras\\
+  \textit{Engineering School Valedictorian}\\
+  Thesis: \textit{Parallel algorithms for the computation of pseudospectra}\\
+  Advisor: Efstratios Gallopoulos}
+
+% ================================================================ appointments
+\section{Appointments}
+
+\subsection{Current}
+\entry{2026--present}{\textbf{Professor}, New Jersey Institute of Technology}
+\entry{2022--present}{\textbf{Associate Chair of Graduate Studies}, Department of Computer Science, NJIT}
+
+\subsection{Past}
+\entry{2017--2026}{\textbf{Associate Professor}, New Jersey Institute of Technology}
+\entry{2010--2020}{\textbf{Adjunct Faculty}, Carnegie Mellon University}
+\entry{2014--2018}{\textbf{Associate Professor}, University of Puerto Rico--Rio Piedras}
+\entry{2010--2014}{\textbf{Assistant Professor}, University of Puerto Rico--Rio Piedras}
+\entry{2008--2010}{\textbf{Systems Scientist}, Special Faculty, Carnegie Mellon University}
+\entry{2007--2008}{\textbf{Postdoctoral Researcher}, Carnegie Mellon University}
+
+\subsection{Visiting}
+\entry{Sep--Dec 2014}{\textbf{Visiting Scientist}, Simons Institute}
+\entry{Feb--May~2014}{\textbf{Visiting Professor}, ICERM, Brown University}
+
+% ================================================================ awards
+\section{Awards and Honors}
+
+\entry{2022}{William J. McCalla ICCAD Best Paper Award (back end)}
+\entry{2020}{Ying Wu College of Computing Excellence in Teaching Award}
+\entry{2017}{ICALP -- Track A: Best Paper Award}
+\entry{2012}{NSF CAREER Award}
+\entry{2002}{SIAM Student Travel Award}
+\entry{1999}{Best Engineering Student Award, Technical Chamber of Greece}
+\entry{1998}{University of Patras Engineering School Valedictorian}
+\entry{1993--1998}{Yearly awards from the Greek State Scholarships Foundation}
+
+% ================================================================ grants
+\section{Grants}
+
+\grant{2023--2025}{NSF: Cybertraining: Pilot: Cyberinfrastructure-Enabled Machine Learning for
+  Understanding and Forecasting Space Weather \badge{co-PI}}{\$190K}
+\grant{2020--2022}{NSF: Spectral Network Alignment}{\$150K}
+\grant{2018--2021}{NSF: Practice-Friendly Theory and Algorithms for Linear Regression Problems}{\$250K}
+\grant{2012--2018}{NSF CAREER: Fast algorithms via a spectral theory for graphs with a prescribed
+  cut structure}{\$500K}
+\grant{2012--2014}{UPR -- Institute of Functional Nanomaterials (IFN): Computational analysis of
+  neural images via spectral methods}{\$50K}
+\grant{2010--2013}{NSF: Algorithm Design Using Spectral Graph Theory \badge{co-PI}}{\$500K}
+\grant{2008--2009}{University of Pittsburgh Medical Center (UPMC) grant for the development of new
+  medical imaging methods based on spectral approaches \badge{co-investigator}}{\$700K}
+
+% ================================================================ conference pubs
+\section{Refereed Conference and Workshop Publications}
+
+\pub{31}{M.~Dindoost, O.~Alvarado Rodriguez, B.~Bryg, \me, D.~A.~Bader}
+  {HiperMotif: Novel parallel subgraph isomorphism in large-scale property graphs}
+  {IEEE High Performance Extreme Computing, HPEC 2025}
+\pub{30}{A.~Moradi Karkaj, M.~J.~Nelson, \me, A.~Hoover}
+  {Prompt Wrangling: On replication and generalization in large language models for PCG levels}
+  {Proceedings of the 15th Workshop on Procedural Content Generation, FDG 2024}\graybadge{workshop}
+\pub{29}{I.~Bustany, G.~Gasparyan, A.~Kahng, \me, B.~Pramanik, Z.~Wang}
+  {TritonPart: An Open-Source Constraints-Driven General Partitioning Multi-Tool for VLSI Physical Design}
+  {42nd International Conference on Computer-Aided Design, ICCAD 2023}
+\pub{28}{\me, M.~Wlodarczyk, M.~Zehavi}
+  {Sidestepping Barriers for Dominating Set in Parameterized Complexity}
+  {18th International Symposium on Parameterized and Exact Computation, IPEC 2023}
+\pub{27}{E.~Beikihassan, A.~Parviz, N.~Aghaieabiane, A.~Hoover, \me}
+  {Resource-constrained knowledge diffusion processes inspired by human peer learning}
+  {26th European Conference on Artificial Intelligence, ECAI 2023}\badge{full oral presentation}
+\pub{26}{I.~Bustany, A.~Kahng, \me, B.~Pramanik, Z.~Wang}
+  {SpecPart: A supervised spectral framework for hypergraph partitioning solution improvement}
+  {41st International Conference on Computer-Aided Design, ICCAD 2022}\badge{best paper award}
+\pub{25}{E.~Beikihassan, A.~Hoover, \me, A.~Parviz}
+  {Ensemble Learning as a Peer Process}
+  {Agent Learning in Open-Endedness Workshop (ALOE), ICLR 2022}\graybadge{workshop}
+\pub{24}{\me, B.~Pramanik}
+  {Spectral Hypergraph Partitioning Revisited}
+  {SIAM Conference on Applied and Computational Discrete Algorithms, ACDA 2021}
+\pub{23}{D.~Wei, \me, S.~Basu-Roy}
+  {Peer Learning Through Targeted Dynamic Groups Formation}
+  {37th IEEE International Conference on Data Engineering, ICDE 2021}
+\pub{22}{\me, H.~Le}
+  {Spectral Graph Modification for Improved Spectral Clustering}
+  {33rd Conference on Neural Information Processing Systems, NeurIPS 2019}
+\pub{21}{D.~Calandriello, \me, A.~Lazaric, M.~Valko}
+  {Improved Large-Scale Graph Learning through Ridge Spectral Sparsification}
+  {35th International Conference on Machine Learning, ICML 2018}
+\pub{20}{A.~Kolla, \me, V.~Madan, A.~K.~Sinop}
+  {Spectrally Robust Graph Isomorphism}
+  {45th International Colloquium on Automata, Languages, and Programming, ICALP 2018}
+\pub{19}{A.~Björklund, P.~Kaski, \me}
+  {Directed Hamiltonicity and Out-Branchings via Generalized Laplacians}
+  {44th International Colloquium on Automata, Languages, and Programming, ICALP 2017}\badge{best paper award}
+\pub{18}{I.~Abraham, D.~Durfee, \me, S.~Krinninger, R.~Peng}
+  {On fully dynamic graph sparsifiers}
+  {57th Annual IEEE Symposium on Foundations of Computer Science, FOCS 2016}
+\pub{17}{M.~Cucuringu, \me, S.~Chawla, G.~Miller, R.~Peng}
+  {Simple and Scalable Constrained Clustering: A Generalized Spectral Method}
+  {19th International Conference on Artificial Intelligence and Statistics, AISTATS 2016}
+\pub{16}{C.~Mavroforakis, R.~Garcia-Lebron, \me, E.~Terzi}
+  {Spanning edge centrality: large-scale computation and applications}
+  {Proceedings of the 24th International World Wide Web Conference, WWW 2015}
+\pub{15}{\me}
+  {Simple parallel and distributed algorithms for spectral graph sparsification}
+  {Proceedings of the 26th Annual Symposium on Parallelism in Algorithms and Architectures, SPAA 2014}
+\pub{14}{L.~Brueggeman, M.~Fellows, R.~Fleischer, M.~Lackner, C.~Komusiewicz, \me, A.~Pfandler, F.~Rosamond}
+  {Train Marshalling Is Fixed Parameter Tractable}
+  {Proceedings of Fun with Algorithms, FUN 2012}
+\pub{13}{\me, A.~Levin, R.~Peng}
+  {Improved spectral sparsification and numerical algorithms for SDD matrices}
+  {Proceedings of the 29th Annual Symposium on Theoretical Aspects of Computer Science, STACS 2012}
+\pub{12}{\me, G.~Miller, R.~Peng}
+  {A nearly-$m\log n$ solver for SDD linear systems}
+  {Proceedings of the 52nd Annual IEEE Symposium on Foundations of Computer Science, FOCS 2011}
+\pub{11}{G.~Blelloch, \me, A.~Gupta, G.~Miller, R.~Peng, K.~Tangwongsan}
+  {Near linear-work parallel SDD solvers, low-diameter decomposition and low-stretch subgraphs}
+  {Proceedings of the 23rd Annual Symposium on Parallelism in Algorithms and Architectures, SPAA 2011}
+\pub{10}{\me, G.~Miller, R.~Peng}
+  {Approaching optimality for solving symmetric diagonally dominant systems}
+  {Proceedings of the 51st Annual IEEE Symposium on Foundations of Computer Science, FOCS 2010}
+\pub{9}{G.~Blelloch, \me, G.~Miller, K.~Tangwongsan}
+  {Hierarchical Diagonal Blocking with precision reduction applied to combinatorial multigrid}
+  {Proceedings of the 23rd ACM/IEEE Conference on High Performance Computing, SC 2010}
+\pub{8}{\me, G.~Miller, D.~Tolliver}
+  {Combinatorial preconditioners and multilevel solvers for problems in computer vision and image processing}
+  {Proceedings of the 5th International Symposium on Visual Computing, ISVC 2009}
+\pub{7}{\me, R.~Williams}
+  {Limits and applications of group algebras for parameterized problems}
+  {Proceedings of the 35th International Colloquium on Automata, Languages and Programming, ICALP 2009}
+\pub{6}{C.~Tsourakakis, P.~Drineas, E.~Michelakis, \me, C.~Faloutsos}
+  {Spectral counting of triangles in power-law networks via element-wise sparsification}
+  {Proceedings of the 2009 International Conference on Advances in Social Networks Analysis and Mining, ASONAM 2009}
+\pub{5}{\me}
+  {Faster algebraic algorithms for path and packing problems}
+  {Proceedings of the 35th International Colloquium on Automata, Languages and Programming, ICALP 2008}
+\pub{4}{\me, G.~Miller}
+  {Graph partitioning into isolated, high conductance clusters: theory, computation and applications to preconditioning}
+  {Proceedings of the 20th Symposium on Parallelism in Algorithms and Architectures, SPAA 2008}
+\pub{3}{\me, G.~L.~Miller}
+  {A linear work, $O(n^{1/6})$ time, parallel algorithm for solving planar Laplacians}
+  {Proceedings of the 18th ACM-SIAM Symposium on Discrete Algorithms, SODA 2007}
+\pub{2}{\me}
+  {On the hardness of multivariate integration}
+  {Proceedings of the 6th International Workshop on Approximation Algorithms for Combinatorial
+   Optimization Problems, APPROX 2003}, pp.~122--128
+\pub{1}{C.~Bekas, E.~Kokiopoulou, \me, E.~Gallopoulos}
+  {Parallel computation of matrix pseudospectra}
+  {Proceedings of the 15th ACM International Conference on Supercomputing, ICS 2001}, pp.~260--269
+
+% ================================================================ journal pubs
+\section{Journal Publications}
+
+\pub{18}{S.~Rajendra Patil, A.~Parmanand Pandey, \me, M.~Xu}
+  {Hierarchical Mamba Meets Hyperbolic Geometry: A New Paradigm for Structured Language Embeddings}
+  {Transactions on Machine Learning Research}, 2026
+\pub{17}{N.~Aghaieabiane, \me}
+  {SGCP: A spectral self-learning method for clustering genes in co-expression networks}
+  {BMC Bioinformatics}, 2024
+\pub{16}{I.~Bustany, A.~Kahng, \me, B.~Pramanik, Z.~Wang}
+  {K-SpecPart: Supervised Embedding Algorithms and Cut Overlay for Improved Hypergraph Partitioning}
+  {IEEE Transactions on Computer-Aided Design of Integrated Circuits and Systems}, 2023
+\pub{15}{\me, G.~Miller, R.~Peng}
+  {A generalized Cheeger inequality}
+  {Linear Algebra and Its Applications}, 2023
+\pub{14}{N.~Aghaieabiane, \me}
+  {A novel calibration step in gene co-expression network construction}
+  {Frontiers in Bioinformatics}, 2021
+\pub{13}{\me, S.~C.~Xu}
+  {Simple parallel and distributed algorithms for spectral graph sparsification}
+  {ACM Transactions on Parallel Computing}, 2016
+\pub{12}{\me, R.~Williams}
+  {Limits and applications of group algebras for parameterized problems}
+  {ACM Transactions on Algorithms (TALG)}, 2016
+\pub{11}{\me}
+  {Multilinear Monomial Detection}
+  {Encyclopedia of Algorithms}, 2016\badge{invited}
+\pub{10}{\me, R.~Williams}
+  {Algebraic Fingerprints for faster algorithms}
+  {Communications of the ACM}, January~2016
+\pub{9}{\me, A.~Levin, R.~Peng}
+  {Faster spectral sparsification and numerical algorithms for SDD matrices}
+  {ACM Transactions on Algorithms (TALG)}, 2015
+\pub{8}{\me, G.~Miller, R.~Peng}
+  {Approaching optimality for solving symmetric diagonally dominant systems}
+  {SIAM Journal on Computing, special issue FOCS 2010}, Vol.~43, No.~1, pp.~337--354, 2014\badge{invited}
+\pub{7}{G.~Blelloch, \me, A.~Gupta, G.~Miller, R.~Peng, K.~Tangwongsan}
+  {Near linear-work parallel SDD solvers, low-diameter decomposition and low-stretch subgraphs}
+  {Theory of Computing Systems}, March~2013\badge{invited}
+\pub{6}{\me, G.~Miller, R.~Peng}
+  {A fast solver for a class of linear systems}
+  {Communications of the ACM}, October~2012\badge{invited}
+\pub{5}{\me}
+  {Constrained multilinear detection for faster functional motif discovery}
+  {Information Processing Letters}, Vol.~112, No.~22, pp.~889--892, 2012
+\pub{4}{\me, G.~Miller, D.~Tolliver}
+  {Combinatorial preconditioners and multilevel solvers for problems in computer vision and image processing}
+  {Computer Vision and Image Understanding}, 115(12), pp.~1638--1646, 2011\badge{invited}
+\pub{3}{C.~Tsourakakis, P.~Drineas, E.~Michelakis, \me, C.~Faloutsos}
+  {Spectral counting of triangles in power-law networks via element-wise sparsification and triangle-based link recommendation}
+  {Social Network Analysis and Mining}, Vol.~1, No.~2, pp.~75--81, 2011
+\pub{2}{\me}
+  {Parameterized complexity and improved inapproximability for computing the largest $j$-simplex in a $V$-polytope}
+  {Information Processing Letters}, 1, No.~1, pp.~8--13, 2006
+\pub{1}{\me}
+  {A faster parameterized algorithm for set packing}
+  {Information Processing Letters}, No.~1, pp.~4--7, 2005
+
+% ================================================================ other pubs
+\section{Other Publications and Preprints}
+
+\pub{3}{\me}{Dimensionality restrictions on sums over $\mathbb{Z}_p^d$}{CMU-CS-07-103 Technical Report}, 2007
+\pub{2}{\me}{Spectrum through pseudospectrum}{arXiv Report No.\ 0701368}, 2001
+\pub{1}{\me, E.~Gallopoulos}{Iterations on domains for computing the matrix pseudospectrum}{Manuscript}, 1999
+
+% ================================================================ patents
+\section{Patents}
+
+\entry{2014}{\textit{Method and apparatuses for solving weighted planar graphs}. \me, G.~L.~Miller. US~8711146}
+\entry{2013}{\textit{Methods for solving graph Laplacians}. \me, G.~L.~Miller. US~8516029}
+
+% ================================================================ invited talks
+\section{Invited Talks}
+
+\entry{2019}{\textit{Spectral Graph Modification for Improved Spectral Clustering}\\
+  The New York Colloquium on Algorithms and Complexity, CUNY, New York, NY, November~15}
+\entry{2019}{\textit{Pragmatic Ridge Spectral Sparsification for Large-Scale Graph Learning}\\
+  DIMACS Workshop on Randomized Numerical Linear Algebra, Statistics, and Optimization,
+  Rutgers University, New Brunswick, NJ, September~18}
+\entry{2018}{\textit{Spectrally Robust Graph Isomorphism}\\
+  Simons Institute, Berkeley, CA, September~25}
+\entry{2018}{\textit{Directed Hamiltonicity and Out-Branchings via Generalized Laplacians}\\
+  Rutgers Business School, Newark, NJ, February~22}
+\entry{2017}{\textit{A survey of provably fast linear system solvers}\\
+  Alan Turing Institute, London, UK, November~1}
+\entry{2017}{\textit{Improved algebraic algorithms for out-branchings problems}\\
+  Randomization in Parameterized Complexity, Schloss Dagstuhl, Germany, January}
+\entry{2016}{\textit{On fully dynamic graph sparsifiers}\\
+  Algebraic and Spectral Graph Theory, Banff International Research Station, Banff, Canada, August~4}
+\entry{2016}{\textit{On fully dynamic graph sparsifiers}\\
+  Recent Advances on Randomized Numerical Linear Algebra, NII Shonan Meeting, Shonan Village, Japan, July~26}
+\entry{2014}{\textit{Spectral algorithms for graph mining and analysis}\\
+  Workshop on Algorithms for Modern Massive Data Sets, MMDS 2014, Berkeley, CA, June~17}
+\entry{2014}{\textit{Spectral algorithms for graph mining and analysis}\\
+  Workshop on Eigenvectors in graph theory and related problems in numerical linear algebra,
+  ICERM, Providence, RI, May~7}
+\entry{2014}{\textit{Spectral graph sparsification and fast Laplacian solvers}\\
+  Boston University, May~5}
+\entry{2014}{\textit{Segmenting neurons in 3D EM images}\\
+  IBDR PI workshop, Washington, DC, May~2}
+\entry{2013}{\textit{Spectral sparsification of graphs: an overview of theory and practical methods}\\
+  Workshop on Large Scale Matrix Analysis and Inference, NIPS 2013, Lake Tahoe, NV, December~9}
+\entry{2013}{\textit{Algebraization in parameterized algorithms and complexity}\\
+  AMS Special Session on the Mathematical Underpinnings of Multivariate Complexity and Algorithm
+  Design, and its frontiers, and the field of Incrementalization, San Diego, CA, January~12}
+\entry{2012}{\textit{Laplacian Solvers: Theory and Practice}\\
+  Workshop on Randomized Numerical Linear Algebra: Theory and Practice, FOCS 2012,
+  New Brunswick, NJ, October~20}
+\entry{2012}{\textit{SDD Solvers: Bridging the Gap Between Theory and Practice}\\
+  Workshop on Algorithms for Modern Massive Data Sets, MMDS 2012, Stanford, CA, July~13}
+\entry{2012}{\textit{Spectral graph theory, matrix sums and near-optimal SDD solvers}\\
+  SIAM Applied Linear Algebra Conference, Valencia, Spain, June~18}
+\entry{2010}{\textit{The power of group algebras in constrained monomial detection problems}\\
+  Seminar on the Exact Complexity of NP-hard Problems, Schloss Dagstuhl, Germany, November~10}
+\entry{2010}{\textit{Graph Sparsification p.2: An $O(m\log^2 n)$ algorithm for solving SDD systems}\\
+  Microsoft Research, Redmond, WA, September~2}
+\entry{2010}{\textit{Graph Sparsification p.1: The Combinatorial Multigrid Solver}\\
+  Microsoft Research, Redmond, WA, September~2}
+\entry{2009}{\textit{How to make a computer see better?}\\
+  University of Puerto Rico, Rio Piedras, September~15}
+\entry{2009}{\textit{Fast detection of square-free terms in multivariate polynomials: one algo-stone, many algo-birds}\\
+  University of Puerto Rico, Rio Piedras, September~14}
+\entry{2009}{\textit{M-matrix systems and solvers in Computer Science}\\
+  University of Wyoming, March~30}
+\entry{2009}{\textit{Spectral Graph Theory meets Practice: The Combinatorial Multigrid Solver}\\
+  Yale University, January~23}
+\entry{2002}{\textit{Advances in the Theory and Computation of Pseudospectra}\\
+  SIAM 50th Anniversary and Annual Meeting, Matrix Spectra and Pseudospectra Minisymposium,
+  Philadelphia, PA, July~8--12}
+
+% ================================================================ presentations
+\section{Conference and Workshop Presentations}
+
+\entry{2016}{Theoretical Foundations of Data Science: Algorithmic, Mathematical, and Statistical (TFoDS),
+  April~28--30}
+\entry{2013}{\textit{Fast SDD solvers via sampling by approximate leverage scores}\\
+  6th International ERCIM Conference on Computational and Methodological Statistics}
+\entry{2011}{\textit{Spectral Algorithms for Segmenting Neurons in their Three-dimensional Space}\\
+  Neuroscience 2011 \note{· with R.~Garcia, J.~Farrington, J.~Serrano-Velez, E.~Rosa-Molinar}}
+\entry{2009}{\textit{The Combinatorial Multigrid Solver}\\
+  The 14th Copper Mountain Conference on Multigrid Methods \note{· with Gary L. Miller}}
+\entry{2008}{\textit{Unassisted segmentation of multiple retinal layers via spectral rounding}\\
+  Association for Research in Vision and Ophthalmology, ARVO 2008 Annual Meeting
+  \note{· with D.~Tolliver, H.~Ishikawa, J.~S.~Schuman, G.~L.~Miller}}
+\entry{2007}{\textit{A Linear Work, Parallel Algorithm for Solving Planar Laplacians}\\
+  Combinatorial Scientific Computing (CSC07), Costa Mesa, CA \note{· with Gary L. Miller}}
+\entry{2006}{\textit{Efficiently Solving Linear Systems using Support Tree Preconditioners}\\
+  Parallel Processing for Scientific Computing (PP06), San Francisco, CA, February
+  \note{· with Gary L. Miller}}
+\entry{2001}{\textit{Hermitian Methods for Computing Eigenvalues}\\
+  5th IMACS Conference on Iterative Methods in Scientific Computing, May \note{· with E.~Gallopoulos}}
+\entry{1999}{\textit{Iterations on Domains for the Computation of Matrix (Pseudo)-Spectrum}\\
+  Conference on the Foundations of Computational Mathematics (FOCM), Oxford, July
+  \note{· with E.~Gallopoulos}}
+
+% ================================================================ teaching
+\section{Teaching}
+
+\entry{Course design}{Online courses for NJIT: Machine Learning (DS 675), Deep Learning (DS 677)}
+\vspace{3pt}
+
+\tentry{NJIT}{Machine Learning (CS/DS 675)\rightpart{\note{S20, F20, F21, Su21, F22, S22, Su22, S23, S24, S26}}}
+\tentry{}{Deep Learning (CS/DS 677)\rightpart{\note{F21, S21, F22, S23, Su23, F23, S24, Su24, Su25, Su26}}}
+\tentry{}{Data Structures and Algorithms (CS 610)\rightpart{\note{F19, Su20, Su21, S26}}}
+\tentry{}{Computational Complexity (CS 611)\rightpart{\note{S18, S19, S20, S21}}}
+\tentry{}{Advanced Data Structures and Algorithm Design (CS 435)\rightpart{\note{F17, F18}}}
+\tentry{}{Introduction to Data Science (CS 301)\rightpart{\note{F26}}}
+\tentry{}{Foundations of Computer Science I (CS 241)\rightpart{\note{F26}}}
+\vspace{4pt}
+\tentry{UPRRP}{Theory of Computability\rightpart{\note{F15, F16}}}
+\tentry{}{Fun with programming interview questions\rightpart{\note{S15}}}
+\tentry{}{Theory of Computation\rightpart{\note{F13}}}
+\tentry{}{Design and Analysis of Algorithms\rightpart{\note{S12, S17}}}
+\tentry{}{High Level Programming Languages\rightpart{\note{S12, S15}}}
+\tentry{}{Undergraduate Machine Learning\rightpart{\note{F11, F12, F13}}}
+\tentry{}{Numerical Analysis\rightpart{\note{S11, S13}}}
+\tentry{}{Linear Algebra for Computer Scientists\rightpart{\note{F10}}}
+\vspace{4pt}
+\tentry{CMU}{Teaching Assistant, Principles of Programming\rightpart{\note{S02}}}
+\tentry{}{Teaching Assistant, Formal Languages, Automata and Computation\rightpart{\note{S01}}}
+\vspace{4pt}
+\tentry{Patras}{Teaching Assistant, Advanced Scientific Computing\rightpart{\note{F99}}}
+
+% ================================================================ advising
+\section{Advising}
+
+\subsection{PhD Students}
+\entry{Current}{Soroush Vahidi, Azadeh Naderi, Arash Moradi Karkaj}
+\entry{2025}{Ali Parviz\rightpart{\note{First position: Visiting Researcher at Google}}}
+\entry{2024}{Ehsan Beikihassan\rightpart{\note{First position: CCC Intelligent Solutions}}}
+\entry{2023}{Niloofar Aghaieabiane\rightpart{\note{First position: JP Morgan}}}
+\entry{2021}{Huong Le\rightpart{\note{First position: Lecturer at NJIT}}}
+
+\subsection{MS Students}
+\entry{2025}{Kadir Altunel}
+\entry{2014}{Richard Garcia-Lebron}
+
+\subsection{Former Undergraduate Students}
+\entry{}{Richard Garcia-Lebron, Jose Farrington, Karlo Martinez, Leonardo Cardona, Carlos Feliciano,
+  Idalyn Mirabal, Alejandro Vientos, Alberto Ruiz, Gustavo Gratacos}
+
+\subsection{PhD Committee Member, NJIT}
+\entry{Current}{Mehtab Sidhu, Yupeng Xu, Chunhui Xu, Hongyang Zhang, Mohammad Dindoost, Zhibo Ye,
+  Swastik Biswas, Zhenduo Wang, Hamideh Sabaei, Yiran Huang}
+\entry{2026}{Shen Fan, Haotian Yin, Siqi Jiang}
+\entry{2025}{Oliver Alvarado Rodriguez, Fuhuan Li, Jingyi Gu, Haoran Liu}
+\entry{2024}{Wenlu Du, Minjuan Zhang}
+\entry{2023}{Mojtaba Zaheri, Mahsa Asadi, Hessam Mohammadi, Sepideh Nikookar, Md Moinul Islam, Xiang Lin}
+\entry{2022}{Shibo Yao, Cavidan Yakupoglu, Gerges Firas, Yasser Abduallah}
+\entry{2021}{Zhihang Hu, Yunzhe Xue, Dong Wei}
+\entry{2020}{Xin Yin}
+\entry{2019}{Abdulrhman Fahad Aljouie}
+
+\subsection{PhD Committee Member, External}
+\entry{2025}{Jingbang Chen (University of Waterloo)}
+\entry{2024}{Yixuan He (University of Oxford), Tijn de Vos (University of Salzburg)}
+\entry{2017}{Shen Chen Xu (CMU)}
+
+\subsection{MS Committee Member, NJIT}
+\entry{2026}{Ritwik Reddy Kolan}
+\entry{2022}{Joseph Patchett}
+\entry{2020}{Rahul Basu, Sanyamee Patel, Sarvesh Shukla}
+
+% ================================================================ professional service
+\section{Professional Service}
+
+\entry{Panels}{NSF Funding Panels (CCF/AF, IIS/RI) \,·\, DoE Funding Panel \,·\, European Research Council (ERC)}
+\entry{PC member}{PKDD-Nectar 2014, 2015; WSDM 2016; WWW 2015--2018; WebConf 2019--2022; KDD 2017;
+  KDD-Applied Track 2018; LATIN 2018; CIKM 2018; AAAI 2019--2020; ICCAD 2024--2026;
+  DAC 2025--2027; SOSFEM 2027; ACDA 2027}
+\entry{Referee}{Conferences: STOC, FOCS, SODA, SPAA, STACS, ESA, MFCS\\
+  Journals, including: JACM, ACM TALG, JCSS, Algorithmica, TOPC, IPL, SIMAX}
+\entry{Organizer}{Workshop ``Electrical Flows, Graph Laplacians and Algorithms: Spectral Theory and
+  Beyond'', ICERM, 2014}
+
+% ================================================================ service NJIT
+\section{Service at NJIT}
+
+\subsection{Department Leadership}
+\entry{2022--present}{\textbf{Associate Chair of Graduate Studies}, Department of Computer Science}
+\vspace{-\entrysep}
+\begin{itemize}
+  \item Established Barclays--NJIT MS in Computer Science partnership program (2025)
+  \item Co-designed three BS program concentrations: AI: Learning and Reasoning, AI: Systems and
+        Infrastructure, and Cybersecurity and Privacy (2026)
+  \item Developed merit-based faculty salary framework, adopted by CS Department (Spring 2024),
+        advancing fairness and transparency in compensation decisions
+  \item Redesigned department workflows for course assignments, scheduling, and TA allocation
+        (2023--2026); developed supporting software adopted college-wide for all scheduling operations
+  \item Updated graduate program catalogs and created Certificate-to-MS pathways
+  \item Established Graduate Certificate in Hyperscale Computing
+\end{itemize}
+\vspace{\entrysep}
+\entry{2022--present}{\textbf{MS Committee Chair}, Department of Computer Science}
+
+\subsection{Department Committees \& Administration}
+\entry{2024--present}{Committee on Lecturers}
+\entry{2023--2024}{Co-administered the Data Structures \& Algorithms PhD Qualifying Exam}
+\entry{2022--present}{Organizer of Spring Department Retreats (2023, 2024, 2025)}
+\entry{2018--2022}{Administered the Computational Complexity PhD Qualifying Exam}
+\entry{2022}{CAREER Mentoring Committee Member}
+\entry{2019, 2022--24}{Faculty Search Committee Member}
+
+\subsection{University Service}
+\entry{2024--2026}{Center for Educational Innovation and Excellence, Advisory Board}
+\entry{2024--2026}{Member of the AI Teaching/Learning Group (charged by the Provost)}
+\entry{2024--2025}{Member of the NJIT group participating in AAC\&U's Institute for AI, Pedagogy, and the Curriculum}
+\entry{2023--2025}{CS representative, Faculty Senate Committee on Academic Assessment}
+\entry{2021--2025}{YWCC representative, Faculty Senate Committee on Research, Scholarship and Creative Academic Activity}
+\entry{2019--2024}{CS representative, Committee on Information Technology, Library, and Academic Resources (CITLAR)}
+
+% ================================================================ service UPRRP
+\section{Service at UPRRP}
+
+\entry{2016--2017}{Department Coordinator for Student Learning Assessment}
+\entry{2012--2014}{Member of the committee for the creation of an MS program in Computer Science}
+\entry{2011}{Undergraduate Research Coordinator, Computer Science Department}
+
+\end{document}
