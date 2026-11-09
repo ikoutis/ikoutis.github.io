@@ -1,0 +1,595 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="description" content="CS 241 meeting 18: interactive visual lecture slides. Works offline."><title>Meeting 18 · Trees</title><style>
+:root{color-scheme:light;--bg:#ffffff;--panel:#f2f5fa;--ink:#172439;--muted:#526078;--mint:#087f6d;--coral:#c5473a;--gold:#986000;--violet:#7451bc;--blue:#286bab}
+*{box-sizing:border-box}body{margin:0;background:#ffffff;color:var(--ink);font-family:'Aptos','Segoe UI',sans-serif;overflow:hidden}button,select{font:inherit}button,a,select{-webkit-tap-highlight-color:transparent}button{cursor:pointer;background:transparent;color:var(--ink);border:1px solid #b5c0cf;border-radius:8px;padding:10px 17px;font-size:19px}button:hover{background:#edf2f7}button:focus-visible,a:focus-visible,select:focus-visible,[tabindex]:focus-visible{outline:3px solid var(--gold);outline-offset:5px}button:disabled{opacity:.35;cursor:default}a{color:var(--mint)}#stage{width:1600px;height:900px;position:absolute;left:50%;top:50%;transform-origin:center;background:var(--bg);overflow:hidden}.brand{position:absolute;top:35px;left:64px;font-size:20px;letter-spacing:.14em;color:var(--muted)}.brand b{color:var(--mint);margin-right:22px}.topnav{position:absolute;right:64px;top:28px;display:flex;gap:12px;align-items:center}select{background:var(--bg);color:var(--ink);border:1px solid #b5c0cf;border-radius:8px;padding:10px;font-size:18px;max-width:260px}#slide{position:absolute;inset:104px 64px 94px}.eyebrow{font-size:18px;color:var(--mint);text-transform:uppercase;letter-spacing:.17em;margin-bottom:12px}h1{font-size:60px;line-height:1.08;letter-spacing:-.035em;margin:0 0 30px;font-weight:700;max-width:1420px}.content{display:grid;grid-template-columns:43% 57%;gap:0;height:480px}.text{padding-right:42px;align-self:center;font-size:27px;line-height:1.42}.text p{margin:0 0 24px}.text p:last-child{margin-bottom:0}em{font-style:normal;color:var(--mint);font-weight:650}.equation{font-family:'Cambria Math','Cambria',serif;font-size:37px;line-height:1.4;margin:17px 0;color:var(--gold)}.task{border-left:4px solid var(--gold);padding:3px 0 3px 23px}.task b{font-size:17px;text-transform:uppercase;letter-spacing:.15em;color:var(--gold);display:block;margin-bottom:12px}.task+p{margin-top:22px;color:var(--muted)}ul{margin:0;padding-left:26px}li{margin-bottom:18px}.rules strong{display:inline-block;min-width:145px;color:var(--mint)}.rules p{border-bottom:1px solid #d7dfeb;padding-bottom:14px}.visual{display:flex;flex-direction:column;justify-content:center;min-width:0;position:relative}.visual svg{width:100%;height:410px;overflow:visible}.caption{font-size:19px;color:var(--muted);text-align:center;min-height:27px;margin-top:6px}.controls{display:flex;gap:10px;align-items:center;justify-content:center;flex-wrap:wrap;margin-top:13px;min-height:44px}.status{font-size:20px;text-align:center;margin-top:12px;color:var(--gold);min-height:29px}.cover h1{font-size:82px;max-width:800px;position:absolute;top:45px}.cover .content{height:620px;grid-template-columns:43% 57%}.cover .text{align-self:end;padding-bottom:44px}.cover .visual{padding-top:0}.cover .visual svg{height:470px}.footer{position:absolute;bottom:27px;left:64px;right:64px;display:flex;align-items:center;justify-content:space-between;font-size:18px;color:var(--muted)}.footer .right{display:flex;gap:12px;align-items:center}#counter{min-width:72px;text-align:center}.track{position:absolute;bottom:0;height:4px;left:0;background:var(--mint);transition:width .2s}.source{font-size:17px;color:var(--muted);text-decoration:none}.source:hover{text-decoration:underline}svg text{font-family:'Aptos','Segoe UI',sans-serif}svg .edge{stroke:#52647d;stroke-width:4;fill:none;stroke-linecap:round}svg .node{fill:var(--bg);stroke:var(--mint);stroke-width:3}svg .label{fill:var(--ink);font-size:22px;font-weight:600;text-anchor:middle;dominant-baseline:central}svg .small{fill:var(--muted);font-size:18px;text-anchor:middle}svg .big{fill:var(--gold);font-size:36px;text-anchor:middle}svg .face{stroke:none;fill-opacity:.26}.palette button{border-width:3px;color:#101827;font-weight:bold;min-width:48px}.palette button[aria-pressed=true]{outline:3px solid #172439;outline-offset:3px}.palette button:nth-child(1){background:#66e5c0}.palette button:nth-child(2){background:#ff887c}.palette button:nth-child(3){background:#ffd16f}.palette button:nth-child(4){background:#b5a0ff}.interactive{cursor:pointer}.interactive:hover{filter:brightness(1.2)}.solid-table{width:100%;border-collapse:collapse;font-size:25px}.solid-table th{color:var(--mint);font-weight:500}.solid-table td,.solid-table th{padding:14px;text-align:right;border-bottom:1px solid #d7dfeb}.solid-table td:first-child,.solid-table th:first-child{text-align:left}.solid-table td:last-child{color:var(--gold)}dialog{max-width:1050px;max-height:80vh;background:#ffffff;color:var(--ink);border:1px solid #6b7d97;border-radius:16px;padding:35px;font-size:23px;line-height:1.5}dialog::backdrop{background:#000b}dialog h2{margin-top:0}dialog button{float:right;margin-left:30px}.notes-label{color:var(--gold)}.overview-list{display:grid;grid-template-columns:1fr 1fr;gap:10px}.overview-list button{text-align:left;font-size:19px}.print-only{display:none}
+@media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+@media print{@page{size:landscape;margin:8mm}body{overflow:visible;background:white}#stage,dialog{display:none!important}.print-only{display:block}.print-page{break-after:page;background:white;color:#142035;padding:12mm;height:175mm;overflow:hidden}.print-page:last-child{break-after:auto}.print-page h1{font-size:28px;margin-bottom:15px}.print-page .content{height:auto;grid-template-columns:45% 55%}.print-page .text{font-size:15px;padding-right:20px}.print-page .equation{font-size:23px;color:#674600}.print-page p{margin-bottom:10px}.print-page .visual svg{height:115mm}.print-page .controls,.print-page .status{display:none}.print-page em{color:#12674e}.print-page .eyebrow{font-size:12px;color:#12674e}.print-page .caption{font-size:12px;color:#43536b}.print-page .task b{color:#674600}.print-page .visual{background:#ffffff;border-radius:8px;padding:8px}.print-page .solid-table{color:#172439;font-size:15px}.print-page .solid-table td,.print-page .solid-table th{padding:8px}.print-page .text .rules p{padding-bottom:7px}.print-page li{margin-bottom:10px}.print-page .task+p{color:#43536b}.print-page .rules strong{color:#12674e}.print-page .task{border-color:#b98517}}
+
+@media print{.print-page .caption{color:#526078}}
+</style><style>
+#ink-layer{position:absolute;inset:0;width:1600px;height:900px;z-index:2;pointer-events:none;overflow:hidden}
+#ink-layer.ink-enabled{pointer-events:auto;touch-action:none;cursor:crosshair}
+#slide .controls button,#slide .controls select,#slide .controls input{position:relative;z-index:3}
+#stage .topnav,#stage .footer{z-index:4}
+#ink-tools{position:absolute;left:7px;top:135px;width:48px;padding:5px 3px;z-index:5;display:flex;flex-direction:column;gap:5px;background:#f4f7fb;border:1px solid #c3ccda;border-radius:10px;box-shadow:0 3px 12px #17243912}
+#ink-tools button{width:40px;height:40px;min-width:0;padding:7px;display:grid;place-items:center;border:1px solid transparent;border-radius:6px;font-size:22px;color:#172439;background:transparent;line-height:1}
+#ink-tools button:hover{background:#e3eaf4}
+#ink-tools button[aria-pressed=true]{background:#d9e9ff;border-color:#1b65b4;color:#154e8c}
+#ink-tools button:disabled{opacity:.3}
+#ink-tools svg{width:24px;height:24px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+#ink-tools hr{width:30px;margin:2px auto;border:0;border-top:1px solid #c3ccda}
+#ink-color{width:36px;height:34px;padding:2px;margin:0 auto;border:1px solid #9eacc0;border-radius:5px;background:white;cursor:pointer}
+#ink-width{font-size:16px;width:40px;max-width:none;padding:4px 1px;background:white;border:1px solid #9eacc0;margin:0;color:#172439}
+#ink-save-status{font-size:10px;line-height:1.25;text-align:center;color:#45604c;overflow-wrap:anywhere;padding:2px 0;min-height:28px}
+#ink-save-status[data-failed=true]{color:#a02a20}
+#ink-menu{width:780px;max-width:90vw}
+#ink-menu p{margin:16px 0}#ink-menu .ink-menu-actions{display:flex;gap:10px;flex-wrap:wrap;margin:20px 0}
+#ink-menu .ink-menu-actions button{float:none;margin:0;font-size:19px}
+#ink-menu .ink-hint{font-size:18px;color:#526078}#ink-menu-message{font-size:18px;color:#087f6d}
+#ink-menu-message[data-failed=true]{color:#a02a20}
+.ink-stroke{pointer-events:none}
+@media print{
+ @page{size:1600px 900px;margin:0}
+ html,body{margin:0;padding:0;width:1600px;background:white;print-color-adjust:exact;-webkit-print-color-adjust:exact}
+ #ink-tools,#ink-menu,#ink-import{display:none!important}
+ .ink-print-page{position:relative;box-sizing:border-box;width:1600px;height:900px;overflow:hidden;break-after:page;page-break-after:always;background:white;color:#172439}
+ .ink-print-page:last-child{break-after:auto;page-break-after:auto}
+ .ink-print-slide{position:absolute;inset:104px 64px 94px}
+ .ink-print-svg{position:absolute;inset:0;width:1600px;height:900px;pointer-events:none;z-index:2}
+ .ink-print-page .controls,.ink-print-page .status{visibility:hidden}
+ .ink-print-page .brand,.ink-print-page .footer{color:#526078}
+}
+#ink-text-layer{position:absolute;inset:0;width:1600px;height:900px;z-index:2;pointer-events:none}
+#ink-layer.ink-text-mode{cursor:text}
+.ink-text-box,.ink-text-print{position:absolute;box-sizing:border-box;border:1px solid transparent;border-radius:5px;line-height:1.25;background:transparent}
+.ink-text-box{pointer-events:none}
+#ink-text-layer[data-mode=text] .ink-text-box,#ink-text-layer[data-mode=use] .ink-text-box{pointer-events:auto;cursor:text}
+#ink-text-layer[data-mode=text] .ink-text-box:hover,.ink-text-box.is-selected{border:1px dashed #1b65b4}
+.ink-text-content,.ink-text-editor{display:block;width:100%;box-sizing:border-box;padding:6px 8px;margin:0;border:0;outline:none;border-radius:0;font:inherit;line-height:inherit;color:inherit;text-align:left;white-space:pre-wrap;overflow-wrap:anywhere;tab-size:4;background:transparent}
+.ink-text-content{height:100%;overflow:hidden}
+.ink-text-editor{height:100%;resize:none;overflow:auto}
+.ink-text-content[data-empty=true]{color:#778399;font-style:italic}
+.ink-text-options{position:absolute;bottom:calc(100% + 4px);left:-1px;display:flex;align-items:center;gap:5px;padding:4px;background:#fff;border:1px solid #b5c0cf;border-radius:7px;box-shadow:0 2px 8px #17243914;white-space:nowrap;cursor:default}
+.ink-text-options button{padding:3px 7px;font-size:14px;height:29px;line-height:20px;border-radius:4px}
+.ink-text-options select{font-size:15px;padding:2px;width:56px;height:29px;border-radius:4px}
+.ink-text-options input{width:32px;height:29px;padding:1px;border:1px solid #b5c0cf;border-radius:4px;background:white}
+.ink-text-options .ink-text-move{cursor:grab;touch-action:none}
+.ink-text-options .ink-text-move:active{cursor:grabbing}
+.ink-text-box .ink-text-resize{position:absolute;right:-7px;bottom:-7px;width:17px;height:17px;padding:0;border:1px solid #1b65b4;border-radius:3px;background:#fff;cursor:nwse-resize;touch-action:none}
+.ink-text-print{z-index:2}
+@media print{#ink-text-layer,.ink-text-options,.ink-text-resize{display:none!important}.ink-text-print{border-color:transparent}}
+</style></head>
+<body><main id="stage"><div class="brand"><b>CS 241</b>MEETING 18 · INK + TEXT</div><nav class="topnav" aria-label="Presentation controls"><select id="act" aria-label="Jump to act"></select><button id="showOverview" title="Slide overview (O)">Slides</button><button id="full" title="Fullscreen (F)">⛶ Fullscreen</button></nav><article id="slide" aria-label="Current slide"></article><footer class="footer"><div><a class="source" id="source" target="_blank" rel="noopener"></a><span> &nbsp; / &nbsp; </span><a class="source" href="https://discrete.openmathbooks.org/dmoi4/sec_gt-planar.html" target="_blank" rel="noopener">Next topic ↗</a></div><div class="right"><span>← → navigate · O overview</span><button id="previous" aria-label="Previous slide">←</button><span id="counter"></span><button id="next" aria-label="Next slide">→</button></div></footer><div id="progress" class="track"></div></main>
+<dialog id="overview"><button onclick="this.closest('dialog').close()">Close</button><h2>Meeting 18 · Trees</h2><div id="overviewList" class="overview-list"></div></dialog><div id="print" class="print-only"></div><noscript>This interactive deck requires JavaScript enabled in your browser. The original PDF slides are available in the same folder.</noscript>
+<script>const DECK={"title": "Trees", "subtitle": "Unique paths · induction · recursive structure", "acts": ["The connection puzzle", "Trees and unique paths", "Leaves and induction", "Spanning and rooted trees", "Traversals and applications"], "slides": [{"act": 0, "title": "How few edges<br>can keep us connected?", "body": "<p>Keep every vertex. Remove as many edges as possible without disconnecting the graph.</p><p>Which edges are essential?</p>", "scene": "graph", "graph": "investigation", "cover": true}, {"act": 0, "title": "Try the two construction problems", "body": "<div class=\"task\"><b>Investigate</b><p>First keep as few edges as possible while connecting every vertex. Then start empty and add as many edges as possible without making a cycle.</p></div><p>Compare your edge counts. State a conjecture.</p>", "scene": "treeEditor"}, {"act": 1, "title": "Which drawings are trees?", "body": "<p>A <em>tree</em> is connected and has no cycles. A <em>forest</em> has no cycles, but may be disconnected.</p><div class=\"task\"><b>Investigate</b><p>Test each drawing against both conditions.</p></div><p>Here graphs are finite, simple, undirected, and nonempty.</p>", "scene": "treeExamples"}, {"act": 1, "title": "How many paths join two vertices?", "body": "<div class=\"task\"><b>Investigate</b><p>Find a path from c to e. Can there be another path with no repeated vertices?</p></div><p>Now add the extra edge. What changes?</p>", "scene": "uniqueExplore"}, {"act": 1, "title": "Two different paths create a cycle", "body": "<p>Two paths may share a beginning and an ending.</p><p>Find where they first separate, then where they next meet. Their two different segments form a cycle.</p>", "scene": "pathCycle"}, {"act": 1, "title": "Trees have exactly one path", "body": "<p><em>Tree ⇒ unique paths.</em> Connectedness supplies a path. A second path would create a cycle.</p><p><em>Unique paths ⇒ tree.</em> Existence gives connectedness. A cycle would give two paths between vertices on it.</p><div class=\"equation\">tree ⇔ exactly one path per pair</div>", "scene": "pathCycle", "complete": true}, {"act": 1, "title": "What if one tree edge disappears?", "body": "<div class=\"task\"><b>Investigate</b><p>Prove that deleting an edge uv from a tree disconnects it. If u and v were still connected, what would that imply about the original tree?</p></div>", "scene": "treeCut"}, {"act": 2, "title": "Count vertices and edges", "body": "<div class=\"task\"><b>Investigate</b><p>Count n and e in these trees. What relationship do you suspect?</p></div><p>Include the smallest tree. A few examples suggest a formula; they do not prove it.</p>", "scene": "treeCounts"}, {"act": 2, "title": "Where can we safely shorten a tree?", "body": "<p>A <em>leaf</em> is a vertex of degree 1.</p><div class=\"task\"><b>Investigate</b><p>Choose a longest path in a tree with at least two vertices. Could one endpoint have another neighbor?</p></div>", "scene": "longestPath"}, {"act": 2, "title": "At least two leaves", "body": "<p>At either endpoint of a longest path, an extra neighbor would create a cycle or extend the path.</p><p>Both are impossible. Each endpoint therefore has degree 1.</p><div class=\"equation\">n ≥ 2 ⇒ at least two leaves</div>", "scene": "longestPath", "conclusion": true}, {"act": 2, "title": "Delete one leaf, keep a tree", "body": "<p>Delete a leaf and its only incident edge.</p><p>No cycle can appear. Paths between remaining vertices survive: a leaf cannot lie inside such a path.</p><div class=\"equation\">(n,e) → (n−1,e−1)</div>", "scene": "leafDelete"}, {"act": 2, "title": "The tree edge formula", "body": "<p>Every tree with n vertices has n−1 edges. We prove it by induction on n.</p><p><em>Base case:</em> a one-vertex tree has no edges.</p><div class=\"equation\">e = 0 = 1 − 1</div>", "scene": "graph", "graph": "single"}, {"act": 2, "title": "Assume it for every smaller tree", "body": "<p><em>Induction hypothesis:</em> every tree with n−1 vertices has n−2 edges.</p><p>Take an arbitrary tree T with n ≥ 2 vertices. Delete a leaf to get a tree T′ with n−1 vertices.</p><div class=\"equation\">|E(T′)| = n−2</div>", "scene": "leafDelete", "smaller": true}, {"act": 2, "title": "Restore the leaf", "body": "<p>Restore the deleted leaf and its one edge.</p><div class=\"equation\">|E(T)| = |E(T′)| + 1</div><div class=\"equation\">= (n−2) + 1 = n−1</div><p>The base case and inductive step establish the formula for every finite tree.</p>", "scene": "leafDelete", "restore": true}, {"act": 2, "title": "Why not delete any vertex?", "body": "<div class=\"task\"><b>Investigate</b><p>A proposed proof deletes an arbitrary vertex, applies induction, then restores one vertex and one edge. Find both problems. Why does choosing a leaf repair them?</p></div>", "scene": "deleteAudit"}, {"act": 3, "title": "Return to the connection puzzle", "body": "<p>A <em>spanning tree</em> keeps every vertex of G, uses only edges of G, and is a tree.</p><div class=\"equation\">V(T) = V(G)     E(T) ⊆ E(G)</div><p>Every spanning tree of this seven-vertex graph must have six edges.</p>", "scene": "spanningView"}, {"act": 3, "title": "Remove cycle edges", "body": "<p>Start with a connected graph. Delete an edge on a cycle.</p><p>The rest of that cycle still connects its endpoints, so connectedness survives.</p><p>When no cycle remains, the result is a spanning tree.</p>", "scene": "spanningSteps", "method": "delete"}, {"act": 3, "title": "Join different components", "body": "<p>Start with every vertex and no edges.</p><p>Add an edge joining two different current components. This cannot create a cycle.</p><p>Connectedness of the original graph guarantees an available connection until just one component remains.</p>", "scene": "spanningSteps", "method": "add"}, {"act": 3, "title": "Why the two edge counts agree", "body": "<p><em>Fewest edges while connected:</em> a cycle would contain an edge we could remove.</p><p><em>Most edges while acyclic:</em> two components could still be joined using an edge of G.</p><div class=\"equation\">Both constructions finish with n−1 edges.</div>", "scene": "spanningCompare"}, {"act": 3, "title": "Construct two different spanning trees", "body": "<div class=\"task\"><b>Investigate</b><p>Return to the opening graph. Build one spanning tree by cycle-edge deletion and a different one by adding edges without creating a cycle.</p></div><p>Explain why both must finish with six edges.</p>", "scene": "treeEditor"}, {"act": 3, "title": "Is the edge count enough?", "body": "<div class=\"task\"><b>Investigate</b><p>This graph has five vertices and four edges. Is it a tree? Which hypothesis is missing?</p></div><p>Check the definition before using a formula.</p>", "scene": "countTrap"}, {"act": 3, "title": "What makes the count decisive?", "body": "<p><em>Connected and e=n−1 ⇒ tree.</em> A spanning tree already uses all n−1 edges; none remain outside it.</p><p><em>Acyclic and e=n−1 ⇒ tree.</em> A forest with c components has</p><div class=\"equation\">e = Σ(nᵢ−1) = n−c.</div><p>Thus e=n−1 forces c=1.</p>", "scene": "forestCount"}, {"act": 3, "title": "Choose a root", "body": "<p>A <em>rooted tree</em> designates one vertex as the root.</p><p>For every other vertex, the next vertex on the unique path toward the root is its <em>parent</em>. Its other neighbors are its children.</p><p>Changing the root changes relationships, not edges.</p>", "scene": "rootTree"}, {"act": 3, "title": "Parents, siblings, and ancestors", "body": "<p><em>Siblings</em> share a parent.</p><p>The <em>ancestors</em> of a vertex lie on the path from its parent to the root. We exclude the vertex itself.</p><p>A vertex and its descendants form its rooted <em>subtree</em>. A rooted leaf has no children.</p>", "scene": "rootTree"}, {"act": 3, "title": "Read the family relationships", "body": "<div class=\"task\"><b>Investigate</b><p>With root f: find its children, the parent of a, the siblings of d, and the ancestors of a. Then root at a: what becomes the parent of f, and how are f and g related?</p></div><p>Ancestors exclude the vertex itself. A rooted leaf has no children.</p>", "scene": "rootTree", "exercise": true}, {"act": 4, "title": "Left and right are part of the structure", "body": "<p>In an <em>ordered binary tree</em>, every vertex has a left-child position and a right-child position. Either may be empty.</p><p>A child and its descendants form a smaller binary tree.</p><div class=\"task\"><b>Investigate</b><p>Would moving D from the right position to the left position change this ordered tree?</p></div>", "scene": "orderedTree", "supp": true}, {"act": 4, "title": "Which operations must happen first?", "body": "<p>In an expression tree, leaves hold operands and internal vertices hold operators.</p><div class=\"task\"><b>Investigate</b><p>Before evaluating the root +, what must be known about its two child subtrees?</p></div><div class=\"equation\">(2 × (a−1)) + (3 × b)</div>", "scene": "expression", "supp": true}, {"act": 4, "title": "Three recursive visit orders", "body": "<p>For an empty subtree, return. Otherwise recurse on each child subtree and visit the root once.</p><div class=\"rules\"><p><strong>Preorder</strong> root · left · right</p><p><strong>Inorder</strong> left · root · right</p><p><strong>Postorder</strong> left · right · root</p></div>", "scene": "traversal", "supp": true}, {"act": 4, "title": "Traverse a new binary tree", "body": "<div class=\"task\"><b>Investigate</b><p>A has left/right children B,C; B has D,E; C has F,G; E has left child H; F has right child I. Draw the tree, then list preorder, inorder, and postorder.</p></div>", "scene": "binaryTask", "supp": true}, {"act": 4, "title": "Same edge count, different total cost", "body": "<p>Every spanning tree has n−1 edges. With edge weights, their total costs can differ.</p><div class=\"task\"><b>Investigate</b><p>Which two edges connect A, B, C at minimum total cost?</p></div><p>A <em>minimum spanning tree</em> minimizes the sum of its edge weights.</p>", "scene": "weightedTree", "supp": true}, {"act": 4, "title": "Shortest routes are a different objective", "body": "<p>A shortest-path tree from A must preserve a shortest route from A to each vertex.</p><p>Compare the two trees: minimum total network cost need not give the shortest A-to-C route.</p>", "scene": "weightedTree", "compare": true, "supp": true}, {"act": 4, "title": "Greedy algorithms: what each chooses", "body": "<div class=\"rules\"><p><strong>Kruskal</strong> A lightest edge between components.</p><p><strong>Prim</strong> A lightest edge leaving the growing tree.</p><p><strong>Dijkstra</strong> Least tentative distance, then update neighbors.</p></div><p>Dijkstra requires nonnegative weights. Full algorithm analysis comes later.</p>", "scene": "weightedTree", "summary": true, "supp": true}, {"act": 4, "title": "Meeting 18, in one slide", "body": "<ul><li>A tree is connected and acyclic.</li><li>Its paths are unique and its edge count is n−1.</li><li>Leaf deletion makes induction possible.</li><li>Spanning trees resolve the connection puzzle.</li><li>A root gives recursive subtrees and traversals.</li></ul><p>Next: planar drawings and Euler’s formula.</p>", "scene": "graph", "graph": "tree18"}], "meeting": 18};
+const $=s=>document.querySelector(s), colors=['#66e5c0','#ff887c','#ffd16f','#b5a0ff','#82bcff'], inks=['#087f6d','#c5473a','#986000','#7451bc','#286bab'];
+const el=(tag,attrs={},content='')=>`<${tag} ${Object.entries(attrs).map(([k,v])=>`${k}="${String(v).replaceAll('"','&quot;')}"`).join(' ')}>${content}</${tag}>`;
+const txt=(x,y,t,cls='small',extra={})=>el('text',{x,y,class:cls,...extra},t);
+const line=(a,b,extra={})=>el('line',{x1:a[0],y1:a[1],x2:b[0],y2:b[1],class:'edge',...extra});
+const path=(d,extra={})=>el('path',{d,class:'edge',...extra});
+const poly=(pts,fill,extra={})=>el('polygon',{points:pts.map(p=>p.join(',')).join(' '),fill,...extra});
+const wrap=(s,label='Graph diagram')=>el('svg',{viewBox:'0 0 640 470',role:'img','aria-label':label},s);
+const ring=(n,cx=320,cy=230,r=165)=>Array.from({length:n},(_,i)=>[cx+r*Math.cos(-Math.PI/2+2*Math.PI*i/n),cy+r*Math.sin(-Math.PI/2+2*Math.PI*i/n)]);
+const cycle=n=>Array.from({length:n},(_,i)=>[i,(i+1)%n]);
+const complete=n=>Array.from({length:n},(_,i)=>Array.from({length:n-i-1},(_,j)=>[i,i+j+1])).flat();
+const bip=(a,b)=>Array.from({length:a},(_,i)=>Array.from({length:b},(_,j)=>[i,a+j])).flat();
+const cubeEdges=[...cycle(4),...cycle(4).map(e=>e.map(i=>i+4)),[0,4],[1,5],[2,6],[3,7]];
+const G={
+investigation:{p:[[150,60],[490,60],[50,235],[320,235],[590,235],[150,410],[490,410]],e:[[0,1],[0,5],[5,6],[1,6],[0,3],[1,3],[5,3],[6,3],[2,0],[2,5],[4,1],[4,6]]},
+tree18:{p:[[150,60],[490,60],[50,235],[320,235],[590,235],[150,410],[490,410]],e:[[0,1],[0,5],[1,6],[0,3],[2,0],[4,1]]},
+pathProof:{p:[[45,235],[180,235],[320,85],[320,385],[460,235],[595,235]],e:[[0,1],[1,2],[2,4],[1,3],[3,4],[4,5]],labels:['u','p','r','s','q','v']},
+rooted18:{p:[],e:[[5,4],[5,7],[5,8],[4,2],[4,3],[4,6],[4,1],[2,0]],labels:['a','b','c','d','e','f','g','h','i']},
+expression18:{p:[[320,40],[180,155],[480,155],[70,295],[260,295],[420,295],[570,295],[200,425],[320,425]],e:[[0,1],[0,2],[1,3],[1,4],[2,5],[2,6],[4,7],[4,8]],labels:['+','×','×','2','−','3','b','a','1']},
+binary18:{p:[[320,35],[170,145],[470,145],[70,260],[250,260],[390,260],[570,260],[190,400],[450,400]],e:[[0,1],[0,2],[1,3],[1,4],[2,5],[2,6],[4,7],[5,8]],labels:['A','B','C','D','E','F','G','H','I']},
+weight18:{p:[[100,370],[320,65],[540,370]],e:[[0,1],[1,2],[0,2]],labels:['A','B','C'],weights:[2,2,3]},
+k4:{p:[[320,45],[565,400],[75,400],[320,270]],e:complete(4)},
+k4cross:{p:[[150,70],[490,70],[490,400],[150,400]],e:complete(4)},
+k23:{p:[[75,235],[565,235],[320,65],[320,235],[320,405]],e:bip(2,3),labels:['a','b','x','y','z'],groups:[0,0,1,1,1]},
+k23cross:{p:[[170,70],[470,70],[90,390],[320,390],[550,390]],e:bip(2,3),labels:['a','b','x','y','z'],groups:[0,0,1,1,1]},
+k33:{p:[[100,70],[100,235],[100,400],[540,70],[540,235],[540,400]],e:bip(3,3),groups:[0,0,0,1,1,1]},
+k24:{p:[[100,150],[100,320],[540,55],[540,175],[540,295],[540,415]],e:bip(2,4),groups:[0,0,1,1,1,1]},
+k5:{p:ring(5),e:complete(5)},
+cube:{p:[[115,30],[525,30],[525,440],[115,440],[235,150],[405,150],[405,320],[235,320]],e:cubeEdges},
+cube3d:{p:[[240,30],[535,30],[535,325],[240,325],[100,140],[395,140],[395,435],[100,435]],e:cubeEdges},
+bowtie:{p:[[320,235],[100,70],[100,400],[540,70],[540,400]],e:[[0,1],[1,2],[2,0],[0,3],[3,4],[4,0]]},
+flower:{p:[[320,235],[110,65],[65,290],[280,425],[500,415],[575,125],[375,35]],e:[[0,1],[1,2],[2,0],[0,3],[3,4],[4,0],[0,5],[5,6],[6,0]]},
+edge:{p:[[180,235],[460,235]],e:[[0,1]]},
+single:{p:[[320,235]],e:[]},
+tree:{p:[[320,220],[170,105],[470,105],[110,365],[240,365],[425,365],[555,365]],e:[[0,1],[0,2],[1,3],[1,4],[2,5],[2,6]]},
+star:{p:[[320,235],[320,55],[100,390],[540,390]],e:[[0,1],[0,2],[0,3]]},
+triangleLeaf:{p:[[180,330],[320,70],[460,330],[70,170]],e:[[0,1],[1,2],[2,0],[0,3]]},
+square:{p:[[140,60],[500,60],[500,410],[140,410]],e:[...cycle(4),[0,2]]},
+eulerTask:{p:[[90,90],[550,90],[550,390],[90,390],[320,235]],e:[[0,1],[1,2],[2,3],[3,0],[0,2],[2,4],[4,0],[3,4]],curves:{4:'M90 90 C90 0 620 0 620 240 Q620 390 550 390'}},
+exams:{p:[[100,330],[250,60],[370,330],[500,180],[565,390]],e:[[0,1],[0,2],[1,2],[2,3],[3,4]],labels:['A','B','C','D','E']},
+registers:{p:[[110,235],[320,65],[530,235],[320,405]],e:[[0,1],[0,2],[1,2],[0,3],[2,3]],labels:['w','x','y','z']},
+disconnected:{p:[[100,80],[30,350],[250,350],[465,80],[380,350],[610,350]],e:[[0,1],[1,2],[2,0],[3,4],[4,5],[5,3]]}
+};
+function graph(g,o={}){if(typeof g==='string')g=G[g]; let out=o.bg||'';
+g.e.forEach(([a,b],i)=>{let attrs={};if(o.highlight?.includes(i)){attrs.style=`stroke:${inks[0]};stroke-width:7`;}if(o.dim?.includes(i))attrs.opacity=.12;if(o.hide?.includes(i))return;out+=g.curves?.[i]?path(g.curves[i],attrs):line(g.p[a],g.p[b],attrs);if(o.steps?.[i]){let x=(g.p[a][0]+g.p[b][0])/2,y=(g.p[a][1]+g.p[b][1])/2;out+=el('circle',{cx:x,cy:y,r:15,fill:'#ffffff'})+txt(x,y,o.steps[i],'label',{style:'font-size:18px;fill:#986000'});}});
+g.p.forEach(([x,y],i)=>{if(o.hideNode===i)return;let color=o.coloring?.[i];let fill=color===undefined||color<0?'#ffffff':colors[color];let stroke=g.groups?inks[g.groups[i]]:inks[0];let label=g.labels?.[i]||String.fromCharCode(97+i);let node=el('circle',{cx:x,cy:y,r:o.nodeRadius||22,fill,stroke,'stroke-width':3})+txt(x,y,label,'label',{style:`fill:#172439;font-size:${o.labelSize||22}px`});if(o.degrees){let deg=g.e.filter(e=>e.includes(i)).length;node+=txt(x,y+40,`deg ${deg}`,'small',{style:`fill:${deg%2?inks[1]:inks[0]}`} )}if(o.current===i)node+=el('circle',{cx:x,cy:y,r:31,fill:'none',stroke:inks[2],'stroke-width':3});if(o.click)node=el('g',{class:'interactive',role:'button',tabindex:0,'aria-label':`${label}, color ${color<0||color===undefined?'unassigned':color+1}`,'data-node':i},node);out+=node;});return out;}
+function mini(g,x,y,s=.45,o={}){return el('g',{transform:`translate(${x} ${y}) scale(${s})`},graph(g,o))}
+const button=(label,action,extra='')=>`<button type="button" data-action="${action}" ${extra}>${label}</button>`;
+let state={},index=0,timer=null;
+function st(){return state[index]||(state[index]={step:0,palette:0,assigned:[],toggle:false,face:-1})}
+function faces(name,selected=-1){let g=G[name],ps=[];
+if(name==='k23')ps=[[0,2,1,3],[0,3,1,4]];else ps=[[0,1,5,4],[1,2,6,5],[2,3,7,6],[3,0,4,7],[4,5,6,7]];
+let out=el('rect',{x:5,y:5,width:630,height:460,rx:22,fill:colors[3],opacity:selected===ps.length?.38:selected<0?.14:.035});
+out+=poly(name==='k23'?[g.p[0],g.p[2],g.p[1],g.p[4]]:g.p.slice(0,4),'#ffffff');
+ps.forEach((f,i)=>{let pts=f.map(k=>g.p[k]);out+=poly(pts,colors[i%4],{opacity:selected===i?.65:selected<0?.25:.06});let x=pts.reduce((s,p)=>s+p[0],0)/pts.length,y=pts.reduce((s,p)=>s+p[1],0)/pts.length;out+=txt(x,y,`F${i+1}`,'label',{'font-size':20,opacity:selected<0||selected===i?1:.4});});
+out+=txt(55,28,`F${ps.length+1}`,'small',{style:'fill:#7451bc'})+graph(g);return wrap(out,'Planar graph with labeled bounded faces and the outside face');}
+const regions=[[[320,25],[610,440],[440,340],[320,150]],[[610,440],[30,440],[200,340],[440,340]],[[30,440],[320,25],[320,150],[200,340]],[[320,150],[440,340],[200,340]]],centers=[[440,235],[320,395],[200,235],[320,277]];
+function mapScene(s,q){let assigned=s.colored?[0,1,2,3]:s.partial?[0,1,2,-1]:s.interactive?q.assigned:[-1,-1,-1,-1];let out='';regions.forEach((pts,i)=>{let c=assigned[i]??-1;let attrs={stroke:'#101827','stroke-width':5};if(s.interactive)Object.assign(attrs,{class:'interactive',role:'button',tabindex:0,'data-region':i,'aria-label':`Region ${'ABCD'[i]}, color ${c<0?'unassigned':c+1}`});out+=poly(pts,c<0?'#e8edf4':colors[c],attrs);out+=txt(...centers[i],`${s.partial&&i===3?'?':'ABCD'[i]}${c>=0?' · '+(c+1):''}`,'label',{style:`fill:${c<0?'#172439':'#172439'};pointer-events:none`});});
+if(s.dual&&q.toggle){const g={p:centers,e:complete(4),labels:['A','B','C','D'],curves:{0:'M440 235 Q580 410 320 395',1:'M440 235 Q320 -15 200 235',3:'M320 395 Q60 400 200 235'}};out+=graph(g);}
+return wrap(out,'Four regions with pairwise shared borders; their adjacency graph is K4');}
+function colorControls(n=4){return '<div class="controls palette">'+Array.from({length:n},(_,i)=>button(i+1,'palette',`data-color="${i}" aria-label="Choose color ${i+1}" aria-pressed="${st().palette===i}"`)).join('')+'</div>'+ '<div class="controls">'+button('Check coloring','check')+button('Clear','clear')+'</div>';}
+// Rectangular districts share a border only when its length is positive.
+// Computing this relation from geometry keeps the map and its checker in sync.
+const districtRows=[[40,210,410,600],[40,150,320,490,600],[40,250,450,600]],districtY=[45,165,300,430];
+const districts=districtRows.flatMap((xs,r)=>xs.slice(0,-1).map((x,i)=>[x,districtY[r],xs[i+1],districtY[r+1]]));
+const districtEdges=[];
+districts.forEach(([a,b,c,d],i)=>districts.slice(0,i).forEach(([x,y,z,w],j)=>{
+ if(((a===z||c===x)&&Math.min(d,w)>Math.max(b,y))||((b===w||d===y)&&Math.min(c,z)>Math.max(a,x)))districtEdges.push([j,i]);
+}));
+const districtColors=[0,1,2,1,2,0,1,0,1,2];
+const districtGraph={p:districts.map(([a,b,c,d])=>[(a+c)/2,(b+d)/2]),e:districtEdges,labels:districts.map((_,i)=>String.fromCharCode(65+i))};
+function districtScene(s,q){
+ let cs=s.colored||(s.proof&&q.step>=1)?districtColors:s.partial?[0,1,-1,-1,-1,0,-1,-1,1,-1]:s.interactive?q.assigned:[];
+ let out='';
+ districts.forEach(([a,b,c,d],i)=>{let col=cs[i]??-1,attrs={x:a,y:b,width:c-a,height:d-b,fill:col<0?'#eef2f7':colors[col],stroke:'#52647d','stroke-width':3};
+  if(s.interactive)Object.assign(attrs,{class:'interactive',role:'button',tabindex:0,'data-region':i,'aria-label':`Region ${districtGraph.labels[i]}, color ${col<0?'unassigned':col+1}`});
+  out+=el('rect',attrs);if(!((s.dual&&q.toggle)||(s.proof&&q.step===2)))out+=txt(...districtGraph.p[i],districtGraph.labels[i]+(col<0?'':` · ${col+1}`),'label',{style:'pointer-events:none;fill:#172439'});
+ });
+ if((s.dual&&q.toggle)||(s.proof&&q.step===2)){
+  const witness=districtEdges.map(([a,b],i)=>[0,1,4].includes(a)&&[0,1,4].includes(b)?i:-1).filter(i=>i>=0);
+  out+=graph(districtGraph,{coloring:cs,highlight:s.proof?witness:[],dim:s.proof?districtEdges.map((_,i)=>i).filter(i=>!witness.includes(i)):[]});
+ }
+ return wrap(out,'Ten connected map regions A to J; shared line segments determine adjacency');
+}
+const countExamples=[{name:'Tree',g:G.tree,v:7,e:6,f:1},{name:'Five-cycle',g:{p:ring(5),e:cycle(5)},v:5,e:5,f:2},{name:'K₄',g:G.k4,v:4,e:6,f:4}];
+const countTable=()=>'<table class="solid-table"><thead><tr><th>Drawing</th><th>v</th><th>e</th><th>f</th></tr></thead><tbody>'+countExamples.map(x=>`<tr><td>${x.name}</td><td>${x.v}</td><td>${x.e}</td><td>${x.f}</td></tr>`).join('')+'</tbody></table>';
+function boundaryDrawing(q){
+ const g=G.triangleLeaf,inner=[0,1,2,0],outer=[0,2,1,0,3,0];
+ let out='<defs><marker id="boundary-arrow" markerWidth="5" markerHeight="5" refX="4" refY="2.5" orient="auto"><path d="M0 0 L5 2.5 L0 5 Z" fill="context-stroke"/></marker></defs>';
+ out+=graph(g,{bg:poly(g.p.slice(0,3),colors[2],{opacity:.16})});
+ function trace(route,color){for(let i=0;i<route.length-1;i++){
+  let a=g.p[route[i]],b=g.p[route[i+1]],dx=b[0]-a[0],dy=b[1]-a[1],len=Math.hypot(dx,dy),nx=-dy/len,ny=dx/len;
+  let u=[a[0]+25*dx/len+12*nx,a[1]+25*dy/len+12*ny],v=[b[0]-25*dx/len+12*nx,b[1]-25*dy/len+12*ny];
+  out+=line(u,v,{style:`stroke:${color};stroke-width:4`,'marker-end':'url(#boundary-arrow)'})+txt((a[0]+b[0])/2+30*nx,(a[1]+b[1])/2+30*ny,i+1,'label',{style:`fill:${color};font-size:21px`});
+ }}
+ if(q.step===1||q.step===3)trace(inner,inks[0]);
+ if(q.step===2||q.step===3)trace(outer,inks[1]);
+ out+=txt(320,235,q.step===1||q.step===3?'inner: 3':'inner face','label');
+ if(q.step===3)out+=txt(320,430,'3 + 5 = 8 = 2 × 4 edges','label');
+ return wrap(out,'Directed boundary walks; the outer walk uses the pendant edge twice in opposite directions');
+}
+const octaFaceVertices=[[0,1,2],[0,2,3],[0,3,4],[0,4,1],[5,1,2],[5,2,3],[5,3,4],[5,4,1]];
+function octaModel(stage,back=false,compact=false){
+ const equator=[[80,230],[320,300],[560,230],[320,165]],p=[[320,25],...(back?[equator[2],equator[3],equator[0],equator[1]]:equator),[320,445]];
+ const visible=back?[2,3,6,7]:[0,1,4,5],centers=octaFaceVertices.map(f=>[f.reduce((v,i)=>v+p[i][0],0)/3,f.reduce((v,i)=>v+p[i][1],0)/3]);
+ let out='';
+ [...octaFaceVertices.keys()].filter(i=>!visible.includes(i)).concat(visible).forEach(i=>{
+  out+=poly(octaFaceVertices[i].map(j=>p[j]),colors[i%5],{opacity:visible.includes(i)?.35:.035,stroke:'#52647d','stroke-width':3,...(!visible.includes(i)?{'stroke-dasharray':'7 7'}:{})});
+ });
+ if(stage>=2)cubeEdges.forEach(([a,b])=>{
+  if(!visible.includes(a)||!visible.includes(b))return;
+  let shared=octaFaceVertices[a].filter(i=>octaFaceVertices[b].includes(i)),mid=[(p[shared[0]][0]+p[shared[1]][0])/2,(p[shared[0]][1]+p[shared[1]][1])/2];
+  out+=path(`M${centers[a].join(' ')} L${mid.join(' ')} L${centers[b].join(' ')}`,{style:`stroke:${inks[0]};stroke-width:5`});
+ });
+ visible.forEach(i=>{if(stage>=1)out+=el('circle',{cx:centers[i][0],cy:centers[i][1],r:compact?30:24,fill:'white',stroke:inks[0],'stroke-width':3});
+  if(stage>=0)out+=txt(...centers[i],`F${i+1}`,'label',{style:`font-size:${compact?32:22}px`});
+ });
+ return out;
+}
+const treeKeep=[0,1,3,4,8,10],treeRemove=[2,5,6,7,9,11],treeAdd=[9,2,11,10,5,4];
+function treeStats(g,chosen,removed=-1){let parent=g.p.map((_,i)=>i),cycle=false;
+ const root=i=>parent[i]===i?i:(parent[i]=root(parent[i]));
+ chosen.forEach(i=>{let [a,b]=g.e[i],x=root(a),y=root(b);if(x===y)cycle=true;else parent[x]=y;});
+ return {components:new Set(parent.filter((_,i)=>i!==removed).map(root)).size,cycle};
+}
+function findPath(g,a,b,chosen=g.e.map((_,i)=>i)){let queue=[a],seen=new Set([a]),prev={};
+ for(let k=0;k<queue.length;k++){let u=queue[k];if(u===b)break;
+  chosen.forEach(i=>{let e=g.e[i],v=e[0]===u?e[1]:e[1]===u?e[0]:-1;if(v>=0&&!seen.has(v)){seen.add(v);prev[v]=[u,i];queue.push(v);}});
+ }
+ if(!seen.has(b))return [];let out=[];while(b!==a){out.unshift(prev[b][1]);b=prev[b][0];}return out;
+}
+function networkView(chosen,interactive=false,extra={}){const g=G.investigation,unused=g.e.map((_,i)=>i).filter(i=>!chosen.includes(i));
+ let out=graph(g,{highlight:chosen,dim:unused,...extra});
+ if(interactive)g.e.forEach(([a,b],i)=>out+=line(g.p[a],g.p[b],{style:'stroke:transparent;stroke-width:22;cursor:pointer',class:'interactive','data-tree-edge':i,role:'button',tabindex:0,'aria-label':`Edge ${String.fromCharCode(97+a)}–${String.fromCharCode(97+b)}, ${chosen.includes(i)?'selected':'not selected'}`,'aria-pressed':chosen.includes(i)}));
+ return wrap(out,'The seven-vertex investigation graph, with selected edges highlighted');
+}
+function rootedGraph(root){const base=G.rooted18,n=base.labels.length,parents=Array(n).fill(-1),depth=Array(n).fill(0),children=Array.from({length:n},()=>[]),queue=[root];parents[root]=root;
+ for(let k=0;k<queue.length;k++){let u=queue[k];base.e.forEach(([a,b])=>{let v=a===u?b:b===u?a:-1;if(v>=0&&parents[v]===-1){parents[v]=u;depth[v]=depth[u]+1;children[u].push(v);queue.push(v);}});children[u].sort((a,b)=>a-b);}
+ let slots=Array(n),next=0;function place(u){if(!children[u].length)return slots[u]=next++;children[u].forEach(place);return slots[u]=children[u].reduce((sum,v)=>sum+slots[v],0)/children[u].length;}place(root);
+ let maxDepth=Math.max(...depth),p=slots.map((x,i)=>[60+x*520/Math.max(1,next-1),45+depth[i]*365/Math.max(1,maxDepth)]);
+ return {...base,p,parents,children,depth};
+}
+const traversalChildren={expression18:[[1,2],[3,4],[5,6],[],[7,8],[],[],[],[]],binary18:[[1,2],[3,4],[5,6],[],[7,null],[null,8],[],[],[]]};
+function traversalOrder(name,mode){const children=traversalChildren[name],out=[];function visit(u){if(u===null||u===undefined)return;const [left,right]=children[u];if(mode==='pre')out.push(u);visit(left);if(mode==='in')out.push(u);visit(right);if(mode==='post')out.push(u);}visit(0);return out;}
+function treeEditorState(q){if(!q.active)q.active=G.investigation.e.map((_,i)=>i);return q.active;}
+function renderTreeScene(s,q){let html='',caption='',controls='',status='';const t=G.tree18;
+ switch(s.scene){
+ case 'treeEditor':{let active=treeEditorState(q),stats=treeStats(G.investigation,active);html=networkView(active,true);caption='Green edges are selected. Faint edges remain available.';controls=button('Start with all edges','treeMode','data-mode="delete"')+button('Start with no edges','treeMode','data-mode="add"');status=`${active.length} edges · ${stats.components} component${stats.components===1?'':'s'} · ${stats.cycle?'contains a cycle':'no cycles'}`;break;}
+ case 'treeExamples':{let examples=[t,{p:ring(5),e:cycle(5)},{p:[[60,120],[190,230],[60,350],[450,120],[580,230],[450,350]],e:[[0,1],[1,2],[3,4],[4,5]]},G.single],i=q.example||0;html=wrap(graph(examples[i]));caption=q.toggle?['Connected and acyclic: a tree.','Connected, but cyclic: not a tree or forest.','Acyclic, but disconnected: a forest, not a tree.','A single vertex is connected and acyclic: a tree.'][i]:'Connected? Acyclic? Apply both tests.';controls=examples.map((_,j)=>button(String.fromCharCode(65+j),'treeExample',`data-example="${j}" aria-pressed="${i===j}"`)).join('')+button(q.toggle?'Hide classification':'Check classification','toggle');break;}
+ case 'uniqueExplore':{let g=q.toggle?{...t,e:[...t.e,[5,6]]}:t;html=wrap(graph(g,{highlight:q.step?[4,0,5]:[]}));if(q.toggle){let out=graph(g,{highlight:[4,0,5]});[[0,5],[5,6],[6,1]].forEach(([a,b])=>out+=line(g.p[a],g.p[b],{style:`stroke:${inks[1]};stroke-width:6`}));html=wrap(out+graph({...g,e:[]}));}caption=q.toggle?'c → a → b → e   and   c → a → f → g → b → e':q.step?'c → a → b → e':'Find a c-to-e path without repeating vertices.';controls=button(q.step?'Hide path':'Show one path','setstep',`data-step="${q.step?0:1}"`)+button(q.toggle?'Remove the extra edge':'Add edge fg','toggle');break;}
+ case 'pathCycle':{let step=s.complete?3:q.step,g=G.pathProof,out=graph(g,{dim:step===3?[0,5]:[]});
+  if(step>=1)[1,2,...(step===1?[0,5]:[])].forEach(i=>out+=line(g.p[g.e[i][0]],g.p[g.e[i][1]],{style:`stroke:${inks[0]};stroke-width:6`}));
+  if(step>=2)[3,4].forEach(i=>out+=line(g.p[g.e[i][0]],g.p[g.e[i][1]],{style:`stroke:${inks[1]};stroke-width:6`}));
+  // Redraw vertex labels above the highlighted paths.
+  out+=graph({...g,e:[]});html=wrap(out);caption=['Start with two possible routes from u to v.','First path: u → p → r → q → v','They separate at p and meet again at q.','Cycle: p → r → q → s → p'][step];if(!s.complete)controls=button('Reset','reset')+button('First path','setstep','data-step="1"')+button('Second path','setstep','data-step="2"')+button('Isolate the cycle','setstep','data-step="3"');break;}
+ case 'treeCut':html=wrap(graph(t,{hide:q.toggle?[0]:[],highlight:q.toggle?[]:[0]}));caption=q.toggle?'There is no remaining path between a and b.':'Edge ab is the only a-to-b path.';controls=button(q.toggle?'Restore ab':'Delete ab','toggle');break;
+ case 'treeCounts':{let examples=[{g:G.single,n:1,e:0},{g:{p:[[70,235],[235,235],[400,235],[565,235]],e:[[0,1],[1,2],[2,3]]},n:4,e:3},{g:G.star,n:4,e:3},{g:t,n:7,e:6}],i=q.example||0,x=examples[i];html=wrap(graph(x.g));caption=q.countShown?.[i]?`n = ${x.n}, e = ${x.e}`:'n = ?    e = ?';controls=['One vertex','Path','Star','Larger tree'].map((x,j)=>button(x,'example',`data-example="${j}"`)).join('')+button(q.countShown?.[i]?'Hide counts':'Reveal counts','counts');break;}
+ case 'longestPath':{let out=graph(t,{highlight:[4,0,5]});if(!s.conclusion&&q.step===1)out+=line(t.p[2],t.p[1],{style:`stroke:${inks[1]};stroke-width:5;stroke-dasharray:9 6`});if(!s.conclusion&&q.step===2){out+=line(t.p[2],[40,420],{style:`stroke:${inks[1]};stroke-width:5;stroke-dasharray:9 6`})+el('circle',{cx:40,cy:420,r:22,fill:'white',stroke:inks[1],'stroke-width':3})+txt(40,420,'w','label');}html=wrap(out);caption=s.conclusion?'Both endpoints c and e must be leaves.':q.step===1?'If c had another neighbor b on the path: cycle c–a–b–c.':q.step===2?'If c had a neighbor w off the path: w–c–a–b–e is longer.':'A longest path: c → a → b → e';if(!s.conclusion)controls=button('Reset','reset')+button('Neighbor on the path','setstep','data-step="1"')+button('Neighbor off the path','setstep','data-step="2"');break;}
+ case 'leafDelete':{let removed=s.smaller?true:s.restore?!q.toggle:q.toggle;html=wrap(graph(t,{hide:removed?[4]:[],hideNode:removed?2:undefined,highlight:removed?[]:[4]}));caption=removed?'After deleting c: 6 vertices, 5 edges; still a tree.':'Original tree: 7 vertices, 6 edges.';if(!s.smaller)controls=button(s.restore?(q.toggle?'Delete the leaf again':'Restore the leaf'):(q.toggle?'Restore leaf c':'Delete leaf c'),'toggle');break;}
+ case 'deleteAudit':{let removed=q.step===1?0:q.step===2?2:-1,hide=removed<0?[]:t.e.map((e,i)=>e.includes(removed)?i:-1).filter(i=>i>=0);html=wrap(graph(t,{hide,hideNode:removed}));caption=q.step===1?'Delete a: four edges disappear and four components remain.':q.step===2?'Delete c: one edge disappears and the rest stays connected.':'Compare an internal vertex with a leaf.';controls=button('Original tree','setstep','data-step="0"')+button('Delete internal vertex a','setstep','data-step="1"')+button('Delete leaf c','setstep','data-step="2"');break;}
+ case 'spanningView':html=networkView(q.toggle?treeKeep:G.investigation.e.map((_,i)=>i));caption=q.toggle?'All seven vertices remain; six selected edges form a tree.':'Which edges would you keep?';controls=button(q.toggle?'Show the original graph':'Show one spanning tree','toggle');break;
+ case 'spanningSteps':{let g=G.investigation,chosen=s.method==='delete'?g.e.map((_,i)=>i).filter(i=>!treeRemove.slice(0,q.step).includes(i)):treeAdd.slice(0,q.step),stats=treeStats(g,chosen);html=networkView(chosen);
+  if(q.step<6){let next=s.method==='delete'?treeRemove[q.step]:treeAdd[q.step],[a,b]=g.e[next],out=graph(g,{highlight:chosen,dim:g.e.map((_,i)=>i).filter(i=>!chosen.includes(i))});if(s.method==='delete'){let alternative=findPath(g,a,b,chosen.filter(i=>i!==next));out=graph(g,{highlight:alternative,dim:g.e.map((_,i)=>i).filter(i=>!chosen.includes(i))});}out+=line(g.p[a],g.p[b],{style:`stroke:${inks[1]};stroke-width:7;stroke-dasharray:9 5`})+graph({...g,e:[]});html=wrap(out);}
+  caption=`${chosen.length} selected edges · ${stats.components} component${stats.components===1?'':'s'}`;controls=button('Reset','reset')+button(s.method==='delete'?'Delete the highlighted edge':'Add the highlighted edge','setstep',`data-step="${Math.min(6,q.step+1)}" ${q.step===6?'disabled':''}`);status=q.step===6?'A spanning tree: all seven vertices, six edges.':s.method==='delete'?'Green shows an alternate route around the edge to be deleted.':'The highlighted edge joins two current components.';break;}
+ case 'spanningCompare':html=wrap(mini({...G.investigation,e:treeKeep.map(i=>G.investigation.e[i])},-5,70,.48)+mini({...G.investigation,e:treeAdd.map(i=>G.investigation.e[i])},325,70,.48)+txt(150,395,'by deletion: 6 edges','label')+txt(480,395,'by addition: 6 edges','label'));caption='Different trees, the same edge count.';break;
+ case 'countTrap':html=wrap(graph({p:[[160,70],[60,350],[290,350],[420,235],[580,235]],e:[[0,1],[1,2],[2,0],[3,4]]}));caption=q.toggle?'Disconnected and cyclic. The count alone is not enough.':'n = 5, e = 4 = n−1. Is this a tree?';controls=button(q.toggle?'Hide verdict':'Check the hypotheses','toggle');break;
+ case 'forestCount':{let g={p:[[100,130],[45,300],[190,300],[340,150],[340,340],[520,235]],e:[[0,1],[0,2],[3,4]]};html=wrap(graph(g)+txt(120,400,'3 vertices, 2 edges')+txt(340,400,'2 vertices, 1 edge')+txt(535,400,'1 vertex, 0 edges'));caption='n = 6, c = 3, e = 3 = n−c';break;}
+ case 'rootTree':{let root=q.root??5,g=rootedGraph(root),out='<defs><marker id="root-arrow" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto"><path d="M0 0 L6 3 L0 6 Z" fill="#52647d"/></marker></defs>',highlight=q.toggle?findPath(g,0,5):[];
+  g.e.forEach(([a,b],i)=>{if(g.parents[a]===b)[a,b]=[b,a];let u=g.p[a],v=g.p[b],dx=v[0]-u[0],dy=v[1]-u[1],len=Math.hypot(dx,dy);out+=line(u,[v[0]-26*dx/len,v[1]-26*dy/len],{'marker-end':'url(#root-arrow)',...(highlight.includes(i)?{style:`stroke:${inks[0]};stroke-width:6`}:{})});});
+  out+=graph({...g,e:[]},{coloring:g.p.map((_,i)=>i===root?2:-1)});html=wrap(out);caption=`Root: ${g.labels[root]} · arrows point from parent to child`;controls=button('Root f','root','data-root="5"')+button('Root a','root','data-root="0"')+button(q.toggle?'Hide path':'Show path a–f','toggle');status=q.toggle?(root===5?'Toward root f: a → c → e → f':'Toward root a: f → e → c → a'):'';break;}
+ case 'orderedTree':{let p=[[320,60],[180,220],[480,220],[q.toggle?80:280,390]],g={p,e:[[0,1],[0,2],[1,3]],labels:['A','B','C','D']},empty=[q.toggle?280:80,390];html=wrap(graph(g)+line(p[1],empty,{opacity:.25,'stroke-dasharray':'7 7'})+txt(...empty,'empty','small')+txt(225,135,'left')+txt(425,135,'right'));caption=q.toggle?'D is now the left child of B: a different ordered tree.':'D is the right child of B; B’s left position is empty.';controls=button(q.toggle?'Move D back to the right':'Move D to the left position','toggle');break;}
+ case 'expression':html=wrap(graph('expression18'));caption='The root operator depends on both child subexpressions.';break;
+ case 'traversal':{let mode=q.order||'post',g=G.expression18,order=traversalOrder('expression18',mode),seen=order.slice(0,q.step),out=graph(g,{coloring:g.p.map((_,i)=>seen.includes(i)?0:-1),current:q.step?order[q.step-1]:undefined});seen.forEach((v,i)=>out+=txt(g.p[v][0]+29,g.p[v][1]-22,i+1,'small',{style:`fill:${inks[2]};font-weight:bold`}));html=wrap(out);controls=['pre','in','post'].map(m=>button({pre:'Preorder',in:'Inorder',post:'Postorder'}[m],'order',`data-order="${m}" aria-pressed="${m===mode}"`)).join('')+button('Reset','reset')+button('Visit next vertex','setstep',`data-step="${Math.min(9,q.step+1)}" ${q.step===9?'disabled':''}`);caption=`${q.step} / 9 vertices visited`+(mode==='in'?' · add parentheses to preserve expression grouping':'');status=seen.length?seen.map(i=>g.labels[i]).join(' → '):'Predict the first visit before stepping.';break;}
+ case 'binaryTask':html=q.toggle?wrap(graph('binary18')):wrap(txt(320,150,'Draw the ordered tree','big')+txt(320,245,'Then give all three visit orders.')+txt(320,325,'Keep left and right positions distinct.'));caption='An absent left child is different from an absent right child.';controls=button(q.toggle?'Hide diagram':'Check your drawing','toggle');break;
+ case 'weightedTree':{let g=G.weight18,chosen=q.step===1?[0,1]:q.step===2?[0,2]:[],out=graph(g,{highlight:chosen,dim:q.step?g.e.map((_,i)=>i).filter(i=>!chosen.includes(i)):[]});g.e.forEach(([a,b],i)=>{let x=(g.p[a][0]+g.p[b][0])/2,y=(g.p[a][1]+g.p[b][1])/2;out+=el('circle',{cx:x,cy:y,r:18,fill:'white'})+txt(x,y,g.weights[i],'label',{style:`fill:${inks[2]}`});});html=wrap(out);caption=q.step===1?'MST: total weight 4 · route A → B → C has weight 4.':q.step===2?'Shortest-path tree from A: total 5 · route A → C has weight 3.':'Edge weights: AB = 2, BC = 2, AC = 3.';controls=button('All edges','setstep','data-step="0"')+button('Minimum spanning tree','setstep','data-step="1"');if(s.compare||s.summary)controls+=button('Shortest paths from A','setstep','data-step="2"');break;}
+ }
+ return html+`<div class="caption">${caption}</div><div class="controls">${controls}</div><div class="status" role="status" aria-live="polite">${status}</div>`;
+}
+function renderScene(s,q){let html='',caption='',controls='',status='';
+if(DECK.meeting===18&&s.scene!=='graph')return renderTreeScene(s,q);
+switch(s.scene){
+case 'districtMap':html=districtScene(s,q);caption='Only a shared boundary segment creates an adjacency.';
+ if(s.interactive){controls=colorControls();status=q.message||'Choose a color, then select a region.';}
+ if(s.dual)controls=button(q.toggle?'Hide graph edges':'Show the adjacency graph','toggle');
+ if(s.proof){controls=button('Reset','reset')+button('Show a coloring','setstep','data-step="1"')+button('Show a lower bound','setstep','data-step="2"');status=q.step===1?'A proper 3-coloring proves χ ≤ 3.':q.step===2?'A, B, E are pairwise adjacent: χ ≥ 3. Hence χ = 3.':'Give a coloring and explain why fewer colors fail.';}
+ break;
+case 'countLab':{let i=q.example||0,x=countExamples[i],shown=q.countShown?.[i];html=wrap(graph(x.g));caption=shown?`v = ${x.v}     e = ${x.e}     f = ${x.f}`:'v = ?     e = ?     f = ?';controls=countExamples.map((x,j)=>button(x.name,'example',`data-example="${j}" aria-pressed="${j===i}"`)).join('')+button(shown?'Hide counts':'Reveal counts','counts');break;}
+case 'countTable':html=countTable();caption='Which expression has the same value in every row?';break;
+case 'boundaryWalk':html=boundaryDrawing(q);caption=q.step===1?'Inner: a → b → c → a':q.step===2?'Outer: a → c → b → a → d → a':q.step===3?'Every edge contributes two occurrences in total.':'Predict the length of each boundary walk.';controls=button('Reset','reset')+button('Inner boundary','setstep','data-step="1"')+button('Outer boundary','setstep','data-step="2"')+button('Both counts','setstep','data-step="3"');break;
+case 'faceBudget':html=wrap(mini('triangleLeaf',155,-5,.52)+txt(175,280,'inner boundary','small')+txt(465,280,'outer boundary','small')+txt(175,325,'3 ≥ 3','big')+txt(465,325,'5 ≥ 3','big')+txt(320,400,'3f = 6 ≤ 3 + 5 = 8 = 2e','label'));caption='This example has f = 2 faces and e = 4 edges.';break;
+case 'spiderSolid':html=wrap(octaModel(-1,q.toggle),'Octahedron; switch sides to see the rear triangular faces');caption='Four faces on this side; four on the other side.';controls=button(q.toggle?'View the front':'View the other side','toggle');break;
+case 'spiderModel':{
+ if(q.step<3)html=wrap(octaModel(q.step,q.toggle),'Octahedron faces progressively replaced by vertices and adjacency edges');
+ else {let visible=q.toggle?[2,3,6,7]:[0,1,4,5],highlight=cubeEdges.map(([a,b],i)=>visible.includes(a)&&visible.includes(b)?i:-1).filter(i=>i>=0);
+ html=wrap(el('g',{transform:'translate(-20 60) scale(.6)'},octaModel(2,q.toggle,true))+el('g',{transform:'translate(265 60) scale(.65)'},graph({...G.cube,labels:Array.from({length:8},(_,i)=>`F${i+1}`)},{labelSize:32,nodeRadius:28,highlight}))+txt(150,410,'faces of the solid','label')+txt(480,410,'vertices of the cube graph','label'));}
+ caption=['Label the eight faces; turn the solid to see the others.','One graph vertex inside each face.','A graph edge crosses each shared solid edge.','The same face adjacencies, drawn as a planar cube graph.'][q.step];
+ controls=button('Reset','reset')+button(q.toggle?'Front side':'Other side','toggle')+button(['Mark face centers','Connect neighboring faces','Show the cube graph','Model complete'][q.step],'setstep',`data-step="${Math.min(3,q.step+1)}" ${q.step===3?'disabled':''}`);break;}
+case 'graph':html=wrap(graph(s.graph,{coloring:s.coloring,degrees:s.degrees}));caption=s.graph==='k5'?'K₅ · 5 vertices · 10 edges':s.graph==='k33'?'K₃,₃ · 6 vertices · 9 edges':'';break;
+case 'map':html=mapScene(s,q);caption='A shared border counts. A single shared point does not.';if(s.dual)controls=button(q.toggle?'Hide adjacency graph':'Show adjacency graph','toggle');if(s.interactive){controls=colorControls();status=q.message||'Choose a color, then select a region.';}break;
+case 'morph':case 'cubeMorph':{let start=G[s.scene==='morph'?'k23cross':'cube3d'],end=G[s.scene==='morph'?'k23':'cube'];html=wrap(graph(q.toggle?end:start));caption=q.toggle?'A planar representation · no crossings':'The same vertices and the same adjacencies';controls=button(q.toggle?'Original drawing':'Redraw without crossings','morph');break;}
+case 'faces':html=faces(s.graph,q.face);caption=`${s.graph==='cube'?'5 bounded + 1 outside = 6':'2 bounded + 1 outside = 3'} faces`;controls=Array.from({length:s.graph==='cube'?6:3},(_,i)=>button(i===(s.graph==='cube'?5:2)?'Outside':`F${i+1}`,'face',`data-face="${i}" aria-pressed="${q.face===i}"`)).join('')+button('All','face','data-face="-1"');break;
+case 'samecounts':{let c5={p:ring(5),e:cycle(5)},tri={p:[[170,80],[60,330],[290,330],[430,330],[570,330]],e:[[0,1],[1,2],[2,0],[2,3],[3,4]]};html=q.toggle?wrap(mini(c5,0,105,.48)+mini(tri,325,105,.48)+txt(155,400,'five-cycle')+txt(475,400,'triangle with a tail')):wrap(txt(320,180,'5 vertices · 5 edges','big')+txt(320,270,'Two different connected planar graphs')+txt(320,330,'How many faces?'));caption=q.toggle?'Compare with your own drawings. What about f?':'Construct your own examples first.';controls=button(q.toggle?'Hide examples':'Show two examples','toggle');break;}
+case 'k4compare':html=wrap(mini('k4cross',-10,80,.5)+mini('k4',325,80,.5)+txt(150,390,'crossed drawing')+txt(480,390,'planar representation'));caption='An edge crossing without a vertex adds no adjacency.';break;
+case 'build':{let p=[[170,320],[440,320],[300,80],[540,100]],es=[[[0,1]],[[0,1],[1,2]],[[0,1],[1,2],[2,0]],[[0,1],[1,2],[2,0],[1,3]]],v=[2,3,3,4][q.step],e=q.step+1,f=q.step<2?1:2;html=wrap(graph({p:p.slice(0,v),e:es[q.step]},{bg:q.step>=2?poly(p.slice(0,3),colors[2],{opacity:.2}):''}));caption=`v = ${v}     e = ${e}     f = ${f}`+(s.discovery?'':`     →     ${v} − ${e} + ${f} = 2`);controls=button('Reset','reset')+button('Next move','step',q.step===3?'disabled':'');break;}
+case 'delete':{let g=G.square;let bg=q.toggle?poly(g.p,colors[0],{opacity:.2}):poly([g.p[0],g.p[1],g.p[2]],colors[0],{opacity:.25})+poly([g.p[0],g.p[2],g.p[3]],colors[2],{opacity:.25});html=wrap(graph(g,{bg,highlight:[4],hide:q.toggle?[4]:[]}));caption=q.toggle?'v = 4, e = 4, f = 2':'v = 4, e = 5, f = 3';controls=button(q.toggle?'Restore the edge':'Delete the cycle edge','toggle');break;}
+case 'proof':html=wrap(txt(320,110,'e = 0','big')+txt(320,165,'one vertex, one face')+path('M320 190 V240')+txt(170,300,'No cycle','big')+txt(480,300,'A cycle','big')+txt(170,350,'tree edge count')+txt(480,350,'delete a cycle edge'));break;
+case 'boundary':{let g=G.triangleLeaf;html=wrap(graph(g,{bg:poly(g.p.slice(0,3),colors[2],{opacity:.22}),highlight:q.toggle?[3]:[]} )+txt(320,245,'inner: 3','label')+txt(480,415,'outer: 5','label')+(q.toggle?path('M166 322 L60 177 M77 160 L189 312',{style:'stroke:#ff887c;stroke-width:3;stroke-dasharray:8 5'}):''));caption='3 + 5 = 8 = 2 × 4 edges';controls=button(q.toggle?'Hide bridge sides':'Highlight both sides of the bridge','toggle');break;}
+case 'bounds':html=wrap(txt(320,110,'K₃,₃','big')+txt(320,200,'General bound: 9 ≤ 12','label')+txt(320,290,'Bipartite bound: 9 > 8','label',{style:'fill:#c5473a'})+txt(320,385,'The stronger test rules it out.'));break;
+case 'parity':html=wrap(txt(180,145,'3 × 3','big')+txt(460,145,'6 × 5','big')+txt(180,195,'triangular faces')+txt(460,195,'pentagonal faces')+txt(320,300,'9 + 30 = 39','big')+txt(320,375,'An odd number of edge sides is impossible.'));break;
+case 'solids':html='<table class="solid-table"><thead><tr><th>Solid</th><th>v</th><th>e</th><th>f</th><th>v−e+f</th></tr></thead><tbody>'+[['Tetrahedron',4,6,4],['Cube',8,12,6],['Octahedron',6,12,8],['Dodecahedron',20,30,12],['Icosahedron',12,30,20]].map(r=>'<tr>'+r.map(x=>`<td>${x}</td>`).join('')+'<td>2</td></tr>').join('')+'</tbody></table>';break;
+case 'octa':{let pts=[[320,25],[80,230],[320,300],[560,230],[320,165],[320,445]],e=[[0,1],[0,2],[0,3],[0,4],[1,2],[2,3],[3,4],[4,1],[5,1],[5,2],[5,3],[5,4]];let out=poly([pts[0],pts[1],pts[2]],colors[0],{opacity:.2})+poly([pts[0],pts[2],pts[3]],colors[3],{opacity:.3})+poly([pts[5],pts[1],pts[2]],colors[2],{opacity:.2});e.forEach(([a,b])=>out+=line(pts[a],pts[b],a===4||b===4?{'stroke-dasharray':'7 8',opacity:.45}:{}));html=wrap(out,'Octahedron with hidden edges dashed');break;}
+case 'dual':html=wrap(graph('cube'));caption='A vertex for each face · an edge for each allowed move';break;
+case 'route':{let g=G[s.graph],r=s.route,used=[],steps={};for(let j=0;j<q.step;j++){let i=g.e.findIndex(([a,b])=>(a===r[j]&&b===r[j+1])||(b===r[j]&&a===r[j+1]));used.push(i);steps[i]=j+1;}html=wrap(graph(g,{highlight:used,steps,current:r[q.step]}));caption=`${s.mode||'Euler circuit'} · ${q.step} / ${r.length-1} steps`;controls=button('Reset','reset')+button('Step','step',q.step===r.length-1?'disabled':'')+button('Play','play',q.step===r.length-1?'disabled':'');status=r.slice(0,q.step+1).map(i=>g.labels?.[i]||String.fromCharCode(97+i)).join(' → ');break;}
+case 'pairing':html=wrap(line([70,80],[320,235],{style:'stroke:#087f6d;stroke-width:6'})+line([320,235],[570,390],{style:'stroke:#087f6d;stroke-width:6'})+line([70,390],[320,235],{style:'stroke:#7451bc;stroke-width:6'})+line([320,235],[570,80],{style:'stroke:#7451bc;stroke-width:6'})+el('circle',{cx:320,cy:235,r:35,fill:'#ffffff',stroke:'#986000','stroke-width':3})+txt(320,235,'v','label')+txt(100,55,'in ①')+txt(540,425,'out ①')+txt(100,425,'in ②')+txt(540,55,'out ②'));caption='Two visits use four distinct incident edges.';break;
+case 'parityGraphs':html=wrap(mini({p:ring(4),e:cycle(4)},0,85,.32)+mini('triangleLeaf',215,85,.32)+mini('k4',430,85,.32)+txt(105,310,'0 odd','label')+txt(320,310,'2 odd','label')+txt(535,310,'4 odd','label')+txt(105,355,'circuit')+txt(320,355,'open trail')+txt(535,355,'neither'));break;
+case 'families':html=wrap(mini('k4',0,-5,.43)+mini('k5',345,-5,.43)+mini({p:ring(7),e:cycle(7)},0,240,.43)+mini({p:Array.from({length:7},(_,i)=>[40+i*90,200]),e:Array.from({length:6},(_,i)=>[i,i+1])},345,240,.43)+txt(135,210,'K₄','label')+txt(480,210,'K₅','label')+txt(135,455,'C₇','label')+txt(480,455,'P₇','label'));break;
+case 'bridges':{let g={p:[[170,55],[170,235],[170,415],[530,235]],e:[[0,1],[0,1],[1,2],[1,2],[0,3],[1,3],[2,3]],labels:['A','B','C','D'],curves:{0:'M170 55 Q65 145 170 235',1:'M170 55 Q265 145 170 235',2:'M170 235 Q65 325 170 415',3:'M170 235 Q265 325 170 415'}};html=wrap(graph(g,{degrees:true}));caption='Seven edges, including two pairs of parallel edges';break;}
+case 'splice':html=wrap(graph('bowtie',{highlight:q.toggle?[0,1,2,3,4,5]:[0,1,2],current:0}));caption=q.toggle?'a → b → c → a → d → e → a':'First closed trail: a → b → c → a';controls=button(q.toggle?'First trail':'Splice in the second triangle','toggle');break;
+case 'temporary':html=wrap(graph('triangleLeaf')+(q.toggle?path('M180 330 Q-10 300 70 170',{style:'stroke:#986000;stroke-width:6;stroke-dasharray:8 7'}):''));caption=q.toggle?'Added a second a–d edge · all degrees even':'Odd vertices: a and d';controls=button(q.toggle?'Remove the temporary edge':'Add the temporary edge','toggle');break;
+case 'compareRoutes':html=wrap(mini('bowtie',0,80,.48,{highlight:[0,1,2,3,4,5]})+mini('bowtie',325,80,.48,{highlight:[1,2,3,4]})+txt(155,365,'Euler circuit','label')+txt(485,365,'Hamilton path','label')+txt(155,410,'a b c a d e a')+txt(485,410,'b c a d e'));break;
+case 'bottleneck':html=wrap(graph('flower',{hide:q.toggle?[0,2,3,5,6,8]:[],hideNode:q.toggle?0:undefined,current:q.toggle?undefined:0}));caption=q.toggle?'Removing the center leaves three separate pieces.':'Every outer vertex has degree 2; the center has degree 6.';controls=button(q.toggle?'Restore center':'Remove center','toggle');break;
+case 'alternation':{let out='';for(let i=0;i<7;i++){if(i<6)out+=line([50+i*90,210],[140+i*90,210]);out+=el('circle',{cx:50+i*90,cy:210,r:28,fill:colors[i%2]})+txt(50+i*90,210,i%2?'B':'A','label',{style:'fill:#101827'});}html=wrap(out+txt(320,320,'4 from A, 3 from B','label')+txt(320,370,'The counts differ by at most one.'));break;}
+case 'colorGraph':html=wrap(graph(s.graph,{coloring:q.assigned,click:true}));controls=colorControls();status=q.message||'Choose a color, then select a vertex.';break;
+case 'cycles':{let even={p:ring(6),e:cycle(6)},odd={p:ring(5),e:cycle(5)};html=wrap(mini(even,0,65,.49,{coloring:[0,1,0,1,0,1]})+mini(odd,325,65,.49,{coloring:[0,1,0,1,q.toggle?2:0]})+txt(155,375,'C₆: two colors','label')+txt(485,375,q.toggle?'C₅: three colors':'C₅: closing conflict','label'));caption=q.toggle?'The odd cycle has a proper coloring using three colors.':'The endpoints of the closing edge have the same color.';controls=button(q.toggle?'Try two colors':'Use a third color','toggle');break;}
+case 'registers':{let out=txt(320,35,'When must each value be available?','label');const intervals=[[100,300],[210,430],[360,550]],names=['p','q','r'];intervals.forEach(([a,b],i)=>{let y=110+i*100;out+=txt(45,y,names[i],'label')+line([90,y],[570,y],{opacity:.2})+el('rect',{x:a,y:y-18,width:b-a,height:36,rx:9,fill:colors[i===1?1:0]});});out+=txt(320,420,'p and r do not overlap; they may share a register.');html=wrap(out,'Three variable lifetimes: p overlaps q, q overlaps r, p does not overlap r');caption='Overlapping lifetimes create interference edges.';break;}
+}
+return html+`<div class="caption">${caption}</div><div class="controls">${controls}</div><div class="status" role="status" aria-live="polite">${status}</div>`;
+}
+function source(s){return s.source|| (DECK.meeting===18?'2.2':DECK.meeting===19?'2.3':s.act===4?'2.5':'2.4')}
+function sourceURL(sec){return 'https://discrete.openmathbooks.org/dmoi4/'+({'2.2':'sec_trees.html','2.3':'sec_gt-planar.html','2.4':'sec_gt-paths.html','2.5':'sec_coloring.html'}[sec])}
+function render(){const s=DECK.slides[index];$('#slide').className=s.cover?'cover':'';$('#slide').innerHTML=`<div class="eyebrow">${s.act===0?'Opening investigation':`Act ${s.act} / ${DECK.acts[s.act]}`}</div><h1>${s.title}</h1><div class="content"><div class="text">${s.body}</div><div class="visual">${renderScene(s,st())}</div></div>`;$('#counter').textContent=`${index+1} / ${DECK.slides.length}`;$('#previous').disabled=index===0;$('#next').disabled=index===DECK.slides.length-1;$('#progress').style.width=`${100*(index+1)/DECK.slides.length}%`;$('#act').value=s.act;$('#source').textContent=s.supp?(s.scene==='weightedTree'?'Course supplement · Graph algorithms':'Course supplement · Trees'):`DMOI 4e · §${source(s)}`;if(s.supp)$('#source').removeAttribute('href');else $('#source').href=sourceURL(source(s));document.title=`${DECK.meeting} · ${s.title.replace(/<[^>]*>/g,' ')} · CS 241`;}
+function go(n){clearInterval(timer);timer=null;index=Math.max(0,Math.min(DECK.slides.length-1,n));history.replaceState(null,'',`#${index+1}`);render();}
+function check(){let s=DECK.slides[index],q=st(),g=s.scene==='districtMap'?districtGraph:s.scene==='map'?{p:centers,e:complete(4),labels:['A','B','C','D']}:G[s.graph],edges=g.e,n=g.p.length;let missing=Array.from({length:n},(_,i)=>i).filter(i=>q.assigned[i]===undefined||q.assigned[i]<0);let conflicts=edges.filter(([a,b])=>q.assigned[a]>=0&&q.assigned[a]===q.assigned[b]);let labels=g.labels;q.message=conflicts.length?`Conflict${conflicts.length>1?'s':''}: ${conflicts.map(([a,b])=>labels[a]+'–'+labels[b]).join(', ')}.`:missing.length?`${missing.length} still uncolored; no conflicts so far.`:`Proper coloring using ${new Set(q.assigned).size} colors. Can fewer work?`;}
+function action(a,target){let q=st(),s=DECK.slides[index];if(a!=='play'){clearInterval(timer);timer=null;}
+if(a==='toggle')q.toggle=!q.toggle;
+if(a==='morph'){q.toggle=!q.toggle;const start=G[s.scene==='morph'?(q.toggle?'k23cross':'k23'):(q.toggle?'cube3d':'cube')],end=G[s.scene==='morph'?(q.toggle?'k23':'k23cross'):(q.toggle?'cube':'cube3d')];if(!matchMedia('(prefers-reduced-motion: reduce)').matches){let began=performance.now(),at=index;function frame(now){if(index!==at)return;let t=Math.min(1,(now-began)/850);t=t*t*(3-2*t);let g={...end,p:end.p.map((p,i)=>p.map((x,j)=>start.p[i][j]+(x-start.p[i][j])*t))};$('.visual svg').outerHTML=wrap(graph(g));if(t<1)requestAnimationFrame(frame);else render();}requestAnimationFrame(frame);return;}}
+if(a==='face')q.face=Number(target.dataset.face);
+if(a==='reset')q.step=0;
+if(a==='setstep')q.step=Number(target.dataset.step);
+if(a==='example')q.example=Number(target.dataset.example);
+if(a==='counts'){q.countShown=q.countShown||[];q.countShown[q.example||0]=!q.countShown[q.example||0];}
+if(a==='treeMode'){q.active=target.dataset.mode==='add'?[]:G.investigation.e.map((_,i)=>i);}
+if(a==='treeExample'){q.example=Number(target.dataset.example);q.toggle=false;}
+if(a==='root'){q.root=Number(target.dataset.root);}
+if(a==='order'){q.order=target.dataset.order;q.step=0;}
+if(a==='step')q.step=Math.min(q.step+1,s.scene==='build'?3:s.route.length-1);
+if(a==='play'){if(timer)return;timer=setInterval(()=>{if(q.step<s.route.length-1){q.step++;render();}else{clearInterval(timer);timer=null;}},700);}
+if(a==='palette')q.palette=Number(target.dataset.color);
+if(a==='clear'){q.assigned=[];q.message='';}
+if(a==='check')check();render();}
+document.addEventListener('click',e=>{const a=e.target.closest('[data-action]');if(a)action(a.dataset.action,a);const edge=e.target.closest('[data-tree-edge]');if(edge){let a=treeEditorState(st()),i=Number(edge.dataset.treeEdge);st().active=a.includes(i)?a.filter(x=>x!==i):[...a,i];render();}const item=e.target.closest('[data-region],[data-node]');if(item){st().assigned[Number(item.dataset.region??item.dataset.node)]=st().palette;st().message='';render();}const jump=e.target.closest('[data-jump]');if(jump){$('#overview').close();go(Number(jump.dataset.jump));}});
+document.addEventListener('keydown',e=>{if(e.target.matches('[data-region],[data-node],[data-tree-edge]')&&['Enter',' '].includes(e.key)){e.preventDefault();e.target.dispatchEvent(new MouseEvent('click',{bubbles:true}));return;}if(document.querySelector('dialog[open]')||e.target.closest('button,select,a,input,textarea,[role=button]'))return;if(['ArrowRight','PageDown',' '].includes(e.key)){e.preventDefault();go(index+1);}if(['ArrowLeft','PageUp'].includes(e.key)){e.preventDefault();go(index-1);}if(e.key==='Home')go(0);if(e.key==='End')go(DECK.slides.length-1);if(e.key.toLowerCase()==='o')$('#overview').showModal();if(e.key.toLowerCase()==='f')fullscreen();});
+function fullscreen(){if(document.fullscreenElement)document.exitFullscreen();else document.documentElement.requestFullscreen().catch(()=>{});}
+$('#previous').onclick=()=>go(index-1);$('#next').onclick=()=>go(index+1);$('#full').onclick=fullscreen;$('#showOverview').onclick=()=>$('#overview').showModal();$('#act').innerHTML=DECK.acts.map((a,i)=>`<option value="${i}">${i===0?'Opening':`Act ${i}`} · ${a}</option>`).join('');$('#act').onchange=e=>go(DECK.slides.findIndex(s=>s.act===Number(e.target.value)));$('#overviewList').innerHTML=DECK.slides.map((s,i)=>`<button data-jump="${i}">${String(i+1).padStart(2,'0')} · ${s.title.replaceAll('<br>',' ')}</button>`).join('');
+function resize(){let scale=Math.min(innerWidth/1600,innerHeight/900);$('#stage').style.transform=`translate(-50%,-50%) scale(${scale})`;}
+addEventListener('resize',resize);addEventListener('hashchange',()=>{let n=Number(location.hash.slice(1));if(Number.isInteger(n)&&n>=1&&n<=DECK.slides.length)go(n-1);});
+addEventListener('beforeprint',()=>{let old=index;$('#print').innerHTML=DECK.slides.map((s,i)=>{index=i;let q={...st()};if(s.scene==='route')q.step=s.route.length-1;let visual=renderScene(s,q);return `<section class="print-page"><div class="eyebrow">CS 241 · Meeting ${DECK.meeting} · ${i+1} / ${DECK.slides.length}</div><h1>${s.title}</h1><div class="content"><div class="text">${s.body}</div><div class="visual">${visual}</div></div></section>`;}).join('');index=old;});
+resize();let initial=Number(location.hash.slice(1));go(Number.isInteger(initial)&&initial>0?initial-1:0);
+</script><script>
+// This module is isolated from deck controls, except for the render/print hooks.
+(()=>{
+ 'use strict';
+ const TEXT_ENABLED=true;
+ const NS='http://www.w3.org/2000/svg',W=1600,H=900;
+ const hash=s=>{let h=2166136261;for(const ch of s){h^=ch.charCodeAt(0);h=Math.imul(h,16777619);}return (h>>>0).toString(16);};
+ const fingerprint=`m${DECK.meeting}-`+hash(DECK.slides.map(s=>s.title).join('\n'));
+ const storageKey=(TEXT_ENABLED?'cs241-ink-text-copy-v1:':'cs241-ink-copy-v1:')+fingerprint;
+ const icons={
+  use:'<path d="M5 3v17l4-5 4 7 3-2-4-6 7-1Z"/>',
+  pen:'<path d="m4 16 12-12 4 4L8 20l-5 1Z"/><path d="m13 7 4 4M4 16l4 4"/>',
+  highlight:'<path d="m7 15 7-12 7 4-7 12Z"/><path d="m7 15-3 4 6 3 4-3M3 22h18"/>',
+  erase:'<path d="m3 14 11-11 8 8-10 10H9Z"/><path d="m7 10 8 8M12 21h9"/>',
+  text:'<path d="M4 5V3h16v2M12 3v18M8 21h8"/>',
+  undo:'<path d="M8 5 3 10l5 5M4 10h10a6 6 0 0 1 0 12"/>',
+  redo:'<path d="m16 5 5 5-5 5M20 10H10a6 6 0 0 0 0 12"/>',
+  clear:'<path d="M3 6h18M8 6V3h8v3M6 6l1 15h10l1-15M10 10v7M14 10v7"/>',
+  menu:'<circle cx="5" cy="12" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/>'
+ };
+ const toolButton=(name,label,extra='')=>`<button type="button" id="ink-${name==='menu'?'more':name}" title="${label}" aria-label="${label}" ${extra}><svg viewBox="0 0 24 24" aria-hidden="true">${icons[name]}</svg></button>`;
+ const stage=document.getElementById('stage'),layer=document.createElementNS(NS,'svg');
+ layer.id='ink-layer';layer.setAttribute('viewBox',`0 0 ${W} ${H}`);layer.setAttribute('aria-label','Slide annotation layer');
+ stage.append(layer);
+ const toolbar=document.createElement('div');toolbar.id='ink-tools';toolbar.setAttribute('role','toolbar');toolbar.setAttribute('aria-label','Writing tools');
+ toolbar.innerHTML=toolButton('use','Interact with the slide (V)','aria-pressed="true"')+toolButton('pen','Pen (P)','aria-pressed="false"')+toolButton('highlight','Highlighter (H)','aria-pressed="false"')+toolButton('erase','Eraser: remove whole strokes (E)','aria-pressed="false"')+'<hr>'+toolButton('undo','Undo ink on this slide (Ctrl+Z)')+toolButton('redo','Redo ink on this slide (Ctrl+Shift+Z)')+'<hr><input id="ink-color" type="color" value="#c62828" title="Ink color" aria-label="Ink color"><select id="ink-width" title="Stroke width" aria-label="Stroke width"><option value="3">3</option><option value="5">5</option><option value="8">8</option></select><hr>'+toolButton('clear','Clear ink on this slide (undo available)')+toolButton('menu','Ink backup, printing, and help')+'<span id="ink-save-status" role="status" aria-live="polite">Ready</span>';
+ stage.append(toolbar);
+ if(TEXT_ENABLED)toolbar.querySelector('#ink-erase').insertAdjacentHTML('afterend',toolButton('text','Text box (T)','aria-pressed="false"'));
+ const menu=document.createElement('dialog');menu.id='ink-menu';
+ menu.innerHTML='<button type="button" id="ink-close">Close</button><h2>Write on this copy</h2><p>Choose <b>Pen</b> or <b>Highlighter</b> and write with a mouse, stylus, or touch. Buttons below the diagrams work in every mode. Choose <b>Interact</b> to click directly on a diagram’s edges or vertices. The eraser removes whole strokes.</p><p>Ink is saved per slide in <b>this browser</b>, together with the diagram state. It is not written into the HTML file. Download a backup before switching browsers, moving the file, or clearing browser data.</p><p class="ink-hint">Ink stays at its page position when you change a diagram. Arrow keys and the slide controls still navigate. V = interact · P = pen · H = highlighter · E = eraser. Ctrl/Cmd+Z undoes ink on the current slide.</p><div class="ink-menu-actions"><button type="button" id="ink-export">Download ink backup</button><button type="button" id="ink-load">Load ink backup…</button><button type="button" id="ink-print">Print slides with ink</button></div><p class="ink-hint">Loading a backup replaces the current ink and diagram states. Each slide’s prior ink can be recovered with Undo. Printing preserves the slide’s layout and ink alignment.</p><p id="ink-menu-message" role="status" aria-live="polite"></p>';
+ document.body.append(menu);
+ if(TEXT_ENABLED){
+  const help=document.createElement('p');help.innerHTML='<b>Text boxes:</b> choose <b>T</b>, then click the slide and type. Click an existing box to edit it. Drag its Move handle or resize from its bottom-right corner. Adjust the size and color above the box. Press Escape or Ctrl/Cmd+Enter to finish typing. Use Undo/Redo for ink and completed text edits.';menu.querySelector('h2').after(help);
+  for(const p of menu.querySelectorAll('p'))p.innerHTML=p.innerHTML.replaceAll('Ink is saved','Ink and text are saved').replaceAll('ink and diagram states','ink, text, and diagram states').replaceAll('prior ink','prior annotations');
+  menu.querySelector('#ink-export').textContent='Download annotation backup';menu.querySelector('#ink-load').textContent='Load annotation backup…';menu.querySelector('#ink-print').textContent='Print slides with annotations';
+ }
+ const fileInput=document.createElement('input');fileInput.id='ink-import';fileInput.type='file';fileInput.accept='.json,application/json';fileInput.hidden=true;document.body.append(fileInput);
+ const get=id=>document.getElementById(id);
+ let ink={},undo={},redo={},mode='use',colorsForTool={pen:'#c62828',highlight:'#f4c430'},width=3;
+ let gesture=null,raf=0,saveTimer=0,loadedWarning='',saveFailed=false;
+ const strokes=(i=index)=>ink[i]||[];
+ const textTools=TEXT_ENABLED?createTextTools():null;
+ // Included inside the annotation module only for an ink + text copy.
+function createTextTools(){
+ const textLayer=document.createElement('div');textLayer.id='ink-text-layer';stage.append(textLayer);
+ let selected=null,selectedSlide=-1,editing=null,drag=null,textColor='#172439',textSize=28;
+ const clamp=(x,a,b)=>Math.max(a,Math.min(b,x));
+ const boxData=(id,i=index)=>strokes(i).find(s=>s.tool==='text'&&s.id===id);
+ const boxElement=id=>Array.from(textLayer.children).find(e=>e.dataset.textId===id);
+ function applyStyle(el,s){Object.assign(el.style,{left:s.x+'px',top:s.y+'px',width:s.w+'px',height:s.h+'px',fontSize:s.size+'px',color:s.color});}
+ function content(s,placeholder=false){const el=document.createElement('div');el.className='ink-text-content';el.textContent=s.text||(placeholder?'Type a note…':'');el.dataset.empty=placeholder&&!s.text;return el;}
+ function fit(s){
+  const measure=document.createElement('div');measure.className='ink-text-content';
+  Object.assign(measure.style,{position:'absolute',left:'-10000px',top:'0',visibility:'hidden',width:(s.w-2)+'px',height:'auto',fontSize:s.size+'px',lineHeight:'1.25'});
+  measure.textContent=s.text+'\u200b';textLayer.append(measure);
+  const h=clamp(measure.scrollHeight+2,48,702);measure.remove();
+  return {...s,h,x:clamp(s.x,64,W-64-s.w),y:clamp(s.y,104,H-94-h)};
+ }
+ function replace(id,changes,i=index){let updated;ink[i]=strokes(i).map(s=>{if(s.tool!=='text'||s.id!==id)return s;updated=fit({...s,...changes});return updated;});return updated;}
+ function changed(a,b){return JSON.stringify(a)!==JSON.stringify(b);}
+ function finishEditing(){
+  if(!editing)return;
+  const session=editing;editing=null;
+  const current=boxData(session.id,session.slide);
+  if(changed(session.before,strokes(session.slide)))remember(session.slide,session.before);
+  if(current&&session.area.isConnected)session.area.replaceWith(content(current,true));
+  updateButtons();saveNow();
+ }
+ function endDrag(cancel=false){
+  if(!drag)return;
+  const session=drag;drag=null;
+  if(session.handle.hasPointerCapture(session.pointerId))session.handle.releasePointerCapture(session.pointerId);
+  if(cancel)ink[session.slide]=session.before;
+  else if(changed(session.before,strokes(session.slide)))remember(session.slide,session.before);
+  renderText();updateButtons();saveNow();
+ }
+ function finish(){finishEditing();endDrag();}
+ function beginEdit(id,before){
+  if(editing?.id===id&&editing.slide===index)return;
+  finish();selected=id;selectedSlide=index;renderText();
+  const s=boxData(id),box=boxElement(id);if(!s||!box)return;
+  textColor=s.color;textSize=s.size;if(mode==='text')get('ink-color').value=s.color;
+  const area=document.createElement('textarea');area.className='ink-text-editor';area.value=s.text;area.placeholder='Type a note…';area.maxLength=5000;area.spellcheck=false;area.setAttribute('aria-label','Slide text box');
+  box.querySelector('.ink-text-content').replaceWith(area);
+  editing={id,slide:index,before:before||strokes(),area};
+  area.addEventListener('input',()=>{if(!editing||editing.area!==area)return;const current=replace(id,{text:area.value},editing.slide);applyStyle(box,current);scheduleSave();});
+  area.addEventListener('blur',finishEditing);
+  area.addEventListener('keydown',e=>{
+   e.stopPropagation();
+   if(e.key==='Escape'||((e.ctrlKey||e.metaKey)&&e.key==='Enter')){e.preventDefault();finishEditing();}
+  });
+  area.focus();area.setSelectionRange(area.value.length,area.value.length);
+ }
+ function editStyle(id,changes){
+  finish();const before=strokes();if(!boxData(id))return;replace(id,changes);
+  if(changed(before,strokes()))remember(index,before);
+  renderText();updateButtons();saveNow();
+ }
+ function remove(id){finish();const before=strokes();ink[index]=before.filter(s=>s.tool!=='text'||s.id!==id);if(changed(before,strokes()))remember(index,before);selected=null;renderText();updateButtons();saveNow();}
+ function startDrag(e,id,kind,handle){
+  if(e.pointerType==='mouse'&&e.button!==0)return;
+  e.preventDefault();e.stopPropagation();finishEditing();
+  const s=boxData(id);if(!s)return;
+  selected=id;selectedSlide=index;
+  drag={id,kind,handle,pointerId:e.pointerId,slide:index,before:strokes(),start:point(e),original:s};handle.setPointerCapture(e.pointerId);
+ }
+ function attachHandle(handle,id,kind){
+  handle.addEventListener('pointerdown',e=>startDrag(e,id,kind,handle));
+  handle.addEventListener('pointermove',e=>{
+   if(!drag||e.pointerId!==drag.pointerId)return;e.preventDefault();
+   const p=point(e),dx=p[0]-drag.start[0],dy=p[1]-drag.start[1],s=drag.original;
+   const change=kind==='move'?{x:s.x+dx,y:s.y+dy}:{w:clamp(s.w+dx,140,W-64-s.x)};
+   const current=replace(id,change,drag.slide);applyStyle(boxElement(id),current);scheduleSave();
+  });
+  handle.addEventListener('pointerup',e=>{if(drag?.pointerId===e.pointerId)endDrag();});
+  handle.addEventListener('pointercancel',e=>{if(drag?.pointerId===e.pointerId)endDrag(true);});
+  handle.addEventListener('lostpointercapture',e=>{if(drag?.pointerId===e.pointerId)endDrag();});
+  handle.addEventListener('keydown',e=>{
+   if(!['ArrowLeft','ArrowRight','ArrowUp','ArrowDown','Delete','Backspace'].includes(e.key))return;e.preventDefault();e.stopPropagation();
+   if(['Delete','Backspace'].includes(e.key)){remove(id);return;}
+   const s=boxData(id),delta=e.shiftKey?20:5,dx=e.key==='ArrowLeft'?-delta:e.key==='ArrowRight'?delta:0,dy=e.key==='ArrowUp'?-delta:e.key==='ArrowDown'?delta:0;
+   editStyle(id,kind==='move'?{x:s.x+dx,y:s.y+dy}:{w:clamp(s.w+dx+dy,140,W-64-s.x)});
+   boxElement(id)?.querySelector(kind==='move'?'.ink-text-move':'.ink-text-resize').focus();
+  });
+ }
+ function renderText(){
+  textLayer.dataset.mode=mode;if(editing||drag)return;
+  if(selectedSlide!==index||!boxData(selected))selected=null;
+  textLayer.replaceChildren();
+  for(const s of strokes().filter(s=>s.tool==='text')){
+   const box=document.createElement('div');box.className='ink-text-box';box.dataset.textId=s.id;applyStyle(box,s);box.append(content(s,true));
+   const active=s.id===selected&&['use','text'].includes(mode);box.classList.toggle('is-selected',active);
+   box.addEventListener('click',e=>{if(!e.target.closest('button,input,select,textarea')&&['use','text'].includes(mode))beginEdit(s.id);});
+   if(active){
+    const options=document.createElement('div');options.className='ink-text-options';options.setAttribute('aria-label','Text box controls');
+    const move=document.createElement('button');move.type='button';move.className='ink-text-move';move.textContent='⠿ Move';move.title='Drag to move; arrow keys to nudge';move.setAttribute('aria-label','Move text box');attachHandle(move,s.id,'move');
+    const size=document.createElement('select');size.setAttribute('aria-label','Text size');for(const n of [20,24,28,32,40,48,56]){const option=document.createElement('option');option.value=n;option.textContent=n;option.selected=n===s.size;size.append(option);}size.onchange=()=>{textSize=Number(size.value);editStyle(s.id,{size:textSize});};
+    const color=document.createElement('input');color.type='color';color.value=s.color;color.title='Text color';color.setAttribute('aria-label','Text color');color.onchange=()=>{textColor=color.value;editStyle(s.id,{color:textColor});if(mode==='text')get('ink-color').value=textColor;};
+    const del=document.createElement('button');del.type='button';del.textContent='Delete';del.setAttribute('aria-label','Delete text box');del.onclick=()=>remove(s.id);
+    options.append(move,size,color,del);box.append(options);
+    const resize=document.createElement('button');resize.type='button';resize.className='ink-text-resize';resize.title='Drag to change width; height follows the text';resize.setAttribute('aria-label','Resize text box');attachHandle(resize,s.id,'resize');box.append(resize);
+   }
+   textLayer.append(box);
+  }
+ }
+ return {
+  finish,render:renderText,
+  color:()=>selected&&boxData(selected)?boxData(selected).color:textColor,
+  setColor(color){textColor=color;if(selected&&selectedSlide===index)editStyle(selected,{color});},
+  setMode(next){if(!['use','text'].includes(next))selected=null;layer.classList.toggle('ink-text-mode',next==='text');renderText();},
+  add(p){
+   finish();const before=strokes(),id='text-'+(globalThis.crypto?.randomUUID?.()||Date.now()+'-'+Math.random().toString(36).slice(2));
+   const s=fit({tool:'text',id,x:p[0],y:p[1],w:360,h:48,text:'',size:textSize,color:textColor});
+   ink[index]=[...before,s];beginEdit(id,before);scheduleSave();
+  },
+  validate(s){
+   if(typeof s.id!=='string'||!/^[a-zA-Z0-9_-]{1,80}$/.test(s.id)||typeof s.text!=='string'||s.text.length>5000||!/^#[0-9a-f]{6}$/i.test(s.color)||![20,24,28,32,40,48,56].includes(s.size)||![s.x,s.y,s.w,s.h].every(Number.isFinite)||s.x<0||s.y<0||s.w<140||s.h<48||s.x+s.w>W||s.y+s.h>H)throw Error('Invalid text box.');
+   return {tool:'text',id:s.id,x:s.x,y:s.y,w:s.w,h:s.h,text:s.text,size:s.size,color:s.color};
+  },
+  print(page,i){for(const s of strokes(i).filter(s=>s.tool==='text')){const box=document.createElement('div');box.className='ink-text-print';applyStyle(box,s);box.append(content(s));page.append(box);}}
+ };
+}
+
+ function validInt(x,lo,hi){return Number.isInteger(x)&&x>=lo&&x<=hi;}
+ function cleanStates(raw){let result={};if(!raw||typeof raw!=='object'||Array.isArray(raw))return result;
+  Object.entries(raw).forEach(([key,v])=>{const i=Number(key);if(!validInt(i,0,DECK.slides.length-1)||!v||typeof v!=='object')return;
+   const s=DECK.slides[i],max=s.scene==='route'?s.route.length-1:({pathCycle:3,longestPath:2,deleteAudit:2,spanningSteps:6,traversal:9,weightedTree:2,uniqueExplore:1,boundaryWalk:3,spiderModel:3,build:3,districtMap:2}[s.scene]||0);
+   const q={step:validInt(v.step,0,max)?v.step:0,toggle:v.toggle===true,palette:validInt(v.palette,0,colors.length-1)?v.palette:0,assigned:[],face:-1};
+   const colorCount=s.scene==='districtMap'?districtGraph.p.length:s.scene==='map'?4:s.scene==='colorGraph'?G[s.graph].p.length:0;
+   if(Array.isArray(v.assigned))q.assigned=Array.from(v.assigned.slice(0,colorCount),c=>validInt(c,-1,colors.length-1)?c:-1);
+   if(s.scene==='faces'&&validInt(v.face,-1,s.graph==='cube'?5:2))q.face=v.face;
+   // Feedback is plain text inserted by the base renderer; never restore markup.
+   if(typeof v.message==='string')q.message=v.message.slice(0,1000).replace(/[<>&]/g,'');
+   if(validInt(v.example,0,s.scene==='countLab'?countExamples.length-1:3))q.example=v.example;
+   if(Array.isArray(v.countShown))q.countShown=v.countShown.slice(0,4).map(x=>x===true);
+   if(Array.isArray(v.active)&&v.active.length<=12&&v.active.every(x=>validInt(x,0,11)))q.active=[...new Set(v.active)];
+   if(v.root===0||v.root===5)q.root=v.root;
+   if(['pre','in','post'].includes(v.order))q.order=v.order;
+   result[i]=q;
+  });return result;
+ }
+ function validatePayload(data){
+  if(!data||!(data.version===1||(TEXT_ENABLED&&data.version===2))||data.deck!==fingerprint||!data.slides||typeof data.slides!=='object'||Array.isArray(data.slides))throw Error(`This backup does not match this version of meeting ${DECK.meeting}.`);
+  let result={},total=0;
+  for(const [key,list] of Object.entries(data.slides)){
+   const i=Number(key);if(!validInt(i,0,DECK.slides.length-1)||!Array.isArray(list)||list.length>10000)throw Error('Invalid slide data.');
+   const textIds=new Set();result[i]=list.map(s=>{
+    if(s?.tool==='text'&&textTools){const box=textTools.validate(s);if(textIds.has(box.id))throw Error('Duplicate text box.');textIds.add(box.id);return box;}
+    if(!s||!['pen','highlight'].includes(s.tool)||!/^#[0-9a-f]{6}$/i.test(s.color)||!Number.isFinite(s.width)||s.width<1||s.width>100||!Array.isArray(s.points)||!s.points.length)throw Error('Invalid ink stroke.');
+    total+=s.points.length;if(total>1500000)throw Error('The backup contains too many points.');
+    const points=s.points.map(p=>{if(!Array.isArray(p)||p.length!==2||!p.every(Number.isFinite)||p[0]<0||p[0]>W||p[1]<0||p[1]>H)throw Error('Invalid ink coordinates.');return [p[0],p[1]];});
+    return {tool:s.tool,color:s.color,width:s.width,points};
+   });
+  }
+  return {slides:result,states:cleanStates(data.states)};
+ }
+ try{const raw=localStorage.getItem(storageKey);if(raw){const data=validatePayload(JSON.parse(raw));ink=data.slides;state=data.states;}}
+ catch(e){loadedWarning='Browser storage could not be loaded. Use backups for this session.';saveFailed=true;}
+ function payload(){return {version:TEXT_ENABLED?2:1,deck:fingerprint,title:`CS 241 · Meeting ${DECK.meeting} · ${DECK.title}`,savedAt:new Date().toISOString(),slides:ink,states:cleanStates(state)};}
+ function status(message,failed=false){const e=get('ink-save-status');e.textContent=message;e.dataset.failed=failed;e.title=failed?'Automatic browser saving failed. Download an annotation backup.':`Ink${TEXT_ENABLED?', text,':''} and diagram states are saved in this browser, not in the HTML file.`;}
+ function saveNow(){clearTimeout(saveTimer);try{localStorage.setItem(storageKey,JSON.stringify(payload()));saveFailed=false;status('Saved locally');}catch(e){saveFailed=true;status('Use backup',true);}}
+ function scheduleSave(){clearTimeout(saveTimer);saveTimer=setTimeout(saveNow,180);}
+ function elementForStroke(s){let el;
+  if(s.points.length===1){el=document.createElementNS(NS,'circle');el.setAttribute('cx',s.points[0][0]);el.setAttribute('cy',s.points[0][1]);el.setAttribute('r',s.width/2);el.setAttribute('fill',s.color);}
+  else{el=document.createElementNS(NS,'path');el.setAttribute('d',s.points.map((p,i)=>(i?'L':'M')+p.join(' ')).join(' '));el.setAttribute('fill','none');el.setAttribute('stroke',s.color);el.setAttribute('stroke-width',s.width);el.setAttribute('stroke-linecap','round');el.setAttribute('stroke-linejoin','round');}
+  el.setAttribute('opacity',s.tool==='highlight'?'.27':'1');el.setAttribute('class','ink-stroke');return el;
+ }
+ function drawInk(){raf=0;layer.replaceChildren(...strokes().filter(s=>s.tool!=='text').map(elementForStroke));if(gesture?.stroke&&gesture.slide===index)layer.append(elementForStroke(gesture.stroke));textTools?.render();updateButtons();}
+ function requestDraw(){if(!raf)raf=requestAnimationFrame(drawInk);}
+ function updateButtons(){get('ink-undo').disabled=!(undo[index]?.length);get('ink-redo').disabled=!(redo[index]?.length);get('ink-clear').disabled=!strokes().length;}
+ function remember(i,before){(undo[i]||(undo[i]=[])).push(before);if(undo[i].length>100)undo[i].shift();redo[i]=[];}
+ function finishGesture(cancel=false){textTools?.finish();if(!gesture)return;const g=gesture;gesture=null;
+  if(g.stroke&&!cancel){remember(g.slide,strokes(g.slide));ink[g.slide]=[...strokes(g.slide),g.stroke];}
+  if(g.before){if(cancel)ink[g.slide]=g.before;else if(g.erased)remember(g.slide,g.before);}
+  if(layer.hasPointerCapture(g.pointerId))layer.releasePointerCapture(g.pointerId);
+  drawInk();saveNow();
+ }
+ function useMode(next){finishGesture();if(toolbar.contains(document.activeElement))document.activeElement.blur();mode=next;layer.classList.toggle('ink-enabled',mode!=='use');for(const name of ['use','pen','highlight','erase',...(TEXT_ENABLED?['text']:[])])get('ink-'+name).setAttribute('aria-pressed',name===mode);
+  get('ink-color').disabled=!['pen','highlight','text'].includes(mode);get('ink-width').disabled=!['pen','highlight'].includes(mode);get('ink-color').value=mode==='text'?textTools.color():colorsForTool[mode]||colorsForTool.pen;textTools?.setMode(mode);
+ }
+ function undoInk(){finishGesture();if(!undo[index]?.length)return;(redo[index]||(redo[index]=[])).push(strokes());ink[index]=undo[index].pop();drawInk();saveNow();}
+ function redoInk(){finishGesture();if(!redo[index]?.length)return;(undo[index]||(undo[index]=[])).push(strokes());ink[index]=redo[index].pop();drawInk();saveNow();}
+ function point(e){const r=layer.getBoundingClientRect();return [Math.round(Math.max(0,Math.min(W,(e.clientX-r.left)*W/r.width))*10)/10,Math.round(Math.max(0,Math.min(H,(e.clientY-r.top)*H/r.height))*10)/10];}
+ function pointSegment(p,a,b){const dx=b[0]-a[0],dy=b[1]-a[1],len=dx*dx+dy*dy,t=len?Math.max(0,Math.min(1,((p[0]-a[0])*dx+(p[1]-a[1])*dy)/len)):0;return Math.hypot(p[0]-a[0]-t*dx,p[1]-a[1]-t*dy);}
+ function segmentsDistance(a,b,c,d){const cross=(u,v,w)=>(v[0]-u[0])*(w[1]-u[1])-(v[1]-u[1])*(w[0]-u[0]);let x=cross(a,b,c),y=cross(a,b,d),z=cross(c,d,a),w=cross(c,d,b);
+  if(((x>0&&y<0)||(x<0&&y>0))&&((z>0&&w<0)||(z<0&&w>0)))return 0;
+  return Math.min(pointSegment(a,c,d),pointSegment(b,c,d),pointSegment(c,a,b),pointSegment(d,a,b));
+ }
+ function eraseBetween(a,b){const g=gesture;if(!g)return;const before=strokes(g.slide);ink[g.slide]=before.filter(s=>{if(s.tool==='text')return true;const radius=10+s.width/2;if(s.points.length===1)return pointSegment(s.points[0],a,b)>radius;for(let j=1;j<s.points.length;j++)if(segmentsDistance(a,b,s.points[j-1],s.points[j])<=radius)return false;return true;});if(ink[g.slide].length!==before.length)g.erased=true;requestDraw();}
+ layer.addEventListener('pointerdown',e=>{if(mode==='use'||gesture||(e.pointerType==='mouse'&&e.button!==0))return;e.preventDefault();const p=point(e),eraser=mode==='erase'||e.button===5;
+  if(mode==='text'){textTools.add(p);return;}
+  gesture={slide:index,pointerId:e.pointerId,last:p};layer.setPointerCapture(e.pointerId);
+  if(eraser){gesture.before=strokes();gesture.erased=false;eraseBetween(p,p);}else gesture.stroke={tool:mode,color:colorsForTool[mode],width:mode==='highlight'?width*6:width,points:[p]};requestDraw();
+ });
+ layer.addEventListener('pointermove',e=>{if(!gesture||e.pointerId!==gesture.pointerId)return;e.preventDefault();const samples=e.getCoalescedEvents?.()||[],events=samples.length?samples:[e];
+  for(const sample of events){const p=point(sample);if(gesture.before)eraseBetween(gesture.last,p);else if(Math.hypot(p[0]-gesture.last[0],p[1]-gesture.last[1])>.5)gesture.stroke.points.push(p);gesture.last=p;}requestDraw();
+ });
+ layer.addEventListener('pointerup',e=>{if(!gesture||e.pointerId!==gesture.pointerId)return;e.preventDefault();const p=point(e);if(gesture.before)eraseBetween(gesture.last,p);else if(Math.hypot(p[0]-gesture.last[0],p[1]-gesture.last[1])>.5)gesture.stroke.points.push(p);finishGesture();});
+ layer.addEventListener('pointercancel',e=>{if(gesture?.pointerId===e.pointerId)finishGesture(true);});
+ layer.addEventListener('lostpointercapture',e=>{if(gesture?.pointerId===e.pointerId)finishGesture();});
+ for(const name of ['use','pen','highlight','erase'])get('ink-'+name).onclick=()=>useMode(name);
+ if(TEXT_ENABLED){get('ink-text').onclick=()=>useMode('text');for(const [id,label] of [['ink-undo','Undo annotation on this slide (Ctrl+Z)'],['ink-redo','Redo annotation on this slide (Ctrl+Shift+Z)'],['ink-clear','Clear ink and text on this slide (undo available)'],['ink-more','Annotation backup, printing, and help'],['ink-color','Annotation color']]){get(id).title=label;get(id).setAttribute('aria-label',label);}}
+ get('ink-undo').onclick=undoInk;get('ink-redo').onclick=redoInk;
+ get('ink-clear').onclick=()=>{finishGesture();if(!strokes().length)return;remember(index,strokes());ink[index]=[];drawInk();saveNow();};
+ get('ink-color').oninput=e=>{if(mode==='text')textTools.setColor(e.target.value);else if(['pen','highlight'].includes(mode))colorsForTool[mode]=e.target.value;};
+ get('ink-width').onchange=e=>width=Number(e.target.value);
+ get('ink-menu').querySelector('#ink-close').onclick=()=>menu.close();
+ const menuButton=get('ink-more');
+ menuButton.onclick=()=>{finishGesture();get('ink-menu-message').textContent=saveFailed?'Browser saving is unavailable. Download a backup to keep your annotations.':`Backups include ink${TEXT_ENABLED?', text,':''} and diagram states for all slides.`;get('ink-menu-message').dataset.failed=saveFailed;menu.showModal();};
+ get('ink-export').onclick=()=>{finishGesture();const blob=new Blob([JSON.stringify(payload(),null,2)],{type:'application/json'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=`meeting-${DECK.meeting}-ink${TEXT_ENABLED?'-text':''}-backup.json`;a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);get('ink-menu-message').textContent='Annotation backup downloaded.';get('ink-menu-message').dataset.failed=false;};
+ get('ink-load').onclick=()=>{fileInput.value='';fileInput.click();};
+ fileInput.onchange=async()=>{const f=fileInput.files[0];if(!f)return;try{if(f.size>40000000)throw Error('The backup file is too large.');const loaded=validatePayload(JSON.parse(await f.text()));finishGesture();clearInterval(timer);timer=null;for(let i=0;i<DECK.slides.length;i++)remember(i,strokes(i));ink=loaded.slides;state=loaded.states;render();saveNow();get('ink-menu-message').textContent='Backup loaded. Previous ink is available with Undo on each slide.';get('ink-menu-message').dataset.failed=false;}catch(e){get('ink-menu-message').textContent='Could not load backup: '+e.message;get('ink-menu-message').dataset.failed=true;}};
+ get('ink-print').onclick=()=>{finishGesture();menu.close();window.print();};
+ // Run before the original keyboard listener, without changing its navigation keys.
+ document.addEventListener('keydown',e=>{if(document.querySelector('dialog[open]')||e.target.closest('input,select,textarea')||e.altKey)return;const key=e.key.toLowerCase();
+  if((e.ctrlKey||e.metaKey)&&key==='z'){e.preventDefault();e.stopImmediatePropagation();e.shiftKey?redoInk():undoInk();return;}
+  if((e.ctrlKey||e.metaKey)&&key==='y'){e.preventDefault();e.stopImmediatePropagation();redoInk();return;}
+  if(e.ctrlKey||e.metaKey)return;const map={v:'use',p:'pen',h:'highlight',e:'erase',...(TEXT_ENABLED?{t:'text'}:{})};if(map[key]){e.preventDefault();e.stopImmediatePropagation();useMode(map[key]);}
+ },true);
+ const baseRender=render;
+ render=function(){finishGesture();baseRender();document.title+=TEXT_ENABLED?' · Ink + text copy':' · Ink copy';drawInk();scheduleSave();};
+ // The base print listener runs first; replace its reflowed pages with exact-layout pages.
+ addEventListener('beforeprint',()=>{finishGesture();clearInterval(timer);timer=null;const old=index,container=get('print');container.replaceChildren();
+  DECK.slides.forEach((s,i)=>{index=i;const page=document.createElement('section');page.className='ink-print-page';
+   page.innerHTML=`<div class="brand"><b>CS 241</b>MEETING ${DECK.meeting}</div><article class="ink-print-slide ${s.cover?'cover':''}"><div class="eyebrow">${s.act===0?'Opening investigation':`Act ${s.act} / ${DECK.acts[s.act]}`}</div><h1>${s.title}</h1><div class="content"><div class="text">${s.body}</div><div class="visual">${renderScene(s,st())}</div></div></article><footer class="footer"><span>Meeting ${DECK.meeting} · ${DECK.title}</span><span>${i+1} / ${DECK.slides.length}</span></footer>`;
+   const svg=document.createElementNS(NS,'svg');svg.setAttribute('viewBox',`0 0 ${W} ${H}`);svg.setAttribute('class','ink-print-svg');strokes(i).filter(s=>s.tool!=='text').forEach(s=>svg.append(elementForStroke(s)));page.append(svg);textTools?.print(page,i);container.append(page);
+  });index=old;
+ });
+ addEventListener('pagehide',()=>{finishGesture();saveNow();});
+ addEventListener('blur',()=>finishGesture());
+ useMode('use');baseRender();document.title+=TEXT_ENABLED?' · Ink + text copy':' · Ink copy';drawInk();
+ if(loadedWarning)status('Use backup',true);else status(Object.keys(ink).length?(TEXT_ENABLED?'Notes restored':'Ink restored'):'Ready');
+})();
+</script></body></html>
