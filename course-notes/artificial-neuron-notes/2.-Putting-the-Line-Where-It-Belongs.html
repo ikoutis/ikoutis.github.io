@@ -3,10 +3,10 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Meeting 2. Putting the Line Where It Belongs — CS 301</title>
-<meta name="description" content="CS 301 Introduction to Data Science, NJIT. Course notes for meeting 2: Putting the Line Where It Belongs.">
+<title>Meeting 2. Threshold Units and Decision Boundaries — CS 301</title>
+<meta name="description" content="CS 301 Introduction to Data Science, NJIT. Course notes for meeting 2: Threshold Units and Decision Boundaries.">
 <meta name="cs301-meeting" content="2">
-<meta name="cs301-title" content="Putting the Line Where It Belongs">
+<meta name="cs301-title" content="Threshold Units and Decision Boundaries">
 <meta name="cs301-acts" content="Act 1 Gates by Hand · Act 2 More Than Two Inputs · Act 3 The Linear Score">
 <style>
 @font-face { font-family: "Latin Modern Roman"; src: url(fonts/lmroman10-regular.otf); font-weight: normal; font-style: normal; }
@@ -70,32 +70,114 @@ footer a { text-decoration: none; }
 footer a:hover { color: var(--njred); }
 @media (max-width: 560px) { body { font-size: 17px; } .page { padding: 28px 18px 56px; } h1 { font-size: 25px; } pre.code { margin-left: 12px; } }
 @media print { .page { max-width: none; padding: 0; } .kicker .pdf { display: none; } h2.act, h3, h4 { break-after: avoid; } figure, .note, table { break-inside: avoid; } }
+/* Reading conventions established by the latest Unit II notes. */
+:root { --blue:#1c5cab; --blue-tint:#eef4fc; --blue-line:#c9dbf3; }
+.page { max-width:820px; }
+.titleblock { border-top:4px solid var(--blue); }
+h2.act { color:var(--blue); margin:52px 0 20px; }
+h3,h4 { break-after:avoid; }
+h4.example .label { color:var(--blue); }
+a:hover,.kicker .pdf:hover { color:var(--blue); }
+p a,li a { overflow-wrap:anywhere; }
+p { text-indent:0; }
+p + p { text-indent:0; margin-top:.65em; }
+.note p + p,.inclass p + p,.colab p + p,.links p + p { text-indent:0; margin-top:.65em; }
+.source { line-height:1.5; overflow-wrap:anywhere; }
+.worked { border-left:4px solid var(--blue); background:#f1f6fc; padding:14px 18px; margin:20px 0; }
+.worked h4.example { margin:0 0 10px; }
+.worked p:last-child { margin-bottom:0; }
+.note { border-left:4px solid #cdd7e2; }
+/* Limit tall plots without reducing the width of multi-panel comparisons. */
+figure img { max-width:100%; max-height:420px; height:auto; object-fit:contain; display:block; margin-inline:auto; }
+figure img:not([width]) { width:auto; }
+ol.ideas figure img { max-height:380px; }
+/* Dense grids need extra space for their many labels. */
+figure.figure-dense img { max-height:560px; }
+figcaption { font-size:.88em; line-height:1.45; color:#3d4858; margin-top:8px; text-align:left; }
+pre.code { font-size:13px; line-height:1.55; background:#f6f7f9; padding:12px 16px; margin-left:0; }
+details.code > summary { background:#eef4fb; line-height:1.45; padding:10px 14px; font-weight:bold; }
+details.code > summary .where { white-space:normal; }
+details.code .inner { padding:4px 0 10px; }
+.tables { max-width:100%; overflow-x:auto; justify-content:safe center; }
+table { line-height:1.45; }
+table th { color:#174f85; }
+table.tt { width:auto; }
+table.tt th { background:#f0f4f8; }
+.skip-link { position:absolute; left:-9999px; }
+.skip-link:focus { position:static; }
+:focus-visible { outline:2px solid var(--blue); outline-offset:3px; }
+@media (max-width:560px) {
+ .page { padding:20px 16px 48px; }
+ h1 { font-size:29px; }
+ h2.act { margin-top:36px; }
+ .worked { padding:10px; }
+ pre.code,pre.out { font-size:12px; }
+ p code,li code { white-space:normal; overflow-wrap:anywhere; }
+ .tables { gap:16px; }
+ table { font-size:13px; }
+ table.trans td { padding:6px 8px; }
+ .math,math[display="block"] { max-width:100%; overflow-x:auto; }
+ .math { font-size:.88em; }
+ details.code > summary { flex-wrap:wrap; }
+}
+@media print {
+ @page { size:Letter; margin:18mm 18mm 20mm; }
+ body { font-size:10.5pt; line-height:1.42; }
+ .page { width:auto; max-width:none; margin:0; padding:0; }
+ .titleblock { padding:6px 0 12px; margin-bottom:16px; }
+ .kicker { font-size:8pt; }
+ h1 { font-size:23pt; }
+ h2.act { font-size:17pt; margin:25px 0 12px; }
+ h3,h4.example { font-size:12pt; margin:16px 0 8px; }
+ p { orphans:3; widows:3; }
+ .worked { padding:10px 13px; break-inside:auto; }
+ .note,.inclass,.colab,.links { padding:10px 13px; }
+ figure { margin:14px 0; break-inside:avoid; }
+ figure img { max-height:95mm; }
+ ol.ideas figure img { max-height:85mm; }
+ figure.figure-dense img { max-height:125mm; }
+ figcaption { font-size:9pt; }
+ pre.code,pre.out { font-size:8pt; line-height:1.4; white-space:pre-wrap; overflow-wrap:anywhere; }
+ details.code { break-inside:auto; border:0; }
+ details.code > summary { font-size:10pt; break-after:avoid; }
+ details.code .inner { padding:8px 12px; border:0; }
+ details.code p { font-size:10.5pt; padding:4px 0 0; }
+ table { font-size:9pt; }
+ ol.ideas { margin:12px 0; }
+ ol.ideas > li { padding:5px 0 5px 34px; margin:0; break-inside:avoid; background:none; }
+ ol.ideas > li::before { left:0; top:8px; width:23px; height:23px; font-size:12px; }
+ ol.ideas h3 { font-size:10.5pt; margin:0 0 4px; }
+ ol.ideas p { font-size:9.5pt; line-height:1.3; }
+ a.open::after { content:none; }
+ .pdf,.skip-link,footer { display:none; }
+}
 </style>
 <script>window.MathJax = { tex: { inlineMath: [['\\(', '\\)']], displayMath: [['\\[', '\\]']] }, chtml: { scale: 1.02 } };</script>
 <script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
 </head>
 <body>
-<main class="page">
+<a class="skip-link" href="#main">Skip to notes</a>
+<main class="page" id="main">
 <header class="titleblock">
-<p class="kicker">NJIT · CS 301 · INTRODUCTION TO DATA SCIENCE · FALL 2026 <a class="pdf" href="2.-Putting-the-Line-Where-It-Belongs.pdf">PDF</a></p>
-<h1>Meeting 2. Putting the Line Where It Belongs</h1>
+<p class="kicker">NJIT · CS 301 · INTRODUCTION TO DATA SCIENCE · FALL 2026 · UNIT I <a class="pdf" href="2.-Putting-the-Line-Where-It-Belongs.pdf">PDF</a></p>
+<h1>Meeting 2. Threshold Units and Decision Boundaries</h1>
 <p class="acts">Act 1 Gates by Hand · Act 2 More Than Two Inputs · Act 3 The Linear Score</p>
 </header>
-<aside class="note"><span class="lead">About these notes.</span> <p>There is no textbook to buy in CS&nbsp;301: these notes are the course’s text, written by the instructors and posted on Canvas as each meeting is reached. They follow the meetings themselves — including questions and examples that came up in class — and, together with the assignment notebook you build, they are what the exams are set from. Logistics, grading, and the schedule live in the syllabus.</p>
+<aside class="note"><span class="lead">About these notes.</span> <p>These instructor-written notes are the course text for CS&nbsp;301 and are posted on Canvas after each meeting. They include examples and questions discussed in class. The exams cover these notes and your assignment notebook. See the syllabus for the schedule, grading, and other course information.</p>
 </aside>
-<p>Meeting 1 ended on a unit whose weights and threshold were simply handed to you: \(w = (2, -1, 2)\), \(\theta = 3\), and the only question was whether it fired. This meeting turns that around. You choose the numbers. A picture helps: the unit’s inputs become points and its decision boundary becomes a line. We will use that picture to choose weights, then introduce vector notation to handle more inputs.</p>
+<p>Meeting 1 ended with a unit whose weights and threshold were given: \(w = (2, -1, 2)\), \(\theta = 3\), and the only question was whether it fired. We now choose weights and a threshold to reproduce a specified gate. Geometrically, the unit’s inputs become points and its decision boundary becomes a line. We will use that picture to choose weights, then introduce vector notation to handle more inputs.</p>
 <aside class="note"><span class="lead">Before we start: from Review Quiz 1.</span> <p>The first review quiz asked what was least clear, and three things came back often enough to answer here.</p>
 <ul>
-<li><em>Reading a circuit of NANDs.</em> One method, every time: fix the inputs, push the values through the gates in the order they are wired, and write down each internal wire as you reach it. The small circle on a gate symbol means <em>inverted output</em>: a NAND is an AND with that circle, and a NAND fed the same value on both inputs simply inverts it. See Meeting 1, Examples 2.1 and 2.2, for two complete traces.</li>
-<li><em>The threshold.</em> \(\theta\) is a number that belongs to the unit, like its weights. It is not an input: nothing arrives on it. The unit computes one number, \(w_1x_1 + \cdots + w_nx_n\), and compares it with \(\theta\). Equal counts as firing — the rule is \(\geq\), and a boundary case is decided by the written rule, not by feel. So far every \(w_i\) and every \(\theta\) was <em>given</em>. This meeting is about choosing them.</li>
-<li><em>Neuron and gate, beyond “exact.”</em> The cell is continuous, noisy, unclocked, changing. A digital gate is engineered to implement a fixed rule on binary inputs. The model of meeting 1 keeps four things from the cell — weighted inputs, a sum, a threshold, an all-or-none answer — and drops everything else. That is what “approximately” in that act’s title means. If the biology makes the arithmetic feel more complicated than it is: the arithmetic is the object, and the cell is where its shape came from. For the calculations, follow the arithmetic rule.</li>
+<li><em>Reading a circuit of NANDs.</em> Fix the inputs, evaluate the gates in dependency order, and record the value on each internal wire. The small circle on a gate symbol means <em>inverted output</em>: a NAND is an AND with that circle, and a NAND fed the same value on both inputs simply inverts it. See Meeting 1, Examples 2.1 and 2.2, for two complete traces.</li>
+<li><em>The threshold.</em> \(\theta\) is a number that belongs to the unit, like its weights. It is not an input: nothing arrives on it. The unit computes one number, \(w_1x_1 + \cdots + w_nx_n\), and compares it with \(\theta\). The rule is \(\geq\), so equality produces output \(1\). So far every \(w_i\) and every \(\theta\) was <em>given</em>. This meeting is about choosing them.</li>
+<li><em>Neuron and gate, beyond “exact.”</em> The cell is continuous, noisy, unclocked, changing. A digital gate is engineered to implement a fixed rule on binary inputs. The model of meeting 1 keeps four things from the cell — weighted inputs, a sum, a threshold, an all-or-none answer — and drops everything else. That is what “approximately” in that act’s title means. The model is evaluated using its stated arithmetic rule.</li>
 </ul>
 <p>And to the question “is this data science?”: yes. This unit uses a simple model to study how we represent inputs, make predictions, and evaluate them.</p>
 </aside>
 <h2 class="act" id="act-1">Act 1. Gates by Hand</h2>
-<h3 id="s-1-1">1.1 Last meeting’s unit, with numbers in it</h3>
-<p>Take the two-input version of the unit and put numbers in it: weights \(w_1 = 1\) and \(w_2 = 2\), threshold \(\theta = 1.5\).</p>
-<figure><img src="images/unit-two-inputs.svg" alt="unit-two-inputs" width="429" height="157"></figure>
+<h3 id="s-1-1">1.1 Evaluating a two-input unit</h3>
+<p>Consider a two-input unit with the following parameters: weights \(w_1 = 1\) and \(w_2 = 2\), threshold \(\theta = 1.5\).</p>
+<figure><img src="images/unit-two-inputs.svg" alt="A two-input threshold unit: inputs x1 and x2 enter with weights 1 and 2, are summed, and the sum is compared with the threshold 1.5." width="429" height="157"></figure>
 <p>Feed it the four rows of the AND table and see what comes out. The sum for an input \((x_1, x_2)\) is \(1\cdot x_1 + 2\cdot x_2\), and the unit fires when that sum is at least \(1.5\):</p>
 <div class="tables">
 <table class="tt">
@@ -107,43 +189,42 @@ footer a:hover { color: var(--njred); }
 </table>
 </div>
 <p>Three rows out of four are right. The unit fires on \((0,1)\), where AND says \(0\): the second input alone, with its weight of \(2\), is enough to push the sum past \(1.5\). To correct that row, we can change a weight or the threshold. A picture helps us see which changes will work.</p>
-<h3 id="s-1-2">1.2 What the picture is showing</h3>
+<h3 id="s-1-2">1.2 Interpreting the decision boundary</h3>
 <p>Here is the same unit as a picture.</p>
-<figure><img src="images/square-and-wrong.svg" alt="square-and-wrong" width="232" height="226"></figure>
+<figure><img src="images/square-and-wrong.svg" alt="The unit square with corners (0,0), (0,1), (1,0) and (1,1); only (1,1) is filled, for AND. The boundary line x1 + 2 x2 = 1.5 crosses the square with the firing side shaded above it. The corner (0,1) lies on the shaded side and is ringed as the wrong one." width="232" height="226"></figure>
 <p>Read the picture one part at a time.</p>
 <ul>
 <li>Each of the four inputs is a <strong>point</strong> on the unit square: \((0,0)\), \((0,1)\), \((1,0)\) and \((1,1)\) — the four corners.</li>
 <li>A <strong>filled</strong> corner means the gate should answer \(1\) there; an open corner means it should answer \(0\). For AND, only \((1,1)\) is filled.</li>
 <li>The <strong>shaded side</strong> is where the unit fires — where \(w_1x_1 + w_2x_2\) has reached the threshold. Its edge is a straight line.</li>
-<li>So the weights and the threshold do one single thing: they place a <strong>line</strong>, and the unit’s answer for any input is which side of the line the input lands on.</li>
+<li>For nonzero weights, the weights and threshold determine a <strong>line</strong> and its firing side.</li>
 </ul>
-<p>Read the failure off the picture. The corner \((0,1)\), ringed, sits on the shaded side, and it should not. The line is too low on the left. That sentence — <em>too low on the left</em> — is a statement about where to move the line, and it is more than the table gave you.</p>
-<h3 id="s-1-3">1.3 Where that line came from</h3>
+<p>The ringed corner \((0,1)\) lies on the firing side even though its label is \(0\). Moving the boundary upward can put this corner on the nonfiring side.</p>
+<h3 id="s-1-3">1.3 The equation of the boundary</h3>
 <p>The boundary is where the sum <em>equals</em> the threshold:</p>
 <div class="math">\[ 1\,x_1 + 2\,x_2 \;=\; 1.5 . \]</div>
 <p>Solve for \(x_2\) and it is a line like any other:</p>
 <div class="math">\[ x_2 \;=\; \frac{1.5 - x_1}{2} \;=\; 0.75 - 0.5\,x_1 . \]</div>
 <p>Two points are enough to draw it: at \(x_1 = 0\) the line passes through \(x_2 = 0.75\), and at \(x_1 = 1\) through \(x_2 = 0.25\).</p>
-<figure><img src="images/square-line-points.svg" alt="square-line-points" width="232" height="226"></figure>
-<p>The conversion is worth doing once by hand, because it is the bridge between two ways of seeing the same unit: as three numbers, and as a line. Move the threshold and the line slides; changing a weight can change both its position and its angle.</p>
+<figure><img src="images/square-line-points.svg" alt="The same square and boundary line, with two dots marking where the line crosses the edges: (0, 0.75) on the left edge and (1, 0.25) on the right edge." width="232" height="226"></figure>
+<p>Rearranging the equation shows how the parameters determine the boundary. Move the threshold and the line slides; changing a weight can change both its position and its angle.</p>
 <p>If \(w_2 = 0\) and \(w_1 \neq 0\), the boundary is the vertical line \(x_1 = \theta/w_1\); we cannot solve for \(x_2\). If both weights are zero, the sum is always zero and the unit gives the same answer on every input. In that case there is no separating line.</p>
 <section class="worked" id="ex-1-1">
-<h4 class="example"><span class="label">Example 1.1</span> Make it right</h4>
+<h4 class="example"><span class="label">Example 1.1</span> Choosing parameters for AND</h4>
 <p>This is the first task of the meeting’s sheet: find \(w_1\), \(w_2\) and \(\theta\) so that the unit answers AND on all four rows — and then, in a sentence or two, write down how you decided. What did you look at first, and what made you change it?</p>
-<p>There is no single answer, and two routes are worth seeing side by side. The first keeps the weights \((1, 2)\) and raises the threshold: push \(\theta\) past \(2\), say to \(2.5\), and the line moves away from the origin, parallel to itself, until \((0,1)\) falls off the firing side. Check the four rows: sums \(0, 2, 1, 3\) against \(2.5\) give \(0, 0, 0, 1\) — AND. The second starts over with equal weights, \(w_1 = w_2 = 1\) and \(\theta = 1.5\): the sums are \(0, 1, 1, 2\), and only the last reaches \(1.5\) — AND again, with a line that runs diagonally between \((1,1)\) and the other three corners.</p>
-<p>Both are correct, and so are infinitely many others. There is no <em>the</em> setting for AND; there is a whole <strong>region</strong> of settings that work, and any point in that region does the job. A gate has one truth table; the unit that reproduces it has infinitely many valid settings.</p>
+<p>Two possible choices illustrate different ways to adjust the boundary. The first keeps the weights \((1, 2)\) and raises the threshold: push \(\theta\) past \(2\), say to \(2.5\), and the line moves away from the origin, parallel to itself, until \((0,1)\) falls off the firing side. Check the four rows: sums \(0, 2, 1, 3\) against \(2.5\) give \(0, 0, 0, 1\) — AND. The second starts over with equal weights, \(w_1 = w_2 = 1\) and \(\theta = 1.5\): the sums are \(0, 1, 1, 2\), and only the last reaches \(1.5\) — AND again, with a line that runs diagonally between \((1,1)\) and the other three corners.</p>
+<p>Both settings reproduce AND. Infinitely many settings satisfy the same four truth-table constraints.</p>
 </section>
-<h3 id="s-1-4">1.4 Keep what you wrote down</h3>
+<h3 id="s-1-4">1.4 Describing a parameter search</h3>
 <p>Your explanation of how you chose the numbers describes a procedure. Look at the two routes of Example 1.1. One says: <em>I saw which corner was on the wrong side and moved the line toward it.</em> The other says: <em>I tried numbers until the table came out right.</em> Those are two different <em>procedures</em>, and both of them worked.</p>
-<p class="bigq">You just ran a search by hand.</p>
-<p>Keep the sheet. What you wrote on it is the thing to look at again when the question comes up of whether something other than a person could follow the same procedure.</p>
+<p>Both procedures search for parameters by checking their outputs. Record the steps clearly enough that someone else could follow them.</p>
 <aside class="note"><span class="lead">Toward the assignment.</span> <p>Task 1 of the unit assignment asks for exactly this, as code: a <code>ThresholdUnit</code> class, constructed from its weights and threshold, and a dictionary of hand-chosen settings for AND, OR, NAND and NOT, each verified against its truth table with the same <code>check</code> that verified the gate classes. It also asks for the reasoning again, in a Markdown cell.</p>
 </aside>
 <h2 class="act" id="act-2">Act 2. More Than Two Inputs</h2>
 <h3 id="s-2-1">2.1 A gate with three inputs</h3>
-<p>Nothing in the unit says “two.” Give it three inputs, three weights, and ask it for the AND of three inputs: answer \(1\) only when all three are \(1\).</p>
-<figure><img src="images/unit-three-and.svg" alt="unit-three-and" width="477" height="211"></figure>
-<p>Eight rows in the table now instead of four — but the unit is the one you already have, one weight longer, and the arithmetic has not changed.</p>
+<p>A three-input unit has three weights. To implement three-input AND, it must output \(1\) exactly when all three inputs are \(1\).</p>
+<figure><img src="images/unit-three-and.svg" alt="A three-input threshold unit: inputs x1, x2, x3 with weights 1, 1, 1, summed and compared with the threshold 2.5." width="477" height="211"></figure>
+<p>The three binary inputs give eight rows. The evaluation rule is still a weighted sum followed by a threshold comparison.</p>
 <section class="worked" id="ex-2-1">
 <h4 class="example"><span class="label">Example 2.1</span> Eight rows</h4>
 <p>With \(w = (1, 1, 1)\) the sum is simply the number of inputs that are \(1\), so the eight rows can be checked at a glance: the sum is \(0\) for one row, \(1\) for three rows, \(2\) for three rows, and \(3\) for the row \((1,1,1)\) alone. Against \(\theta = 2.5\), only that last row fires.</p>
@@ -164,12 +245,12 @@ footer a:hover { color: var(--njred); }
 </section>
 <h3 id="s-2-2">2.2 Eight rows, eight corners</h3>
 <p>Two inputs gave a square with four corners. Three give a <strong>cube</strong> with eight, and only \((1,1,1)\) is filled: only there should the unit fire.</p>
-<figure><img src="images/cube-bare.svg" alt="cube-bare" width="205" height="179"></figure>
-<p>And the boundary? Where the sum equals the threshold is now \(x_1 + x_2 + x_3 = 2.5\), and that is not a line but a <strong>plane</strong> — drawn here as a patch, cutting off the one corner that fires.</p>
-<figure><img src="images/cube-plane.svg" alt="cube-plane" width="262" height="231"></figure>
-<p>The plane does everything the line did: it splits the space in two, and the answer is which side you are on. One corner above, seven below.</p>
-<h3 id="s-2-3">2.3 Same object, one dimension up</h3>
-<p>Line up the two cases, and the case after them:</p>
+<figure><img src="images/cube-bare.svg" alt="The unit cube with its eight corners, one for each three-bit input; only the corner (1,1,1) is filled." width="205" height="179"></figure>
+<p>The boundary \(x_1 + x_2 + x_3 = 2.5\) is a <strong>plane</strong>. The patch drawn below separates the firing corner from the other seven corners.</p>
+<figure><img src="images/cube-plane.svg" alt="The same cube with a plane, drawn as a patch, cutting off the corner (1,1,1) from the other seven." width="262" height="231"></figure>
+<p>The plane separates the firing half-space, containing \((1,1,1)\), from the other seven corners.</p>
+<h3 id="s-2-3">2.3 Decision boundaries in higher dimensions</h3>
+<p>The boundary depends on the number of input dimensions:</p>
 <div class="tables">
 <table class="trans">
 <tr><td style="text-align:left"><span class="muted">two inputs</span></td><td style="text-align:left"><span class="muted">three inputs</span></td><td style="text-align:left"><span class="muted">four, or forty</span></td></tr>
@@ -179,41 +260,41 @@ footer a:hover { color: var(--njred); }
 </table>
 </div>
 <p>The arithmetic extends to any number of inputs without changing shape. We cannot draw the full four-dimensional space as an ordinary picture, though views of selected coordinates can still help. The boundary is called a <em>hyperplane</em>; like a line in two dimensions or a plane in three, it separates the space into two sides.</p>
-<h3 id="s-2-4">2.4 Two inputs was the small case</h3>
+<h3 id="s-2-4">2.4 Examples with more inputs</h3>
 <p>Many problems involve more than two or three inputs.</p>
 <ul>
-<li>A day of weather is a high temperature <em>and</em> a low one <em>and</em> a humidity <em>and</em> a pressure — four numbers describing one day. There is no square to put that on, and no cube either.</li>
+<li>A weather record can contain a high temperature, a low temperature, humidity, and pressure: four features describing one day.</li>
 <li>The cell of meeting 1 was never working with two inputs. A cortical neuron collects from <em>thousands</em> of synapses at once.</li>
 </ul>
 <p>The geometry still helps us think about the unit. To calculate with many inputs, we also need notation that works in forty dimensions as easily as in two.</p>
 <p>\(w_1x_1 + w_2x_2 + w_3x_3 + w_4x_4 + w_5x_5 + \cdots\) — at forty inputs, this has forty terms. Vector notation lets us work with the same sum without writing every term each time.</p>
 <h2 class="act" id="act-3">Act 3. The Linear Score</h2>
-<h3 id="s-3-1">3.1 Write it once</h3>
+<h3 id="s-3-1">3.1 Vector notation for the weighted sum</h3>
 <p>The sum, in full and in the shorthand from meeting 1:</p>
 <div class="math">\[ w_1x_1 + w_2x_2 + \cdots + w_nx_n \;=\; \sum_{i=1}^{n} w_i x_i . \]</div>
 <p>Now collect the weights into one object, \(\mathbf{w} = (w_1, \ldots, w_n)\), and the inputs into another, \(\mathbf{x} = (x_1, \ldots, x_n)\) — two <strong>vectors</strong>, each a list of \(n\) numbers. Then the whole sum has a name and a symbol:</p>
 <div class="math">\[ \mathbf{w} \cdot \mathbf{x} \qquad\text{the \alert{inner product} of $\mathbf{w}$ and $\mathbf{x}$.} \]</div>
-<p>Also called the dot product. It takes two lists of \(n\) numbers and returns <em>one</em> number — multiply the lists entry by entry, add up the products — and it looks the same whether \(n\) is two or forty. This is the whole notation: two symbols for two lists, and a dot between them.</p>
-<h3 id="s-3-2">3.2 One number, and it is the score</h3>
+<p>Also called the dot product, it multiplies corresponding entries of two vectors of length \(n\) and sums the products to return one number. Both vectors must have the same number of entries.</p>
+<h3 id="s-3-2">3.2 The bias and the score</h3>
 <p>\(\mathbf{w}\cdot\mathbf{x}\) is the <strong>weighted sum</strong>. We compare it with \(\theta\): values above the threshold are on the firing side, and values below it are on the other side. The boundary is where the weighted sum equals \(\theta\), which need not be zero.</p>
 <p>It is tidier to put the threshold on the same side of the comparison as everything else. Write \(b = -\theta\):</p>
 <div class="math">\[ \mathbf{w}\cdot\mathbf{x} \;\geq\; \theta \qquad\Longleftrightarrow\qquad \mathbf{w}\cdot\mathbf{x} + b \;\geq\; 0 . \]</div>
-<p>\(b\) is called the <strong>bias</strong>. Same unit, same behaviour on every input; what has changed is bookkeeping. The threshold has become one more number of the same kind as the weights — a number to choose, alongside them — and the unit’s decision is now a comparison with zero. The unit, in full: it answers \(1\) when \(\mathbf{w}\cdot\mathbf{x} + b \geq 0\), and \(0\) otherwise.</p>
+<p>\(b\) is called the <strong>bias</strong>. This substitution preserves the output on every input. The threshold has become one more number of the same kind as the weights — a number to choose, alongside them — and the unit’s decision is now a comparison with zero. The unit, in full: it answers \(1\) when \(\mathbf{w}\cdot\mathbf{x} + b \geq 0\), and \(0\) otherwise.</p>
 <p>From here on, the <strong>score</strong> means \(s = \mathbf{w}\cdot\mathbf{x} + b\), including the bias. Now its sign tells us the side: positive means the firing side, negative means the other side, and zero means the boundary. For fixed nonzero weights, scores closer to zero correspond to points closer to the boundary.</p>
-<h3 id="s-3-3">3.3 The same thing as matrices</h3>
-<p>You have seen vectors and matrices before, and the inner product is a matrix product in disguise. Take \(\mathbf{w}\) and \(\mathbf{x}\) to be <strong>columns</strong> — \(n \times 1\) matrices. Then \(\mathbf{w}^{\mathsf{T}}\), the transpose, is a row, \(1 \times n\), and the product of a \(1 \times n\) row with an \(n \times 1\) column is a \(1 \times 1\) matrix:</p>
+<h3 id="s-3-3">3.3 The inner product as a matrix product</h3>
+<p>The inner product can be written as a matrix product. Take \(\mathbf{w}\) and \(\mathbf{x}\) to be <strong>columns</strong> — \(n \times 1\) matrices. Then \(\mathbf{w}^{\mathsf{T}}\), the transpose, is a row, \(1 \times n\), and the product of a \(1 \times n\) row with an \(n \times 1\) column is a \(1 \times 1\) matrix:</p>
 <div class="math">\[ \underbrace{\mathbf{w}^{\mathsf{T}}}_{1 \times n}\; \underbrace{\mathbf{x}}_{n \times 1} \;=\; \underbrace{\mathbf{w}^{\mathsf{T}}\mathbf{x}}_{1 \times 1} \;=\; \mathbf{w}\cdot\mathbf{x} . \]</div>
 <p>A \(1 \times 1\) matrix is a single number, which is why the shapes work out. You will meet \(\mathbf{w}^{\mathsf{T}}\mathbf{x}\), \(\mathbf{w}\cdot\mathbf{x}\) and \(\langle \mathbf{w}, \mathbf{x}\rangle\) used for the same thing, sometimes on the same page.</p>
 <h3 id="s-3-4">3.4 Transposing reverses the order</h3>
-<p>One rule about transposes, and one trap. The rule: for any two matrices that can be multiplied,</p>
+<p>For any two matrices whose product is defined,</p>
 <div class="math">\[ (AB)^{\mathsf{T}} \;=\; B^{\mathsf{T}}A^{\mathsf{T}} \qquad\muteds{\text{--- the order \emph{flips}.}} \]</div>
 <p>Apply it to the weighted sum. The product is \(1 \times 1\), and a \(1 \times 1\) matrix is equal to its own transpose, so</p>
 <div class="math">\[ \mathbf{w}^{\mathsf{T}}\mathbf{x} \;=\; \left(\mathbf{w}^{\mathsf{T}}\mathbf{x}\right)^{\mathsf{T}} \;=\; \mathbf{x}^{\mathsf{T}}\mathbf{w} . \]</div>
 <p>For real vectors, the inner product is symmetric: \(\mathbf{w}^{\mathsf T}\mathbf{x} = \mathbf{x}^{\mathsf T}\mathbf{w}\). This does not mean matrix products can generally be reversed. Nor does it mean \((AB)^{\mathsf T} = A^{\mathsf T}B^{\mathsf T}\): try that expression with a \(2\times3\) matrix and a \(3\times4\) matrix, and the right-hand side cannot even be multiplied. When transposing a product, reverse the order and transpose each factor.</p>
 <section class="worked" id="ex-3-1">
 <h4 class="example"><span class="label">Example 3.1</span> One more gate</h4>
-<p>The second task of the meeting’s sheet. Same square, same method as Act 1: find \(w_1\), \(w_2\) and \(\theta\) so that the unit answers <span class="red">XOR</span> — \(1\) when the two inputs <em>differ</em>, \(0\) when they agree.</p>
-<figure><img src="images/square-xor.svg" alt="square-xor" width="232" height="226"></figure>
+<p>The second task of the meeting’s sheet uses the same square and method as Act 1: find \(w_1\), \(w_2\) and \(\theta\) so that the unit answers <span class="red">XOR</span> — \(1\) when the two inputs <em>differ</em>, \(0\) when they agree.</p>
+<figure><img src="images/square-xor.svg" alt="The unit square with the corners (0,1) and (1,0) filled and (0,0) and (1,1) open, the XOR pattern; no boundary line is drawn." width="232" height="226"></figure>
 <div class="tables">
 <table class="tt">
 <tr><th style="text-align:center">\(x_1\)</th><th style="text-align:center">\(x_2\)</th><th class="rule" style="text-align:center">XOR</th></tr>
@@ -225,22 +306,36 @@ footer a:hover { color: var(--njred); }
 </div>
 <p>Two corners are filled this time, \((0,1)\) and \((1,0)\), and two are open. Try several settings. Then <strong>write down what happens</strong>: the settings you tried, the most rows you got right, and what you currently think the reason is. Your reasoning matters even if you do not find a working setting; Task 1 of the assignment asks for the same record in a cell of your notebook.</p>
 </section>
-<h3 id="s-3-5">3.5 Two things to take with you</h3>
+<h3 id="s-3-5">3.5 Review</h3>
 <p>Two questions remain open.</p>
 <ul>
-<li>You set the weights for AND by hand, and you wrote down how you did it. <span class="red">Could something other than a person follow that procedure?</span> A person does not scale to forty weights. The procedure might.</li>
-<li>XOR: whatever happened just now, it was not for lack of trying. <span class="red">So what exactly went wrong?</span></li>
+<li>You chose parameters for AND and described the procedure. How could that procedure be implemented for a larger number of inputs?</li>
+<li>Which difficulty arose when you tried to fit XOR, and what might explain it?</li>
 </ul>
-<aside class="note"><span class="lead">After this meeting.</span> <ul>
-<li>Assignment Task 1, <em>Gates by hand</em>, is open on Canvas: the four gate classes tested against their truth tables; OR built from three NANDs; <code>ThresholdUnit(w, theta)</code> with its score and its bias; weights and thresholds chosen by hand for AND, OR, NAND and NOT, with your reasoning; a three-input AND; and the XOR record. The page on Canvas has every cell to paste.</li>
-<li>On Canvas there is also a <strong>page where you can move the line</strong> and watch the four corners. Write your XOR record first, so that it describes your own attempt; then give the page five minutes with XOR selected.</li>
-<li><strong>Keep the sheet</strong> you wrote your reasoning on.</li>
-<li>The week’s review quiz is on Canvas.</li>
-</ul>
-</aside>
+<h2 class="act" id="act-4">Act 4. Practice</h2>
+<h3 id="s-4-1">4.1 Parameters and the decision boundary</h3>
+<p><strong>Multiple choice.</strong> A threshold neuron has four numerical input features, a nonzero weight vector, and a trainable bias. How many trainable parameters does it have, and what kind of decision boundary does it define?</p>
+<ol type="A">
+<li>Four parameters; a line.</li>
+<li>Four parameters; a hyperplane.</li>
+<li>Five parameters; a hyperplane.</li>
+<li>Five parameters; a curved surface.</li>
+</ol>
+<h3 id="s-4-2">4.2 Score, prediction, and threshold</h3>
+<p><strong>Short calculation.</strong> Let \(w=(2,-1)\), \(b=-1\), and \(x=(1,1)\). Compute \(s=w^Tx+b\), give the predicted class using the rule \(s\geq0\), and give the equivalent threshold \(\theta\).</p>
+<h3 id="s-4-3">4.3 Rescaling the parameters</h3>
+<p><strong>Mark all that apply.</strong> We multiply every weight and the bias by \(5\). Which statements must hold?</p>
+<ol type="A">
+<li>The decision boundary stays the same.</li>
+<li>Every input receives the same predicted class as before.</li>
+<li>Every input receives the same numerical score as before.</li>
+<li>The neuron can now represent more binary classification patterns.</li>
+</ol>
+<h3 id="s-4-4">4.4 Changing the threshold</h3>
+<p><strong>Short explanation.</strong> Keep the weights fixed and increase the threshold. Does the boundary move parallel to itself or rotate? Can an input previously classified as \(0\) become classified as \(1\)? Explain.</p>
 <footer>
 <span>CS 301 · Meeting 2 · <a href="index.html">all meetings</a></span>
-<span>generated from meeting-02.tex on 2026-09-17</span>
+<span>Threshold Units and Decision Boundaries</span>
 </footer>
 </main>
 </body>

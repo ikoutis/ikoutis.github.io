@@ -3,11 +3,11 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Meeting 5. The Neuron Feels Its Way — CS 301</title>
-<meta name="description" content="CS 301 Introduction to Data Science, NJIT. Course notes for meeting 5: The Neuron Feels Its Way.">
+<title>Meeting 5. Parameter Search and the Gradient — CS 301</title>
+<meta name="description" content="CS 301 Introduction to Data Science, NJIT. Course notes for meeting 5: Parameter Search and the Gradient.">
 <meta name="cs301-meeting" content="5">
-<meta name="cs301-title" content="The Neuron Feels Its Way">
-<meta name="cs301-acts" content="Act 1 Search Without Direction · Act 2 Search with Precision · Act 3 Search in the Fog">
+<meta name="cs301-title" content="Parameter Search and the Gradient">
+<meta name="cs301-acts" content="Act 1 Random and Grid Search · Act 2 Solving for Target Scores · Act 3 The Loss Surface and Gradient">
 <style>
 @font-face { font-family: "Latin Modern Roman"; src: url(fonts/lmroman10-regular.otf); font-weight: normal; font-style: normal; }
 @font-face { font-family: "Latin Modern Roman"; src: url(fonts/lmroman10-italic.otf); font-weight: normal; font-style: italic; }
@@ -70,20 +70,102 @@ footer a { text-decoration: none; }
 footer a:hover { color: var(--njred); }
 @media (max-width: 560px) { body { font-size: 17px; } .page { padding: 28px 18px 56px; } h1 { font-size: 25px; } pre.code { margin-left: 12px; } }
 @media print { .page { max-width: none; padding: 0; } .kicker .pdf { display: none; } h2.act, h3, h4 { break-after: avoid; } figure, .note, table { break-inside: avoid; } }
+/* Reading conventions established by the latest Unit II notes. */
+:root { --blue:#1c5cab; --blue-tint:#eef4fc; --blue-line:#c9dbf3; }
+.page { max-width:820px; }
+.titleblock { border-top:4px solid var(--blue); }
+h2.act { color:var(--blue); margin:52px 0 20px; }
+h3,h4 { break-after:avoid; }
+h4.example .label { color:var(--blue); }
+a:hover,.kicker .pdf:hover { color:var(--blue); }
+p a,li a { overflow-wrap:anywhere; }
+p { text-indent:0; }
+p + p { text-indent:0; margin-top:.65em; }
+.note p + p,.inclass p + p,.colab p + p,.links p + p { text-indent:0; margin-top:.65em; }
+.source { line-height:1.5; overflow-wrap:anywhere; }
+.worked { border-left:4px solid var(--blue); background:#f1f6fc; padding:14px 18px; margin:20px 0; }
+.worked h4.example { margin:0 0 10px; }
+.worked p:last-child { margin-bottom:0; }
+.note { border-left:4px solid #cdd7e2; }
+/* Limit tall plots without reducing the width of multi-panel comparisons. */
+figure img { max-width:100%; max-height:420px; height:auto; object-fit:contain; display:block; margin-inline:auto; }
+figure img:not([width]) { width:auto; }
+ol.ideas figure img { max-height:380px; }
+/* Dense grids need extra space for their many labels. */
+figure.figure-dense img { max-height:560px; }
+figcaption { font-size:.88em; line-height:1.45; color:#3d4858; margin-top:8px; text-align:left; }
+pre.code { font-size:13px; line-height:1.55; background:#f6f7f9; padding:12px 16px; margin-left:0; }
+details.code > summary { background:#eef4fb; line-height:1.45; padding:10px 14px; font-weight:bold; }
+details.code > summary .where { white-space:normal; }
+details.code .inner { padding:4px 0 10px; }
+.tables { max-width:100%; overflow-x:auto; justify-content:safe center; }
+table { line-height:1.45; }
+table th { color:#174f85; }
+table.tt { width:auto; }
+table.tt th { background:#f0f4f8; }
+.skip-link { position:absolute; left:-9999px; }
+.skip-link:focus { position:static; }
+:focus-visible { outline:2px solid var(--blue); outline-offset:3px; }
+@media (max-width:560px) {
+ .page { padding:20px 16px 48px; }
+ h1 { font-size:29px; }
+ h2.act { margin-top:36px; }
+ .worked { padding:10px; }
+ pre.code,pre.out { font-size:12px; }
+ p code,li code { white-space:normal; overflow-wrap:anywhere; }
+ .tables { gap:16px; }
+ table { font-size:13px; }
+ table.trans td { padding:6px 8px; }
+ .math,math[display="block"] { max-width:100%; overflow-x:auto; }
+ .math { font-size:.88em; }
+ details.code > summary { flex-wrap:wrap; }
+}
+@media print {
+ @page { size:Letter; margin:18mm 18mm 20mm; }
+ body { font-size:10.5pt; line-height:1.42; }
+ .page { width:auto; max-width:none; margin:0; padding:0; }
+ .titleblock { padding:6px 0 12px; margin-bottom:16px; }
+ .kicker { font-size:8pt; }
+ h1 { font-size:23pt; }
+ h2.act { font-size:17pt; margin:25px 0 12px; }
+ h3,h4.example { font-size:12pt; margin:16px 0 8px; }
+ p { orphans:3; widows:3; }
+ .worked { padding:10px 13px; break-inside:auto; }
+ .note,.inclass,.colab,.links { padding:10px 13px; }
+ figure { margin:14px 0; break-inside:avoid; }
+ figure img { max-height:95mm; }
+ ol.ideas figure img { max-height:85mm; }
+ figure.figure-dense img { max-height:125mm; }
+ figcaption { font-size:9pt; }
+ pre.code,pre.out { font-size:8pt; line-height:1.4; white-space:pre-wrap; overflow-wrap:anywhere; }
+ details.code { break-inside:auto; border:0; }
+ details.code > summary { font-size:10pt; break-after:avoid; }
+ details.code .inner { padding:8px 12px; border:0; }
+ details.code p { font-size:10.5pt; padding:4px 0 0; }
+ table { font-size:9pt; }
+ ol.ideas { margin:12px 0; }
+ ol.ideas > li { padding:5px 0 5px 34px; margin:0; break-inside:avoid; background:none; }
+ ol.ideas > li::before { left:0; top:8px; width:23px; height:23px; font-size:12px; }
+ ol.ideas h3 { font-size:10.5pt; margin:0 0 4px; }
+ ol.ideas p { font-size:9.5pt; line-height:1.3; }
+ a.open::after { content:none; }
+ .pdf,.skip-link,footer { display:none; }
+}
 </style>
 <script>window.MathJax = { tex: { inlineMath: [['\\(', '\\)']], displayMath: [['\\[', '\\]']] }, chtml: { scale: 1.02 } };</script>
 <script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
 </head>
 <body>
-<main class="page">
+<a class="skip-link" href="#main">Skip to notes</a>
+<main class="page" id="main">
 <header class="titleblock">
-<p class="kicker">NJIT · CS 301 · INTRODUCTION TO DATA SCIENCE · FALL 2026 <a class="pdf" href="5.-The-Neuron-Feels-Its-Way.pdf">PDF</a></p>
-<h1>Meeting 5. The Neuron Feels Its Way</h1>
-<p class="acts">Act 1 Search Without Direction · Act 2 Search with Precision · Act 3 Search in the Fog</p>
+<p class="kicker">NJIT · CS 301 · INTRODUCTION TO DATA SCIENCE · FALL 2026 · UNIT I <a class="pdf" href="5.-The-Neuron-Feels-Its-Way.pdf">PDF</a></p>
+<h1>Meeting 5. Parameter Search and the Gradient</h1>
+<p class="acts">Act 1 Random and Grid Search · Act 2 Solving for Target Scores · Act 3 The Loss Surface and Gradient</p>
 </header>
-<aside class="note"><span class="lead">About these notes.</span> <p>There is no textbook to buy in CS&nbsp;301: these notes are the course’s text, written by the instructors and posted on Canvas as each meeting is reached. They follow the meetings themselves — including questions and examples that came up in class — and, together with the assignment notebook you build, they are what the exams are set from. Logistics, grading, and the schedule live in the syllabus.</p>
+<aside class="note"><span class="lead">About these notes.</span> <p>These instructor-written notes are the course text for CS&nbsp;301 and are posted on Canvas after each meeting. They include examples and questions discussed in class. The exams cover these notes and your assignment notebook. See the syllabus for the schedule, grading, and other course information.</p>
 </aside>
-<p>The loss from meeting 4 lets us compare settings of a unit: a lower loss means its outputs fit the observed labels better under that measure. To find a better setting, we can try parameters at random, solve equations for chosen target scores, or use the slope of the loss to choose a direction. Each approach uses different information about the problem. The gradient gives the slopes with respect to all the parameters, including when there are too many to visualize together.</p>
+<p>The loss from meeting 4 lets us compare settings of a unit: a lower loss means its outputs fit the observed labels better under that measure. To find a better setting, we can try parameters at random, solve equations for chosen target scores, or use the slope of the loss to choose a direction. Each approach uses different information about the problem. The gradient collects the slopes with respect to every parameter, even when there are too many parameters to visualize together.</p>
 <aside class="note"><span class="lead">Where the temperature went.</span> <p>A question from Review Quiz 4: why does \(T\) not appear in the loss formula — is it absorbed by the score? For \(T &gt; 0\), dividing the score by \(T\) is the same as dividing all three of the unit’s numbers by \(T\):</p>
 <div class="math">\[ \sigma\!\left(\frac{\mathbf{w}\cdot\mathbf{x} + b}{T}\right) \;=\; \sigma\!\left(\frac{\mathbf{w}}{T}\cdot\mathbf{x} + \frac{b}{T}\right). \]</div>
 <p>A unit with temperature \(T\) is the same function as a unit with temperature \(1\), weights \(\mathbf{w}/T\), and bias \(b/T\). Temperature therefore adds no new functions when the weights and bias are free to vary. It lets us adjust the confidence of a hand-drawn line while keeping its decision boundary fixed.</p>
@@ -100,11 +182,11 @@ footer a:hover { color: var(--njred); }
 </div>
 <p>Trying numbers suggests random search; reasoning from the table gives conditions on the parameters. Moving the line toward a misclassified corner uses information about where the current setting goes wrong.</p>
 </aside>
-<h2 class="act" id="act-1">Act 1. Search Without Direction</h2>
+<h2 class="act" id="act-1">Act 1. Random and Grid Search</h2>
 <h3 id="s-1-1">1.1 Parameters and loss</h3>
-<p>The numbers a unit has — its weights and its bias — are its <strong>parameters</strong>. A two-input unit has three of them. For any setting of the parameters and a nonempty labeled dataset, we can compute the loss \(L\). On the AND table, scaling a setting whose scores are strictly on the correct side of zero drives the loss toward zero. On the weather data, the best loss measured with the four weather features is about \(0.21\).</p>
+<p>A unit’s weights and bias are its <strong>parameters</strong>. A two-input unit has three of them. For any setting of the parameters and a nonempty labeled dataset, we can compute the loss \(L\). On the AND table, scaling a setting whose scores are strictly on the correct side of zero drives the loss toward zero. On the weather data, the best loss measured with the four weather features is about \(0.21\).</p>
 <h3 id="s-1-2">1.2 Random search</h3>
-<p>Twenty-five people tried numbers until the table came out right. As a procedure: pick \((w_1, w_2, \theta)\) at random inside a box, compute the loss, keep the setting if its loss is the best so far, and repeat. This is <strong>random search</strong>. Its only ingredient beyond meeting 4 is the box. We use \([-6, 6]\) for each of the three numbers, the range the meeting-2 interactive page used.</p>
+<p>Twenty-five people tried numbers until the table came out right. We can describe that approach as a procedure: pick \((w_1, w_2, \theta)\) at random inside a box, compute the loss, keep the setting if its loss is the best so far, and repeat. This is <strong>random search</strong>. Its only ingredient beyond meeting 4 is the box. We use \([-6, 6]\) for each of the three numbers, the range the meeting-2 interactive page used.</p>
 <p>On the AND table, one run gives the following best-so-far losses. After 1 guess, \(1.20\). After 10, \(0.43\). After 100, \(0.27\). After 1,000, \(0.11\), and at that point the best setting reproduces the table on all four rows. After 10,000, \(0.10\).</p>
 <p>About 2 percent of this box consists of settings that reproduce AND, so a random guess has roughly one chance in fifty. Across fifty runs, the first guess that reproduces AND took about 52 trials on average, with a range from 1 to 197.</p>
 <p>The loss decides which guess to keep, including when both guesses classify the same number of rows correctly.</p>
@@ -143,9 +225,9 @@ footer a:hover { color: var(--njred); }
 </table>
 </div>
 <p>Ten thousand random settings reach a loss of \(0.219\), against the hand-drawn line’s \(0.245\) and the best line’s \(0.217\), at the price of ten thousand passes over the data. After ten guesses the best setting is right on 54 percent of the days, which is close to a coin flip. The weights multiply temperatures in the tens of degrees, so choices of weights and bias in this box can give large scores with the wrong sign and a high loss. The range and scale of the parameters affect which settings random search is likely to try.</p>
-<h3 id="s-1-6">1.6 What these searches lack</h3>
+<h3 id="s-1-6">1.6 How search methods choose candidates</h3>
 <p>Random search keeps the best setting found, but each new guess comes from the same distribution regardless of the losses already observed. Grid search also follows a schedule fixed in advance. Neither uses the current setting’s errors to choose a direction of movement, as students did when they moved the line toward a misclassified corner.</p>
-<h2 class="act" id="act-2">Act 2. Search with Precision</h2>
+<h2 class="act" id="act-2">Act 2. Solving for Target Scores</h2>
 <h3 id="s-2-1">2.1 Reasoning from the table</h3>
 <p>Thirty-five people reasoned from the truth table before drawing anything. In various words, they wrote conditions like these:</p>
 <div class="tables">
@@ -175,20 +257,20 @@ footer a:hover { color: var(--njred); }
 <p></p>
 <pre class="code">w = np.linalg.solve(A, t)</pre>
 <p>For a dense \(n\)-by-\(n\) system, elimination takes on the order of \(n^3\) arithmetic operations. It uses the equations’ structure instead of enumerating candidate settings. The numerical answer is subject to floating-point rounding; its accuracy also depends on the system.</p>
-<h3 id="s-2-4">2.4 Why solving does not finish the job</h3>
+<h3 id="s-2-4">2.4 Target scores and loss minimization</h3>
 <p><strong>Labels do not specify target scores.</strong> We chose \((-3, -1, -1, 1)\). A truth table gives labels, and a label says which side of zero the score should be on, not what number it should be. Meeting 4 showed that on a truth table the loss prefers scores as far from zero as possible, on the correct side, and “as far as possible” is not a target.</p>
 <p><strong>Some weather days have identical inputs and opposite labels.</strong> The 6,865 days would give 6,865 score equations in three unknowns. A unit using only high and low gives the same score to days with the same measurements, even when their labels differ. It cannot assign those days target scores on opposite sides of zero. Minimizing loss lets us compare predictions despite these conflicting labels.</p>
 <p><strong>Minimizing cross-entropy gives nonlinear equations.</strong> The condition for a finite minimum sets the loss derivatives to zero. Those equations involve the sigmoid of the score and are nonlinear in the parameters, so linear elimination does not solve them.</p>
 <aside class="note"><span class="lead">If you have met least squares.</span> <p>Measuring closeness by the sum of squared differences between the scores and the targets does lead to a linear system, the normal equations. This fits raw scores to chosen targets. Squared error between <em>sigmoid probabilities</em> and labels is a different objective and does not give those same linear equations. For probabilities, squared error is bounded by \(1\) per row; cross-entropy grows without bound as the probability assigned to the observed label approaches zero. We use cross-entropy to give that stronger penalty to confident errors.</p>
 </aside>
-<h2 class="act" id="act-3">Act 3. Search in the Fog</h2>
+<h2 class="act" id="act-3">Act 3. The Loss Surface and Gradient</h2>
 <h3 id="s-3-1">3.1 The loss as a surface</h3>
 <p>A two-input unit has three parameters. Hold the threshold fixed and two remain, so the loss is a number for every point of the \((w_1, w_2)\) plane. A number over a plane is a surface, and it can be drawn.</p>
-<figure><img src="images/loss-surface-and.svg" alt="loss-surface-and" width="510" height="367"></figure>
+<figure><img src="images/loss-surface-and.svg" alt="A three-dimensional surface of the loss over the (w1, w2) plane for AND with theta = 1.5 held: a curved sheet sloping down toward a bottom region, with a starting setting and the bottom marked, and contour lines drawn beneath it." width="510" height="367"></figure>
 <p>This is the loss on the AND table with \(\theta = 1.5\) held. It is a bowl. Its lowest point is \(\mathbf{w} = (1, 1)\), at loss \(0.406\) — setting A of the meeting-4 sheet, rounded there to \(0.41\). Meeting 2’s opening unit, \(\mathbf{w} = (1, 2)\), sits on the side of the bowl at \(0.463\).</p>
 <p>For AND, scaling all three parameters of setting A together drives the loss toward zero. The surface above has a lowest point at \(0.406\) because \(\theta\) is held at \(1.5\): with the threshold fixed, the weights can grow only so far before the rows \((0, 1)\) and \((1, 0)\) start to fire, and the loss rises again. This two-dimensional slice has a minimum. When all three parameters are free, the loss can approach zero but never reaches it at finite parameter values.</p>
 <h3 id="s-3-2">3.2 The same surface on the weather data</h3>
-<figure><img src="images/loss-surface-newark.svg" alt="loss-surface-newark" width="510" height="408"></figure>
+<figure><img src="images/loss-surface-newark.svg" alt="The same kind of surface for the Newark data with the bias b = -12 held, over w1 per degree of high and w2 per degree of low: a steep-walled valley, its bottom marked and the hand-drawn line&#x27;s setting marked on its side." width="510" height="408"></figure>
 <p>The loss on the weather data, over the weights for the high and the low, with \(b = -12\) held. The shape is different: a narrow valley running diagonally, with steep sides. The lowest point is near \(\mathbf{w} = (0.03, 0.20)\), at loss \(0.218\), where the unit places 91.0 percent of the days correctly. The hand-drawn line, \(\mathbf{w} = (0.1, 0.1)\), lies in the valley at \(0.245\). A setting like \((0.3, 0.3)\) is far up the side at loss \(6.8\), which is why the picture cuts the sides off.</p>
 <p>A day’s high and low tend to rise and fall together. Increasing one weight while decreasing the other can therefore leave many scores similar, producing a valley of settings with similar losses. Near its floor, the loss changes more slowly along the valley than across it.</p>
 <p>You can turn both surfaces with the mouse on the interactive page, <a href="https://ikoutis.github.io/course-notes/artificial-neuron-notes/interactive/loss-landscape.html"><em>The loss landscape</em></a>, linked from Canvas; the floor of the page shows the same loss as a map.</p>
@@ -258,24 +340,36 @@ footer a:hover { color: var(--njred); }
 <div class="math">\[ \sum_{i=1}^{n} (\hat y_i - y_i)\,x_{ij} \;=\; 0 \qquad \text{for every } j. \]</div>
 <p>The bias equation is \(\sum_i(\hat y_i-y_i)=0\). There is one equation per parameter, but \(\hat y_i = \sigma(w_1 x_{i1} + w_2 x_{i2} + b)\), so the unknowns occur inside the sigmoid. These equations are nonlinear and cannot be passed to <code>np.linalg.solve</code>. This limits the linear-system approach; it does not rule out numerical methods for nonlinear equations or special cases with explicit solutions.</p>
 <p>We can still compute the gradient at any finite setting without first finding a minimum. As the AND example shows, a finite minimum need not exist when all parameters are free.</p>
-<h3 id="s-3-8">3.8 Feeling the way down</h3>
-<figure><img src="images/loss-surface-fog.svg" alt="loss-surface-fog" width="510" height="367"></figure>
-<p>The picture above shows the AND surface as it would look from a point on it in thick fog: only the ground within a small radius of the point \((1, 2)\) is visible, with the downhill direction \(-\nabla L\) drawn as an arrow at that point. You cannot see the bowl or its lowest point, but the gradient tells you which way the ground rises locally. Move a short distance in the opposite direction, compute the gradient at the new point, and move again.</p>
+<h3 id="s-3-8">3.8 Following the local gradient</h3>
+<figure><img src="images/loss-surface-fog.svg" alt="The AND loss surface hidden in fog: only a small patch of the surface around the point w = (1, 2), loss 0.46, is visible, with an arrow labelled downhill pointing away from it." width="510" height="367"></figure>
+<p>The figure shows a small neighborhood of \((1,2)\) on the AND loss surface, with an arrow in the direction \(-\nabla L\). An iterative method can take a short step in that direction and recompute the gradient at the new parameters. Each step uses local information about the loss.</p>
 <p>A unit with forty inputs has forty-one parameters. We can draw slices of its loss landscape, but cannot display all forty-one parameter directions together as an ordinary surface. The gradient calculation still averages each row’s error times its inputs, with a separate component for the bias.</p>
-<p>On the interactive page, switch <strong>fog</strong> on. The surface disappears and a patch of ground around the marked point remains, with the downhill arrow on it. Press <strong>step downhill</strong>: the page moves the point against the gradient and computes the gradient again at the new point. The distance depends on the gradient’s size and the page’s learning-rate setting. At the default learning rate, from \((1, 2)\) on the AND surface the loss goes \(0.463\), \(0.438\), \(0.424\), \(0.417\), \(0.413\), and the point moves toward \((1, 1)\) without the surface ever being shown. Switch the fog off afterwards to see the path on the full surface. On the weather surface, from the hand-drawn line, the loss goes \(0.245\), \(0.231\), \(0.229\), \(0.229\), and then decreases slowly along the valley toward \(0.218\). Press <strong>random guess</strong> a few times on either surface for the contrast with Act 1: the point lands anywhere in the box, and the next guess uses nothing about where the last one landed.</p>
+<p>On the interactive page, switch <strong>fog</strong> on. The surface disappears and a patch of ground around the marked point remains, with the downhill arrow on it. Press <strong>step downhill</strong>: the page moves the point against the gradient and computes the gradient again at the new point. The distance depends on the gradient’s size and the page’s learning-rate setting. At the default learning rate, from \((1, 2)\) on the AND surface the loss goes \(0.463\), \(0.438\), \(0.424\), \(0.417\), \(0.413\), and the point moves toward \((1, 1)\) without the surface ever being shown. Switch the fog off afterwards to see the path on the full surface. On the weather surface, from the hand-drawn line, the loss goes \(0.245\), \(0.231\), \(0.229\), \(0.229\), and then decreases slowly along the valley toward \(0.218\). Press <strong>random guess</strong> to sample new settings from the search box. Each draw is independent of the preceding setting and its loss.</p>
 <h3 id="s-3-9">3.9 Comparing the methods</h3>
 <p>Grid search checks every setting on a chosen grid, at a cost that grows exponentially with the number of parameters. Random search samples a chosen box and keeps its best result; its chance of finding a useful setting depends on the fraction of the box those settings occupy. Linear elimination solves consistent equations for chosen target scores, but the equations for minimizing cross-entropy are nonlinear.</p>
 <p>The gradient gives a local direction from the errors at the current setting. Computing it does not require knowing where the minimum is or drawing the loss landscape. The interactive examples take steps using this direction; a complete search procedure also needs a choice of step size and a stopping condition.</p>
-<aside class="note"><span class="lead">After this meeting.</span> <ul>
-<li>Spend five minutes on <a href="https://ikoutis.github.io/course-notes/artificial-neuron-notes/interactive/loss-landscape.html"><em>The loss landscape</em></a>, linked from Canvas, with the fog switched on.</li>
-<li>Keep the meeting’s sheet: the linear system of Example 2.1 and the two slope computations of Example 3.2.</li>
-<li>Assignment Task 2, <em>From certainty to confidence</em>, is open on Canvas. No new task opens after this meeting.</li>
-<li>Review Quiz 5 is on Canvas.</li>
-</ul>
-</aside>
+<h2 class="act" id="act-4">Act 4. Practice</h2>
+<h3 id="s-4-1">4.1 Search and derivative methods</h3>
+<p><strong>Matching.</strong> Match each method to its description.</p>
+<p>Methods: random search; grid search; finite differences; analytic gradient.</p>
+<p>Descriptions:</p>
+<ol type="A">
+<li>Approximate a derivative by evaluating the loss at nearby parameter values.</li>
+<li>Evaluate every combination from specified lists of parameter values.</li>
+<li>Compute derivatives using formulas derived from the model and loss.</li>
+<li>Evaluate sampled parameter vectors.</li>
+</ol>
+<h3 id="s-4-2">4.2 Target scores and classification</h3>
+<p><strong>True or false, with explanation.</strong> We choose numerical target scores for the training examples and obtain an inconsistent system of linear equations. Therefore, no threshold neuron can classify all the examples correctly.</p>
+<h3 id="s-4-3">4.3 A zero-valued feature</h3>
+<p><strong>Application.</strong> One example has a large prediction error, but its \(j\)-th feature is zero. Using</p>
+<div class="math">\[ \frac{\partial \ell}{\partial w_j}=(q-y)x_j, \]</div>
+<p>explain why this example makes no contribution to the derivative with respect to \(w_j\). Can it still contribute to the bias derivative?</p>
+<h3 id="s-4-4">4.4 A zero full-batch derivative</h3>
+<p><strong>Short explanation.</strong> The full-batch derivative with respect to one weight is zero. Must every training example’s contribution to that derivative also be zero? Explain a situation in which the contributions are nonzero but their average is zero.</p>
 <footer>
 <span>CS 301 · Meeting 5 · <a href="index.html">all meetings</a></span>
-<span>generated from meeting-05.tex on 2026-09-19</span>
+<span>Parameter Search and the Gradient</span>
 </footer>
 </main>
 </body>

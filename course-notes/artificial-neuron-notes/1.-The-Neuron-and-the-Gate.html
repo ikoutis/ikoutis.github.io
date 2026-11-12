@@ -70,62 +70,142 @@ footer a { text-decoration: none; }
 footer a:hover { color: var(--njred); }
 @media (max-width: 560px) { body { font-size: 17px; } .page { padding: 28px 18px 56px; } h1 { font-size: 25px; } pre.code { margin-left: 12px; } }
 @media print { .page { max-width: none; padding: 0; } .kicker .pdf { display: none; } h2.act, h3, h4 { break-after: avoid; } figure, .note, table { break-inside: avoid; } }
+/* Reading conventions established by the latest Unit II notes. */
+:root { --blue:#1c5cab; --blue-tint:#eef4fc; --blue-line:#c9dbf3; }
+.page { max-width:820px; }
+.titleblock { border-top:4px solid var(--blue); }
+h2.act { color:var(--blue); margin:52px 0 20px; }
+h3,h4 { break-after:avoid; }
+h4.example .label { color:var(--blue); }
+a:hover,.kicker .pdf:hover { color:var(--blue); }
+p a,li a { overflow-wrap:anywhere; }
+p { text-indent:0; }
+p + p { text-indent:0; margin-top:.65em; }
+.note p + p,.inclass p + p,.colab p + p,.links p + p { text-indent:0; margin-top:.65em; }
+.source { line-height:1.5; overflow-wrap:anywhere; }
+.worked { border-left:4px solid var(--blue); background:#f1f6fc; padding:14px 18px; margin:20px 0; }
+.worked h4.example { margin:0 0 10px; }
+.worked p:last-child { margin-bottom:0; }
+.note { border-left:4px solid #cdd7e2; }
+/* Limit tall plots without reducing the width of multi-panel comparisons. */
+figure img { max-width:100%; max-height:420px; height:auto; object-fit:contain; display:block; margin-inline:auto; }
+figure img:not([width]) { width:auto; }
+ol.ideas figure img { max-height:380px; }
+/* Dense grids need extra space for their many labels. */
+figure.figure-dense img { max-height:560px; }
+figcaption { font-size:.88em; line-height:1.45; color:#3d4858; margin-top:8px; text-align:left; }
+pre.code { font-size:13px; line-height:1.55; background:#f6f7f9; padding:12px 16px; margin-left:0; }
+details.code > summary { background:#eef4fb; line-height:1.45; padding:10px 14px; font-weight:bold; }
+details.code > summary .where { white-space:normal; }
+details.code .inner { padding:4px 0 10px; }
+.tables { max-width:100%; overflow-x:auto; justify-content:safe center; }
+table { line-height:1.45; }
+table th { color:#174f85; }
+table.tt { width:auto; }
+table.tt th { background:#f0f4f8; }
+.skip-link { position:absolute; left:-9999px; }
+.skip-link:focus { position:static; }
+:focus-visible { outline:2px solid var(--blue); outline-offset:3px; }
+@media (max-width:560px) {
+ .page { padding:20px 16px 48px; }
+ h1 { font-size:29px; }
+ h2.act { margin-top:36px; }
+ .worked { padding:10px; }
+ pre.code,pre.out { font-size:12px; }
+ p code,li code { white-space:normal; overflow-wrap:anywhere; }
+ .tables { gap:16px; }
+ table { font-size:13px; }
+ table.trans td { padding:6px 8px; }
+ .math,math[display="block"] { max-width:100%; overflow-x:auto; }
+ .math { font-size:.88em; }
+ details.code > summary { flex-wrap:wrap; }
+}
+@media print {
+ @page { size:Letter; margin:18mm 18mm 20mm; }
+ body { font-size:10.5pt; line-height:1.42; }
+ .page { width:auto; max-width:none; margin:0; padding:0; }
+ .titleblock { padding:6px 0 12px; margin-bottom:16px; }
+ .kicker { font-size:8pt; }
+ h1 { font-size:23pt; }
+ h2.act { font-size:17pt; margin:25px 0 12px; }
+ h3,h4.example { font-size:12pt; margin:16px 0 8px; }
+ p { orphans:3; widows:3; }
+ .worked { padding:10px 13px; break-inside:auto; }
+ .note,.inclass,.colab,.links { padding:10px 13px; }
+ figure { margin:14px 0; break-inside:avoid; }
+ figure img { max-height:95mm; }
+ ol.ideas figure img { max-height:85mm; }
+ figure.figure-dense img { max-height:125mm; }
+ figcaption { font-size:9pt; }
+ pre.code,pre.out { font-size:8pt; line-height:1.4; white-space:pre-wrap; overflow-wrap:anywhere; }
+ details.code { break-inside:auto; border:0; }
+ details.code > summary { font-size:10pt; break-after:avoid; }
+ details.code .inner { padding:8px 12px; border:0; }
+ details.code p { font-size:10.5pt; padding:4px 0 0; }
+ table { font-size:9pt; }
+ ol.ideas { margin:12px 0; }
+ ol.ideas > li { padding:5px 0 5px 34px; margin:0; break-inside:avoid; background:none; }
+ ol.ideas > li::before { left:0; top:8px; width:23px; height:23px; font-size:12px; }
+ ol.ideas h3 { font-size:10.5pt; margin:0 0 4px; }
+ ol.ideas p { font-size:9.5pt; line-height:1.3; }
+ a.open::after { content:none; }
+ .pdf,.skip-link,footer { display:none; }
+}
 </style>
 <script>window.MathJax = { tex: { inlineMath: [['\\(', '\\)']], displayMath: [['\\[', '\\]']] }, chtml: { scale: 1.02 } };</script>
 <script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
 </head>
 <body>
-<main class="page">
+<a class="skip-link" href="#main">Skip to notes</a>
+<main class="page" id="main">
 <header class="titleblock">
-<p class="kicker">NJIT · CS 301 · INTRODUCTION TO DATA SCIENCE · FALL 2026 <a class="pdf" href="1.-The-Neuron-and-the-Gate.pdf">PDF</a></p>
+<p class="kicker">NJIT · CS 301 · INTRODUCTION TO DATA SCIENCE · FALL 2026 · UNIT I <a class="pdf" href="1.-The-Neuron-and-the-Gate.pdf">PDF</a></p>
 <h1>Meeting 1. The Neuron and the Gate</h1>
 <p class="acts">Act 1 The Biological Neuron · Act 2 Logic Gates and Certainty · Act 3 Computing a Neuron, Approximately</p>
 </header>
-<aside class="note"><span class="lead">About these notes.</span> <p>There is no textbook to buy in CS&nbsp;301: these notes are the course’s text, written by the instructors and posted on Canvas as each meeting is reached. They follow the meetings themselves — including questions and examples that came up in class — and, together with the assignment notebook you build, they are what the exams are set from. Logistics, grading, and the schedule live in the syllabus.</p>
+<aside class="note"><span class="lead">About these notes.</span> <p>These instructor-written notes are the course text for CS&nbsp;301 and are posted on Canvas after each meeting. They include examples and questions discussed in class. The exams cover these notes and your assignment notebook. See the syllabus for the schedule, grading, and other course information.</p>
 </aside>
-<p>Unit I is organized around a single question:</p>
-<p class="pull"><em>A logic gate is <span class="red">written</span>. Could a neuron be <span class="red">taught</span>?</em></p>
-<p>This first meeting introduces the two objects in that sentence — the biological neuron, a living cell, and the logic gate, the exact device computers are made of — and ends with a 1943 idea that connects them: a neuron, written as arithmetic.</p>
+<p>Unit I studies how an artificial neuron makes predictions and learns its parameters from examples. We begin with biological neurons and logic gates, then describe a simplified neuron model in arithmetic.</p>
 <h2 class="act" id="act-1">Act 1. The Biological Neuron</h2>
 <h3 id="s-1-1">1.1 Neurons and cell types</h3>
-<p>Your brain runs on roughly <strong>86 billion</strong> neurons. For decades the standard figure was “100 billion” — a round number that no measurement established. A laboratory technique gave a measured estimate: dissolve brain tissue into a suspension, count the cell nuclei in samples of it, and scale up. The answer comes out near 86 billion on average — about 16 billion in the cerebral cortex and about 69 billion in the cerebellum, with variation from person to person. The lesson for working with data: ask how a number was measured, rather than accepting it because it is often repeated.</p>
-<p>A neuron is a cell — a strange-looking one, as the next section shows — and the 86 billion are not one cell repeated. Neurons come in <strong>kinds</strong>, differing in shape, chemistry, connections, and response. A recent atlas, built by reading which genes individual brain cells express, groups them into 461 clusters and 3,313 finer subclusters. Those counts include both neurons and non-neuronal cells.</p>
+<p>The human brain contains roughly <strong>86 billion</strong> neurons. For decades the standard figure was “100 billion” — a round number that no measurement established. A laboratory technique gave a measured estimate: dissolve brain tissue into a suspension, count the cell nuclei in samples of it, and scale up. The answer comes out near 86 billion on average — about 16 billion in the cerebral cortex and about 69 billion in the cerebellum, with variation from person to person. The estimate depends on the sampling and counting method.</p>
+<p>Neurons are cells with many different shapes, chemical properties, connections, and responses. A recent atlas, built by reading which genes individual brain cells express, groups them into 461 clusters and 3,313 finer subclusters. Those counts include both neurons and non-neuronal cells.</p>
 <p>Many cells share a type, and small circuits with similar arrangements also recur across the brain. This suggests a useful comparison with computers: complex systems can be built from repeated parts. Artificial neural networks also reuse small modules at a much larger scale.</p>
 <p class="source">The counts: Azevedo et al., <em>J. Comp. Neurol.</em> 513 (2009), 532–541, doi:10.1002/cne.21974. The cell-type atlas: <em>Transcriptomic diversity of cell types across the adult human brain</em>, <em>Science</em> 382 (2023), doi:10.1126/science.add7046.</p>
 <h3 id="s-1-2">1.2 What one cell does</h3>
-<figure><img src="images/neuron.svg" alt="neuron" width="496" height="235"></figure>
-<p>The branched structures on the left are <strong>dendrites</strong>, from the Greek <em>dendron</em>, a tree — and they do look like the branches of one. Signals from other neurons, chemical or electrical, arrive there, at contact points called <strong>synapses</strong>. What arrives is gathered into the <strong>cell body</strong> (the soma), and when the cell responds, the response travels down the <strong>axon</strong> — the long fiber to the right — and out through the axon terminals to other cells.</p>
+<figure><img src="images/neuron.svg" alt="A neuron, labelled: branching dendrites on the left, the round cell body in the middle, and the long axon running to the right and ending in axon terminals." width="496" height="235"></figure>
+<p>The branching structures on the left are <strong>dendrites</strong>; the name comes from the Greek <em>dendron</em>, meaning tree. Signals from other neurons, chemical or electrical, arrive there, at contact points called <strong>synapses</strong>. What arrives is gathered into the <strong>cell body</strong> (the soma), and when the cell responds, the response travels down the <strong>axon</strong> — the long fiber to the right — and out through the axon terminals to other cells.</p>
 <p>The operation of the cell, reduced to four steps:</p>
 <ol>
 <li>Signals <strong>arrive</strong> at the dendrites, at the synapses.</li>
-<li>Each synapse has a <strong>strength</strong>. One way to say it: a synapse decides how much attention its input gets. A strong synapse passes its signal on with force; a weak one barely registers it; some push in the negative direction and <em>suppress</em> the cell instead.</li>
+<li>Each synapse has a <strong>strength</strong> that affects its contribution to the cell’s response. Excitatory inputs increase the tendency to fire, while inhibitory inputs suppress it.</li>
 <li>The cell body <strong>adds up</strong> what arrives — each signal counted in proportion to the strength of the synapse it crossed.</li>
 <li>Past a <strong>threshold</strong>, the cell <strong>fires</strong>: a spike travels down the axon to the next cells. Below the threshold it stays quiet. The threshold is the cell’s own; different neurons have different ones.</li>
 </ol>
-<p>This is a simplified description; different kinds of neuron behave differently. Keep the four steps — arrive, weigh, add, compare — in mind. In Act&nbsp;3 we will express them as arithmetic.</p>
-<h3 id="s-1-3">1.3 Nothing here is exact</h3>
-<p>Nothing in the previous section behaves like a symbol in an equation.</p>
+<p>This description simplifies the behavior of biological neurons. Act&nbsp;3 models input strength, accumulation, and thresholding with arithmetic.</p>
+<h3 id="s-1-3">1.3 Biological variability and timing</h3>
+<p>Several features of biological neurons require further explanation.</p>
 <ul>
-<li><strong>Membrane voltage is continuous.</strong> The voltage across the cell’s membrane is not restricted to two levels; it moves through every value in a range. (A range, not an unbounded scale — the cell regulates itself, and activity that ran away unchecked would destroy it.)</li>
-<li><strong>Signals are pulses, not values.</strong> A neuron does not hand the next cell a number. It emits spikes, and what carries information is their <em>rate</em> and their <em>timing</em>.</li>
+<li><strong>Membrane voltage is continuous.</strong> The voltage across the cell’s membrane is not restricted to two levels; it moves through every value in a range. The cell regulates this voltage within a physiological range.</li>
+<li><strong>Spike rate and timing carry information.</strong> Neurons emit spikes whose <em>rate</em> and <em>timing</em> affect other cells.</li>
 <li><strong>The contact is chemical.</strong> At most synapses the signal crosses the gap as a puff of neurotransmitter molecules — and the amount released can vary.</li>
 <li><strong>There is noise.</strong> The same input can produce different responses. Hear the same song twice and it need not trace the same pattern through your brain each time.</li>
-<li><strong>There is no global clock.</strong> Nothing ticks all 86 billion cells forward in step. Be careful with what this does <em>not</em> say: timing matters a great deal in the brain — the timing of spikes carries information, down to the millisecond. What is missing is a shared metronome, not time itself.</li>
+<li><strong>There is no global clock.</strong> Neural activity is not synchronized by a single clock. Individual spike times still carry information, with differences of milliseconds affecting responses.</li>
 <li><strong>The strengths themselves change.</strong> Synaptic strengths can grow and shrink with activity and experience. These changes are part of how the brain learns.</li>
 </ul>
 <p>A familiar example of adjustment: step out of a dark room into bright sunlight. At first it is overwhelming; then your visual system adjusts its sensitivity. Several mechanisms contribute, so this is not simply a change in synaptic strengths, or necessarily an example of learning.</p>
 <p>These features — continuous voltages, noise, no global clock, and changing strengths — matter when modeling a neuron. Digital circuits also have physical voltages and noise, but they are engineered to give reliable answers in terms of just two symbols.</p>
 <h2 class="act" id="act-2">Act 2. Logic Gates and Certainty</h2>
-<h3 id="s-2-1">2.1 The machine, from very far away</h3>
-<p>Seen from far enough away, a computer is a three-stage story:</p>
-<figure><img src="images/machine.svg" alt="machine" width="552" height="175"></figure>
-<p>The world on the left is continuous — light, sound, pressure, voltages from a microphone. At the machine’s boundary all of it is <em>converted</em>: measured, and written as strings of 0s and 1s. In the middle, everything the machine does — arithmetic, text, video, this very document — is operations on those 0s and 1s, nothing else. At the far boundary some of the results are converted back to the continuous world: pixels on a screen, sound from a speaker, motion in a motor. Not all of them come back out: a file written to disk or a message sent across the network stays 0s and 1s the whole way. Storage is physical too — a disk encodes each bit as the state of some small piece of solid matter — but what the physical state encodes is a discrete symbol.</p>
-<p>Two side remarks belong here. First, “discrete” is a design choice, not a law of nature: there was once a whole branch of computing built on continuous signals — analog computers — and the quantum machines now being developed are different again. The machines this course runs on are the discrete kind. Second, the middle of the picture usually uses a <strong>clock</strong> to coordinate when intermediate results are stored. The logic between those storage points takes time to settle. The brain of Act&nbsp;1 has no such global clock.</p>
-<h3 id="s-2-2">2.2 Two symbols, and nothing in between</h3>
+<h3 id="s-2-1">2.1 Input, processing, and output</h3>
+<p>A digital computer can be described in three stages:</p>
+<figure><img src="images/machine.svg" alt="The machine from far away, in three stages: the continuous world enters on the left and is converted to 0s and 1s; the middle works only on 0s and 1s; on the right some results are converted back to the continuous world." width="552" height="175"></figure>
+<p>Sensors measure quantities such as light, sound, and pressure. These measurements are encoded as strings of bits. The processor performs operations on these bit strings to handle arithmetic, text, video, and other data. At the far boundary some of the results are converted back to the continuous world: pixels on a screen, sound from a speaker, motion in a motor. Not all of them come back out: a file written to disk or a message sent across the network stays 0s and 1s the whole way. Storage is physical too — a disk encodes each bit as the state of some small piece of solid matter — but what the physical state encodes is a discrete symbol.</p>
+<p>Analog computers use continuous signals, and quantum computers use another model of computation. This course uses digital computers. Their processing circuits usually use a <strong>clock</strong> to coordinate when intermediate results are stored. The logic between those storage points takes time to settle. The brain of Act&nbsp;1 has no such global clock.</p>
+<h3 id="s-2-2">2.2 Representing bits with voltages</h3>
 <p>Physically, a wire carries a voltage. One range is interpreted as <em>high</em>, or <strong>1</strong>, and another as <em>low</em>, or <strong>0</strong>. The voltages in between occur during transitions, but do not represent a valid logic value. The circuit must have time to settle before its answer is read. Small voltage changes within either valid range leave the represented bit unchanged; this is part of what makes digital computation reliable.</p>
 <h3 id="s-2-3">2.3 Three gates</h3>
 <p>The operations performed on bits are built from <strong>logic gates</strong>: small devices that, in the examples below, take one or two bits and produce one bit, by a rule small enough to write out in full.</p>
-<figure><img src="images/three-gates.svg" alt="three-gates" width="420" height="84"></figure>
+<figure><img src="images/three-gates.svg" alt="The symbols for three logic gates, left to right: AND and OR, each with two input wires and one output wire, and NOT, with one input and one output." width="420" height="84"></figure>
 <p><strong>AND</strong> answers 1 only when both inputs are 1. <strong>OR</strong> answers 1 when at least one input is 1. <strong>NOT</strong> takes a single input and answers with the other symbol. In class you filled these tables in yourself; here they are complete:</p>
 <div class="tables">
 <table class="tt">
@@ -151,9 +231,9 @@ footer a:hover { color: var(--njred); }
 <p>A <strong>truth table</strong> specifies the output for every possible binary input. These four rows completely define the two-input AND function. They do not describe physical details such as how long a gate takes to produce its answer.</p>
 <p>Gates also come in wider versions: an AND with three or more inputs answers 1 exactly when <em>all</em> of its inputs are 1, and real chips use such gates freely because they save space. Everything in this unit works with the two-input versions, and nothing is lost.</p>
 <h3 id="s-2-4">2.4 How many kinds of part does a computer need?</h3>
-<p>Inside a real processor you would find implementations of several different logical operations — the three above, XOR, and other variants — because dedicated circuits are efficient. But that is engineering convenience. The interesting question is: how many <em>different kinds</em> of gate do you actually need, to build all the logic of a computer?</p>
-<p>Three are enough: AND, OR and NOT can express any Boolean function. Can you do better? A student in class pointed out that two suffice — AND and NOT — because OR can be assembled out of them: \(a\) OR \(b\) answers 0 only when both inputs are 0, which is the same as NOT (NOT \(a\) AND NOT \(b\)).</p>
-<p>And you can do better still. <em>One</em> kind of gate is enough: the <strong>NAND</strong>, which is simply AND followed by NOT — it answers with the opposite of what AND answers.</p>
+<p>Inside a real processor you would find implementations of several different logical operations — the three above, XOR, and other variants — because dedicated circuits are efficient. We can also ask which sets of gate types can express every Boolean function.</p>
+<p>AND, OR and NOT can express any Boolean function. AND and NOT also suffice, because OR can be assembled from them: \(a\) OR \(b\) answers 0 only when both inputs are 0, which is the same as NOT (NOT \(a\) AND NOT \(b\)).</p>
+<p>The <strong>NAND</strong> gate alone is sufficient. Its output is the negation of AND.</p>
 <div class="tables">
 <table class="tt">
 <tr><th style="text-align:center">\(a\)</th><th style="text-align:center">\(b\)</th><th class="rule" style="text-align:center">NAND</th></tr>
@@ -169,17 +249,17 @@ footer a:hover { color: var(--njred); }
 <li>\(a\) AND \(b\)  =  NAND\(\big(\)NAND\((a,b),\,\)NAND\((a,b)\big)\)</li>
 <li>\(a\) OR \(b\)  =  NAND\(\big(\)NAND\((a,a),\,\)NAND\((b,b)\big)\)</li>
 </ul>
-<p>One NAND, then two, then three — and no second kind of gate anywhere in the list. NAND gates can therefore build all the Boolean logic a processor needs. Arrangements with feedback can also store bits.</p>
-<aside class="note"><span class="lead">Why NAND rather than AND?</span> <p>Because of what gates are made of. In standard two-input CMOS circuits, a NAND takes four transistors, while an AND is built as a NAND followed by an inverter: six. The inverting gate is the cheap one, so it is a useful building block in chips. The name misleads a little: “NAND” sounds like an AND with a NOT bolted on, but physically it is the AND that is the composite.</p>
+<p>These constructions use one, two, and three NAND gates respectively. NAND gates can therefore build all the Boolean logic a processor needs. Arrangements with feedback can also store bits.</p>
+<aside class="note"><span class="lead">Why NAND rather than AND?</span> <p>Because of what gates are made of. In standard two-input CMOS circuits, a NAND takes four transistors, while an AND is built as a NAND followed by an inverter: six. NAND therefore uses fewer transistors in this implementation.</p>
 </aside>
 <aside class="note"><span class="lead">Repeated parts.</span> <p>The brain contains many cells of each type and recurring circuit patterns. A computer also combines repeated small parts into larger modules. NAND shows how far this idea can go: one kind of gate is enough to build every Boolean function.</p>
 </aside>
 <h3 id="s-2-5">2.5 Wiring gates together</h3>
-<p>The output of one gate can feed an input of another, and every computation the machine performs is, at bottom, such a wiring. The way to understand a small circuit is to <em>trace</em> it: fix the inputs, and push the values through gate by gate.</p>
+<p>The output of one gate can feed an input of another to form a larger circuit. The way to understand a small circuit is to <em>trace</em> it: fix the inputs, and push the values through gate by gate.</p>
 <section class="worked" id="ex-2-1">
 <h4 class="example"><span class="label">Example 2.1</span> Trace the circuit</h4>
 <p>Three NANDs, wired as below — the circuit you traced on the meeting’s worksheet. The values on the two internal wires are named \(n_1\) and \(n_2\).</p>
-<figure><img src="images/nand-circuit.svg" alt="nand-circuit" width="386" height="199"></figure>
+<figure><img src="images/nand-circuit.svg" alt="A circuit of three NAND gates. Input a feeds both inputs of the top gate and input b both inputs of the bottom gate; their outputs, n1 and n2, feed the third gate, whose output is labelled out." width="386" height="199"></figure>
 <p>Take the row \(a=0\), \(b=0\). The top gate receives \(a\) on both inputs, so \(n_1 = \text{NAND}(0,0) = 1\); likewise \(n_2 = 1\); and the output is \(\text{NAND}(1,1) = 0\). Now \(a=0\), \(b=1\): the top gate still sees \((0,0)\), so \(n_1 = 1\); the bottom gate sees \((1,1)\), so \(n_2 = 0\); and the output is \(\text{NAND}(1,0) = 1\). Before computing the row \((1,0)\), notice that the circuit is <em>symmetric</em>: swapping \(a\) and \(b\) swaps the roles of \(n_1\) and \(n_2\) and cannot change the output. So \((1,0)\) gives \(1\) with no further work. The last row, \((1,1)\), gives \(n_1 = n_2 = 0\) and output \(\text{NAND}(0,0) = 1\).</p>
 <div class="tables">
 <table class="tt">
@@ -196,8 +276,8 @@ footer a:hover { color: var(--njred); }
 <section class="worked" id="ex-2-2">
 <h4 class="example"><span class="label">Example 2.2</span> The same method, for AND</h4>
 <p>The second identity of §2.4 says that AND is two NANDs: the first takes \(a\) and \(b\), and the second takes the first’s output on both of its inputs. Drawn as a circuit, with the one internal wire named \(n_1\):</p>
-<figure><img src="images/and-from-nands.svg" alt="and-from-nands" width="358" height="66"></figure>
-<p>The method is the one of Example&nbsp;2.1, and it is the same for every circuit: fix the inputs, push the values through the gates in the order they are wired, and write down each internal wire as you reach it. For \((0,0)\): \(n_1 = \text{NAND}(0,0) = 1\), and the output is \(\text{NAND}(1,1) = 0\). For \((0,1)\) and \((1,0)\): \(n_1 = 1\) again, so the output is \(0\) again. For \((1,1)\): \(n_1 = \text{NAND}(1,1) = 0\), and the output is \(\text{NAND}(0,0) = 1\).</p>
+<figure><img src="images/and-from-nands.svg" alt="Two NAND gates in a row. The first takes a and b; its output n1 feeds both inputs of the second, whose output is labelled out." width="358" height="66"></figure>
+<p>Use the method of Example&nbsp;2.1: fix the inputs, evaluate the gates in dependency order, and record the value on each internal wire. For \((0,0)\): \(n_1 = \text{NAND}(0,0) = 1\), and the output is \(\text{NAND}(1,1) = 0\). For \((0,1)\) and \((1,0)\): \(n_1 = 1\) again, so the output is \(0\) again. For \((1,1)\): \(n_1 = \text{NAND}(1,1) = 0\), and the output is \(\text{NAND}(0,0) = 1\).</p>
 <div class="tables">
 <table class="tt">
 <tr><th style="text-align:center">\(a\)</th><th style="text-align:center">\(b\)</th><th class="rule" style="text-align:center">\(n_1\)</th><th class="rule" style="text-align:center">out</th></tr>
@@ -207,16 +287,16 @@ footer a:hover { color: var(--njred); }
 <tr><td style="text-align:center">1</td><td style="text-align:center">1</td><td class="rule" style="text-align:center">0</td><td class="rule" style="text-align:center">1</td></tr>
 </table>
 </div>
-<p>The last column is \(0,0,0,1\): AND. Notice what the second gate is doing: fed the same value on both inputs, a NAND simply inverts it, which is the first identity of §2.4 (NOT \(a\) = NAND\((a,a)\)) appearing as a part of a larger circuit. Read this way, the three identities are not three facts to memorize but one method applied three times.</p>
+<p>The last column is \(0,0,0,1\): AND. Notice what the second gate is doing: fed the same value on both inputs, a NAND simply inverts it, which is the first identity of §2.4 (NOT \(a\) = NAND\((a,a)\)) appearing as a part of a larger circuit. Each identity can be checked by tracing the intermediate values for every input.</p>
 </section>
-<h3 id="s-2-6">2.6 A gate is exact</h3>
+<h3 id="s-2-6">2.6 The ideal gate model</h3>
 <p>In the ideal logic model, a two-input gate’s four-row table specifies its entire input-output behavior.</p>
 <ul>
 <li>The same binary inputs give the same answer, every time.</li>
-<li>A gate remembers nothing about any input before this one. It answers, and is done.</li>
+<li>The output of an individual combinational gate depends only on its current inputs.</li>
 <li>In a synchronous circuit, the clock allows time for answers to settle before they are stored.</li>
 </ul>
-<p>Real gates are designed to implement that model reliably within their operating limits. They can fail, but their intended rule does not change with experience. That is the useful contrast with a synapse whose strength changes as the brain learns.</p>
+<p>Real gates are designed to implement that model reliably within their operating limits. They can fail, but their intended rule does not change with experience. Synaptic strengths, by comparison, can change with learning.</p>
 <h3 id="s-2-7">2.7 A gate you can run</h3>
 <p>A gate is fixed hardware. But an entire computer is built out of gates, programming languages run on the computer — and in a programming language you can write the gate back down as code:</p>
 <p></p>
@@ -227,19 +307,17 @@ footer a:hover { color: var(--njred); }
 gate = AndGate()
 for a, b, expected in [(0,0,0), (0,1,0), (1,0,0), (1,1,1)]:
     assert gate(a, b) == expected</pre>
-<p>The loop at the bottom deserves a second look: it is the truth table, row by row. The table is not a description of the class for a reader to consult; it is the requirement the class has to meet, and the loop checks that requirement on every row. A gate class that passes its own truth table is correct for all of its binary inputs. This is one consequence of a gate’s exactness: its specification is complete, and small enough to test in full.</p>
+<p>The loop checks the class against every row of the truth table. A gate class that passes its own truth table is correct for all of its binary inputs. This is one consequence of a gate’s exactness: its specification is complete, and small enough to test in full.</p>
 <p>Notice also the loop in the construction itself: physical gates make a processor, the processor runs Python, and inside Python we have just rebuilt a gate — as software. Put enough of these software gates together and you could simulate an entire computer, inside the computer. Engineers use circuit simulation to check chip designs before anything is manufactured, although their tools model more hardware detail than these Python classes.</p>
 <aside class="note"><span class="lead">Toward the assignment.</span> <p>Task 1 of the unit assignment asks for exactly what this section did once: the four gate classes — AND, OR, NOT, NAND — each tested against its own truth table, in your own notebook.</p>
 </aside>
 <h2 class="act" id="act-3">Act 3. Computing a Neuron, Approximately</h2>
 <h3 id="s-3-1">3.1 Gates can count</h3>
 <p>Wired together, gates do arithmetic. Two of them add one bit to one bit:</p>
-<figure><img src="images/half-adder.svg" alt="half-adder" width="300" height="156"></figure>
-<p>The XOR gate (1 when <em>exactly one</em> input is 1) produces the sum bit, and an AND produces the carry — check it against \(1+1\), which is \(10\) in binary: sum \(0\), carry \(1\). This circuit is a <em>half adder</em>. To add longer binary numbers, each position must also accept the carry from the preceding position. A <em>full adder</em> does that; it can be built from two half adders and an OR gate. Chain full adders and you can add 64-bit numbers. Multiplication is shifting and adding; comparison, subtraction, and the rest of arithmetic follow. Every number the machine ever adds, it adds <em>with gates</em> — there is no other machinery underneath.</p>
+<figure><img src="images/half-adder.svg" alt="A half adder: inputs a and b each feed both an XOR gate, whose output is labelled sum, and an AND gate, whose output is labelled carry." width="300" height="156"></figure>
+<p>The XOR gate (1 when <em>exactly one</em> input is 1) produces the sum bit, and an AND produces the carry — check it against \(1+1\), which is \(10\) in binary: sum \(0\), carry \(1\). This circuit is a <em>half adder</em>. To add longer binary numbers, each position must also accept the carry from the preceding position. A <em>full adder</em> does that; it can be built from two half adders and an OR gate. Chain full adders and you can add 64-bit numbers. Multiplication is shifting and adding; comparison, subtraction, and the rest of arithmetic follow. These arithmetic circuits are built from logic gates.</p>
 <p>Arithmetic was a major purpose of early computers. A pocket calculator is a familiar use of the same idea: gates carrying out arithmetic. (A game to play with one: type a large positive number and press the square-root key repeatedly. The display marches toward 1 — fast at first, then very slowly. Working out <em>why</em> it slows down is a good exercise for later in the course.)</p>
-<h3 id="s-3-2">3.2 Turn the question around</h3>
-<p>So: arithmetic is built out of gates.</p>
-<p class="bigq">Could a <span class="red">neuron</span> be built out of <span class="red">arithmetic</span>?</p>
+<h3 id="s-3-2">3.2 Implementing a neuron model</h3>
 <p>The computer already performs additions, multiplications, and comparisons. We can use those operations to write a model of a neuron as a program.</p>
 <h3 id="s-3-3">3.3 The cell, written as arithmetic</h3>
 <p>Return to the four-step description of Act&nbsp;1, and translate each step — in order — into a piece of arithmetic. This is a <em>modeling</em> step: deciding what each biological feature becomes, as a number or an operation.</p>
@@ -251,17 +329,17 @@ for a, b, expected in [(0,0,0), (0,1,0), (1,0,0), (1,1,1)]:
 <tr><td style="text-align:left"><span class="muted">it fires past a threshold</span></td><td style="text-align:left">output \(1\) if the sum is \(\geq \theta\), else \(0\)</td></tr>
 </table>
 </div>
-<p>In prose: the incoming signals become numbers \(x_1, \ldots, x_n\) — real numbers, since the signals they stand for are continuous. Each synapse’s strength becomes a number too, the <strong>weight</strong> \(w_i\): a large weight is a synapse paying close attention to its input, a weight near zero is one ignoring it. For a positive input, a negative weight pushes the cell away from firing. The cell body’s gathering becomes multiplication and addition — each input counted in proportion to its weight — and the firing decision becomes a comparison against the <strong>threshold</strong>, which by long tradition gets a Greek letter: \(\theta\). (Every course acquires its Greek letters eventually; this is our first.)</p>
-<p>Writing \(w_1x_1 + w_2x_2 + \cdots + w_nx_n\) in full gets old quickly. A student in class supplied the standard shorthand, which says exactly the same thing:</p>
+<p>In prose: the incoming signals become numbers \(x_1, \ldots, x_n\) — real numbers, since the signals they stand for are continuous. Each synapse’s strength becomes a number too, the <strong>weight</strong> \(w_i\): a larger weight gives an input a larger contribution to the sum, while a weight near zero gives it little influence. For a positive input, a negative weight pushes the cell away from firing. The cell body’s gathering becomes multiplication and addition — each input counted in proportion to its weight — and the firing decision becomes a comparison against the <strong>threshold</strong>, denoted by \(\theta\).</p>
+<p>The standard summation notation for this weighted sum is:</p>
 <div class="math">\[ \sum_{i=1}^{n} w_i x_i \qquad\text{“the sum, over $i$ from 1 to $n$, of $w_i x_i$.”} \]</div>
 <p>The whole object — inputs, weights, sum, threshold — drawn as one device:</p>
-<figure><img src="images/unit.svg" alt="unit" width="477" height="211"></figure>
+<figure><img src="images/unit.svg" alt="The threshold unit drawn as a device: three inputs x1, x2, x3 enter on the left, each arrow labelled with its weight w1, w2, w3; they meet at a summing node, the sum is compared with the threshold theta, and one output leaves on the right." width="477" height="211"></figure>
 <p><span class="muted">Three inputs are drawn; there could be any number. Notice that the picture is the neuron of Act&nbsp;1 with every part replaced by its arithmetic counterpart — and that the weights and the threshold are the parameters we choose.</span></p>
 <section class="worked" id="ex-3-1">
 <h4 class="example"><span class="label">Example 3.1</span> Does it fire?</h4>
 <p>Fix a unit with three inputs, weights \(w = (2,\, -1,\, 2)\), and threshold \(\theta = 3\) — the unit from the meeting’s worksheet. For each input, form the weighted sum and compare it with \(\theta\).</p>
 <p>For \(x = (1, 0, 1)\): the sum is \(2\cdot 1 + (-1)\cdot 0 + 2\cdot 1 = 4\), and \(4 \geq 3\), so the unit fires: output \(1\).</p>
-<p>For \(x = (1, 1, 1)\): the sum is \(2 - 1 + 2 = 3\) — <em>exactly</em> the threshold. Which way does it go? Intuition cannot settle this; only the definition can, and our definition says the unit fires when the sum is <em>greater than or equal to</em> \(\theta\). Output \(1\). The row is a small lesson in reading definitions literally: a boundary case is decided by the written rule, not by feel. (And the rule has consequences: raise the threshold to \(3.5\) and this row, alone among the four, changes its answer.)</p>
+<p>For \(x = (1, 1, 1)\): the sum is \(2 - 1 + 2 = 3\) — <em>exactly</em> the threshold. The rule includes equality, so the output is \(1\). Raising the threshold to \(3.5\) changes this row’s output to \(0\) and leaves the other three outputs unchanged.</p>
 <p>For \(x = (0, 1, 1)\): the sum is \(0 - 1 + 2 = 1 &lt; 3\). Silent: output \(0\).</p>
 <p>For \(x = (1, 1, 0)\): no arithmetic needed. The first and third weights are equal, so swapping \(x_1\) and \(x_3\) cannot change the sum — this is the same symmetry shortcut as in Example 2.1. The sum is again \(1\), and the output \(0\).</p>
 <div class="tables">
@@ -284,25 +362,38 @@ for a, b, expected in [(0,0,0), (0,1,0), (1,0,0), (1,1,1)]:
 </ul>
 <p>The connection is useful in both directions: gates perform the arithmetic of a neuron model, and a neuron model with suitable parameters can reproduce a gate’s logic.</p>
 <p class="source">W.&nbsp;S. McCulloch and W.&nbsp;Pitts, “A logical calculus of the ideas immanent in nervous activity,” Bulletin of Mathematical Biophysics 5 (1943), 115–133.</p>
-<aside class="note"><span class="lead">Gates, twice in one meeting.</span> <p>Gates have now appeared in two entirely different roles. As the <em>thing to imitate</em>: AND, OR and NOT are functions a unit can be asked to reproduce. And as the <em>material</em>: the additions and the comparison the unit performs are themselves carried out by gates.</p>
+<aside class="note"><span class="lead">Two uses of logic gates.</span> <p>AND, OR and NOT provide functions for a threshold unit to reproduce. Logic gates also implement the arithmetic used to evaluate the unit on a digital computer.</p>
 </aside>
-<h3 id="s-3-5">3.5 Approximately</h3>
-<p>What the model <em>keeps</em> from the cell: weighted inputs, accumulation, a threshold, an all-or-none response. What it <em>leaves out</em>: everything else in Act&nbsp;1. There is no timing and no spike rate — the unit gives one answer, once. There is no chemistry, no noise, no gap to cross. These are deliberate simplifications. The model allows real-valued inputs and weights; a computer represents them with finite precision.</p>
+<h3 id="s-3-5">3.5 Assumptions of the model</h3>
+<p>The model represents weighted inputs, accumulation, a threshold, and a binary response. It omits spike timing, firing rate, chemistry, and noise, and returns one output for each supplied input. The model allows real-valued inputs and weights; a computer represents them with finite precision.</p>
 <p>An MP3 is a useful analogy: a sampled, compressed recording leaves out some information, yet it can preserve much of what we enjoy in the music. Similarly, a simplified neuron can retain useful structure without reproducing every biological detail.</p>
 <p>(The class also raised a broader question: could continuous, or even quantum, details of the biology matter for understanding the mind and consciousness? Our threshold model does not answer that question. Here we are studying what a simplified model can do.)</p>
-<p>One omission matters more than all the others, and it is the one to carry out of this meeting. In the model used here, the weights are numbers <em>we</em> choose, and they stay where we put them. In a living brain, synaptic strengths can change with experience. Every weight in Example 3.1 was picked by hand. The unit question — <em>written, or taught?</em> — is asking whether that gap can be closed.</p>
-<h3 id="s-3-6">3.6 Coda: on making mistakes</h3>
+<p>The model used here has fixed weights chosen by hand, including every weight in Example 3.1. Learning would require a procedure that adjusts these weights using examples.</p>
+<h3 id="s-3-6">3.6 Learning from errors</h3>
 <p>One more thread from the meeting: give yourself opportunities to learn from mistakes. Trying something, checking it, and adjusting helps you discover what you do and do not understand. There is a useful parallel with artificial neural networks: training repeatedly scores their outputs and adjusts their weights. People learn in more ways than this, but the practical advice holds: do the work, inspect your errors, and try again.</p>
-<p>The class also made a rough energy comparison. A human brain runs on about 20 watts, or about 175 kilowatt-hours over a year. For scale, a hypothetical training run using a million kilowatt-hours would use as much energy as roughly 5,700 years at that power. That compares energy, not years of learning: a brain uses energy for much more than education, and model training costs vary widely. The advice does not depend on the estimate. Use whatever tools you like, but arrange your work so that you make your own attempts and understand your own mistakes.</p>
-<aside class="note"><span class="lead">After this meeting.</span> <ul>
-<li>Set up your environment: <strong>Python 3 and Jupyter with NumPy</strong> — Anaconda locally, or Colab in a browser.</li>
-<li>Assignment Task 1, <em>Gates by hand</em>: the four gate classes (AND, OR, NOT, NAND), each tested against the truth table you filled in during the meeting.</li>
-<li>Review Quiz&nbsp;1 is on Canvas.</li>
-</ul>
-</aside>
+<p>The class also made a rough energy comparison. A human brain runs on about 20 watts, or about 175 kilowatt-hours over a year. For scale, a hypothetical training run using a million kilowatt-hours would use as much energy as roughly 5,700 years at that power. That compares energy, not years of learning: a brain uses energy for much more than education, and model training costs vary widely. When using computational tools, make your own attempts and examine the errors you find.</p>
+<h2 class="act" id="act-4">Act 4. Practice</h2>
+<h3 id="s-4-1">4.1 Biological analogues</h3>
+<p><strong>Matching.</strong> Match each component of the artificial neuron to its biological analogue.</p>
+<p>Components: input value; weight; weighted sum; threshold comparison.</p>
+<p>Analogues: synaptic strength; incoming activity; combined effect of incoming signals; condition for firing.</p>
+<h3 id="s-4-2">4.2 A circuit built from NAND gates</h3>
+<p><strong>Multiple choice.</strong> Which Boolean function does this circuit compute?</p>
+<div class="math">\[ \operatorname{NAND}\bigl(\operatorname{NAND}(a,a), \operatorname{NAND}(b,b)\bigr). \]</div>
+<p>Choices: AND; OR; XOR; NAND. Explain your choice without writing the complete truth table.</p>
+<h3 id="s-4-3">4.3 What a truth-table test establishes</h3>
+<p><strong>Multiple choice.</strong> A proposed two-input AND gate passes all four rows of its truth table. What does this establish?</p>
+<ol type="A">
+<li>It computes AND correctly for every binary input pair.</li>
+<li>It behaves correctly for every pair of real-valued inputs.</li>
+<li>Its weights and threshold are the only possible choices.</li>
+<li>It reproduces the behavior of a biological neuron.</li>
+</ol>
+<h3 id="s-4-4">4.4 Information omitted by the representation</h3>
+<p><strong>Short explanation.</strong> Two patterns of incoming spikes differ in their timing, but our representation assigns them the same input vector. Can a fixed weighted-threshold neuron distinguish them? Explain what this reveals about the representation.</p>
 <footer>
 <span>CS 301 · Meeting 1 · <a href="index.html">all meetings</a></span>
-<span>generated from meeting-01.tex on 2026-09-17</span>
+<span>The Neuron and the Gate</span>
 </footer>
 </main>
 </body>

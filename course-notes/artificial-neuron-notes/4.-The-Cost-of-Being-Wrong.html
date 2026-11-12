@@ -3,11 +3,11 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Meeting 4. The Cost of Being Wrong — CS 301</title>
-<meta name="description" content="CS 301 Introduction to Data Science, NJIT. Course notes for meeting 4: The Cost of Being Wrong.">
+<title>Meeting 4. Likelihood and Cross-Entropy Loss — CS 301</title>
+<meta name="description" content="CS 301 Introduction to Data Science, NJIT. Course notes for meeting 4: Likelihood and Cross-Entropy Loss.">
 <meta name="cs301-meeting" content="4">
-<meta name="cs301-title" content="The Cost of Being Wrong">
-<meta name="cs301-acts" content="Act 1 Scoring a Guess: Likelihood · Act 2 The Cross-Entropy Loss">
+<meta name="cs301-title" content="Likelihood and Cross-Entropy Loss">
+<meta name="cs301-acts" content="Act 1 Likelihood · Act 2 The Cross-Entropy Loss">
 <style>
 @font-face { font-family: "Latin Modern Roman"; src: url(fonts/lmroman10-regular.otf); font-weight: normal; font-style: normal; }
 @font-face { font-family: "Latin Modern Roman"; src: url(fonts/lmroman10-italic.otf); font-weight: normal; font-style: italic; }
@@ -70,42 +70,124 @@ footer a { text-decoration: none; }
 footer a:hover { color: var(--njred); }
 @media (max-width: 560px) { body { font-size: 17px; } .page { padding: 28px 18px 56px; } h1 { font-size: 25px; } pre.code { margin-left: 12px; } }
 @media print { .page { max-width: none; padding: 0; } .kicker .pdf { display: none; } h2.act, h3, h4 { break-after: avoid; } figure, .note, table { break-inside: avoid; } }
+/* Reading conventions established by the latest Unit II notes. */
+:root { --blue:#1c5cab; --blue-tint:#eef4fc; --blue-line:#c9dbf3; }
+.page { max-width:820px; }
+.titleblock { border-top:4px solid var(--blue); }
+h2.act { color:var(--blue); margin:52px 0 20px; }
+h3,h4 { break-after:avoid; }
+h4.example .label { color:var(--blue); }
+a:hover,.kicker .pdf:hover { color:var(--blue); }
+p a,li a { overflow-wrap:anywhere; }
+p { text-indent:0; }
+p + p { text-indent:0; margin-top:.65em; }
+.note p + p,.inclass p + p,.colab p + p,.links p + p { text-indent:0; margin-top:.65em; }
+.source { line-height:1.5; overflow-wrap:anywhere; }
+.worked { border-left:4px solid var(--blue); background:#f1f6fc; padding:14px 18px; margin:20px 0; }
+.worked h4.example { margin:0 0 10px; }
+.worked p:last-child { margin-bottom:0; }
+.note { border-left:4px solid #cdd7e2; }
+/* Limit tall plots without reducing the width of multi-panel comparisons. */
+figure img { max-width:100%; max-height:420px; height:auto; object-fit:contain; display:block; margin-inline:auto; }
+figure img:not([width]) { width:auto; }
+ol.ideas figure img { max-height:380px; }
+/* Dense grids need extra space for their many labels. */
+figure.figure-dense img { max-height:560px; }
+figcaption { font-size:.88em; line-height:1.45; color:#3d4858; margin-top:8px; text-align:left; }
+pre.code { font-size:13px; line-height:1.55; background:#f6f7f9; padding:12px 16px; margin-left:0; }
+details.code > summary { background:#eef4fb; line-height:1.45; padding:10px 14px; font-weight:bold; }
+details.code > summary .where { white-space:normal; }
+details.code .inner { padding:4px 0 10px; }
+.tables { max-width:100%; overflow-x:auto; justify-content:safe center; }
+table { line-height:1.45; }
+table th { color:#174f85; }
+table.tt { width:auto; }
+table.tt th { background:#f0f4f8; }
+.skip-link { position:absolute; left:-9999px; }
+.skip-link:focus { position:static; }
+:focus-visible { outline:2px solid var(--blue); outline-offset:3px; }
+@media (max-width:560px) {
+ .page { padding:20px 16px 48px; }
+ h1 { font-size:29px; }
+ h2.act { margin-top:36px; }
+ .worked { padding:10px; }
+ pre.code,pre.out { font-size:12px; }
+ p code,li code { white-space:normal; overflow-wrap:anywhere; }
+ .tables { gap:16px; }
+ table { font-size:13px; }
+ table.trans td { padding:6px 8px; }
+ .math,math[display="block"] { max-width:100%; overflow-x:auto; }
+ .math { font-size:.88em; }
+ details.code > summary { flex-wrap:wrap; }
+}
+@media print {
+ @page { size:Letter; margin:18mm 18mm 20mm; }
+ body { font-size:10.5pt; line-height:1.42; }
+ .page { width:auto; max-width:none; margin:0; padding:0; }
+ .titleblock { padding:6px 0 12px; margin-bottom:16px; }
+ .kicker { font-size:8pt; }
+ h1 { font-size:23pt; }
+ h2.act { font-size:17pt; margin:25px 0 12px; }
+ h3,h4.example { font-size:12pt; margin:16px 0 8px; }
+ p { orphans:3; widows:3; }
+ .worked { padding:10px 13px; break-inside:auto; }
+ .note,.inclass,.colab,.links { padding:10px 13px; }
+ figure { margin:14px 0; break-inside:avoid; }
+ figure img { max-height:95mm; }
+ ol.ideas figure img { max-height:85mm; }
+ figure.figure-dense img { max-height:125mm; }
+ figcaption { font-size:9pt; }
+ pre.code,pre.out { font-size:8pt; line-height:1.4; white-space:pre-wrap; overflow-wrap:anywhere; }
+ details.code { break-inside:auto; border:0; }
+ details.code > summary { font-size:10pt; break-after:avoid; }
+ details.code .inner { padding:8px 12px; border:0; }
+ details.code p { font-size:10.5pt; padding:4px 0 0; }
+ table { font-size:9pt; }
+ ol.ideas { margin:12px 0; }
+ ol.ideas > li { padding:5px 0 5px 34px; margin:0; break-inside:avoid; background:none; }
+ ol.ideas > li::before { left:0; top:8px; width:23px; height:23px; font-size:12px; }
+ ol.ideas h3 { font-size:10.5pt; margin:0 0 4px; }
+ ol.ideas p { font-size:9.5pt; line-height:1.3; }
+ a.open::after { content:none; }
+ .pdf,.skip-link,footer { display:none; }
+}
 </style>
 <script>window.MathJax = { tex: { inlineMath: [['\\(', '\\)']], displayMath: [['\\[', '\\]']] }, chtml: { scale: 1.02 } };</script>
 <script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
 </head>
 <body>
-<main class="page">
+<a class="skip-link" href="#main">Skip to notes</a>
+<main class="page" id="main">
 <header class="titleblock">
-<p class="kicker">NJIT · CS 301 · INTRODUCTION TO DATA SCIENCE · FALL 2026 <a class="pdf" href="4.-The-Cost-of-Being-Wrong.pdf">PDF</a></p>
-<h1>Meeting 4. The Cost of Being Wrong</h1>
-<p class="acts">Act 1 Scoring a Guess: Likelihood · Act 2 The Cross-Entropy Loss</p>
+<p class="kicker">NJIT · CS 301 · INTRODUCTION TO DATA SCIENCE · FALL 2026 · UNIT I <a class="pdf" href="4.-The-Cost-of-Being-Wrong.pdf">PDF</a></p>
+<h1>Meeting 4. Likelihood and Cross-Entropy Loss</h1>
+<p class="acts">Act 1 Likelihood · Act 2 The Cross-Entropy Loss</p>
 </header>
-<aside class="note"><span class="lead">About these notes.</span> <p>There is no textbook to buy in CS&nbsp;301: these notes are the course’s text, written by the instructors and posted on Canvas as each meeting is reached. They follow the meetings themselves — including questions and examples that came up in class — and, together with the assignment notebook you build, they are what the exams are set from. Logistics, grading, and the schedule live in the syllabus.</p>
+<aside class="note"><span class="lead">About these notes.</span> <p>These instructor-written notes are the course text for CS&nbsp;301 and are posted on Canvas after each meeting. They include examples and questions discussed in class. The exams cover these notes and your assignment notebook. See the syllabus for the schedule, grading, and other course information.</p>
 </aside>
 <p>Meeting 2 asked whether a procedure could find the weights we had chosen by hand. Meeting 3 gave us a weather classifier that gets 707 of 6,865 days wrong. How should we compare it with another setting?</p>
-<p>We need a single number that measures how well a setting predicts the labels, taking its confidence into account. This meeting develops that measure through examples we can calculate by hand, then uses computed fits as points of comparison on the weather data.</p>
+<p>We need a single number that measures how well a setting predicts the labels, taking its confidence into account. We develop that measure through examples we can calculate by hand, then compare computed fits on the weather data.</p>
 <aside class="note"><span class="lead">The names so far.</span> <p>Everything in this meeting is built from the unit as meetings 2 and 3 left it. The meeting opened by going over the review-quiz answers, and these were the names that needed repeating.</p>
 <ul>
 <li>the <strong>score</strong> \(s = \mathbf{w}\cdot\mathbf{x} + b\): one number per input. The unit multiplies each input by its weight, adds the results, and adds \(b\);</li>
-<li>the <strong>bias</strong> \(b = -\theta\), so that “fires when the sum reaches \(\theta\)” becomes “fires when \(s \geq 0\)”. Two names for one number: the threshold says how large the weighted sum must be, and the bias is that number with its sign reversed. The word <em>bias</em> fits because \(b\) is the unit’s own disposition: with a larger \(b\) it is more inclined to fire on the same input, and with a smaller \(b\) it is less inclined;</li>
+<li>the <strong>bias</strong> \(b = -\theta\), so that “fires when the sum reaches \(\theta\)” becomes “fires when \(s \geq 0\)”. Two names for one number: the threshold says how large the weighted sum must be, and the bias is that number with its sign reversed. Increasing \(b\) raises the score for every input; decreasing it lowers every score;</li>
 <li>the <strong>sigmoid</strong> \(\sigma(s) = 1/(1 + e^{-s})\), which turns that score into a number strictly between 0 and 1;</li>
-<li>the <strong>temperature</strong> \(T\), a width in the units of the score: \(\sigma(s/T)\) is the output, and \(T\) says how far from the boundary an input must be before the unit is nearly sure. Changing \(T\) changes the probability but not the decision at a \(0.5\) cutoff: a positive score divided by any positive \(T\) is still positive, so the day stays on the same side of the line;</li>
+<li>the <strong>temperature</strong> \(T\), a width in the units of the score: \(\sigma(s/T)\) is the output, and \(T\) says how far from the boundary an input must be before its output is close to \(0\) or \(1\). Changing \(T\) changes the probability but not the decision at a \(0.5\) cutoff: a positive score divided by any positive \(T\) is still positive, so the day stays on the same side of the line;</li>
 <li>the <strong>label</strong> \(y\), which is 0 or 1 and nothing else.</li>
 </ul>
 </aside>
 <aside class="note"><span class="lead">Vectors, once more.</span> <p>Several quiz answers said that meeting 2’s notation was the least clear part so far, so it was repeated in class. Here is the notation we need for this meeting.</p>
-<p>The inputs \(x_1, x_2, \dots\) are numbers, one per input. Written side by side they form a <strong>row vector</strong> \(\mathbf{x}\). The weights \(w_1, w_2, \dots\) form a row vector \(\mathbf{w}\) in the same way. A vector can just as well be written as a column, and the <strong>transpose</strong>, written \(\mathbf{x}^{\mathsf T}\), is the operation that turns a row into a column or a column into a row. The same operation applies to a matrix: each row of \(A\) becomes a column of \(A^{\mathsf T}\), and each column becomes a row. One rule about it was stated in meeting 2 and is worth keeping: the transpose of a product is the product of the transposes in the reverse order, \((AB)^{\mathsf T} = B^{\mathsf T} A^{\mathsf T}\).</p>
+<p>The inputs \(x_1, x_2, \dots\) are numbers, one per input. Written side by side they form a <strong>row vector</strong> \(\mathbf{x}\). The weights \(w_1, w_2, \dots\) form a row vector \(\mathbf{w}\) in the same way. A vector can just as well be written as a column, and the <strong>transpose</strong>, written \(\mathbf{x}^{\mathsf T}\), is the operation that turns a row into a column or a column into a row. The same operation applies to a matrix: each row of \(A\) becomes a column of \(A^{\mathsf T}\), and each column becomes a row. As stated in meeting 2, the transpose of a product is the product of the transposes in the reverse order, \((AB)^{\mathsf T} = B^{\mathsf T} A^{\mathsf T}\).</p>
 <p>The weighted sum is a simple case of matrix multiplication: a row times a column. Multiply corresponding entries and add the products:</p>
 <div class="math">\[ \mathbf{x}\,\mathbf{w}^{\mathsf T} = x_1 w_1 + x_2 w_2 + \dots = \mathbf{w} \cdot \mathbf{x} . \]</div>
 <p>We then add the bias to get the score. Meeting 2’s notes wrote the two vectors as columns, so the same sum appeared there as \(\mathbf{w}^{\mathsf T}\mathbf{x}\); in class it was written with rows, as above. Either way it is one number. The general rule, for matrices with many rows and columns, is the same rule applied row by row and column by column.</p>
 </aside>
-<h2 class="act" id="act-1">Act 1. Scoring a Guess: Likelihood</h2>
+<h2 class="act" id="act-1">Act 1. Likelihood</h2>
 <h3 id="s-1-1">1.1 Why counting errors is not enough</h3>
-<p>One word first, because it is about to be used in two ways. The unit computes a score for each input: \(s = \mathbf{w} \cdot \mathbf{x} + b\). What this meeting builds is a score <em>for the unit</em>, computed by us, from the data, to say how well the unit does on it. The first is one number per day; the second is one number per setting of \(\mathbf{w}\) and \(b\).</p>
+<p>We need to distinguish two quantities. The unit computes a score for each input: \(s = \mathbf{w} \cdot \mathbf{x} + b\). We also need a score <em>for the unit</em>, computed from the data to measure how well its predictions fit the labels. The first is one number per day; the second is one number per setting of \(\mathbf{w}\) and \(b\).</p>
 <p>The obvious score is the one meeting 3 used: count the days the line puts on the wrong side, and prefer the line with fewer. For the hand line high \(+\) low \(= 120\) that count is 707 of 6,865, and it does not depend on the temperature, because dividing every score by \(T\) moves no day across the line. The count has two defects, and both matter.</p>
-<p><strong>It ignores confidence.</strong> Take two lines, both wrong about November 6, 2024. One gave that day a probability of 0.51 of being in the warm half; the other gave it 0.93. By the count they are equally wrong. They are not equally wrong: the second was confident and mistaken, which is worse than being mistaken while unsure. Read the 0.93 as the claim it is. The unit is not only saying “warm half” about that November day; it expects about seven of a hundred similar days to be in the cold half. The day was in the cold half, so the unit put it among the seven. A unit that said 0.51 made the same wrong call while admitting it was nearly a coin toss, and that admission is worth something.</p>
-<p><strong>It barely moves.</strong> Shift a line a little and, almost always, no day crosses to the other side — the days sit at scattered points, and a small move of the boundary steps over none of them. The count is therefore the same number for a whole neighbourhood of lines, and a score that cannot tell nearby candidates apart cannot guide a choice between them.</p>
+<p><strong>It ignores the predicted probability.</strong> Suppose two models assign probabilities \(0.51\) and \(0.93\) to the warm half for November 6, 2024. Both misclassify this cold-half day at a \(0.5\) cutoff. Their probabilities for the observed label are \(0.49\) and \(0.07\), respectively. A measure based on these probabilities can distinguish the two predictions.</p>
+<p><strong>It is locally constant.</strong> Shift a line a little and, almost always, no day crosses to the other side — the days sit at scattered points, and a small move of the boundary steps over none of them. The count is therefore the same number for a whole neighbourhood of lines, and a score that cannot tell nearby candidates apart cannot guide a choice between them.</p>
 <p>What is wanted instead is a score that reads the unit’s probabilities rather than only its verdicts, and can respond smoothly to small changes in the settings even when no predicted label changes.</p>
 <h3 id="s-1-2">1.2 What it means to explain the data</h3>
 <p>Meeting 3 read the unit’s output as its confidence that the label is 1. Another useful picture is to <em>imagine</em> a neuron that fires randomly with that probability. Our code still computes a probability; it does not actually make a random firing decision.</p>
@@ -127,10 +209,9 @@ footer a:hover { color: var(--njred); }
 <p>A setting explains the data well when \(p_i\) is high on row after row. This setting explains the July day very well and the other two badly — which is the arithmetic form of what meeting 3 said about them.</p>
 <h3 id="s-1-3">1.3 One expression, both cases</h3>
 <p>The definition of \(p_i\) just given is a definition <em>by cases</em>: \(\sigma(s_i)\) in one circumstance, \(1 - \sigma(s_i)\) in the other. That is clear, and computers can handle it too. Writing the two cases as one expression is convenient for algebra and for calculations on arrays of rows.</p>
-<p>So: is there one expression that gives \(\sigma(s)\) when \(y = 1\) and \(1 - \sigma(s)\) when \(y = 0\), with no cases at all?</p>
-<p>There is, and it uses a fact that is easy to walk past: <strong>\(y\) is 0 or 1 and nothing else.</strong> A quantity that can only be 0 or 1 can be used as a switch. For any two numbers \(A\) and \(B\), consider</p>
+<p>Because \(y\) is binary, it can select between the two expressions. For any two numbers \(A\) and \(B\), consider</p>
 <div class="math">\[ y\,A \;+\; (1 - y)\,B . \]</div>
-<p>When \(y = 1\) this is \(1\cdot A + 0\cdot B = A\). When \(y = 0\) it is \(0\cdot A + 1\cdot B = B\). One of the two terms is multiplied by 1 and survives; the other is multiplied by 0 and vanishes. The label chooses.</p>
+<p>When \(y = 1\) this is \(1\cdot A + 0\cdot B = A\). When \(y = 0\) it is \(0\cdot A + 1\cdot B = B\). Exactly one term has coefficient \(1\); the other has coefficient \(0\).</p>
 <p>Now take \(A = \sigma(s)\) and \(B = 1 - \sigma(s)\):</p>
 <div class="math">\[ p_i \;=\; y_i\,\sigma(s_i) \;+\; (1 - y_i)\big(1 - \sigma(s_i)\big). \]</div>
 <p>This is exactly the same rule, written without cases. Although it looks like an average, nothing is blended: \(y\) is either 0 or 1, so it selects exactly one of the two terms.</p>
@@ -139,16 +220,16 @@ footer a:hover { color: var(--njred); }
 <p>Check both branches on numbers.</p>
 <p>A row whose label is \(1\), with \(\sigma(s) = 0.9\). The expression is \(1 \cdot 0.9 + (1 - 1)\cdot(1 - 0.9) = 0.9 + 0 \cdot 0.1 = 0.9\). The neuron should fire; the model assigned probability \(0.9\) to that observed outcome.</p>
 <p>A row whose label is \(0\), with \(\sigma(s) = 0.3\). The expression is \(0 \cdot 0.3 + (1 - 0)\cdot(1 - 0.3) = 0 + 0.7 = 0.7\). The neuron should stay silent, and the model assigned probability \(0.7\) to that observed outcome. Notice that the unit’s own output, \(0.3\), is not the answer. On a row labelled 0 the unit is doing well when its output is <em>small</em>.</p>
-<p>Later we will apply logarithms to these probabilities. If a probability rounds to 0 or 1 on a computer, an unused term can contain \(\log 0\). Multiplying that term by zero does not rescue the calculation: \(0\times(-\infty)\) evaluates to <code>nan</code>, “not a number.” The logarithmic formula therefore needs care; §2.8 explains how to compute it safely.</p>
+<p>Later we will apply logarithms to these probabilities. If a probability rounds to 0 or 1 on a computer, an unused term can contain \(\log 0\). Multiplying that term by zero still gives an undefined floating-point operation: \(0\times(-\infty)\) evaluates to <code>nan</code>, “not a number.” The logarithmic formula therefore needs care; §2.8 explains how to compute it safely.</p>
 </section>
 <h3 id="s-1-4">1.4 Likelihood</h3>
-<p>One row at a time is not yet a score for the whole dataset. Combine them.</p>
+<p>We combine the per-row probabilities to evaluate the full dataset.</p>
 <p>Suppose the labels are independent given their inputs and the model’s fixed settings. Then the probability assigned to the complete set of observed labels is the product of the per-row probabilities. This is a simplifying modeling assumption; successive weather days can in fact be related. The product is called the <strong>likelihood</strong>:</p>
 <div class="math">\[ \text{the likelihood of a setting} \;=\; \prod_{i=1}^{n} p_i . \]</div>
 <p>Read it as the probability the model assigns to what happened, with the inputs held fixed. Higher is better, and it gives us one number for a whole setting.</p>
 <p>Two consequences follow from its being a <em>product</em>, and they are the reason it behaves as a score should.</p>
-<p><strong>One confident mistake hurts.</strong> A row on which the neuron assigned probability \(0.07\) to the observed label multiplies the whole likelihood by \(0.07\). No amount of being right elsewhere undoes that cheaply.</p>
-<p><strong>One certain mistake is fatal.</strong> A row with \(p_i = 0\) sends the product to exactly \(0\). A threshold unit using our hand-drawn line answers only 0 or 1. If we interpret those answers as probabilities, it assigns each of its 707 misclassified days a probability of \(0\). Its likelihood on that data is exactly zero, and would remain zero if it were right about every other day in the record. This is what meeting 3 meant by saying that the sigmoid unit, wrong about the same November day, at least “gave 7% to what happened.”</p>
+<p><strong>Small probabilities reduce the product.</strong> Assigning probability \(0.07\) to one observed label multiplies the likelihood by \(0.07\).</p>
+<p><strong>A zero probability makes the product zero.</strong> A row with \(p_i = 0\) sends the product to exactly \(0\). A threshold unit using our hand-drawn line answers only 0 or 1. If we interpret those answers as probabilities, it assigns each of its 707 misclassified days a probability of \(0\). Its likelihood on that data is exactly zero, and would remain zero if it were right about every other day in the record. This is what meeting 3 meant by saying that the sigmoid unit, wrong about the same November day, at least “gave 7% to what happened.”</p>
 <section class="worked" id="ex-1-2">
 <h4 class="example"><span class="label">Example 1.2</span> Likelihood by hand</h4>
 <p>The unit with \(w = (1, 1)\), \(\theta = 1.5\) and \(T = 1\), asked for AND. This is the first task of the meeting’s sheet.</p>
@@ -164,7 +245,7 @@ footer a:hover { color: var(--njred); }
 </table>
 </div>
 <p>Using these rounded probabilities, the likelihood is \(0.82 \times 0.62 \times 0.62 \times 0.62 \approx 0.20\).</p>
-<p>Now hold the same line more firmly: double the weights and the threshold, to \(w = (2,2)\) and \(\theta = 3\). The line is unchanged — \(2x_1 + 2x_2 = 3\) is the same set of points as \(x_1 + x_2 = 1.5\) — but the scores are twice as large: \(-3, -1, -1, 1\). The probabilities become \(0.95, 0.73, 0.73, 0.73\), and the likelihood rises to \(0.37\).</p>
+<p>Now double the weights and the threshold, to \(w = (2,2)\) and \(\theta = 3\). The line is unchanged — \(2x_1 + 2x_2 = 3\) is the same set of points as \(x_1 + x_2 = 1.5\) — but the scores are twice as large: \(-3, -1, -1, 1\). The probabilities become \(0.95, 0.73, 0.73, 0.73\), and the likelihood rises to \(0.37\).</p>
 </section>
 <h3 id="s-1-5">1.5 On AND, more confidence helps</h3>
 <p>Continue the doubling. Multiplying \(w\) and \(\theta\) by \(k\) leaves the boundary exactly where it was and multiplies every score by \(k&gt;0\). Values in the table are rounded; even the displayed \(1.0000\) is slightly less than 1:</p>
@@ -177,12 +258,11 @@ footer a:hover { color: var(--njred); }
 <tr><td style="text-align:center">8</td><td class="rule" style="text-align:center">1.0000</td><td style="text-align:center">0.98</td><td style="text-align:center">0.98</td><td style="text-align:center">0.98</td><td class="rule" style="text-align:center">0.95</td></tr>
 </table>
 </div>
-<p>Every row improves, every time. The reason is worth stating plainly: on this table every row is strictly on the correct side of the line, so every row is a row where more confidence means more credit. Nothing pulls the other way, and the likelihood climbs toward 1 as \(k\) grows.</p>
-<p>Hold on to the phrasing — <em>every row is on the correct side</em> — because it fails on our weather data. Section 2.5 examines what happens then.</p>
+<p>Every input lies strictly on the correct side of the line, so scaling the parameters increases the probability assigned to each observed label. The likelihood approaches \(1\) as \(k\) grows. Section 2.5 examines data with conflicting labels, for which this argument does not apply.</p>
 <h3 id="s-1-6">1.6 A product of 6,865 numbers</h3>
 <p>The likelihood has one practical defect, and it is severe. On the weather data it is a product of 6,865 numbers, each smaller than 1. For the hand-drawn line at \(T = 10\) its value is about \(10^{-730}\).</p>
 <p>A double-precision floating-point number — the kind Python uses — has a smallest positive value of about \(5\times10^{-324}\) (including subnormal values). The likelihood of this perfectly ordinary setting is a real number that the machine silently rounds to zero. Two different settings, one much better than the other, would both be reported as zero, and the score would be useless exactly where it was needed.</p>
-<p>The fix is one line of high-school algebra, and it is the subject of the second act.</p>
+<p>Computing the log-likelihood avoids forming this very small product.</p>
 <h2 class="act" id="act-2">Act 2. The Cross-Entropy Loss</h2>
 <h3 id="s-2-1">2.1 From a product to a sum</h3>
 <p>The logarithm turns products into sums: \(\log(ab) = \log a + \log b\), and so</p>
@@ -191,33 +271,33 @@ footer a:hover { color: var(--njred); }
 <p>It ranks settings identically. The logarithm is an increasing function, so if one setting has the larger likelihood it has the larger log-likelihood. Nothing about which setting is preferred can change.</p>
 <p>And it is a number the computer can hold. Each \(\log p_i\) is a modest negative number, and their sum for the weather at \(T = 10\) is about \(-1{,}680\): unremarkable to store, where \(10^{-730}\) was impossible.</p>
 <p>Throughout this course the logarithm is the <strong>natural</strong> logarithm, written \(\ln\) or \(\log\) interchangeably here. The choice matters only for the units, which §2.7 will name.</p>
-<h3 id="s-2-2">2.2 From goodness to loss</h3>
+<h3 id="s-2-2">2.2 Mean negative log-likelihood</h3>
 <p>Two conventions convert the log-likelihood into the quantity actually used.</p>
 <p><strong>Flip the sign.</strong> The log-likelihood is negative, and larger is better; it is easier to work with a quantity that is positive, and where the goal is to make it <em>small</em>. Negating does that. The name for such a quantity is a <strong>loss</strong>.</p>
 <p><strong>Divide by the number of rows.</strong> A truth table has 4 rows and the weather has 6,865, so their totals depend strongly on dataset size. Averaging removes that direct dependence. It does not make different prediction tasks equally difficult.</p>
 <p>Applying both to the log-likelihood, and substituting the switch form of \(p_i\) from §1.3, gives the <strong>cross-entropy loss</strong>:</p>
 <div class="math">\[ L \;=\; -\frac{1}{n}\sum_{i=1}^{n} \Big[\, y_i \log \sigma(s_i) \;+\; (1 - y_i)\log\big(1 - \sigma(s_i)\big) \Big]. \]</div>
-<p>The bracket deserves a second look, because it is the switch of §1.3 again, now selecting between logarithms. There, one of two <em>probabilities</em> was selected; here, one of two <em>logarithms</em> is. On a row with \(y_i = 1\) the bracket is \(\log \sigma(s_i)\), and on a row with \(y_i = 0\) it is \(\log(1 - \sigma(s_i))\) — in both cases \(\log p_i\), which is what the sum needs.</p>
-<p>This step is safe for the same reason as before, and only for that reason: \(y\) is 0 or 1. It is not generally true that \(\log\big(yA + (1-y)B\big)\) equals \(y \log A + (1-y)\log B\); with, say, \(y = \tfrac12\) the left side is the logarithm of an average and the right side is an average of logarithms, and those differ. What rescues the identity is that \(y\) never takes such a value. At \(y = 1\) both sides are \(\log A\); at \(y = 0\) both are \(\log B\); and there is no third case to check.</p>
+<p>The bracket uses the binary label to select a logarithm, as in §1.3. There, one of two <em>probabilities</em> was selected; here, one of two <em>logarithms</em> is. On a row with \(y_i = 1\) the bracket is \(\log \sigma(s_i)\), and on a row with \(y_i = 0\) it is \(\log(1 - \sigma(s_i))\) — in both cases \(\log p_i\), which is what the sum needs.</p>
+<p>This step is safe for the same reason as before, and only for that reason: \(y\) is 0 or 1. It is not generally true that \(\log\big(yA + (1-y)B\big)\) equals \(y \log A + (1-y)\log B\); with, say, \(y = \tfrac12\) the left side is the logarithm of an average and the right side is an average of logarithms, and those differ. The identity holds here because \(y\) is binary. At \(y = 1\) both sides are \(\log A\); at \(y = 0\) both are \(\log B\); and there is no third case to check.</p>
 <h3 id="s-2-3">2.3 One row’s contribution</h3>
-<p>Each row contributes \(-\log p_i\) to the loss. It is worth seeing that function on its own.</p>
-<figure><img src="images/row-bill.svg" alt="row-bill" width="464" height="255"></figure>
-<p>The curve is the price of being wrong, read against how much probability the unit gave to the truth.</p>
+<p>The mean loss averages the row contributions \(-\log p_i\). The graph below shows one such contribution as a function of \(p_i\).</p>
+<figure><img src="images/row-bill.svg" alt="The cost of one row, minus log p, against the probability p given to the label that occurred, from 0 to 1: a curve that rises without bound as p approaches 0 and reaches 0 at p = 1, with points marked at p = 0.0266 (cost 3.63), 0.07 (2.66), 0.5 (0.69), 0.93 (0.07) and 0.995 (0.01)." width="464" height="255"></figure>
+<p>The curve shows how a row’s loss depends on the probability assigned to its observed label.</p>
 <ul>
-<li>\(p = 0.995\) costs \(0.01\). The unit was sure and right: almost free.</li>
+<li>\(p = 0.995\) gives a loss of about \(0.01\).</li>
 <li>\(p = 0.93\) costs \(0.07\); \(p = 0.5\) costs \(0.69\).</li>
 <li>\(p = 0.07\) costs \(2.66\) — November 6, 2024 under the hand line.</li>
 <li>\(p \approx 0.0266\) costs \(3.63\) — May 9, 2020. The table in §1.2 rounded this probability to \(0.027\).</li>
 <li>And as \(p\) approaches 0, the cost grows without bound.</li>
 </ul>
-<p>Because the sigmoid never quite reaches 0 or 1, each row has a finite cost for finite scores. A wrong answer given with confidence costs a finite amount, and the more confident it was, the more it costs. A wrong answer given with <em>certainty</em> costs infinitely: the 0-or-1 unit, on that same November day, pays a contribution no number of correct days can offset. This is the sense in which this meeting’s title should be read: the loss is the price of being wrong, and how confident the unit was sets the price.</p>
+<p>Because the sigmoid never quite reaches 0 or 1, each row has a finite cost for finite scores. A wrong answer given with confidence costs a finite amount, and the more confident it was, the more it costs. Assigning zero probability to an observed label gives infinite loss, regardless of the predictions on other rows. The loss increases as the probability assigned to the observed label decreases.</p>
 <section class="worked" id="ex-2-1">
 <h4 class="example"><span class="label">Example 2.1</span> Cross-entropy by hand</h4>
 <p>The two settings of Example 1.2, now scored by the loss. This is the second task of the meeting’s sheet.</p>
 <p>For \(k = 1\) the probabilities were \(0.82, 0.62, 0.62, 0.62\). Their negative logarithms are \(0.20, 0.48, 0.48, 0.48\), and the loss is the average:</p>
 <div class="math">\[ L \;\approx\; \frac{0.20 + 0.48 + 0.48 + 0.48}{4} \;=\; \frac{1.64}{4} \;=\; 0.41 . \]</div>
 <p>For \(k = 2\) the probabilities were \(0.95, 0.73, 0.73, 0.73\), so the rounded contributions are \(0.05, 0.32, 0.32, 0.32\), giving a loss of about \(1.01/4 \approx 0.25\). Doubling the weights reduced the loss without moving the line.</p>
-<p>Two mistakes are worth naming because they are the common ones. Dropping the minus sign gives a negative loss, which is impossible: every contribution is the negative logarithm of a number below 1, hence positive. And skipping the division by 4 gives a number that cannot be compared with anything computed on a dataset of a different size.</p>
+<p>Two common errors affect this calculation. Dropping the minus sign gives a negative loss, which is impossible: every contribution is the negative logarithm of a number below 1, hence positive. Omitting the division by 4 gives the total loss, which scales with the number of rows.</p>
 </section>
 <h3 id="s-2-4">2.4 Why the loss approaches zero on AND</h3>
 <p>Take the doubling further. The likelihoods of §1.5 correspond to these losses:</p>
@@ -228,15 +308,15 @@ footer a:hover { color: var(--njred); }
 <tr><td style="text-align:center">loss</td><td class="rule" style="text-align:center">0.41</td><td style="text-align:center">0.25</td><td style="text-align:center">0.096</td><td style="text-align:center">0.014</td></tr>
 </table>
 </div>
-<p>The loss falls toward zero, and the word “toward” is exact: since \(\sigma\) never attains 1, no \(p_i\) is ever exactly 1, no contribution is ever exactly 0, and the loss is never exactly zero. But there is no lower bound short of zero either — name a small number and a large enough \(k\) gets under it.</p>
+<p>The loss approaches zero: since \(\sigma\) never attains 1, no \(p_i\) is ever exactly 1, no contribution is ever exactly 0, and the loss is never exactly zero. For every positive loss target, a sufficiently large \(k\) gives a loss below it.</p>
 <p>What makes this possible is that all four AND inputs lie strictly on the correct side of the boundary. Increasing the scale makes every correct prediction more confident. Merely having a truth table is not enough: the unit must be able to separate its labels, with no input on the boundary. A real dataset with that property would also allow the loss to approach zero in this way.</p>
 <h3 id="s-2-5">2.5 Why conflicting labels prevent zero loss</h3>
-<p>On the weather data the same manoeuvre stops working, and it is worth seeing exactly where.</p>
+<p>Conflicting labels in the weather data prevent the same reduction toward zero.</p>
 <p>There are 6,865 days and 1,878 distinct (high, low) pairs, so many days share an input with some other day. Of those pairs, <strong>337 occur with both labels</strong> — the same high and the same low, once in the warm half of the year and once in the cold. Those pairs cover 1,881 days, more than a quarter of the data.</p>
-<p>Take one of them. A high of 82° F with a low of 63° F occurs on 14 days: <strong>12 in the warm half and 2 in the cold half</strong>. The unit sees the same two numbers on all 14 days, so it returns the same probability on all 14 days — it has nothing to distinguish them with. Call that probability \(q\). Then 12 days pay \(-\ln q\) each and 2 days pay \(-\ln(1 - q)\) each, and the average contribution over the 14 is</p>
+<p>Take one of them. A high of 82° F with a low of 63° F occurs on 14 days: <strong>12 in the warm half and 2 in the cold half</strong>. The unit sees the same two numbers on all 14 days, so it returns the same probability on all 14 days — it has nothing to distinguish them with. Call that probability \(q\). Then 12 days contribute \(-\ln q\) each and 2 days contribute \(-\ln(1 - q)\) each, and the average contribution over the 14 is</p>
 <div class="math">\[ \frac{12}{14}\big(-\ln q\big) + \frac{2}{14}\big(-\ln(1-q)\big). \]</div>
-<p>Choosing \(q\) to make this as small as possible gives \(q = 12/14 \approx 0.86\) — matching the observed fraction — and a cost of about \(0.41\) per day. Not zero. Choosing any other \(q\) makes it worse, and choosing \(q\) close to 0 or 1 makes it far worse: the two cold days alone would pay \(-\ln(1-q)\) each, which grows without bound as \(q\) approaches 1.</p>
-<p>Thus any model using only high and low must pay a positive cost on these conflicting groups. For comparison, here are losses computed on the full weather dataset:</p>
+<p>Choosing \(q\) to make this as small as possible gives \(q = 12/14 \approx 0.86\) — matching the observed fraction — and a minimum average loss of about \(0.41\) per day. Choosing any other \(q\) makes it worse, and choosing \(q\) close to 0 or 1 makes it far worse: the two cold days each contribute \(-\ln(1-q)\), which grows without bound as \(q\) approaches 1.</p>
+<p>Thus any model using only high and low has positive loss on these conflicting groups. For comparison, here are losses computed on the full weather dataset:</p>
 <div class="tables">
 <table class="trans">
 <tr><td style="text-align:left">a unit that answers \(\tfrac12\) on every day</td><td class="rule" style="text-align:center">0.693</td></tr>
@@ -248,33 +328,33 @@ footer a:hover { color: var(--njred); }
 </div>
 <p>The fitted losses near \(0.21\) are results for these sigmoid units, not a proven lower bound for every model. Conflicting (high, low) pairs establish a positive lower bound when those are the only features. They do not establish the same bound when humidity and pressure are also available, since those measurements may distinguish days with the same temperatures.</p>
 <h3 id="s-2-6">2.6 Temperature, seen by the loss</h3>
-<p>The loss also settles a question meeting 3 left open. There, the value \(T = 10\) was set by hand, with no reason given. With a loss in hand, the data can be asked which \(T\) it prefers. Keeping the hand-drawn line fixed and changing only \(T\):</p>
-<figure><img src="images/loss-temperature.svg" alt="loss-temperature" width="464" height="255"></figure>
+<p>The loss also settles a question meeting 3 left open. There, the value \(T = 10\) was set by hand, with no reason given. We can now compare temperatures using their losses. Keeping the hand-drawn line fixed and changing only \(T\):</p>
+<figure><img src="images/loss-temperature.svg" alt="Cross-entropy loss against temperature T from 0 to 40 for the hand-drawn line: high near T = 0, falling to a minimum of 0.24 near T = 9, then rising slowly to 0.43 at T = 40. Dashed lines mark the loss of saying one half everywhere, 0.693, and of the best line on all four measurements, 0.21." width="464" height="255"></figure>
 <p>There is a minimum, near \(T = 9\). Sharpening the unit below that value makes it worse, and blurring it above that value makes it worse.</p>
-<p>The reason is the competition absent from the AND example in §1.5. Lowering \(T\) makes outputs more extreme wherever the score is nonzero. This lowers the cost of correctly classified days and raises the cost of misclassified days. A day exactly on the boundary stays at probability \(\tfrac12\) and its cost is unchanged. The total falls while the first effect dominates and rises once the second does, and between them sits a best sharpness. On our correctly separated AND table there is no second effect, so decreasing \(T\) keeps lowering the loss.</p>
-<p>One consequence, worth noticing now: multiplying the weights and the bias by \(k&gt;0\) has the same effect as dividing \(T\) by \(k\), since both multiply every score by the same factor. We can therefore absorb a fixed temperature into the weights and bias: \(\mathbf{w}/T\) and \(b/T\) at temperature 1 give exactly the same probabilities.</p>
+<p>The reason is the competition absent from the AND example in §1.5. Lowering \(T\) makes outputs more extreme wherever the score is nonzero. This lowers the cost of correctly classified days and raises the cost of misclassified days. A day exactly on the boundary stays at probability \(\tfrac12\) and its cost is unchanged. The total falls while the first effect dominates and rises once the second does, The minimum occurs at the temperature that balances these effects. On our correctly separated AND table there is no second effect, so decreasing \(T\) keeps lowering the loss.</p>
+<p>Consequently, multiplying the weights and the bias by \(k&gt;0\) has the same effect as dividing \(T\) by \(k\), since both multiply every score by the same factor. We can therefore absorb a fixed temperature into the weights and bias: \(\mathbf{w}/T\) and \(b/T\) at temperature 1 give exactly the same probabilities.</p>
 <h3 id="s-2-7">2.7 Why it is called cross-entropy</h3>
 <p>The name <em>cross-entropy</em> comes from information theory. We can understand it by interpreting the loss as surprise.</p>
-<p>Start with a single number: if something you believed had probability \(p\) happens, then \(-\log p\) measures how <strong>surprised</strong> you should be. If you were certain (\(p = 1\)) the surprise is 0. The less probability you gave it, the more surprised you are, without limit. That is precisely the contribution of §2.3 — so the cross-entropy loss is the <em>average surprise</em> of the unit, over the rows, at what actually happened. A unit that explains the data is a unit that is rarely surprised by it.</p>
+<p>Start with a single number: if something you believed had probability \(p\) happens, then \(-\log p\) measures how <strong>surprised</strong> you should be. If you were certain (\(p = 1\)) the surprise is 0. The less probability you gave it, the more surprised you are, without limit. That is precisely the contribution of §2.3 — so the cross-entropy loss is the <em>average surprise</em> of the unit, over the rows, at what actually happened. A model has low loss when it assigns high probabilities to the observed outcomes.</p>
 <p>Now suppose outcomes occur according to some distribution \(p\) — outcome \(i\) happening a fraction \(p_i\) of the time. The average surprise of someone who believes \(p\) and sees the world do \(p\) is</p>
 <div class="math">\[ H(p) \;=\; -\sum_i p_i \log p_i , \]</div>
 <p>and this quantity is the <strong>entropy</strong> of \(p\). It was defined by Claude Shannon in 1948, in the paper that created information theory, and it measures how uncertain the situation is in the first place: a coin that always lands heads has entropy 0: its next outcome has no uncertainty; a fair coin has the largest entropy two outcomes can have.</p>
 <p>Entropy has a unit, and the logarithm chooses it. With logarithms base 2 the unit is the <strong>bit</strong>, and the entropy of a fair coin is exactly 1 bit — one yes-or-no question settles it. With natural logarithms, as here, the unit is called the <em>nat</em>, and the same fair coin has entropy \(\ln 2 \approx 0.693\) nats. That number should look familiar: it is the loss of a unit that answers \(\tfrac12\) on every day, from the table in §2.5. Such a unit uses no information from the measurements. Its loss is \(\ln 2\) whatever the labels are. That equals a fair coin’s entropy; it does not imply that the weather labels themselves are fair coin flips.</p>
-<p>Finally the “cross”. Suppose the world does \(p\) but you believe some other distribution \(q\). Your average surprise is then</p>
+<p>If outcomes follow distribution \(p\) and predictions use distribution \(q\), the expected surprise is</p>
 <div class="math">\[ H(p, q) \;=\; -\sum_i p_i \log q_i , \]</div>
-<p>the <strong>cross-entropy</strong> of \(q\) relative to \(p\): the outcomes are weighted by how often they really happen, but the surprise of each is computed from what you believed. It is smallest when \(q = p\), and every departure of your beliefs from the truth costs you something.</p>
+<p>the <strong>cross-entropy</strong> of \(q\) relative to \(p\): the outcomes are weighted by how often they really happen, but the surprise of each is computed from what you believed. It is smallest when \(q = p\), and increases when the predicted distribution differs from the outcome distribution.</p>
 <p>For each observed row, we represent the target as a distribution with all its weight on that row’s label. This is a way of encoding the observed answer, not a claim that the label was certain before we saw it. The unit’s distribution gives probability \(\sigma(s_i)\) to label 1 and \(1-\sigma(s_i)\) to label 0. Cross-entropy between this target and the unit’s distribution leaves just \(-\log p_i\). Averaging over the observed rows gives our loss \(L\).</p>
-<p>We can also express the fitted results in bits. A unit that says \(\tfrac12\) everywhere pays 1 bit per day. The fitted unit using four measurements pays about \(0.212\) nats, or \(0.31\) bits, on this dataset. It has reduced the average cost by about two-thirds of a bit per day. That measures its improvement on these records, not all the information weather could possibly provide about the label.</p>
+<p>We can also express the fitted results in bits. A unit that outputs \(\tfrac12\) everywhere has loss 1 bit per day. The fitted unit using four measurements has loss about \(0.212\) nats, or \(0.31\) bits, on this dataset. It has reduced the average cost by about two-thirds of a bit per day. That measures its improvement on these records, not all the information weather could possibly provide about the label.</p>
 <p class="source">C.&nbsp;E.&nbsp;Shannon, <em>A Mathematical Theory of Communication</em>, Bell System Technical Journal 27 (1948), 379–423 and 623–656. Shannon appears in this course twice: his 1937 master’s thesis, <em>A Symbolic Analysis of Relay and Switching Circuits</em>, showed that Boolean algebra can be used to analyze and design switching circuits. The principle of preferring the setting that makes the observed data most probable is called maximum likelihood; R.&nbsp;A.&nbsp;Fisher developed its theory in the 1920s.</p>
 <aside class="note"><span class="lead">Beyond the lecture: cross-entropy in general.</span> <p>Nothing below is needed for this unit, and none of it is examined here. It is included because the quantity is much more general than the use made of it above, and the general form is the one you will meet elsewhere.</p>
-<p>For discrete outcomes, cross-entropy is defined for two distributions over the same outcomes, and there may be any number of outcomes rather than two. If \(p\) is what happens and \(q\) is what is believed, \(H(p, q) = -\sum_i p_i \log q_i\) as above. Three properties are worth knowing.</p>
-<p><em>It is never smaller than the entropy.</em> \(H(p, q) \geq H(p)\), with equality exactly when \(q = p\). Believing the truth is optimal, and believing anything else costs more.</p>
+<p>For discrete outcomes, cross-entropy is defined for two distributions over the same outcomes, and there may be any number of outcomes rather than two. If \(p\) is what happens and \(q\) is what is believed, \(H(p, q) = -\sum_i p_i \log q_i\) as above. Three useful properties are listed below.</p>
+<p><em>It is never smaller than the entropy.</em> \(H(p, q) \geq H(p)\), with equality exactly when \(q = p\). Matching the outcome distribution minimizes cross-entropy.</p>
 <p><em>The excess has its own name.</em> The gap \(H(p,q) - H(p)\) is the <strong>Kullback–Leibler divergence</strong> \(D(p \,\|\, q)\), the part of the cost due to using \(q\) instead of \(p\). Thus \(H(p,q) = H(p) + D(p\,\|\,q)\): average surprise equals the uncertainty in \(p\) plus the cost of a mismatched prediction. A single row’s target puts all its weight on one label and has entropy zero. That does not mean the underlying prediction problem has no uncertainty.</p>
 <p><em>It measures message length.</em> Shannon’s setting was communication. Using logarithms base 2, \(-\log_2 q_i\) is the ideal code length for outcome \(i\). If outcomes follow \(p\), the average of these lengths is \(H(p,q)\) bits; the minimum is \(H(p)\), achieved when \(q=p\). Actual codes use whole numbers of bits, but can approach these averages by coding long messages in blocks. This connects good prediction with good compression.</p>
 <p>The conflicting days in §2.5 give a related example. At (82° F, 63° F), the observed label frequencies are \((12/14, 2/14)\), with entropy about \(0.41\) nats. That is the smallest average loss on those 14 records for a model that sees only those two temperatures. Grouping all identical inputs gives the corresponding lower bound on this dataset.</p>
 <p>For a population, the average remaining uncertainty is called the <em>conditional entropy</em> of the label given the features. It is a lower bound on expected cross-entropy for predictions based on those features. Estimating it from a finite sample is difficult: a pair seen once appears perfectly predictable, and even 14 observations leave uncertainty. The fitted losses in §2.5 are not estimates of this fundamental limit.</p>
 </aside>
-<h3 id="s-2-8">2.8 Computing it without breaking it</h3>
+<h3 id="s-2-8">2.8 Numerically stable loss computation</h3>
 <p>Written directly in NumPy, with temperature \(T\):</p>
 <p></p>
 <pre class="code">z = s / T
@@ -283,7 +363,7 @@ loss = -np.mean(y * np.log(p) + (1 - y) * np.log(1 - p))</pre>
 <p>On the AND table this reproduces the \(0.41\) and \(0.25\) of Example 2.1, and on the weather with the hand line at \(T = 10\) it gives \(0.245\).</p>
 <p>At \(T=1\), this direct calculation returns <code>nan</code>, although the true loss is about \(1.12\). For 804 days, the sigmoid rounds to exactly \(1.0\) in double precision. This starts at an argument of about 37: the mathematical value is below 1, but the calculation cannot preserve the small difference.</p>
 <p>Then \(\log(1-p)\) becomes \(\log 0=-\infty\). On a warm-half row, \(1-y=0\), so the expression includes \(0\times(-\infty)\) and produces <code>nan</code>. On a cold-half row, that logarithm instead gives an infinite loss. These are numerical failures; for finite scores, the mathematical loss is finite.</p>
-<p>The cure is to never form \(p\) at all. Writing \(z\) for the score divided by the temperature, a little algebra gives</p>
+<p>A stable calculation uses the score directly. Writing \(z\) for the score divided by the temperature, a little algebra gives</p>
 <div class="math">\[ -\log \sigma(z) = \log\big(1 + e^{-z}\big), \qquad -\log\big(1 - \sigma(z)\big) = \log\big(1 + e^{z}\big), \]</div>
 <p>so each contribution is \(\log(1 + e^{x})\) for a suitable \(x\). That function is computed safely as</p>
 <div class="math">\[ \log\big(1 + e^{x}\big) \;=\; \max(x, 0) + \log\big(1 + e^{-|x|}\big), \]</div>
@@ -294,19 +374,28 @@ loss = -np.mean(y * np.log(p) + (1 - y) * np.log(1 - p))</pre>
                     np.logaddexp(0, z))
 loss = np.mean(row_loss)</pre>
 <p>which returns \(1.12\) at \(T = 1\) and agrees with the direct version everywhere the direct version works.</p>
-<h3 id="s-2-9">2.9 Two things to take with you</h3>
+<h3 id="s-2-9">2.9 Review</h3>
 <p>A setting can now be evaluated by one loss: the average negative log-probability it assigns to the observed labels. This uses its confidence as well as its decisions, and responds smoothly to small parameter changes even when the number of classification errors stays fixed.</p>
 <p>For our AND example, all inputs lie strictly on the correct side of the line, so increasing confidence drives the loss toward zero. For weather models using only high and low, identical inputs with different labels prevent zero loss. The fitted losses near \(0.21\) are useful comparisons, but are not a proven limit for every model or feature set.</p>
 <p>We now have a way to compare candidate settings. The question of how a procedure should choose the next setting remains open.</p>
-<aside class="note"><span class="lead">After this meeting.</span> <ul>
-<li>Assignment Task 2, <em>From certainty to confidence</em>: the sigmoid unit as a class, with <code>predict</code>, <code>accuracy</code> and <code>loss</code>, on both threads — the truth tables, where the loss goes toward zero for the gates we have separated, and the weather, where our hand-drawn line still makes mistakes. Find the surprising days in code, and report the loss of a hand-chosen unit on each dataset.</li>
-<li>Work both tasks of the meeting’s sheet if you did not finish them: the likelihood first, then the same two settings scored by the loss.</li>
-<li>The week’s review quiz is on Canvas.</li>
-</ul>
-</aside>
+<h2 class="act" id="act-3">Act 3. Practice</h2>
+<h3 id="s-3-1">3.1 Probability of the observed label</h3>
+<p><strong>Short calculation.</strong> A neuron outputs \(q=0.8\), where \(q\) is the probability of class \(1\). The observed label is \(0\). What probability did the model assign to the observed label, and what is its cross-entropy loss? You may use \(\ln 5\approx1.61\).</p>
+<h3 id="s-3-2">3.2 Accuracy and cross-entropy</h3>
+<p><strong>Short explanation.</strong> Two classifiers make exactly the same predicted classes on a validation set. Must they have the same cross-entropy loss? Explain how their losses could differ substantially despite identical accuracy.</p>
+<h3 id="s-3-3">3.3 Working with log-likelihood</h3>
+<p><strong>Mark all that apply.</strong> Why do we work with log-likelihood instead of directly multiplying many probabilities?</p>
+<ol type="A">
+<li>Taking logarithms preserves the ranking of positive likelihoods.</li>
+<li>A logarithm converts a product into a sum.</li>
+<li>Taking logarithms removes the assumptions used to factor the likelihood into per-example probabilities.</li>
+<li>Summing logarithms avoids forming a product that may underflow.</li>
+</ol>
+<h3 id="s-3-4">3.4 Identical inputs with different labels</h3>
+<p><strong>Application and explanation.</strong> Fourteen training examples have exactly the same input vector: twelve have label \(1\), and two have label \(0\). A deterministic model must assign them the same probability \(q\). Which choice minimizes their average cross-entropy: \(q=1/2\), \(q=12/14\), or \(q=1\)? Explain why perfect classification of these examples is impossible using the available inputs.</p>
 <footer>
 <span>CS 301 · Meeting 4 · <a href="index.html">all meetings</a></span>
-<span>generated from meeting-04.tex on 2026-09-17</span>
+<span>Likelihood and Cross-Entropy Loss</span>
 </footer>
 </main>
 </body>
