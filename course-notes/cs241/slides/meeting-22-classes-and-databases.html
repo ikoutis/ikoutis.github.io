@@ -1,0 +1,591 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="Interactive CS 241 Meeting 22: equivalence classes, partitions, database relations and joins."><title>Meeting 22 · Equivalence classes and databases</title><style>
+:root{color-scheme:light;--bg:#ffffff;--panel:#f2f5fa;--ink:#172439;--muted:#526078;--mint:#087f6d;--coral:#c5473a;--gold:#986000;--violet:#7451bc;--blue:#286bab}
+*{box-sizing:border-box}body{margin:0;background:#ffffff;color:var(--ink);font-family:'Aptos','Segoe UI',sans-serif;overflow:hidden}button,select{font:inherit}button,a,select{-webkit-tap-highlight-color:transparent}button{cursor:pointer;background:transparent;color:var(--ink);border:1px solid #b5c0cf;border-radius:8px;padding:10px 17px;font-size:19px}button:hover{background:#edf2f7}button:focus-visible,a:focus-visible,select:focus-visible,[tabindex]:focus-visible{outline:3px solid var(--gold);outline-offset:5px}button:disabled{opacity:.35;cursor:default}a{color:var(--mint)}#stage{width:1600px;height:900px;position:absolute;left:50%;top:50%;transform-origin:center;background:var(--bg);overflow:hidden}.brand{position:absolute;top:35px;left:64px;font-size:20px;letter-spacing:.14em;color:var(--muted)}.brand b{color:var(--mint);margin-right:22px}.topnav{position:absolute;right:64px;top:28px;display:flex;gap:12px;align-items:center}select{background:var(--bg);color:var(--ink);border:1px solid #b5c0cf;border-radius:8px;padding:10px;font-size:18px;max-width:260px}#slide{position:absolute;inset:104px 64px 94px}.eyebrow{font-size:18px;color:var(--mint);text-transform:uppercase;letter-spacing:.17em;margin-bottom:12px}h1{font-size:60px;line-height:1.08;letter-spacing:-.035em;margin:0 0 30px;font-weight:700;max-width:1420px}.content{display:grid;grid-template-columns:43% 57%;gap:0;height:480px}.text{padding-right:42px;align-self:center;font-size:27px;line-height:1.42}.text p{margin:0 0 24px}.text p:last-child{margin-bottom:0}em{font-style:normal;color:var(--mint);font-weight:650}.equation{font-family:'Cambria Math','Cambria',serif;font-size:37px;line-height:1.4;margin:17px 0;color:var(--gold)}.task{border-left:4px solid var(--gold);padding:3px 0 3px 23px}.task b{font-size:17px;text-transform:uppercase;letter-spacing:.15em;color:var(--gold);display:block;margin-bottom:12px}.task+p{margin-top:22px;color:var(--muted)}ul{margin:0;padding-left:26px}li{margin-bottom:18px}.rules strong{display:inline-block;min-width:145px;color:var(--mint)}.rules p{border-bottom:1px solid #d7dfeb;padding-bottom:14px}.visual{display:flex;flex-direction:column;justify-content:center;min-width:0;position:relative}.visual svg{width:100%;height:410px;overflow:visible}.caption{font-size:19px;color:var(--muted);text-align:center;min-height:27px;margin-top:6px}.controls{display:flex;gap:10px;align-items:center;justify-content:center;flex-wrap:wrap;margin-top:13px;min-height:44px}.status{font-size:20px;text-align:center;margin-top:12px;color:var(--gold);min-height:29px}.cover h1{font-size:82px;max-width:800px;position:absolute;top:45px}.cover .content{height:620px;grid-template-columns:43% 57%}.cover .text{align-self:end;padding-bottom:44px}.cover .visual{padding-top:0}.cover .visual svg{height:470px}.footer{position:absolute;bottom:27px;left:64px;right:64px;display:flex;align-items:center;justify-content:space-between;font-size:18px;color:var(--muted)}.footer .right{display:flex;gap:12px;align-items:center}#counter{min-width:72px;text-align:center}.track{position:absolute;bottom:0;height:4px;left:0;background:var(--mint);transition:width .2s}.source{font-size:17px;color:var(--muted);text-decoration:none}.source:hover{text-decoration:underline}svg text{font-family:'Aptos','Segoe UI',sans-serif}svg .edge{stroke:#52647d;stroke-width:4;fill:none;stroke-linecap:round}svg .node{fill:var(--bg);stroke:var(--mint);stroke-width:3}svg .label{fill:var(--ink);font-size:22px;font-weight:600;text-anchor:middle;dominant-baseline:central}svg .small{fill:var(--muted);font-size:18px;text-anchor:middle}svg .big{fill:var(--gold);font-size:36px;text-anchor:middle}svg .face{stroke:none;fill-opacity:.26}.palette button{border-width:3px;color:#101827;font-weight:bold;min-width:48px}.palette button[aria-pressed=true]{outline:3px solid #172439;outline-offset:3px}.palette button:nth-child(1){background:#66e5c0}.palette button:nth-child(2){background:#ff887c}.palette button:nth-child(3){background:#ffd16f}.palette button:nth-child(4){background:#b5a0ff}.interactive{cursor:pointer}.interactive:hover{filter:brightness(1.2)}.solid-table{width:100%;border-collapse:collapse;font-size:25px}.solid-table th{color:var(--mint);font-weight:500}.solid-table td,.solid-table th{padding:14px;text-align:right;border-bottom:1px solid #d7dfeb}.solid-table td:first-child,.solid-table th:first-child{text-align:left}.solid-table td:last-child{color:var(--gold)}dialog{max-width:1050px;max-height:80vh;background:#ffffff;color:var(--ink);border:1px solid #6b7d97;border-radius:16px;padding:35px;font-size:23px;line-height:1.5}dialog::backdrop{background:#000b}dialog h2{margin-top:0}dialog button{float:right;margin-left:30px}.notes-label{color:var(--gold)}.overview-list{display:grid;grid-template-columns:1fr 1fr;gap:10px}.overview-list button{text-align:left;font-size:19px}.print-only{display:none}
+@media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+@media print{@page{size:landscape;margin:8mm}body{overflow:visible;background:white}#stage,dialog{display:none!important}.print-only{display:block}.print-page{break-after:page;background:white;color:#142035;padding:12mm;height:175mm;overflow:hidden}.print-page:last-child{break-after:auto}.print-page h1{font-size:28px;margin-bottom:15px}.print-page .content{height:auto;grid-template-columns:45% 55%}.print-page .text{font-size:15px;padding-right:20px}.print-page .equation{font-size:23px;color:#674600}.print-page p{margin-bottom:10px}.print-page .visual svg{height:115mm}.print-page .controls,.print-page .status{display:none}.print-page em{color:#12674e}.print-page .eyebrow{font-size:12px;color:#12674e}.print-page .caption{font-size:12px;color:#43536b}.print-page .task b{color:#674600}.print-page .visual{background:#ffffff;border-radius:8px;padding:8px}.print-page .solid-table{color:#172439;font-size:15px}.print-page .solid-table td,.print-page .solid-table th{padding:8px}.print-page .text .rules p{padding-bottom:7px}.print-page li{margin-bottom:10px}.print-page .task+p{color:#43536b}.print-page .rules strong{color:#12674e}.print-page .task{border-color:#b98517}}
+
+@media print{.print-page .caption{color:#526078}}
+
+.content{grid-template-columns:40% 60%;height:550px}.text{font-size:26px;line-height:1.4;padding-right:40px}.text p{margin-bottom:21px}h1{font-size:52px;margin-bottom:23px}.equation{font-size:30px;line-height:1.4}.eyebrow{font-size:19px;margin-bottom:10px}.visual{justify-content:flex-start}.visual svg{height:385px}.caption{font-size:20px;line-height:1.3;min-height:27px;margin:7px 0 0}.controls{gap:8px;margin-top:11px;min-height:42px}.controls button,.controls select{font-size:18px;padding:8px 12px}.controls label{font-size:18px;display:flex;align-items:center;gap:7px}.status{font-size:20px;line-height:1.35;color:#34465d;min-height:53px;margin-top:9px}.status strong{color:#087f6d}.status .fail{color:#ad392e}.cover h1{font-size:77px;max-width:640px;top:45px}.cover .content{height:620px;grid-template-columns:40% 60%}.cover .text{font-size:27px;align-self:end;padding-bottom:30px}.cover .visual{justify-content:center}.cover .visual svg{height:440px}.calendar-day,.bucket-token,.quiz-choice{cursor:pointer}.calendar-day:focus-visible,.bucket-token:focus-visible{outline:none}.calendar-day:hover rect,.calendar-day:focus-visible rect{stroke:#7451bc;stroke-width:4}.bucket-token:hover circle,.bucket-token:focus-visible circle{stroke:#7451bc;stroke-width:4}.relation-layout{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:12px;min-height:365px}.relation-layout svg{height:360px;width:100%}.block-matrix{border-spacing:3px}.block-matrix th{font-size:20px;font-weight:500;color:#526078;text-align:center;min-width:26px}.block-matrix button{width:45px;height:44px;font-size:22px;padding:0;border-radius:6px;border:1px solid #c6d0df;background:#f5f7fa}.block-matrix button.on{background:#dcefe9;border-color:#76aa9c;color:#075f51}.block-matrix button.missing{border:2px dashed #b47a0b;background:#fff1d7}.block-matrix button.extra{border:2px solid #c5473a;background:#ffe8e3}.block-matrix button.focus-pair{outline:3px solid #7451bc;outline-offset:1px}.block-matrix button:disabled{opacity:1;cursor:default}.matrix-label{text-align:center;font-size:19px;color:#526078;margin-bottom:9px}.pair-list{font-size:18px;color:#526078;line-height:1.5;text-align:center;min-height:27px}.proof-line{font:27px/1.45 'Cambria Math',Cambria,serif;color:#075f51;text-align:center;min-height:82px;margin:8px 20px 0}.proof-visual svg{height:285px}.proof-visual{height:390px}.db-table{width:100%;border-collapse:collapse;font-size:22px}.db-table th{font-weight:600;color:#075f51;border-bottom:2px solid #9ab9b0;padding:10px 9px;text-align:left;white-space:nowrap}.db-table td{padding:10px 9px;border-bottom:1px solid #d4dde8;height:45px}.db-table tr.match td{background:#e0f1e9}.db-table tr.bad td{background:#ffe8e3;color:#a52e23}.db-table tr.dim td{color:#8490a1;background:#f6f7f9}.db-table td.focus-col,.db-table th.focus-col{background:#e4ecfb}.db-table tbody tr[data-action]{cursor:pointer}.db-table tbody tr[data-action]:hover td{outline:1px solid #b5a0dd;outline-offset:-1px}.db-table .row-picker{font:inherit;border:0;border-radius:0;background:transparent;padding:0;margin:0;min-width:0;text-align:left;cursor:pointer;color:inherit}.db-table .empty{text-align:center;color:#7a879b;font-size:20px}.table-title{font-size:20px;font-weight:600;color:#526078;letter-spacing:.04em;margin:0 0 12px}.table-shell{min-width:0}.single-table{width:90%;margin:30px auto 12px;min-height:300px}.tuple-readout{font:28px/1.4 'Cambria Math',Cambria,serif;color:#286bab;text-align:center;margin:18px 5px;min-height:40px}.db-flow{display:grid;grid-template-columns:minmax(0,1fr) 65px minmax(0,1fr);gap:12px;align-items:start;min-height:365px;padding-top:35px}.flow-symbol{font:40px 'Cambria Math',Cambria,serif;color:#087f6d;text-align:center;padding-top:80px}.join-inputs{display:grid;grid-template-columns:minmax(0,1fr) 75px minmax(0,1fr);gap:0;align-items:start;min-height:245px}.join-inputs .db-table{font-size:20px}.join-inputs .db-table th,.join-inputs .db-table td{padding:8px 9px;height:41px}.join-links{width:75px!important;height:245px!important}.join-output{width:82%;margin:5px auto 0;min-height:145px}.join-output .db-table{font-size:19px}.join-output .db-table td,.join-output .db-table th{height:34px;padding:5px 9px}.join-output .table-title{font-size:18px;margin-bottom:5px}.join-panel{min-height:405px}.pipeline-stage{font-size:24px;font-weight:600;color:#087f6d;margin:15px 0 24px;text-align:center}.pipeline-track{display:flex;justify-content:center;gap:8px;font-size:18px;margin:5px 0 15px}.pipeline-track span{padding:5px 8px;color:#8490a1;border-bottom:3px solid #d8e0e9}.pipeline-track span.active{color:#075f51;border-color:#087f6d}.pipeline .table-shell{max-width:90%;margin:auto}.pipeline{min-height:395px}.projection-controls button[aria-pressed=true]{background:#deeee8;border-color:#087f6d;color:#075f51}.quiz-form{display:grid;gap:13px;padding:16px 20px;min-height:385px}.quiz-line{display:flex;justify-content:space-between;gap:18px;align-items:center;border-bottom:1px solid #d8e0e9;padding:12px 0;font-size:23px;line-height:1.35}.quiz-line select{min-width:150px;font-size:19px}.quiz-line.correct{color:#087f6d}.quiz-line.incorrect{color:#b13b2c}.quiz-line select{position:relative;z-index:3}.integer-groups{display:flex;gap:7px;justify-content:center;min-height:370px;padding-top:25px}.integer-group{flex:1;max-width:115px;border-radius:30px;padding:12px 5px;text-align:center}.integer-group h3{font-size:24px;margin:0 0 12px}.integer-group div{font-size:22px;line-height:1.7}.integer-group .ellipsis{color:#526078}.overview-list button{float:none;margin:0}#notesText{white-space:pre-line}
+.integer-groups.compact .integer-group div{font-size:20px;line-height:1.15}.integer-groups.compact .integer-group h3{margin-bottom:5px}.block-matrix button:not(:disabled){position:relative;z-index:3}
+@media print{.ink-print-slide .content{height:550px}.ink-print-slide .visual svg{height:385px}.ink-print-slide .proof-visual svg{height:285px}.ink-print-slide .relation-layout svg{height:360px}.ink-print-slide .join-links{height:245px!important}.ink-print-slide .controls,.ink-print-slide .status{visibility:hidden}.print-page .text{font-size:15px}.print-page .single-table{min-height:0}.print-page .db-table{font-size:14px}.print-page .db-table th,.print-page .db-table td{padding:5px;height:26px}.print-page .db-flow{padding-top:0;min-height:0}.print-page .join-panel{min-height:0}.print-page .table-title{font-size:13px}.print-page .proof-line{font-size:18px}.print-page .integer-group div{font-size:15px}}
+</style><style>
+#ink-layer{position:absolute;inset:0;width:1600px;height:900px;z-index:2;pointer-events:none;overflow:hidden}
+#ink-layer.ink-enabled{pointer-events:auto;touch-action:none;cursor:crosshair}
+#slide .controls button,#slide .controls select,#slide .controls input{position:relative;z-index:3}
+#stage .topnav,#stage .footer{z-index:4}
+#ink-tools{position:absolute;left:64px;bottom:18px;height:56px;padding:6px 8px;z-index:5;display:flex;align-items:center;gap:5px;background:#f4f7fb;border:1px solid #c3ccda;border-radius:9px;box-shadow:0 3px 12px #17243912}
+#ink-tools button{flex:0 0 40px;width:40px;height:40px;min-width:0;padding:7px;display:grid;place-items:center;border:1px solid transparent;border-radius:6px;font-size:22px;color:#172439;background:transparent;line-height:1}
+#ink-tools button:hover{background:#e3eaf4}
+#ink-tools button[aria-pressed=true]{background:#d9e9ff;border-color:#1b65b4;color:#154e8c}
+#ink-tools button:disabled{opacity:.3}
+#ink-tools svg{width:24px;height:24px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+#ink-tools hr{flex:0 0 1px;width:1px;height:30px;margin:0 4px;border:0;border-left:1px solid #c3ccda}
+#ink-color{display:none}
+.ink-swatches{display:flex;align-items:center;gap:3px}.ink-swatches[hidden]{display:none}
+#ink-tools .ink-swatch{width:32px;min-width:32px;flex:0 0 32px;padding:5px}
+.ink-swatch span{width:21px;height:21px;border-radius:50%;display:block;border:1px solid white}
+#ink-tools .ink-swatch[aria-pressed=true]{outline:2px solid #1b65b4;outline-offset:-1px}
+.ink-width-label{font-size:13px;color:#526078;margin:0 2px 0 8px}
+#ink-width{flex:0 0 88px;font-size:16px;width:88px;height:36px;max-width:none;padding:4px 6px;background:white;border:1px solid #9eacc0;border-radius:5px;margin:0;color:#172439}
+#ink-save-status{flex:0 0 82px;width:82px;font-size:12px;line-height:1.3;text-align:center;color:#45604c;padding:0 4px}
+#ink-save-status[data-failed=true]{color:#a02a20}
+#stage .footer{justify-content:flex-end}
+#lectureResetControls{position:absolute;top:30px;left:520px;z-index:5;display:flex;gap:8px}
+#lectureResetControls[hidden]{display:none}
+#lectureResetControls button{font-size:16px;padding:10px}
+#restartLecture{color:#145aa3;border-color:#aac2df;background:#f4f8fd}
+#resetAnnotations{color:#a43328;border-color:#d8b5b0;background:#fff8f6}
+.route-playback{display:flex;align-items:center;gap:8px;font-size:17px}
+.route-playback select{font-size:17px;padding:7px;max-width:110px}
+.route-playback input{width:115px}
+#ink-menu{width:780px;max-width:90vw}
+#ink-menu p{margin:16px 0}#ink-menu .ink-menu-actions{display:flex;gap:10px;flex-wrap:wrap;margin:20px 0}
+#ink-menu .ink-menu-actions button{float:none;margin:0;font-size:19px}
+#ink-menu .ink-hint{font-size:18px;color:#526078}#ink-menu-message{font-size:18px;color:#087f6d}
+#ink-menu-message[data-failed=true]{color:#a02a20}
+.ink-stroke{pointer-events:none}
+@media print{
+ @page{size:1600px 900px;margin:0}
+ html,body{margin:0;padding:0;width:1600px;background:white;print-color-adjust:exact;-webkit-print-color-adjust:exact}
+ #ink-tools,#ink-menu,#ink-import,#lectureResetControls{display:none!important}
+ .ink-print-page{position:relative;box-sizing:border-box;width:1600px;height:900px;overflow:hidden;break-after:page;page-break-after:always;background:white;color:#172439}
+ .ink-print-page:last-child{break-after:auto;page-break-after:auto}
+ .ink-print-slide{position:absolute;inset:104px 64px 94px}
+ .ink-print-svg{position:absolute;inset:0;width:1600px;height:900px;pointer-events:none;z-index:2}
+ .ink-print-page .controls,.ink-print-page .status{visibility:hidden}
+ .ink-print-page .brand,.ink-print-page .footer{color:#526078}
+}
+#ink-text-layer{position:absolute;inset:0;width:1600px;height:900px;z-index:2;pointer-events:none}
+#ink-layer.ink-text-mode{cursor:text}
+.ink-text-box,.ink-text-print{position:absolute;box-sizing:border-box;border:1px solid transparent;border-radius:5px;line-height:1.25;background:transparent}
+.ink-text-box{pointer-events:none}
+#ink-text-layer[data-mode=text] .ink-text-box,#ink-text-layer[data-mode=use] .ink-text-box{pointer-events:auto;cursor:text}
+#ink-text-layer[data-mode=text] .ink-text-box:hover,.ink-text-box.is-selected{border:1px dashed #1b65b4}
+.ink-text-content,.ink-text-editor{display:block;width:100%;box-sizing:border-box;padding:6px 8px;margin:0;border:0;outline:none;border-radius:0;font:inherit;line-height:inherit;color:inherit;text-align:left;white-space:pre-wrap;overflow-wrap:anywhere;tab-size:4;background:transparent}
+.ink-text-content{height:100%;overflow:hidden}
+.ink-text-editor{height:100%;resize:none;overflow:auto}
+.ink-text-content[data-empty=true]{color:#778399;font-style:italic}
+.ink-text-options{position:absolute;bottom:calc(100% + 4px);left:-1px;display:flex;align-items:center;gap:5px;padding:4px;background:#fff;border:1px solid #b5c0cf;border-radius:7px;box-shadow:0 2px 8px #17243914;white-space:nowrap;cursor:default}
+.ink-text-options button{padding:3px 7px;font-size:14px;height:29px;line-height:20px;border-radius:4px}
+.ink-text-options select{font-size:15px;padding:2px;width:56px;height:29px;border-radius:4px}
+.ink-text-options input{width:32px;height:29px;padding:1px;border:1px solid #b5c0cf;border-radius:4px;background:white}
+.ink-text-options .ink-text-move{cursor:grab;touch-action:none}
+.ink-text-options .ink-text-move:active{cursor:grabbing}
+.ink-text-box .ink-text-resize{position:absolute;right:-7px;bottom:-7px;width:17px;height:17px;padding:0;border:1px solid #1b65b4;border-radius:3px;background:#fff;cursor:nwse-resize;touch-action:none}
+.ink-text-print{z-index:2}
+@media print{#ink-text-layer,.ink-text-options,.ink-text-resize{display:none!important}.ink-text-print{border-color:transparent}}
+</style></head>
+<body><main id="stage"><div class="brand"><b>CS 241</b>MEETING 22 · INK + TEXT</div><nav class="topnav" aria-label="Presentation controls"><select id="act" aria-label="Jump to act"></select><button id="showOverview" title="Slide overview (O)">Slides</button><button id="full" title="Fullscreen (F)">⛶ Fullscreen</button></nav><article id="slide" aria-label="Current slide"></article><footer class="footer"><div><a class="source" id="source" target="_blank" rel="noopener"></a><span> / </span><a class="source" href="meeting-21-relations.html">Meeting 21 ↗</a></div><div class="right"><span>← → navigate · O overview</span><button id="previous" aria-label="Previous slide">←</button><span id="counter"></span><button id="next" aria-label="Next slide">→</button></div></footer><div id="progress" class="track"></div></main>
+<dialog id="overview"><button onclick="this.closest('dialog').close()">Close</button><h2>Meeting 22 · Classes and databases</h2><div id="overviewList" class="overview-list"></div></dialog><div id="print" class="print-only"></div><noscript>This interactive lecture requires JavaScript.</noscript>
+<script>const DECK={"meeting": 22, "title": "Equivalence classes and databases", "acts": ["Calendar numbers", "Classes and representatives", "Partitions and relations", "Tables, selection, projection", "Joins and queries", "Synthesis"], "slides": [{"act": 0, "title": "Different numbers.<br>The same class.", "body": "<p>On U = {1,2,…,31}, relate two numbers when their difference is a multiple of seven.</p><div class=\"task\"><b>Try it first</b><p>Choose a number. Which other numbers belong with it?</p></div>", "scene": "calendar", "cover": true}, {"act": 0, "title": "Name the classes before revealing them", "body": "<div class=\"task\"><b>Try it first</b><p>List [1], [2], and [7]. Then compare [1] with [8]. Are they different sets?</p></div><p>The universe matters: today’s calendar example stops at 31.</p>", "scene": "calendar", "activity": "worksheet"}, {"act": 1, "title": "A class collects outgoing neighbors", "body": "<p>For a relation R on A, define</p><div class=\"equation\">[a] = {b ∈ A : a R b}</div><p>This is a <em>relation class</em>. For an equivalence relation, it is an equivalence class.</p><div class=\"task\"><b>Try it first</b><p>Read “a is a multiple of b” carefully. What belongs to [4]?</p></div>", "scene": "divisorClasses", "anchor": 4, "other": 6}, {"act": 1, "title": "General relation classes can overlap", "body": "<div class=\"task\"><b>Try it first</b><p>Compare [2] and [4] for “is a multiple of.” Are the classes equal? Are they disjoint?</p></div><p>The equal-or-disjoint conclusion requires an <em>equivalence relation</em>.</p>", "scene": "divisorClasses", "anchor": 2, "other": 4}, {"act": 1, "title": "A representative is a name, not a new set", "body": "<p>For congruence modulo seven, 1 ∼ 8.</p><div class=\"task\"><b>Try it first</b><p>Reveal both classes. What changes when the representative changes?</p></div><div class=\"equation\">[1] = [8]</div>", "scene": "calendar", "activity": "compare", "anchor": 1, "other": 8}, {"act": 1, "title": "Equivalent elements give equal classes", "body": "<p>Assume R is an equivalence relation and a R b.</p><div class=\"task\"><b>Try it first</b><p>Take x ∈ [a]. Why must x also belong to [b]?</p></div><p>Prove both containments to establish equality.</p>", "scene": "classProof", "kind": "equal"}, {"act": 1, "title": "A shared element forces equality", "body": "<div class=\"task\"><b>Try it first</b><p>Suppose x lies in both [a] and [b]. Use symmetry and transitivity to relate a and b.</p></div><p>Two equivalence classes can be equal or disjoint; partial overlap is impossible.</p>", "scene": "classProof", "kind": "overlap"}, {"act": 2, "title": "Keep one copy of each distinct class", "body": "<div class=\"task\"><b>Try it first</b><p>Color all the calendar classes. How many distinct blocks appear?</p></div><p>Every number belongs to its own class. Distinct classes do not overlap.</p>", "scene": "calendar", "activity": "partition"}, {"act": 2, "title": "What makes a partition?", "body": "<p>A <em>partition</em> of A consists of nonempty subsets whose union is A and whose distinct blocks are disjoint.</p><div class=\"task\"><b>Try it first</b><p>Test the proposed collection. If it fails, name the exact problem.</p></div>", "scene": "partitionCheck"}, {"act": 2, "title": "Build your own partition", "body": "<div class=\"task\"><b>Try it first</b><p>Put each element of {1,…,6} into exactly one block. Make exactly two nonempty blocks.</p></div><p>Click a number to move it to the next tray. Empty trays are unused; they are not blocks.</p>", "scene": "partitionEditor"}, {"act": 2, "title": "Same block defines a relation", "body": "<p>Use P = {{1,4}, {2,3,5}}. Define a ∼ b exactly when they share a block.</p><div class=\"task\"><b>Try it first</b><p>Which pairs involve 1? Which involve 2? Do the loops belong?</p></div>", "scene": "blockRelation"}, {"act": 2, "title": "Build every ordered pair", "body": "<div class=\"task\"><b>Try it first</b><p>Encode the same-block relation for {{1,4}, {2,3,5}}. Click matrix entries, then check your construction.</p></div><p>Both directions and the self-pairs matter.</p>", "scene": "blockRelation", "activity": "encode"}, {"act": 2, "title": "Why “same block” is equivalence", "body": "<div class=\"task\"><b>Try it first</b><p>Explain reflexivity, symmetry, and transitivity from the partition rules.</p></div><p>For transitivity, pay attention to the block containing the middle element.</p>", "scene": "blockRelation", "activity": "proof"}, {"act": 2, "title": "Two descriptions of the same structure", "body": "<p>Equivalence relation → distinct classes → same-block relation recovers the original relation.</p><p>Partition → same-block relation → classes recovers the original blocks.</p><div class=\"task\"><b>Try it first</b><p>Move an element. Watch the corresponding relation change.</p></div>", "scene": "correspondence"}, {"act": 2, "title": "From a finite calendar to all integers", "body": "<p>For any positive n, congruence modulo n partitions ℤ into n classes.</p><div class=\"equation\">ℤ = [0] ⊔ [1] ⊔ ⋯ ⊔ [n−1]</div><div class=\"task\"><b>Try it first</b><p>Change n. What stays true about each class?</p></div>", "scene": "integerClasses"}, {"act": 3, "title": "A table is a set of tuples", "body": "<p>A binary relation uses two coordinates. An n-ary relation uses n.</p><div class=\"equation\">R ⊆ X₁ × ⋯ × Xₙ</div><div class=\"task\"><b>Try it first</b><p>Click a row to read its ordered triple. Which sets supply its coordinates?</p></div>", "scene": "tuples"}, {"act": 3, "title": "Unique here does not mean guaranteed unique", "body": "<p>ID and Name are both distinct in the first sample. The database requires unique IDs but allows repeated names.</p><div class=\"task\"><b>Try it first</b><p>Add another Ada. Which attribute still has the promised guarantee?</p></div>", "scene": "keys"}, {"act": 3, "title": "Selection keeps rows that pass a test", "body": "<p>A <em>selection</em> filters tuples by a predicate. It keeps the same attributes.</p><div class=\"task\"><b>Try it first</b><p>Select Major = CS. Predict the surviving rows before applying the filter.</p></div>", "scene": "selection"}, {"act": 3, "title": "Projection keeps chosen coordinates", "body": "<p>A <em>projection</em> keeps selected attributes.</p><div class=\"task\"><b>Try it first</b><p>Project onto Major. How many distinct output tuples should there be?</p></div><p>In this course’s relation model, tuples form a set.</p>", "scene": "projection"}, {"act": 3, "title": "Two source rows can give one output tuple", "body": "<div class=\"task\"><b>Try it first</b><p>Reveal the projection onto Major. Click an output row to find all its contributors.</p></div><p>Discarded coordinates may be the only reason the original tuples were different.</p>", "scene": "projection", "activity": "duplicates"}, {"act": 3, "title": "Filter rows, then keep the names", "body": "<div class=\"task\"><b>Try it first</b><p>For STUDENT, first select Major = CS, then project onto Name. Write the unary relation.</p></div><p>Each operation produces another relation.</p>", "scene": "pipeline", "kind": "selectProject"}, {"act": 4, "title": "Match records through a stated condition", "body": "<p>STUDENT stores people. ENROLL stores course registrations.</p><div class=\"equation\">STUDENT.ID = ENROLL.StudentID</div><div class=\"task\"><b>Try it first</b><p>Click a row. Which rows in the other table match it?</p></div>", "scene": "join", "activity": "inspect"}, {"act": 4, "title": "A join tests pairs of rows", "body": "<p>A join selects compatible pairs from a Cartesian product.</p><div class=\"task\"><b>Try it first</b><p>There are 3 × 4 candidate row pairs. Which satisfy the ID equality?</p></div>", "scene": "joinGrid"}, {"act": 4, "title": "Construct the join one student at a time", "body": "<div class=\"task\"><b>Try it first</b><p>List all resulting (ID, Name, Course) tuples. Process each student and keep every matching enrollment.</p></div><p>A match produces a combined tuple; an absent match produces none.</p>", "scene": "join", "activity": "build"}, {"act": 4, "title": "One match is not the limit", "body": "<div class=\"task\"><b>Try it first</b><p>Inspect student 101. Why must two output tuples appear?</p></div><p>Every compatible pair contributes. Choosing only the first match loses information.</p>", "scene": "join", "activity": "multiple"}, {"act": 4, "title": "Unmatched rows do not survive this join", "body": "<div class=\"task\"><b>Try it first</b><p>Find one unmatched row in each input. Explain why neither can contribute an output tuple.</p></div><p>This is an inner join: only matching pairs are included.</p>", "scene": "join", "activity": "unmatched"}, {"act": 4, "title": "The matching attribute can be a room", "body": "<p>COURSE lists a course and room. ROOM lists a room and capacity.</p><div class=\"task\"><b>Try it first</b><p>Join on the room value. Write each matching room once in the combined tuple.</p></div>", "scene": "join", "kind": "rooms", "activity": "inspect"}, {"act": 4, "title": "Build a query from smaller operations", "body": "<div class=\"task\"><b>Try it first</b><p>Find the names and courses of CS majors: select STUDENT, join with ENROLL, then project onto Name and Course.</p></div><p>Follow the schema and the rows through each stage.</p>", "scene": "pipeline", "kind": "query"}, {"act": 5, "title": "Choose the operation and justify it", "body": "<div class=\"task\"><b>Try it first</b><p>Match each request to its operation. Also check the claim about equivalence classes.</p></div><p>Explain what changes: rows, coordinates, or combinations of tuples.</p>", "scene": "quiz"}, {"act": 5, "title": "Relations organize groups and records", "body": "<p>Equivalence classes turn consistent sameness into a partition.</p><p>Tables store tuples. Selection, projection, and joins build new relations.</p><p><em>Next:</em> Pascal’s triangle and counting.</p>", "scene": "closing"}]};'use strict';
+const $=s=>document.querySelector(s),C={teal:'#087f6d',blue:'#286bab',purple:'#7451bc',gold:'#b47a0b',coral:'#c5473a',ink:'#172439',muted:'#526078'};
+const FILLS=['#dcefe7','#e1eafa','#f0e3f7','#fff0d4','#fbe3e1','#dff0f3','#ecedcf'];
+const STU=[[101,'Ada','CS'],[102,'Bo','Math'],[103,'Cy','CS']],ENROLL=[[101,241],[101,288],[103,241],[104,280]],ATTRS=['ID','Name','Major'];
+const PARTITIONS=[[[1,3,5],[2,4,6]],[[1,2,3],[3,4],[5,6]],[[1,2],[3,4]],[[1,2,3],[4,5,6],[]],[[1,2,3],[4,5,6,7]]];
+let state={},index=0,timer=null,serial=0;
+const esc=s=>String(s).replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;').replaceAll('"','&quot;');
+const mod=(a,n)=>((a%n)+n)%n;
+const range=(a,b)=>Array.from({length:b-a+1},(_,i)=>a+i);
+const setText=xs=>'{'+xs.join(', ')+'}';
+const svg=(html,label,view='0 0 820 420')=>`<svg viewBox="${view}" role="group" aria-label="${esc(label)}">${html}</svg>`;
+const txt=(x,y,t,size=23,color=C.ink,extra='')=>`<text x="${x}" y="${y}" font-size="${size}" fill="${color}" text-anchor="middle" dominant-baseline="central" ${extra}>${esc(t)}</text>`;
+const btn=(label,action,extra='')=>`<button type="button" data-action="${action}" ${extra}>${label}</button>`;
+const choose=(key,label,options,value)=>`<label>${label}<select data-setting="${key}" aria-label="${label}">${options.map(([v,t])=>`<option value="${v}" ${String(value)===String(v)?'selected':''}>${esc(t)}</option>`).join('')}</select></label>`;
+function freshState(s){return {anchor:s.anchor||1,other:s.other||8,reveal:false,all:false,checked:false,step:0,candidate:0,bins:s.scene==='partitionEditor'?Array(6).fill(-1):[0,1,1,0,1],mask:0,reorder:false,focus:-1,n:5,repeat:false,column:0,filter:'CS',columns:4,source:'left',row:-1,output:-1,grid:0,answers:['?','?','?','?'],closing:0};}
+function st(){return state[index]||(state[index]=freshState(DECK.slides[index]));}
+function cleanDeckStates(raw){
+ const out={},int=(v,a,b)=>Number.isInteger(v)&&v>=a&&v<=b;if(!raw||typeof raw!=='object'||Array.isArray(raw))return out;
+ for(const [key,v] of Object.entries(raw)){const i=Number(key);if(!int(i,0,DECK.slides.length-1)||!v||typeof v!=='object'||Array.isArray(v))continue;const s=DECK.slides[i],q=freshState(s);
+  for(const [k,a,b] of [['anchor',1,31],['other',1,31],['step',0,12],['candidate',0,4],['mask',0,33554431],['focus',-1,5],['n',2,7],['column',0,2],['columns',1,7],['row',-1,3],['output',-1,3],['grid',0,4095],['closing',0,1]])if(int(v[k],a,b))q[k]=v[k];
+  for(const k of ['reveal','all','checked','reorder','repeat'])q[k]=v[k]===true;
+  if(['CS','Math','All'].includes(v.filter))q.filter=v.filter;if(['left','right'].includes(v.source))q.source=v.source;
+  const length=s.scene==='partitionEditor'?6:5;if(Array.isArray(v.bins)&&v.bins.length===length&&v.bins.every(x=>int(x,-1,2)))q.bins=[...v.bins];
+  if(s.scene==='divisorClasses'){if(![2,4,6].includes(q.anchor))q.anchor=s.anchor||2;if(![2,4,6].includes(q.other))q.other=s.other||4;}
+  if(Array.isArray(v.answers)&&v.answers.length===4&&v.answers.every(x=>['?','yes','no','selection','projection','join'].includes(x)))q.answers=[...v.answers];
+  const maxStep=s.scene==='blockRelation'&&s.activity!=='proof'?5:s.scene==='pipeline'&&s.kind!=='query'?2:3;q.step=Math.min(q.step,maxStep);
+  out[i]=q;
+ }return out;
+}
+function relationClass(a,universe,predicate){return universe.filter(b=>predicate(a,b));}
+function partitionReport(blocks,universe){
+ const counts=new Map(universe.map(x=>[x,0])),outside=new Set();
+ blocks.forEach(block=>new Set(block).forEach(x=>counts.has(x)?counts.set(x,counts.get(x)+1):outside.add(x)));
+ const empty=blocks.flatMap((b,i)=>b.length?[]:[i]),missing=universe.filter(x=>counts.get(x)===0),repeated=universe.filter(x=>counts.get(x)>1);
+ return {valid:!empty.length&&!missing.length&&!repeated.length&&!outside.size,empty,missing,repeated,outside:[...outside]};
+}
+function blocksFromBins(bins){return [...new Set(bins.filter(x=>x>=0))].sort().map(k=>bins.flatMap((b,i)=>b===k?[i+1]:[]));}
+function sameBlockMask(bins){let mask=0;bins.forEach((a,i)=>bins.forEach((b,j)=>{if(a>=0&&a===b)mask|=1<<(i*bins.length+j);}));return mask;}
+function classesFromMask(mask,n){const classes=[];for(let i=0;i<n;i++){const row=range(0,n-1).filter(j=>mask&(1<<(i*n+j))).map(j=>j+1);if(!classes.some(c=>JSON.stringify(c)===JSON.stringify(row)))classes.push(row);}return classes;}
+function selectRows(rows,filter){return rows.filter(r=>filter==='All'||r[2]===filter);}
+function projectRows(rows,columns){return [...new Map(rows.map(row=>{const tuple=columns.map(i=>row[i]);return [JSON.stringify(tuple),tuple];})).values()];}
+function joinRows(left,right,leftKey=0,rightKey=0){const rows=left.flatMap(a=>right.filter(b=>a[leftKey]===b[rightKey]).map(b=>[...a,...b.filter((_,i)=>i!==rightKey)]));return [...new Map(rows.map(r=>[JSON.stringify(r),r])).values()];}
+function panel(html,caption='',controls='',status=''){return html+`<div class="caption">${caption}</div><div class="controls">${controls}</div><div class="status" role="status" aria-live="polite">${status}</div>`;}
+function calendar(s,q){
+ const members=a=>relationClass(a,range(1,31),(x,y)=>mod(y-x,7)===0),first=members(q.anchor),second=members(q.other);let art='';
+ for(let d=1;d<=31;d++){const x=142+((d-1)%7)*77,y=38+Math.floor((d-1)/7)*68,selected=d===q.anchor,belongs=first.includes(d),fill=q.all?FILLS[mod(d-1,7)]:q.reveal&&belongs?FILLS[0]:'#f3f6fa';
+  art+=`<g class="calendar-day" role="button" tabindex="0" data-action="day" data-day="${d}" data-focus-key="day-${d}" aria-label="Select day ${d}"><rect x="${x}" y="${y}" width="65" height="57" rx="10" fill="${fill}" stroke="${selected?C.teal:'#bac8d9'}" stroke-width="${selected?3:1}"/>${txt(x+32.5,y+29,d,26)}</g>`;
+ }
+ let controls=choose('anchor','Representative',range(1,31).map(n=>[n,n]),q.anchor)+btn('Reveal class','reveal');
+ if(s.activity==='compare')controls+=choose('other','Compare with',range(1,31).map(n=>[n,n]),q.other)+btn('Compare classes','check');
+ if(s.activity==='partition'||s.cover)controls+=btn(q.all?'Hide all classes':'Color all classes','all');
+ const caption=q.reveal?`[${q.anchor}] = ${setText(first)}`:'Click a number to reveal its class in U = {1,…,31}.';
+ let status=q.all?'<strong>Seven distinct classes; every number appears in exactly one.</strong>':'';
+ if(s.activity==='compare'&&q.checked)status=`[${q.other}] = ${setText(second)}. <strong>${mod(q.anchor-q.other,7)===0?'The two classes are equal.':'The two classes are disjoint.'}</strong>`;
+ return panel(svg(art,'Calendar numbers 1 through 31'),caption,controls,status);
+}
+function divisorClasses(s,q){
+ const members=a=>relationClass(a,range(1,6),(x,y)=>x%y===0),a=members(q.anchor),b=members(q.other),both=a.filter(x=>b.includes(x)),onlyA=a.filter(x=>!b.includes(x)),onlyB=b.filter(x=>!a.includes(x));
+ const ellipse=(x,y,rx,ry,color,fill)=>`<ellipse cx="${x}" cy="${y}" rx="${rx}" ry="${ry}" fill="${fill}" fill-opacity=".7" stroke="${color}" stroke-width="2"/>`;
+ let art='',regions;
+ if(!q.reveal){art=ellipse(300,185,195,145,C.teal,FILLS[0])+ellipse(520,185,195,145,C.blue,FILLS[1])+txt(240,30,`[${q.anchor}]`,30,C.teal)+txt(580,30,`[${q.other}]`,30,C.blue)+txt(410,185,'?',38,C.muted);}
+ else if(!onlyA.length&&!onlyB.length){art=ellipse(410,195,235,140,C.purple,FILLS[2])+txt(410,30,`[${q.anchor}] = [${q.other}]`,30,C.purple);regions=[[both,410,C.purple]];}
+ else if(!onlyA.length||!onlyB.length){const aInside=!onlyA.length;art=ellipse(410,195,270,150,aInside?C.blue:C.teal,aInside?FILLS[1]:FILLS[0])+ellipse(325,195,130,115,aInside?C.teal:C.blue,aInside?FILLS[0]:FILLS[1])+txt(550,72,`[${aInside?q.other:q.anchor}]`,28,aInside?C.blue:C.teal)+txt(325,110,`[${aInside?q.anchor:q.other}]`,28,aInside?C.teal:C.blue);regions=[[both,325,C.purple],[aInside?onlyB:onlyA,555,aInside?C.blue:C.teal]];}
+ else{art=ellipse(300,185,195,145,C.teal,FILLS[0])+ellipse(520,185,195,145,C.blue,FILLS[1])+txt(240,30,`[${q.anchor}]`,30,C.teal)+txt(580,30,`[${q.other}]`,30,C.blue);regions=[[onlyA,235,C.teal],[both,410,C.purple],[onlyB,585,C.blue]];}
+ if(q.reveal){for(const [items,x,color] of regions)items.forEach((v,i)=>{const y=200+(i-(items.length-1)/2)*50;art+=`<circle cx="${x}" cy="${y}" r="22" fill="white" stroke="${color}" stroke-width="2"/>`+txt(x,y,v,25);});art+=txt(410,370,'Outside both classes: '+setText(range(1,6).filter(x=>!a.includes(x)&&!b.includes(x))),22,C.muted);}
+ return panel(svg(art,'Two relation classes and their intersection'),q.reveal?`[${q.anchor}] = ${setText(a)}; [${q.other}] = ${setText(b)}`:'Here a R b means “a is a multiple of b.”',choose('anchor','First',[[2,2],[4,4],[6,6]],q.anchor)+choose('other','Second',[[2,2],[4,4],[6,6]],q.other)+btn('Reveal members','reveal'),q.reveal?`Intersection: ${setText(both)}. ${JSON.stringify(a)===JSON.stringify(b)?'These happen to be equal.':'Different classes can overlap in this general relation.'}`:'Compute the outgoing neighbors of each representative.');
+}
+function classProof(s,q){
+ const points=[[145,105],[675,105],[410,290]],labels=['a','b','x'],id='proof-'+(++serial);let edges=s.kind==='equal'?[[0,1],[0,2]]:[[0,2],[1,2]];
+ if(q.step>=1)edges.push(s.kind==='equal'?[1,0]:[2,1]);if(q.step>=2)edges.push(s.kind==='equal'?[1,2]:[0,1]);
+ let art=`<defs><marker id="${id}" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="11" markerHeight="11" orient="auto-start-reverse" markerUnits="userSpaceOnUse"><path d="M0 0 L10 5 L0 10Z" fill="${C.blue}"/></marker></defs>`;
+ edges.forEach(([a,b],k)=>{const [x,y]=points[a],[u,v]=points[b],len=Math.hypot(u-x,v-y),dx=(u-x)/len,dy=(v-y)/len;art+=`<path d="M${x+dx*31},${y+dy*31} Q${(x+u)/2-dy*20},${(y+v)/2+dx*20} ${u-dx*31},${v-dy*31}" fill="none" stroke="${k>1?C.gold:C.blue}" stroke-width="4" marker-end="url(#${id})"/>`;});
+ points.forEach(([x,y],i)=>art+=`<circle cx="${x}" cy="${y}" r="30" fill="white" stroke="${C.teal}" stroke-width="3"/>`+txt(x,y,labels[i],28));
+ const lines=s.kind==='equal'?['Assume a R b and take x ∈ [a], so a R x.','Symmetry: a R b gives b R a.','Transitivity: b R a and a R x give b R x.','Thus [a] ⊆ [b]. Reverse the roles to get [b] ⊆ [a].']:['x ∈ [a] ∩ [b] means a R x and b R x.','Symmetry: b R x gives x R b.','Transitivity: a R x and x R b give a R b.','Equivalent representatives give [a] = [b].'];
+ return panel('<div class="proof-visual">'+svg(art,'Relations used in the class proof','0 0 820 360')+`<div class="proof-line">${lines[Math.min(q.step,3)]}</div></div>`,'Only relations used in this argument are shown.',btn('Next reasoning step','step','data-max="3" '+(q.step===3?'disabled':''))+btn('Start proof again','reset'),q.step===3?'<strong>The argument used arbitrary elements, not just the picture.</strong>':'Identify which equivalence axiom permits the next arrow.');
+}
+function bucketDiagram(blocks,{checked=false,universe=range(1,6),interactive=false,bins=null}={}){
+ const report=partitionReport(blocks.filter(b=>!interactive||b.length),universe),cols=blocks.length,w=760/cols;let art='';
+ blocks.forEach((block,k)=>{const x=30+k*w;art+=`<rect x="${x}" y="58" width="${w-15}" height="245" rx="20" fill="${FILLS[k]}" stroke="${checked&&!block.length&&!interactive?C.coral:'#abc5bd'}" stroke-width="2"/>`+txt(x+(w-15)/2,88,interactive?`Tray ${'ABC'[k]}`:`Block ${k+1}`,23,C.muted);
+  if(!block.length)art+=txt(x+(w-15)/2,190,interactive?'unused':'∅',interactive?23:40,C.muted);
+  block.forEach((v,i)=>{const per=Math.min(3,Math.max(1,Math.floor((w-30)/58))),px=x+(w-15)/2+(i%per-(Math.min(per,block.length)-1)/2)*58,py=148+Math.floor(i/per)*68,bad=checked&&(report.repeated.includes(v)||report.outside.includes(v));art+=token(v,px,py,bad?C.coral:C.teal,interactive);});
+ });
+ const missing=universe.filter(v=>!blocks.some(b=>b.includes(v)));art+=txt(125,350,interactive?'Unplaced':'Outside the blocks',20,C.muted);
+ missing.forEach((v,i)=>art+=token(v,265+i*65,350,checked?C.coral:C.muted,interactive));
+ return svg(art,interactive?'Move elements among partition trays':'Proposed partition blocks');
+}
+function token(v,x,y,color,interactive){return `<g class="${interactive?'bucket-token':''}" ${interactive?`role="button" tabindex="0" data-action="move" data-value="${v}" data-focus-key="token-${v}" aria-label="Move element ${v} to next tray"`:''}><circle cx="${x}" cy="${y}" r="23" fill="white" stroke="${color}" stroke-width="3"/>${txt(x,y,v,25)}</g>`;}
+function partitionCheck(q){const blocks=PARTITIONS[q.candidate],report=partitionReport(blocks,range(1,6));let message='';if(q.checked)message=report.valid?'<strong>A partition: nonempty blocks, full coverage, no overlap.</strong>':'<span class="fail">'+[report.empty.length?'Empty block present.':'',report.missing.length?'Uncovered: '+report.missing.join(', ')+'.':'',report.repeated.length?'Repeated: '+report.repeated.join(', ')+'.':'',report.outside.length?'Outside A: '+report.outside.join(', ')+'.':''].filter(Boolean).join(' ')+'</span>';
+ return panel(bucketDiagram(blocks,{checked:q.checked}),'Universe A = {1,2,3,4,5,6}.',choose('candidate','Collection',[[0,'P₁ · Odd/even'],[1,'P₂ · Overlap'],[2,'P₃ · Incomplete'],[3,'P₄ · Empty block'],[4,'P₅ · Outside A']],q.candidate)+btn('Check partition','check'),message);}
+function partitionEditor(q){const blocks=[0,1,2].map(k=>q.bins.flatMap((b,i)=>b===k?[i+1]:[])),used=blocks.filter(b=>b.length),valid=q.bins.every(x=>x>=0)&&used.length===2;return panel(bucketDiagram(blocks,{interactive:true,checked:q.checked}),'Click each element to cycle: unplaced → A → B → C → unplaced.',btn('Check construction','check')+btn('Reset trays','reset'),q.checked?(valid?'<strong>Valid: exactly two nonempty, disjoint blocks cover A.</strong>':`<span class="fail">${q.bins.filter(x=>x<0).length} unplaced; ${used.length} nonempty block(s). Aim for 0 unplaced and 2 blocks.</span>`):'Empty trays are not counted as partition blocks.');}
+function blockGraph(bins,mask,focus=-1){
+ const n=bins.length,groups=[...new Set(bins.filter(k=>k>=0))].sort(),points=Array(n),id='block-'+(++serial);let art=`<defs><marker id="${id}" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto" markerUnits="userSpaceOnUse"><path d="M0 0 L10 5 L0 10Z" fill="${C.blue}"/></marker></defs>`;
+ groups.forEach((group,g)=>{const members=bins.flatMap((b,i)=>b===group?[i]:[]),width=480/groups.length,cx=10+width*(g+.5),r=members.length===1?0:Math.min(90,width*.33);art+=`<rect x="${10+g*width}" y="25" width="${width-12}" height="305" rx="28" fill="${FILLS[group]}"/>`;members.forEach((v,k)=>points[v]=[cx+r*Math.cos(-Math.PI/2+2*Math.PI*k/members.length),177+(members.length===2?85:r)*Math.sin(-Math.PI/2+2*Math.PI*k/members.length)]);});
+ for(let a=0;a<n;a++)for(let b=0;b<n;b++)if(mask&(1<<(a*n+b))){const [x,y]=points[a],[u,v]=points[b],highlight=a===focus;let d;if(a===b){const sign=x<250?-1:1;d=`M${x+sign*17},${y-12} C${x+sign*65},${y-48} ${x+sign*65},${y+48} ${x+sign*17},${y+12}`;}else{const len=Math.hypot(u-x,v-y),dx=(u-x)/len,dy=(v-y)/len;d=`M${x+dx*24},${y+dy*24} Q${(x+u)/2-dy*15},${(y+v)/2+dx*15} ${u-dx*24},${v-dy*24}`;}art+=`<path d="${d}" fill="none" stroke="${highlight?C.gold:C.blue}" stroke-opacity="${focus<0||highlight?1:.25}" stroke-width="${highlight?4:2.5}" marker-end="url(#${id})"/>`;}
+ points.forEach(([x,y],i)=>art+=`<g class="bucket-token" data-action="focus" data-value="${i}" data-focus-key="vertex-${i}" role="button" tabindex="0" aria-label="Inspect class of ${i+1}"><circle cx="${x}" cy="${y}" r="23" fill="white" stroke="${i===focus?C.gold:C.teal}" stroke-width="3"/>${txt(x,y,i+1,24)}</g>`);
+ return svg(art,'Same-block relation including directed pairs and loops','0 0 500 360');
+}
+function blockMatrix(bins,mask,q,{editable=false,showErrors=false}={}){const n=bins.length,order=range(0,n-1);if(q.reorder)order.sort((a,b)=>bins[a]-bins[b]||a-b);const target=sameBlockMask(bins);
+ return '<div><div class="matrix-label">row → column</div><table class="block-matrix" aria-label="Same-block relation matrix"><thead><tr><th>↓ / →</th>'+order.map(i=>`<th scope="col">${i+1}</th>`).join('')+'</tr></thead><tbody>'+order.map(a=>`<tr><th scope="row">${a+1}</th>`+order.map(b=>{const bit=1<<(a*n+b),on=!!(mask&bit);return `<td><button type="button" class="${on?'on ':''}${a===q.focus?'focus-pair ':''}${showErrors&&(target&bit)&&!on?'missing ':''}${showErrors&&!(target&bit)&&on?'extra':''}" data-action="pair" data-a="${a}" data-b="${b}" data-focus-key="pair-${a}-${b}" aria-label="Pair (${a+1}, ${b+1})" aria-pressed="${on}" ${editable?'':'disabled'}>${on?1:0}</button></td>`;}).join('')+'</tr>').join('')+'</tbody></table></div>';}
+function blockRelation(s,q){const bins=[0,1,1,0,1],target=sameBlockMask(bins),mask=s.activity==='encode'?q.mask:s.activity==='proof'||q.all?target:q.mask;let status='',caption='P = {{1,4}, {2,3,5}}.',controls='';
+ if(s.activity==='encode'){controls=btn('Check all pairs','check')+btn('Clear matrix','clearMask');if(q.checked){const missing=range(0,24).filter(k=>(target&(1<<k))&&!(mask&(1<<k))).length,extra=range(0,24).filter(k=>!(target&(1<<k))&&(mask&(1<<k))).length;status=missing||extra?`<span class="fail">${missing} missing; ${extra} extra pair(s). Gold = missing, red = extra.</span>`:'<strong>Exactly the 13 required pairs, including every loop.</strong>';}}
+ else if(s.activity==='proof'){controls=btn('Explain next axiom','step','data-max="3" '+(q.step===3?'disabled':''))+btn('Start again','reset');status=['Try the three arguments before revealing them.','Reflexive: every element belongs to a block, so it shares a block with itself.','Symmetric: if a and b share a block, b and a share that same block.','Transitive: a,b ∈ B and b,c ∈ C. The unique block containing b forces B = C, so a,c share it.'][q.step];}
+ else{controls=btn('Reveal next row','blockRow',''+(q.step===5?'disabled':''))+btn('Reveal all pairs','allPairs')+btn('Start again','reset');status=q.all?'<strong>2² + 3² = 13 ordered pairs.</strong> [1]={1,4}; [2]={2,3,5}.':`${q.step} of 5 rows revealed. Every member points to every member of its block.`;}
+ controls+=btn(q.reorder?'Original label order':'Group matrix by block','reorder');
+ return panel('<div class="relation-layout">'+blockGraph(bins,mask,q.focus)+blockMatrix(bins,mask,q,{editable:s.activity==='encode',showErrors:q.checked})+'</div>',caption,controls,status);
+}
+function correspondence(q){const n=5;const safeBins=q.bins.map(x=>Math.max(0,x)),mask=sameBlockMask(safeBins),classes=classesFromMask(mask,n);
+ return panel('<div class="relation-layout">'+blockGraph(safeBins,mask,q.focus)+blockMatrix(safeBins,mask,q)+'</div>','Click a “Move” button to change an element’s block.',range(1,n).map(v=>btn('Move '+v,'moveGroup',`data-value="${v}"`)).join('')+btn(q.reorder?'Original order':'Group matrix','reorder'),`Recovered classes: ${classes.map(setText).join(' , ')}. <strong>The original blocks return.</strong>`);
+}
+function integerClasses(q){const groups=range(0,q.n-1).map(r=>range(-8,12).filter(v=>mod(v,q.n)===r));return panel(`<div class="integer-groups ${q.n<=3?'compact':''}">`+groups.map((g,r)=>`<div class="integer-group" style="background:${FILLS[r]}"><h3>[${r}]</h3><div class="ellipsis">⋮</div>${g.map(v=>`<div>${v}</div>`).join('')}<div class="ellipsis">⋮</div></div>`).join('')+'</div>','Only the window −8 through 12 is shown; every class continues both ways.',choose('n','Modulus n',range(2,7).map(n=>[n,n]),q.n),`<strong>${q.n} classes on ℤ.</strong> Integers in one column differ by a multiple of ${q.n}.`);}
+function table(title,headers,rows,{selected=[],bad=[],dim=[],column=-1,source=null,pending=false,output=false}={}){
+ const labels=headers.map((h,i)=>`<th scope="col" class="${i===column?'focus-col':''}">${esc(h)}</th>`).join('');
+ let body=rows.map((row,i)=>`<tr class="${selected.includes(i)?'match ':''}${bad.includes(i)?'bad ':''}${dim.includes(i)?'dim':''}" ${source?`data-action="inspect" data-source="${source}" data-row="${i}"`:''}>`+row.map((v,j)=>`<td class="${j===column?'focus-col':''}">${j===0&&source?`<button class="row-picker" type="button" data-action="inspect" data-source="${source}" data-row="${i}" data-focus-key="${source}-${i}" aria-label="Inspect ${esc(title)} row ${i+1}">${esc(v)}</button>`:esc(v)}</td>`).join('')+'</tr>').join('');
+ if(!rows.length)body=`<tr><td colspan="${headers.length}" class="empty">${pending?'Predict the result, then reveal.':'∅ · no tuples'}</td></tr>`;
+ return `<div class="table-shell"><h3 class="table-title">${esc(title)}</h3><table class="db-table" aria-label="${esc(title)}"><thead><tr>${labels}</tr></thead><tbody>${body}</tbody></table></div>`;
+}
+function tuples(q){const row=q.row<0?null:STU[q.row%3];return panel('<div class="single-table">'+table('STUDENT',ATTRS,STU,{selected:row?[q.row%3]:[],column:q.column,source:'left'})+'</div><div class="tuple-readout">'+(row?esc('('+row.join(', ')+')'):'Click a row to read its tuple.')+'</div>','IDs × Names × Majors has 3 × 3 × 2 = 18 possible triples.',choose('column','Attribute',ATTRS.map((a,i)=>[i,a]),q.column),'<strong>Arity: 3 coordinates. Cardinality: 3 stored tuples.</strong>');}
+function keys(q){const rows=q.repeat?[...STU,[104,'Ada','Math']]:STU,values=rows.map(r=>r[q.column]),duplicates=values.flatMap((v,i)=>values.indexOf(v)!==values.lastIndexOf(v)?[i]:[]);return panel('<div class="single-table">'+table('STUDENT',ATTRS,rows,{column:q.column,bad:q.checked?duplicates:[]})+'</div>','Rule: IDs must be unique in every allowed table; repeated names are permitted.',choose('column','Test attribute',ATTRS.map((a,i)=>[i,a]),q.column)+btn(q.repeat?'Remove second Ada':'Add another Ada','repeat')+btn('Check uniqueness','check'),q.checked?(duplicates.length?`<span class="fail">${ATTRS[q.column]} is not unique in this sample.</span>`:`<strong>${ATTRS[q.column]} is unique in this sample.</strong>`)+(q.column===0?' The database rule guarantees unique IDs.':' This does not make it a guaranteed key.'):'Inspect the sample, then test the declared rule.');}
+function selection(q){const rows=selectRows(STU,q.filter),selected=q.reveal?STU.flatMap((r,i)=>rows.includes(r)?[i]:[]):[],dim=q.reveal?STU.flatMap((r,i)=>rows.includes(r)?[]:[i]):[];return panel('<div class="db-flow">'+table('STUDENT',ATTRS,STU,{selected,dim})+'<div class="flow-symbol">σ →</div>'+table('RESULT',ATTRS,q.reveal?rows:[],{pending:!q.reveal})+'</div>','Selection keeps the schema: ID, Name, Major.',choose('filter','Predicate',[['CS','Major = CS'],['Math','Major = Math'],['All','All rows']],q.filter)+btn('Apply selection','reveal'),q.reveal?`<strong>${STU.length} input rows; ${rows.length} output rows.</strong> The result is a subset of STUDENT.`:'Predict which rows satisfy the predicate.');}
+function projection(s,q){const cols=range(0,2).filter(i=>q.columns&(1<<i)),output=projectRows(STU,cols),chosen=q.output>=0?output[q.output]:null,contributors=chosen?STU.flatMap((r,i)=>JSON.stringify(cols.map(c=>r[c]))===JSON.stringify(chosen)?[i]:[]):[];
+ const controls='<span class="projection-controls">'+ATTRS.map((name,i)=>btn(name,'column',`data-column="${i}" aria-pressed="${!!(q.columns&(1<<i))}" ${cols.length===1&&cols[0]===i?'disabled':''}`)).join(' ')+'</span>'+btn('Apply projection','reveal');
+ return panel('<div class="db-flow">'+table('STUDENT',ATTRS,STU,{selected:contributors})+'<div class="flow-symbol">π →</div>'+table('RESULT',cols.map(i=>ATTRS[i]),q.reveal?output:[],{pending:!q.reveal,source:'output',selected:q.output>=0?[q.output]:[]})+'</div>','Choose attributes. Click a result row to trace its source rows.',controls,q.reveal?(contributors.length?`${contributors.length} source row(s) contribute the selected output tuple.`:`<strong>${output.length} distinct output tuple(s).</strong> Identical projected tuples appear once.`):'Projection changes the coordinates; relations retain set semantics.');
+}
+function joinData(s){return s.kind==='rooms'?{left:[[241,'GITC1100'],[288,'CKB303']],right:[['GITC1100',90],['CKB303',36]],leftHeaders:['Course','Room'],rightHeaders:['Room','Capacity'],headers:['Course','Room','Capacity'],leftTitle:'COURSE',rightTitle:'ROOM',li:1,ri:0}:{left:STU.map(r=>r.slice(0,2)),right:ENROLL,leftHeaders:['ID','Name'],rightHeaders:['StudentID','Course'],headers:['ID','Name','Course'],leftTitle:'STUDENT',rightTitle:'ENROLL',li:0,ri:0};}
+function joinScene(s,q){
+ const d=joinData(s),{left,right,li,ri}=d,all=joinRows(left,right,li,ri),leftBad=left.flatMap((a,i)=>right.some(b=>a[li]===b[ri])?[]:[i]),rightBad=right.flatMap((b,i)=>left.some(a=>a[li]===b[ri])?[]:[i]);let selectedLeft=[],selectedRight=[],output=[],pending=true,status='Click an input row to inspect its matches.';
+ if(s.activity==='build'){const k=Math.min(q.step,left.length);output=joinRows(left.slice(0,k),right,li,ri);pending=k===0;if(k){selectedLeft=[k-1];selectedRight=right.flatMap((b,i)=>b[ri]===left[k-1][li]?[i]:[]);status=`Processed ${k} of ${left.length} students. ${output.length} output tuple(s). ${selectedRight.length?'This student contributes '+selectedRight.length+'.':'This student has no match.'}`;}}
+ else if(s.activity==='unmatched'&&q.checked){output=all;pending=false;status=`<span class="fail">Unmatched: ${d.leftTitle} ${leftBad.map(i=>left[i][li]).join(', ')}; ${d.rightTitle} ${rightBad.map(i=>right[i][ri]).join(', ')}.</span>`;}
+ else if(q.all){output=all;pending=false;selectedLeft=left.flatMap((_,i)=>leftBad.includes(i)?[]:[i]);selectedRight=right.flatMap((_,i)=>rightBad.includes(i)?[]:[i]);status=`<strong>${all.length} distinct combined tuples.</strong> The matching attribute is written once.`;}
+ else if(q.row>=0){const source=q.source==='right'?right:left,row=source[q.row];if(row){const value=row[q.source==='right'?ri:li];selectedLeft=left.flatMap((a,i)=>a[li]===value?[i]:[]);selectedRight=right.flatMap((b,i)=>b[ri]===value?[i]:[]);output=joinRows(left.filter(a=>a[li]===value),right.filter(b=>b[ri]===value),li,ri);pending=false;status=`Selected key ${esc(value)}: ${selectedLeft.length} left × ${selectedRight.length} right match(es) = ${output.length} output tuple(s).`;}}
+ let links='';left.forEach((a,i)=>right.forEach((b,j)=>{if(a[li]===b[ri]){const active=q.all||(selectedLeft.includes(i)&&selectedRight.includes(j));if(active)links+=`<path d="M0,${84+i*41} C30,${84+i*41} 45,${84+j*41} 75,${84+j*41}" fill="none" stroke="${C.teal}" stroke-width="3"/>`;}}));
+ const html='<div class="join-panel"><div class="join-inputs">'+table(d.leftTitle,d.leftHeaders,left,{source:'left',selected:selectedLeft,bad:q.checked&&s.activity==='unmatched'?leftBad:[]})+svg(links,'Matching keys','0 0 75 245').replace('<svg ','<svg class="join-links" ')+table(d.rightTitle,d.rightHeaders,right,{source:'right',selected:selectedRight,bad:q.checked&&s.activity==='unmatched'?rightBad:[]})+'</div><div class="join-output">'+table('JOIN RESULT',d.headers,output,{pending})+'</div></div>';
+ let controls=s.activity==='build'?btn('Process next student','step',`data-max="${left.length}" ${q.step>=left.length?'disabled':''}`):s.activity==='unmatched'?btn('Mark unmatched rows','check'):btn('Show full join','allJoin');controls+=btn('Reset example','reset');
+ return panel(html,d.leftTitle+'.'+d.leftHeaders[li]+' = '+d.rightTitle+'.'+d.rightHeaders[ri],controls,status);
+}
+function joinGrid(q){let art=txt(440,25,'ENROLL row: (StudentID, Course)',22,C.muted);ENROLL.forEach((row,j)=>art+=txt(307+j*133,73,'('+row.join(',')+')',19,C.blue));
+ STU.forEach((row,i)=>{art+=txt(175,143+i*103,row[0]+' '+row[1],22,C.teal);ENROLL.forEach((enroll,j)=>{const k=i*4+j,show=!!(q.grid&(1<<k)),match=row[0]===enroll[0],x=248+j*133,y=98+i*103;art+=`<g class="calendar-day" data-action="grid" data-cell="${k}" data-focus-key="grid-${k}" role="button" tabindex="0" aria-label="Test student ${row[0]} with enrollment ${j+1}"><rect x="${x}" y="${y}" width="119" height="88" rx="10" fill="${show?(match?FILLS[0]:'#f0f2f6'):'white'}" stroke="#bbc9da"/>${txt(x+59,y+27,`${row[0]} = ${enroll[0]}?`,18)}${txt(x+59,y+62,show?(match?'match':'no'):'?',24,show&&match?C.teal:C.muted)}</g>`;});});
+ const count=range(0,11).filter(k=>q.grid&(1<<k)).length;return panel(svg(art,'All twelve candidate row pairs'),'The two enrollments for 101 are different source rows.',btn('Reveal every comparison','allGrid')+btn('Start again','reset'),count===12?'<strong>3 matching pairs out of 12 candidates.</strong> They produce the three joined tuples.':`${count} of 12 candidates inspected.`);}
+function pipeline(s,q){const select=selectRows(STU,q.filter),joined=joinRows(select,ENROLL),isQuery=s.kind==='query',max=isQuery?3:2,k=Math.min(q.step,max),names=isQuery?['STUDENT','Select','Join','Project']:['STUDENT','Select','Project'];
+ const stages=isQuery?[[ATTRS,STU],[ATTRS,select],[['ID','Name','Major','Course'],joined],[['Name','Course'],projectRows(joined,[1,3])]]:[[ATTRS,STU],[ATTRS,select],[['Name'],projectRows(select,[1])]], [headers,rows]=stages[k];
+ let html='<div class="pipeline"><div class="pipeline-track">'+names.map((name,i)=>`<span class="${i===k?'active':''}">${i?i+'. ':''}${name}</span>`).join('')+`</div><div class="pipeline-stage">${k===0?'Start with the stored relation':names[k]+': '+rows.length+' resulting tuple(s)'}</div>`+table(names[k].toUpperCase()+' RESULT',headers,rows)+'</div>';
+ const detail=k===0?'Observe both the rows and their attributes.':k===1?'Selection retains the same three attributes.':isQuery&&k===2?'The join matches IDs and adds the Course attribute.':'Projection keeps the requested coordinates and removes duplicate tuples.';
+ return panel(html,detail,choose('filter','Select predicate',[['CS','Major = CS'],['Math','Major = Math'],['All','All rows']],q.filter)+btn('Next operation','step',`data-max="${max}" ${k===max?'disabled':''}`)+btn('Previous','back',k===0?'disabled':'')+btn('Start query again','restartSteps'),k===max?'<strong>'+esc(rows.length?setText(rows.map(r=>'('+r.join(', ')+')')):'Empty relation; its attributes are still defined.')+'</strong>':'Predict the next output before advancing.');}
+function quiz(q){const prompts=['Modulo seven on U: [1] = [8].','Keep only students whose Major is CS.','Keep only the Name coordinate.','Combine STUDENT and ENROLL by ID.'],correct=['yes','selection','projection','join'];return panel('<div class="quiz-form">'+prompts.map((prompt,i)=>`<label class="quiz-line ${q.checked?(q.answers[i]===correct[i]?'correct':'incorrect'):''}"><span>${i+1}. ${prompt}</span><select data-answer="${i}" aria-label="Answer ${i+1}">${(i?[['?','Choose'],['selection','Selection'],['projection','Projection'],['join','Join']]:[['?','Choose'],['yes','True'],['no','False']]).map(([v,l])=>`<option value="${v}" ${v===q.answers[i]?'selected':''}>${l}</option>`).join('')}</select></label>`).join('')+'</div>','Explain each choice in terms of sets and tuples.',btn('Check choices','check')+btn('Reset choices','reset'),q.checked?`<strong>${q.answers.filter((a,i)=>a===correct[i]).length} of 4 correct.</strong> Revisit any marked statement before checking again.`:'Feedback stays in this browser; this is practice.');}
+function closing(q){return q.closing===0?panel('<div class="relation-layout">'+blockGraph([0,1,1,0,1],sameBlockMask([0,1,1,0,1]))+blockMatrix([0,1,1,0,1],sameBlockMask([0,1,1,0,1]),{reorder:true,focus:-1})+'</div>','A partition and its same-block relation encode the same grouping.',btn('Show the query result','closing'),'Classes are sets of related elements.'):panel('<div class="single-table">'+table('CS STUDENTS AND THEIR COURSES',['Name','Course'],projectRows(joinRows(selectRows(STU,'CS'),ENROLL),[1,3]))+'</div>','Select, join, and project each return a relation.',btn('Show the class partition','closing'),'Rows are tuples; attributes name their coordinates.');}
+function renderScene(s,q){switch(s.scene){case'calendar':return calendar(s,q);case'divisorClasses':return divisorClasses(s,q);case'classProof':return classProof(s,q);case'partitionCheck':return partitionCheck(q);case'partitionEditor':return partitionEditor(q);case'blockRelation':return blockRelation(s,q);case'correspondence':return correspondence(q);case'integerClasses':return integerClasses(q);case'tuples':return tuples(q);case'keys':return keys(q);case'selection':return selection(q);case'projection':return projection(s,q);case'join':return joinScene(s,q);case'joinGrid':return joinGrid(q);case'pipeline':return pipeline(s,q);case'quiz':return quiz(q);case'closing':return closing(q);default:throw Error('Unknown scene '+s.scene);}}
+function slideContent(s,q){return `<div class="eyebrow">${s.act===0?'Opening investigation':`Act ${s.act} / ${DECK.acts[s.act]}`}</div><h1>${s.title}</h1><div class="content"><div class="text">${s.body}</div><div class="visual">${renderScene(s,q)}</div></div>`;}
+function render(){const s=DECK.slides[index];$('#slide').className=s.cover?'cover':'';$('#slide').innerHTML=slideContent(s,st());$('#counter').textContent=`${index+1} / ${DECK.slides.length}`;$('#previous').disabled=index===0;$('#next').disabled=index===DECK.slides.length-1;$('#progress').style.width=`${100*(index+1)/DECK.slides.length}%`;$('#act').value=s.act;$('#source').textContent=s.act>=3?'Course supplement · Relational databases':'DMOI 4e · §2.6';if(s.act>=3)$('#source').removeAttribute('href');else $('#source').href='https://discrete.openmathbooks.org/dmoi4/sec_gt-relations.html';document.title=`22 · ${s.title.replace(/<[^>]*>/g,' ')} · CS 241`;}
+function go(n){clearInterval(timer);timer=null;index=Math.max(0,Math.min(DECK.slides.length-1,n));history.replaceState(null,'',`#${index+1}`);render();}
+function action(a,target){const s=DECK.slides[index],q=st();clearInterval(timer);timer=null;
+ if(a==='day'){q.anchor=Number(target.dataset.day);q.reveal=true;q.checked=false;}
+ if(a==='reveal')q.reveal=true;if(a==='all')q.all=!q.all;if(a==='check'){q.checked=true;if(s.scene==='calendar')q.reveal=true;}
+ if(a==='reset')state[index]=freshState(s);
+ if(a==='step')q.step=Math.min(Number(target.dataset.max),q.step+1);if(a==='back')q.step=Math.max(0,q.step-1);if(a==='restartSteps')q.step=0;
+ if(a==='move'){const i=Number(target.dataset.value)-1;q.bins[i]=(q.bins[i]+2)%4-1;}
+ if(a==='moveGroup'){const i=Number(target.dataset.value)-1;q.bins[i]=(Math.max(0,q.bins[i])+1)%3;}
+ if(a==='focus')q.focus=Number(target.dataset.value);
+ if(a==='pair'){q.mask^=1<<(Number(target.dataset.a)*5+Number(target.dataset.b));}
+ if(a==='clearMask'){q.mask=0;q.checked=false;}
+ if(a==='blockRow'){const targetMask=sameBlockMask([0,1,1,0,1]);q.mask|=targetMask&(31<<(q.step*5));q.focus=q.step;q.step=Math.min(5,q.step+1);}
+ if(a==='allPairs'){q.all=true;q.step=5;q.mask=sameBlockMask([0,1,1,0,1]);}
+ if(a==='reorder')q.reorder=!q.reorder;
+ if(a==='repeat'){q.repeat=!q.repeat;q.checked=false;}
+ if(a==='column'){const bit=1<<Number(target.dataset.column);if(q.columns!==bit)q.columns^=bit;q.reveal=false;q.output=-1;}
+ if(a==='inspect'){if(target.dataset.source==='output')q.output=Number(target.dataset.row);else{q.source=target.dataset.source;q.row=Number(target.dataset.row);q.all=false;} }
+ if(a==='allJoin')q.all=true;
+ if(a==='grid')q.grid^=1<<Number(target.dataset.cell);if(a==='allGrid')q.grid=4095;
+ if(a==='closing')q.closing=1-q.closing;
+ render();
+}
+function activate(target){const key=target.dataset.focusKey;action(target.dataset.action,target);if(key)Array.from(document.querySelectorAll('#slide [data-focus-key]')).find(el=>el.dataset.focusKey===key)?.focus();}
+document.addEventListener('click',e=>{const target=e.target.closest('[data-action]');if(target)activate(target);const jump=e.target.closest('[data-jump]');if(jump){$('#overview').close();go(Number(jump.dataset.jump));}});
+document.addEventListener('change',e=>{const q=st();if(e.target.matches('[data-answer]')){q.answers[Number(e.target.dataset.answer)]=e.target.value;q.checked=false;render();return;}const key=e.target.dataset.setting;if(!key)return;q[key]=key==='filter'?e.target.value:Number(e.target.value);q.checked=false;q.reveal=false;q.output=-1;if(key==='filter')q.step=0;render();});
+document.addEventListener('keydown',e=>{const target=e.target.closest('[role="button"][data-action]');if(target&&['Enter',' '].includes(e.key)){e.preventDefault();activate(target);return;}if(document.querySelector('dialog[open]')||e.target.closest('button,select,a,input,textarea,[role=button]'))return;if(['ArrowRight','PageDown',' '].includes(e.key)){e.preventDefault();go(index+1);}if(['ArrowLeft','PageUp'].includes(e.key)){e.preventDefault();go(index-1);}if(e.key==='Home')go(0);if(e.key==='End')go(DECK.slides.length-1);if(e.key.toLowerCase()==='o')$('#overview').showModal();if(e.key.toLowerCase()==='f')fullscreen();});
+function fullscreen(){if(document.fullscreenElement)document.exitFullscreen();else document.documentElement.requestFullscreen().catch(()=>{});}
+function pauseDeckAnimations(){document.querySelector('#slide').getAnimations({subtree:true}).forEach(a=>a.pause());}
+$('#previous').onclick=()=>go(index-1);$('#next').onclick=()=>go(index+1);$('#full').onclick=fullscreen;$('#showOverview').onclick=()=>$('#overview').showModal();$('#act').innerHTML=DECK.acts.map((a,i)=>`<option value="${i}">${i===0?'Opening':'Act '+i} · ${a}</option>`).join('');$('#act').onchange=e=>go(DECK.slides.findIndex(s=>s.act===Number(e.target.value)));$('#overviewList').innerHTML=DECK.slides.map((s,i)=>`<button data-jump="${i}">${String(i+1).padStart(2,'0')} · ${s.title.replaceAll('<br>',' ')}</button>`).join('');
+function resize(){const scale=Math.min(innerWidth/1600,innerHeight/900);$('#stage').style.transform=`translate(-50%,-50%) scale(${scale})`;}
+addEventListener('resize',resize);addEventListener('hashchange',()=>{const n=Number(location.hash.slice(1));if(Number.isInteger(n)&&n>=1&&n<=DECK.slides.length)go(n-1);});addEventListener('beforeprint',()=>{const old=index;$('#print').innerHTML=DECK.slides.map((s,i)=>{index=i;return `<section class="print-page">${slideContent(s,st())}</section>`;}).join('');index=old;});resize();const initial=Number(location.hash.slice(1));go(Number.isInteger(initial)&&initial>0?initial-1:0);
+</script><script>
+// This module is isolated from deck controls, except for the render/print hooks.
+(()=>{
+ 'use strict';
+ const TEXT_ENABLED=true;
+ const NS='http://www.w3.org/2000/svg',W=1600,H=900;
+ const hash=s=>{let h=2166136261;for(const ch of s){h^=ch.charCodeAt(0);h=Math.imul(h,16777619);}return (h>>>0).toString(16);};
+ const fingerprint=`m${DECK.meeting}-`+hash(DECK.slides.map(s=>s.title).join('\n'));
+ const storageKey=(TEXT_ENABLED?'cs241-ink-text-copy-v1:':'cs241-ink-copy-v1:')+fingerprint;
+ const icons={
+  use:'<path d="M5 3v17l4-5 4 7 3-2-4-6 7-1Z"/>',
+  pen:'<path d="m4 16 12-12 4 4L8 20l-5 1Z"/><path d="m13 7 4 4M4 16l4 4"/>',
+  highlight:'<path d="m7 15 7-12 7 4-7 12Z"/><path d="m7 15-3 4 6 3 4-3M3 22h18"/>',
+  erase:'<path d="m3 14 11-11 8 8-10 10H9Z"/><path d="m7 10 8 8M12 21h9"/>',
+  text:'<path d="M4 5V3h16v2M12 3v18M8 21h8"/>',
+  undo:'<path d="M8 5 3 10l5 5M4 10h10a6 6 0 0 1 0 12"/>',
+  redo:'<path d="m16 5 5 5-5 5M20 10H10a6 6 0 0 0 0 12"/>',
+  clear:'<path d="M3 6h18M8 6V3h8v3M6 6l1 15h10l1-15M10 10v7M14 10v7"/>',
+  menu:'<circle cx="5" cy="12" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/>'
+ };
+ const toolButton=(name,label,extra='')=>`<button type="button" id="ink-${name==='menu'?'more':name}" title="${label}" aria-label="${label}" ${extra}><svg viewBox="0 0 24 24" aria-hidden="true">${icons[name]}</svg></button>`;
+ const stage=document.getElementById('stage'),layer=document.createElementNS(NS,'svg');
+ layer.id='ink-layer';layer.setAttribute('viewBox',`0 0 ${W} ${H}`);layer.setAttribute('aria-label','Slide annotation layer');
+ stage.append(layer);
+ const toolbar=document.createElement('div');toolbar.id='ink-tools';toolbar.setAttribute('role','toolbar');toolbar.setAttribute('aria-label','Writing tools');
+ toolbar.innerHTML=toolButton('use','Interact with the slide (V)','aria-pressed="true"')+toolButton('pen','Pen (P)','aria-pressed="false"')+toolButton('highlight','Highlighter (H)','aria-pressed="false"')+toolButton('erase','Eraser: remove whole strokes (E)','aria-pressed="false"')+'<hr>'+toolButton('undo','Undo ink on this slide (Ctrl+Z)')+toolButton('redo','Redo ink on this slide (Ctrl+Shift+Z)')+'<hr><input id="ink-color" type="color" value="#c62828" title="Ink color" aria-label="Ink color"><select id="ink-width" title="Stroke width" aria-label="Stroke width"><option value="3">3</option><option value="5">5</option><option value="8">8</option></select><hr>'+toolButton('clear','Clear ink on this slide (undo available)')+toolButton('menu','Ink backup, printing, and help')+'<span id="ink-save-status" role="status" aria-live="polite">Ready</span>';
+ stage.append(toolbar);
+ if(TEXT_ENABLED)toolbar.querySelector('#ink-erase').insertAdjacentHTML('afterend',toolButton('text','Text box (T)','aria-pressed="false"'));
+ const resets=document.createElement('div');resets.id='lectureResetControls';resets.setAttribute('role','group');resets.setAttribute('aria-label','Lecture reset controls');
+ resets.innerHTML='<button id="restartLecture" type="button" title="Reset all demonstrations; keep annotations">↺ Restart lecture</button><button id="resetAnnotations" type="button" title="Clear ink and text on all slides; Undo restores annotations on each slide">Reset annotations</button>';
+ stage.append(resets);
+ const menu=document.createElement('dialog');menu.id='ink-menu';
+ menu.innerHTML='<button type="button" id="ink-close">Close</button><h2>Write on this copy</h2><p>Choose <b>Pen</b> or <b>Highlighter</b> and write with a mouse, stylus, or touch. Buttons below the diagrams work in every mode. Choose <b>Interact</b> to click directly on a diagram’s edges or vertices. The eraser removes whole strokes.</p><p>Ink is saved per slide in <b>this browser</b>, together with the diagram state. It is not written into the HTML file. Download a backup before switching browsers, moving the file, or clearing browser data.</p><p class="ink-hint">Ink stays at its page position when you change a diagram. Arrow keys and the slide controls still navigate. V = interact · P = pen · H = highlighter · E = eraser. Ctrl/Cmd+Z undoes ink on the current slide.</p><div class="ink-menu-actions"><button type="button" id="ink-export">Download ink backup</button><button type="button" id="ink-load">Load ink backup…</button><button type="button" id="ink-print">Print slides with ink</button></div><p class="ink-hint">Loading a backup replaces the current ink and diagram states. Each slide’s prior ink can be recovered with Undo. Printing preserves the slide’s layout and ink alignment.</p><p id="ink-menu-message" role="status" aria-live="polite"></p>';
+ document.body.append(menu);
+ const resources=document.createElement('section');resources.innerHTML='<h3>Reading and related slides</h3>';resources.append(stage.querySelector('.footer>div:first-child'));menu.append(resources);
+ const controlHelp=document.createElement('p');controlHelp.className='ink-hint';controlHelp.textContent='Quick colors remember separate pen and highlighter choices. Writing pauses route playback. On the opening slide, Restart lecture resets all demonstrations and keeps your annotations. Reset annotations clears ink and text across the deck; Undo restores them on each slide.';menu.append(controlHelp);
+ if(TEXT_ENABLED){
+  const help=document.createElement('p');help.innerHTML='<b>Text boxes:</b> choose <b>T</b>, then click the slide and type. Click an existing box to edit it. Drag its Move handle or resize from its bottom-right corner. Adjust the size and color above the box. Press Escape or Ctrl/Cmd+Enter to finish typing. Use Undo/Redo for ink and completed text edits.';menu.querySelector('h2').after(help);
+  for(const p of menu.querySelectorAll('p'))p.innerHTML=p.innerHTML.replaceAll('Ink is saved','Ink and text are saved').replaceAll('ink and diagram states','ink, text, and diagram states').replaceAll('prior ink','prior annotations');
+  menu.querySelector('#ink-export').textContent='Download annotation backup';menu.querySelector('#ink-load').textContent='Load annotation backup…';menu.querySelector('#ink-print').textContent='Print slides with annotations';
+ }
+ const fileInput=document.createElement('input');fileInput.id='ink-import';fileInput.type='file';fileInput.accept='.json,application/json';fileInput.hidden=true;document.body.append(fileInput);
+ const get=id=>document.getElementById(id);
+ let ink={},undo={},redo={},mode='use',colorsForTool={pen:'#1565c0',highlight:'#fdd835'},width=3;
+ let gesture=null,raf=0,saveTimer=0,loadedWarning='',saveFailed=false;
+ const strokes=(i=index)=>ink[i]||[];
+ const textTools=TEXT_ENABLED?createTextTools():null;
+ // Included inside the annotation module only for an ink + text copy.
+function createTextTools(){
+ const textLayer=document.createElement('div');textLayer.id='ink-text-layer';stage.append(textLayer);
+ let selected=null,selectedSlide=-1,editing=null,drag=null,textColor='#172439',textSize=28;
+ const clamp=(x,a,b)=>Math.max(a,Math.min(b,x));
+ const boxData=(id,i=index)=>strokes(i).find(s=>s.tool==='text'&&s.id===id);
+ const boxElement=id=>Array.from(textLayer.children).find(e=>e.dataset.textId===id);
+ function applyStyle(el,s){Object.assign(el.style,{left:s.x+'px',top:s.y+'px',width:s.w+'px',height:s.h+'px',fontSize:s.size+'px',color:s.color});}
+ function content(s,placeholder=false){const el=document.createElement('div');el.className='ink-text-content';el.textContent=s.text||(placeholder?'Type a note…':'');el.dataset.empty=placeholder&&!s.text;return el;}
+ function fit(s){
+  const measure=document.createElement('div');measure.className='ink-text-content';
+  Object.assign(measure.style,{position:'absolute',left:'-10000px',top:'0',visibility:'hidden',width:(s.w-2)+'px',height:'auto',fontSize:s.size+'px',lineHeight:'1.25'});
+  measure.textContent=s.text+'\u200b';textLayer.append(measure);
+  const h=clamp(measure.scrollHeight+2,48,702);measure.remove();
+  return {...s,h,x:clamp(s.x,64,W-64-s.w),y:clamp(s.y,104,H-94-h)};
+ }
+ function replace(id,changes,i=index){let updated;ink[i]=strokes(i).map(s=>{if(s.tool!=='text'||s.id!==id)return s;updated=fit({...s,...changes});return updated;});return updated;}
+ function changed(a,b){return JSON.stringify(a)!==JSON.stringify(b);}
+ function finishEditing(){
+  if(!editing)return;
+  const session=editing;editing=null;
+  const current=boxData(session.id,session.slide);
+  if(changed(session.before,strokes(session.slide)))remember(session.slide,session.before);
+  if(current&&session.area.isConnected)session.area.replaceWith(content(current,true));
+  updateButtons();saveNow();
+ }
+ function endDrag(cancel=false){
+  if(!drag)return;
+  const session=drag;drag=null;
+  if(session.handle.hasPointerCapture(session.pointerId))session.handle.releasePointerCapture(session.pointerId);
+  if(cancel)ink[session.slide]=session.before;
+  else if(changed(session.before,strokes(session.slide)))remember(session.slide,session.before);
+  renderText();updateButtons();saveNow();
+ }
+ function finish(){finishEditing();endDrag();}
+ function beginEdit(id,before){
+  if(editing?.id===id&&editing.slide===index)return;
+  // A playing route must not replace the editor while someone is typing.
+  stopPlayback();
+  finish();selected=id;selectedSlide=index;renderText();
+  const s=boxData(id),box=boxElement(id);if(!s||!box)return;
+  textColor=s.color;textSize=s.size;if(mode==='text')get('ink-color').value=s.color;
+  updateInkChoices();
+  const area=document.createElement('textarea');area.className='ink-text-editor';area.value=s.text;area.placeholder='Type a note…';area.maxLength=5000;area.spellcheck=false;area.setAttribute('aria-label','Slide text box');
+  box.querySelector('.ink-text-content').replaceWith(area);
+  editing={id,slide:index,before:before||strokes(),area};
+  area.addEventListener('input',()=>{if(!editing||editing.area!==area)return;const current=replace(id,{text:area.value},editing.slide);applyStyle(box,current);scheduleSave();});
+  area.addEventListener('blur',finishEditing);
+  area.addEventListener('keydown',e=>{
+   e.stopPropagation();
+   if(e.key==='Escape'||((e.ctrlKey||e.metaKey)&&e.key==='Enter')){e.preventDefault();finishEditing();}
+  });
+  area.focus();area.setSelectionRange(area.value.length,area.value.length);
+ }
+ function editStyle(id,changes){
+  finish();const before=strokes();if(!boxData(id))return;replace(id,changes);
+  if(changed(before,strokes()))remember(index,before);
+  renderText();updateButtons();saveNow();
+ }
+ function remove(id){finish();const before=strokes();ink[index]=before.filter(s=>s.tool!=='text'||s.id!==id);if(changed(before,strokes()))remember(index,before);selected=null;renderText();updateButtons();saveNow();}
+ function startDrag(e,id,kind,handle){
+  if(e.pointerType==='mouse'&&e.button!==0)return;
+  e.preventDefault();e.stopPropagation();finishEditing();
+  const s=boxData(id);if(!s)return;
+  selected=id;selectedSlide=index;
+  drag={id,kind,handle,pointerId:e.pointerId,slide:index,before:strokes(),start:point(e),original:s};handle.setPointerCapture(e.pointerId);
+ }
+ function attachHandle(handle,id,kind){
+  handle.addEventListener('pointerdown',e=>startDrag(e,id,kind,handle));
+  handle.addEventListener('pointermove',e=>{
+   if(!drag||e.pointerId!==drag.pointerId)return;e.preventDefault();
+   const p=point(e),dx=p[0]-drag.start[0],dy=p[1]-drag.start[1],s=drag.original;
+   const change=kind==='move'?{x:s.x+dx,y:s.y+dy}:{w:clamp(s.w+dx,140,W-64-s.x)};
+   const current=replace(id,change,drag.slide);applyStyle(boxElement(id),current);scheduleSave();
+  });
+  handle.addEventListener('pointerup',e=>{if(drag?.pointerId===e.pointerId)endDrag();});
+  handle.addEventListener('pointercancel',e=>{if(drag?.pointerId===e.pointerId)endDrag(true);});
+  handle.addEventListener('lostpointercapture',e=>{if(drag?.pointerId===e.pointerId)endDrag();});
+  handle.addEventListener('keydown',e=>{
+   if(!['ArrowLeft','ArrowRight','ArrowUp','ArrowDown','Delete','Backspace'].includes(e.key))return;e.preventDefault();e.stopPropagation();
+   if(['Delete','Backspace'].includes(e.key)){remove(id);return;}
+   const s=boxData(id),delta=e.shiftKey?20:5,dx=e.key==='ArrowLeft'?-delta:e.key==='ArrowRight'?delta:0,dy=e.key==='ArrowUp'?-delta:e.key==='ArrowDown'?delta:0;
+   editStyle(id,kind==='move'?{x:s.x+dx,y:s.y+dy}:{w:clamp(s.w+dx+dy,140,W-64-s.x)});
+   boxElement(id)?.querySelector(kind==='move'?'.ink-text-move':'.ink-text-resize').focus();
+  });
+ }
+ function renderText(){
+  textLayer.dataset.mode=mode;if(editing||drag)return;
+  if(selectedSlide!==index||!boxData(selected))selected=null;
+  textLayer.replaceChildren();
+  for(const s of strokes().filter(s=>s.tool==='text')){
+   const box=document.createElement('div');box.className='ink-text-box';box.dataset.textId=s.id;applyStyle(box,s);box.append(content(s,true));
+   const active=s.id===selected&&['use','text'].includes(mode);box.classList.toggle('is-selected',active);
+   box.addEventListener('click',e=>{if(!e.target.closest('button,input,select,textarea')&&['use','text'].includes(mode))beginEdit(s.id);});
+   if(active){
+    const options=document.createElement('div');options.className='ink-text-options';options.setAttribute('aria-label','Text box controls');
+    const move=document.createElement('button');move.type='button';move.className='ink-text-move';move.textContent='⠿ Move';move.title='Drag to move; arrow keys to nudge';move.setAttribute('aria-label','Move text box');attachHandle(move,s.id,'move');
+    const size=document.createElement('select');size.setAttribute('aria-label','Text size');for(const n of [20,24,28,32,40,48,56]){const option=document.createElement('option');option.value=n;option.textContent=n;option.selected=n===s.size;size.append(option);}size.onchange=()=>{textSize=Number(size.value);editStyle(s.id,{size:textSize});};
+    const color=document.createElement('input');color.type='color';color.value=s.color;color.title='Text color';color.setAttribute('aria-label','Text color');color.onchange=()=>{textColor=color.value;editStyle(s.id,{color:textColor});if(mode==='text')get('ink-color').value=textColor;updateInkChoices();};
+    const del=document.createElement('button');del.type='button';del.textContent='Delete';del.setAttribute('aria-label','Delete text box');del.onclick=()=>remove(s.id);
+    options.append(move,size,color,del);box.append(options);
+    const resize=document.createElement('button');resize.type='button';resize.className='ink-text-resize';resize.title='Drag to change width; height follows the text';resize.setAttribute('aria-label','Resize text box');attachHandle(resize,s.id,'resize');box.append(resize);
+   }
+   textLayer.append(box);
+  }
+ }
+ return {
+  finish,render:renderText,
+  color:()=>selected&&boxData(selected)?boxData(selected).color:textColor,
+  setColor(color){textColor=color;if(selected&&selectedSlide===index)editStyle(selected,{color});},
+  setMode(next){if(!['use','text'].includes(next))selected=null;layer.classList.toggle('ink-text-mode',next==='text');renderText();},
+  add(p){
+   finish();const before=strokes(),id='text-'+(globalThis.crypto?.randomUUID?.()||Date.now()+'-'+Math.random().toString(36).slice(2));
+   const s=fit({tool:'text',id,x:p[0],y:p[1],w:360,h:48,text:'',size:textSize,color:textColor});
+   ink[index]=[...before,s];beginEdit(id,before);scheduleSave();
+  },
+  validate(s){
+   if(typeof s.id!=='string'||!/^[a-zA-Z0-9_-]{1,80}$/.test(s.id)||typeof s.text!=='string'||s.text.length>5000||!/^#[0-9a-f]{6}$/i.test(s.color)||![20,24,28,32,40,48,56].includes(s.size)||![s.x,s.y,s.w,s.h].every(Number.isFinite)||s.x<0||s.y<0||s.w<140||s.h<48||s.x+s.w>W||s.y+s.h>H)throw Error('Invalid text box.');
+   return {tool:'text',id:s.id,x:s.x,y:s.y,w:s.w,h:s.h,text:s.text,size:s.size,color:s.color};
+  },
+  print(page,i){for(const s of strokes(i).filter(s=>s.tool==='text')){const box=document.createElement('div');box.className='ink-text-print';applyStyle(box,s);box.append(content(s));page.append(box);}}
+ };
+}
+
+ function validInt(x,lo,hi){return Number.isInteger(x)&&x>=lo&&x<=hi;}
+ function cleanStates(raw){if(typeof cleanDeckStates==='function')return cleanDeckStates(raw);let result={};if(!raw||typeof raw!=='object'||Array.isArray(raw))return result;
+  Object.entries(raw).forEach(([key,v])=>{const i=Number(key);if(!validInt(i,0,DECK.slides.length-1)||!v||typeof v!=='object')return;
+   const s=DECK.slides[i],max=s.scene==='route'?s.route.length-1:({pathCycle:3,longestPath:2,deleteAudit:2,spanningSteps:6,traversal:9,weightedTree:2,uniqueExplore:1,boundaryWalk:3,spiderModel:3,build:3,districtMap:2}[s.scene]||0);
+   const q={step:validInt(v.step,0,max)?v.step:0,toggle:v.toggle===true,palette:validInt(v.palette,0,colors.length-1)?v.palette:0,assigned:[],face:-1};
+   const colorCount=s.scene==='districtMap'?districtGraph.p.length:s.scene==='map'?4:s.scene==='colorGraph'?G[s.graph].p.length:0;
+   if(Array.isArray(v.assigned))q.assigned=Array.from(v.assigned.slice(0,colorCount),c=>validInt(c,-1,colors.length-1)?c:-1);
+   if(s.scene==='faces'&&validInt(v.face,-1,s.graph==='cube'?5:2))q.face=v.face;
+   // Feedback is plain text inserted by the base renderer; never restore markup.
+   if(typeof v.message==='string')q.message=v.message.slice(0,1000).replace(/[<>&]/g,'');
+   if(validInt(v.example,0,s.scene==='countLab'?countExamples.length-1:3))q.example=v.example;
+   if(Array.isArray(v.countShown))q.countShown=v.countShown.slice(0,4).map(x=>x===true);
+   if(Array.isArray(v.active)&&v.active.length<=12&&v.active.every(x=>validInt(x,0,11)))q.active=[...new Set(v.active)];
+   if(v.root===0||v.root===5)q.root=v.root;
+   if(['pre','in','post'].includes(v.order))q.order=v.order;
+   if(s.scene==='route'&&[350,700,1400].includes(v.routeDelay))q.routeDelay=v.routeDelay;
+   result[i]=q;
+  });return result;
+ }
+ function validatePayload(data){
+  if(!data||!(data.version===1||(TEXT_ENABLED&&data.version===2))||data.deck!==fingerprint||!data.slides||typeof data.slides!=='object'||Array.isArray(data.slides))throw Error(`This backup does not match this version of meeting ${DECK.meeting}.`);
+  let result={},total=0;
+  for(const [key,list] of Object.entries(data.slides)){
+   const i=Number(key);if(!validInt(i,0,DECK.slides.length-1)||!Array.isArray(list)||list.length>10000)throw Error('Invalid slide data.');
+   const textIds=new Set();result[i]=list.map(s=>{
+    if(s?.tool==='text'&&textTools){const box=textTools.validate(s);if(textIds.has(box.id))throw Error('Duplicate text box.');textIds.add(box.id);return box;}
+    if(!s||!['pen','highlight'].includes(s.tool)||!/^#[0-9a-f]{6}$/i.test(s.color)||!Number.isFinite(s.width)||s.width<1||s.width>100||!Array.isArray(s.points)||!s.points.length)throw Error('Invalid ink stroke.');
+    total+=s.points.length;if(total>1500000)throw Error('The backup contains too many points.');
+    const points=s.points.map(p=>{if(!Array.isArray(p)||p.length!==2||!p.every(Number.isFinite)||p[0]<0||p[0]>W||p[1]<0||p[1]>H)throw Error('Invalid ink coordinates.');return [p[0],p[1]];});
+    return {tool:s.tool,color:s.color,width:s.width,points};
+   });
+  }
+  return {slides:result,states:cleanStates(data.states)};
+ }
+ try{const raw=localStorage.getItem(storageKey);if(raw){const data=validatePayload(JSON.parse(raw));ink=data.slides;state=data.states;}}
+ catch(e){loadedWarning='Browser storage could not be loaded. Use backups for this session.';saveFailed=true;}
+ function payload(){return {version:TEXT_ENABLED?2:1,deck:fingerprint,title:`CS 241 · Meeting ${DECK.meeting} · ${DECK.title}`,savedAt:new Date().toISOString(),slides:ink,states:cleanStates(state)};}
+ function status(message,failed=false){const e=get('ink-save-status');e.textContent=message;e.dataset.failed=failed;e.title=failed?'Automatic browser saving failed. Download an annotation backup.':`Ink${TEXT_ENABLED?', text,':''} and diagram states are saved in this browser, not in the HTML file.`;}
+ function saveNow(){clearTimeout(saveTimer);try{localStorage.setItem(storageKey,JSON.stringify(payload()));saveFailed=false;status('Saved locally');}catch(e){saveFailed=true;status('Use backup',true);}}
+ function scheduleSave(){clearTimeout(saveTimer);saveTimer=setTimeout(saveNow,180);}
+ function elementForStroke(s){let el;
+  if(s.points.length===1){el=document.createElementNS(NS,'circle');el.setAttribute('cx',s.points[0][0]);el.setAttribute('cy',s.points[0][1]);el.setAttribute('r',s.width/2);el.setAttribute('fill',s.color);}
+  else{el=document.createElementNS(NS,'path');el.setAttribute('d',s.points.map((p,i)=>(i?'L':'M')+p.join(' ')).join(' '));el.setAttribute('fill','none');el.setAttribute('stroke',s.color);el.setAttribute('stroke-width',s.width);el.setAttribute('stroke-linecap','round');el.setAttribute('stroke-linejoin','round');}
+  el.setAttribute('opacity',s.tool==='highlight'?'.27':'1');el.setAttribute('class','ink-stroke');return el;
+ }
+ function drawInk(){raf=0;layer.replaceChildren(...strokes().filter(s=>s.tool!=='text').map(elementForStroke));if(gesture?.stroke&&gesture.slide===index)layer.append(elementForStroke(gesture.stroke));textTools?.render();updateButtons();}
+ function requestDraw(){if(!raf)raf=requestAnimationFrame(drawInk);}
+ function updateButtons(){get('ink-undo').disabled=!(undo[index]?.length);get('ink-redo').disabled=!(redo[index]?.length);get('ink-clear').disabled=!strokes().length;get('resetAnnotations').disabled=!Object.values(ink).some(list=>list.length);}
+ function remember(i,before){(undo[i]||(undo[i]=[])).push(before);if(undo[i].length>100)undo[i].shift();redo[i]=[];}
+ function finishGesture(cancel=false){textTools?.finish();if(!gesture)return;const g=gesture;gesture=null;
+  if(g.stroke&&!cancel){remember(g.slide,strokes(g.slide));ink[g.slide]=[...strokes(g.slide),g.stroke];}
+  if(g.before){if(cancel)ink[g.slide]=g.before;else if(g.erased)remember(g.slide,g.before);}
+  if(layer.hasPointerCapture(g.pointerId))layer.releasePointerCapture(g.pointerId);
+  drawInk();saveNow();
+ }
+ function useMode(next){finishGesture();if(toolbar.contains(document.activeElement))document.activeElement.blur();mode=next;layer.classList.toggle('ink-enabled',mode!=='use');for(const name of ['use','pen','highlight','erase',...(TEXT_ENABLED?['text']:[])])get('ink-'+name).setAttribute('aria-pressed',name===mode);
+  if(next!=='use')stopPlayback();
+  get('ink-color').disabled=!['pen','highlight','text'].includes(mode);get('ink-color').value=mode==='text'?textTools.color():colorsForTool[mode]||colorsForTool.pen;textTools?.setMode(mode);updateInkChoices();
+ }
+ function undoInk(){finishGesture();if(!undo[index]?.length)return;(redo[index]||(redo[index]=[])).push(strokes());ink[index]=undo[index].pop();drawInk();saveNow();}
+ function redoInk(){finishGesture();if(!redo[index]?.length)return;(undo[index]||(undo[index]=[])).push(strokes());ink[index]=redo[index].pop();drawInk();saveNow();}
+ function point(e){const r=layer.getBoundingClientRect();return [Math.round(Math.max(0,Math.min(W,(e.clientX-r.left)*W/r.width))*10)/10,Math.round(Math.max(0,Math.min(H,(e.clientY-r.top)*H/r.height))*10)/10];}
+ function pointSegment(p,a,b){const dx=b[0]-a[0],dy=b[1]-a[1],len=dx*dx+dy*dy,t=len?Math.max(0,Math.min(1,((p[0]-a[0])*dx+(p[1]-a[1])*dy)/len)):0;return Math.hypot(p[0]-a[0]-t*dx,p[1]-a[1]-t*dy);}
+ function segmentsDistance(a,b,c,d){const cross=(u,v,w)=>(v[0]-u[0])*(w[1]-u[1])-(v[1]-u[1])*(w[0]-u[0]);let x=cross(a,b,c),y=cross(a,b,d),z=cross(c,d,a),w=cross(c,d,b);
+  if(((x>0&&y<0)||(x<0&&y>0))&&((z>0&&w<0)||(z<0&&w>0)))return 0;
+  return Math.min(pointSegment(a,c,d),pointSegment(b,c,d),pointSegment(c,a,b),pointSegment(d,a,b));
+ }
+ function eraseBetween(a,b){const g=gesture;if(!g)return;const before=strokes(g.slide);ink[g.slide]=before.filter(s=>{if(s.tool==='text')return true;const radius=10+s.width/2;if(s.points.length===1)return pointSegment(s.points[0],a,b)>radius;for(let j=1;j<s.points.length;j++)if(segmentsDistance(a,b,s.points[j-1],s.points[j])<=radius)return false;return true;});if(ink[g.slide].length!==before.length)g.erased=true;requestDraw();}
+ layer.addEventListener('pointerdown',e=>{if(mode==='use'||gesture||(e.pointerType==='mouse'&&e.button!==0))return;e.preventDefault();const p=point(e),eraser=mode==='erase'||e.button===5;
+  if(mode==='text'){textTools.add(p);return;}
+  gesture={slide:index,pointerId:e.pointerId,last:p};layer.setPointerCapture(e.pointerId);
+  if(eraser){gesture.before=strokes();gesture.erased=false;eraseBetween(p,p);}else gesture.stroke={tool:mode,color:colorsForTool[mode],width:mode==='highlight'?width*6:width,points:[p]};requestDraw();
+ });
+ layer.addEventListener('pointermove',e=>{if(!gesture||e.pointerId!==gesture.pointerId)return;e.preventDefault();const samples=e.getCoalescedEvents?.()||[],events=samples.length?samples:[e];
+  for(const sample of events){const p=point(sample);if(gesture.before)eraseBetween(gesture.last,p);else if(Math.hypot(p[0]-gesture.last[0],p[1]-gesture.last[1])>.5)gesture.stroke.points.push(p);gesture.last=p;}requestDraw();
+ });
+ layer.addEventListener('pointerup',e=>{if(!gesture||e.pointerId!==gesture.pointerId)return;e.preventDefault();const p=point(e);if(gesture.before)eraseBetween(gesture.last,p);else if(Math.hypot(p[0]-gesture.last[0],p[1]-gesture.last[1])>.5)gesture.stroke.points.push(p);finishGesture();});
+ layer.addEventListener('pointercancel',e=>{if(gesture?.pointerId===e.pointerId)finishGesture(true);});
+ layer.addEventListener('lostpointercapture',e=>{if(gesture?.pointerId===e.pointerId)finishGesture();});
+ for(const name of ['use','pen','highlight','erase'])get('ink-'+name).onclick=()=>useMode(name);
+ if(TEXT_ENABLED){get('ink-text').onclick=()=>useMode('text');for(const [id,label] of [['ink-undo','Undo annotation on this slide (Ctrl+Z)'],['ink-redo','Redo annotation on this slide (Ctrl+Shift+Z)'],['ink-clear','Clear ink and text on this slide (undo available)'],['ink-more','Annotation backup, printing, and help'],['ink-color','Annotation color']]){get(id).title=label;get(id).setAttribute('aria-label',label);}}
+ get('ink-undo').onclick=undoInk;get('ink-redo').onclick=redoInk;
+ get('ink-clear').onclick=()=>{finishGesture();if(!strokes().length)return;remember(index,strokes());ink[index]=[];drawInk();saveNow();};
+ get('ink-color').insertAdjacentHTML('beforebegin',[
+  ['ink',[['Blue','#1565c0'],['Red','#c62828'],['Black','#111111']]],
+  ['highlight',[['Yellow','#fdd835'],['Orange','#fb8c00']]]
+ ].map(([palette,swatches])=>`<div class="ink-swatches" data-palette="${palette}" role="group" aria-label="${palette==='ink'?'Ink':'Highlighter'} color">`+swatches.map(([name,color])=>`<button type="button" class="ink-swatch" data-ink-color="${color}" title="${name} ${palette==='ink'?'ink':'highlighter'}" aria-label="${name} ${palette==='ink'?'ink':'highlighter'}" aria-pressed="false"><span style="background:${color}"></span></button>`).join('')+'</div>').join(''));
+ get('ink-width').insertAdjacentHTML('beforebegin','<label class="ink-width-label" for="ink-width">Width</label>');
+ get('ink-width').innerHTML=[[3,'Thin'],[5,'Medium'],[8,'Thick']].map(([n,name])=>`<option value="${n}">${name}</option>`).join('');
+ function updateInkChoices(){
+  const color=mode==='text'?textTools.color():(colorsForTool[mode]||colorsForTool.pen);
+  toolbar.querySelectorAll('[data-palette]').forEach(group=>group.hidden=group.dataset.palette!==(mode==='highlight'?'highlight':'ink'));
+  toolbar.querySelectorAll('[data-ink-color]').forEach(button=>button.setAttribute('aria-pressed',button.dataset.inkColor===color));
+  get('ink-width').value=String(width);
+ }
+ function chooseInkColor(color){
+  if(!['pen','highlight','text'].includes(mode))useMode('pen');
+  if(mode==='text')textTools.setColor(color);else colorsForTool[mode]=color;
+  get('ink-color').value=color;updateInkChoices();
+ }
+ toolbar.querySelectorAll('[data-ink-color]').forEach(button=>button.onclick=()=>chooseInkColor(button.dataset.inkColor));
+ get('ink-color').oninput=e=>chooseInkColor(e.target.value);
+ get('ink-width').onchange=e=>{finishGesture();width=Number(e.target.value);useMode(mode==='highlight'?'highlight':'pen');};
+ get('ink-menu').querySelector('#ink-close').onclick=()=>menu.close();
+ const menuButton=get('ink-more');
+ menuButton.onclick=()=>{finishGesture();get('ink-menu-message').textContent=saveFailed?'Browser saving is unavailable. Download a backup to keep your annotations.':`Backups include ink${TEXT_ENABLED?', text,':''} and diagram states for all slides.`;get('ink-menu-message').dataset.failed=saveFailed;menu.showModal();};
+ get('ink-export').onclick=()=>{finishGesture();const blob=new Blob([JSON.stringify(payload(),null,2)],{type:'application/json'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=`meeting-${DECK.meeting}-ink${TEXT_ENABLED?'-text':''}-backup.json`;a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);get('ink-menu-message').textContent='Annotation backup downloaded.';get('ink-menu-message').dataset.failed=false;};
+ get('ink-load').onclick=()=>{fileInput.value='';fileInput.click();};
+ fileInput.onchange=async()=>{const f=fileInput.files[0];if(!f)return;try{if(f.size>40000000)throw Error('The backup file is too large.');const loaded=validatePayload(JSON.parse(await f.text()));finishGesture();clearInterval(timer);timer=null;for(let i=0;i<DECK.slides.length;i++)remember(i,strokes(i));ink=loaded.slides;state=loaded.states;render();saveNow();get('ink-menu-message').textContent='Backup loaded. Previous ink is available with Undo on each slide.';get('ink-menu-message').dataset.failed=false;}catch(e){get('ink-menu-message').textContent='Could not load backup: '+e.message;get('ink-menu-message').dataset.failed=true;}};
+ get('ink-print').onclick=()=>{finishGesture();menu.close();window.print();};
+ // Run before the original keyboard listener, without changing its navigation keys.
+ document.addEventListener('keydown',e=>{if(document.querySelector('dialog[open]')||e.target.closest('input,select,textarea')||e.altKey)return;const key=e.key.toLowerCase();
+  if((e.ctrlKey||e.metaKey)&&key==='z'){e.preventDefault();e.stopImmediatePropagation();e.shiftKey?redoInk():undoInk();return;}
+  if((e.ctrlKey||e.metaKey)&&key==='y'){e.preventDefault();e.stopImmediatePropagation();redoInk();return;}
+  if(e.ctrlKey||e.metaKey)return;const map={v:'use',p:'pen',h:'highlight',e:'erase',...(TEXT_ENABLED?{t:'text'}:{})};if(map[key]){e.preventDefault();e.stopImmediatePropagation();useMode(map[key]);}
+ },true);
+ function stopPlayback(){
+  clearInterval(timer);timer=null;
+  if(typeof pauseDeckAnimations==='function')pauseDeckAnimations();
+  const button=stage.querySelector('[data-action="play"]');if(button)button.textContent='Play';
+ }
+ // Pause without rerendering: an active pen stroke or text editor must stay put.
+ document.addEventListener('pointerdown',e=>{if(e.target.closest('#ink-tools,#ink-layer,#ink-text-layer'))stopPlayback();},true);
+ function updateLectureControls(){
+  resets.hidden=index!==0;
+  const s=DECK.slides[index];if(s.scene!=='route')return;
+  const q=st(),controls=stage.querySelector('#slide .controls'),play=controls.querySelector('[data-action="play"]');
+  play.textContent=timer?'Pause':'Play';
+  controls.insertAdjacentHTML('beforeend','<label class="route-playback">Speed <select id="route-speed" aria-label="Route playback speed">'+[[1400,'Slow'],[700,'Normal'],[350,'Fast']].map(([n,label])=>`<option value="${n}" ${n===(q.routeDelay||700)?'selected':''}>${label}</option>`).join('')+'</select></label>'+`<label class="route-playback">Step <input id="route-progress" aria-label="Route step" type="range" min="0" max="${s.route.length-1}" value="${q.step}" aria-valuetext="${q.step} of ${s.route.length-1}"></label>`);
+ }
+ const baseAction=action;
+ action=function(a,target){
+  if(a!=='play')return baseAction(a,target);
+  if(timer){stopPlayback();return;}
+  const q=st(),s=DECK.slides[index],at=index;
+  if(q.step>=s.route.length-1)q.step=0;
+  timer=setInterval(()=>{if(index!==at){stopPlayback();return;}q.step=Math.min(q.step+1,s.route.length-1);if(q.step===s.route.length-1)stopPlayback();render();},q.routeDelay||700);
+  render();
+ };
+ document.addEventListener('change',e=>{
+  if(!['route-speed','route-progress'].includes(e.target.id))return;
+  stopPlayback();const q=st();if(e.target.id==='route-speed')q.routeDelay=Number(e.target.value);else q.step=Number(e.target.value);render();
+ });
+ const baseRender=render;
+ render=function(){finishGesture();baseRender();updateLectureControls();document.title+=TEXT_ENABLED?' · Ink + text copy':' · Ink copy';drawInk();scheduleSave();};
+ // The base print listener runs first; replace its reflowed pages with exact-layout pages.
+ addEventListener('beforeprint',()=>{finishGesture();clearInterval(timer);timer=null;const old=index,container=get('print');container.replaceChildren();
+  DECK.slides.forEach((s,i)=>{index=i;const page=document.createElement('section');page.className='ink-print-page';
+   page.innerHTML=`<div class="brand"><b>CS 241</b>MEETING ${DECK.meeting}</div><article class="ink-print-slide ${s.cover?'cover':''}"><div class="eyebrow">${s.act===0?'Opening investigation':`Act ${s.act} / ${DECK.acts[s.act]}`}</div><h1>${s.title}</h1><div class="content"><div class="text">${s.body}</div><div class="visual">${renderScene(s,st())}</div></div></article><footer class="footer"><span>Meeting ${DECK.meeting} · ${DECK.title}</span><span>${i+1} / ${DECK.slides.length}</span></footer>`;
+   const svg=document.createElementNS(NS,'svg');svg.setAttribute('viewBox',`0 0 ${W} ${H}`);svg.setAttribute('class','ink-print-svg');strokes(i).filter(s=>s.tool!=='text').forEach(s=>svg.append(elementForStroke(s)));page.append(svg);textTools?.print(page,i);container.append(page);
+  });index=old;
+ });
+ addEventListener('pagehide',()=>{finishGesture();saveNow();});
+ addEventListener('blur',()=>finishGesture());
+ get('restartLecture').onclick=()=>{useMode('use');stopPlayback();state={};go(0);saveNow();status('Lecture reset');get('restartLecture').blur();};
+ get('resetAnnotations').onclick=()=>{useMode('use');stopPlayback();for(const [key,list] of Object.entries(ink))if(list.length)remember(Number(key),list);ink={};drawInk();saveNow();status('Notes reset');get('resetAnnotations').blur();};
+ useMode('use');baseRender();updateLectureControls();document.title+=TEXT_ENABLED?' · Ink + text copy':' · Ink copy';drawInk();
+ if(loadedWarning)status('Use backup',true);else status(Object.keys(ink).length?(TEXT_ENABLED?'Notes restored':'Ink restored'):'Ready');
+})();
+</script></body></html>
