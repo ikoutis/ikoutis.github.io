@@ -11,17 +11,31 @@
 #ink-layer.ink-enabled{pointer-events:auto;touch-action:none;cursor:crosshair}
 #slide .controls button,#slide .controls select,#slide .controls input{position:relative;z-index:3}
 #stage .topnav,#stage .footer{z-index:4}
-#ink-tools{position:absolute;left:7px;top:135px;width:48px;padding:5px 3px;z-index:5;display:flex;flex-direction:column;gap:5px;background:#f4f7fb;border:1px solid #c3ccda;border-radius:10px;box-shadow:0 3px 12px #17243912}
-#ink-tools button{width:40px;height:40px;min-width:0;padding:7px;display:grid;place-items:center;border:1px solid transparent;border-radius:6px;font-size:22px;color:#172439;background:transparent;line-height:1}
+#ink-tools{position:absolute;left:64px;bottom:18px;height:56px;padding:6px 8px;z-index:5;display:flex;align-items:center;gap:5px;background:#f4f7fb;border:1px solid #c3ccda;border-radius:9px;box-shadow:0 3px 12px #17243912}
+#ink-tools button{flex:0 0 40px;width:40px;height:40px;min-width:0;padding:7px;display:grid;place-items:center;border:1px solid transparent;border-radius:6px;font-size:22px;color:#172439;background:transparent;line-height:1}
 #ink-tools button:hover{background:#e3eaf4}
 #ink-tools button[aria-pressed=true]{background:#d9e9ff;border-color:#1b65b4;color:#154e8c}
 #ink-tools button:disabled{opacity:.3}
 #ink-tools svg{width:24px;height:24px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
-#ink-tools hr{width:30px;margin:2px auto;border:0;border-top:1px solid #c3ccda}
-#ink-color{width:36px;height:34px;padding:2px;margin:0 auto;border:1px solid #9eacc0;border-radius:5px;background:white;cursor:pointer}
-#ink-width{font-size:16px;width:40px;max-width:none;padding:4px 1px;background:white;border:1px solid #9eacc0;margin:0;color:#172439}
-#ink-save-status{font-size:10px;line-height:1.25;text-align:center;color:#45604c;overflow-wrap:anywhere;padding:2px 0;min-height:28px}
+#ink-tools hr{flex:0 0 1px;width:1px;height:30px;margin:0 4px;border:0;border-left:1px solid #c3ccda}
+#ink-color{display:none}
+.ink-swatches{display:flex;align-items:center;gap:3px}.ink-swatches[hidden]{display:none}
+#ink-tools .ink-swatch{width:32px;min-width:32px;flex:0 0 32px;padding:5px}
+.ink-swatch span{width:21px;height:21px;border-radius:50%;display:block;border:1px solid white}
+#ink-tools .ink-swatch[aria-pressed=true]{outline:2px solid #1b65b4;outline-offset:-1px}
+.ink-width-label{font-size:13px;color:#526078;margin:0 2px 0 8px}
+#ink-width{flex:0 0 88px;font-size:16px;width:88px;height:36px;max-width:none;padding:4px 6px;background:white;border:1px solid #9eacc0;border-radius:5px;margin:0;color:#172439}
+#ink-save-status{flex:0 0 82px;width:82px;font-size:12px;line-height:1.3;text-align:center;color:#45604c;padding:0 4px}
 #ink-save-status[data-failed=true]{color:#a02a20}
+#stage .footer{justify-content:flex-end}
+#lectureResetControls{position:absolute;top:30px;left:520px;z-index:5;display:flex;gap:8px}
+#lectureResetControls[hidden]{display:none}
+#lectureResetControls button{font-size:16px;padding:10px}
+#restartLecture{color:#145aa3;border-color:#aac2df;background:#f4f8fd}
+#resetAnnotations{color:#a43328;border-color:#d8b5b0;background:#fff8f6}
+.route-playback{display:flex;align-items:center;gap:8px;font-size:17px}
+.route-playback select{font-size:17px;padding:7px;max-width:110px}
+.route-playback input{width:115px}
 #ink-menu{width:780px;max-width:90vw}
 #ink-menu p{margin:16px 0}#ink-menu .ink-menu-actions{display:flex;gap:10px;flex-wrap:wrap;margin:20px 0}
 #ink-menu .ink-menu-actions button{float:none;margin:0;font-size:19px}
@@ -31,7 +45,7 @@
 @media print{
  @page{size:1600px 900px;margin:0}
  html,body{margin:0;padding:0;width:1600px;background:white;print-color-adjust:exact;-webkit-print-color-adjust:exact}
- #ink-tools,#ink-menu,#ink-import{display:none!important}
+ #ink-tools,#ink-menu,#ink-import,#lectureResetControls{display:none!important}
  .ink-print-page{position:relative;box-sizing:border-box;width:1600px;height:900px;overflow:hidden;break-after:page;page-break-after:always;background:white;color:#172439}
  .ink-print-page:last-child{break-after:auto;page-break-after:auto}
  .ink-print-slide{position:absolute;inset:104px 64px 94px}
@@ -59,7 +73,7 @@
 .ink-text-print{z-index:2}
 @media print{#ink-text-layer,.ink-text-options,.ink-text-resize{display:none!important}.ink-text-print{border-color:transparent}}
 </style></head>
-<body><main id="stage"><div class="brand"><b>CS 241</b>MEETING 18 · INK + TEXT</div><nav class="topnav" aria-label="Presentation controls"><select id="act" aria-label="Jump to act"></select><button id="showOverview" title="Slide overview (O)">Slides</button><button id="full" title="Fullscreen (F)">⛶ Fullscreen</button></nav><article id="slide" aria-label="Current slide"></article><footer class="footer"><div><a class="source" id="source" target="_blank" rel="noopener"></a><span> &nbsp; / &nbsp; </span><a class="source" href="https://discrete.openmathbooks.org/dmoi4/sec_gt-planar.html" target="_blank" rel="noopener">Next topic ↗</a></div><div class="right"><span>← → navigate · O overview</span><button id="previous" aria-label="Previous slide">←</button><span id="counter"></span><button id="next" aria-label="Next slide">→</button></div></footer><div id="progress" class="track"></div></main>
+<body><main id="stage"><div class="brand"><b>CS 241</b>MEETING 18 · INK + TEXT</div><nav class="topnav" aria-label="Presentation controls"><select id="act" aria-label="Jump to act"></select><button id="showOverview" title="Slide overview (O)">Slides</button><button id="full" title="Fullscreen (F)">⛶ Fullscreen</button></nav><article id="slide" aria-label="Current slide"></article><footer class="footer"><div><a class="source" id="source" target="_blank" rel="noopener"></a><span> &nbsp; / &nbsp; </span><a class="source" href="meeting-19-planar-graphs.html">Meeting 19 ↗</a></div><div class="right"><span>← → navigate · O overview</span><button id="previous" aria-label="Previous slide">←</button><span id="counter"></span><button id="next" aria-label="Next slide">→</button></div></footer><div id="progress" class="track"></div></main>
 <dialog id="overview"><button onclick="this.closest('dialog').close()">Close</button><h2>Meeting 18 · Trees</h2><div id="overviewList" class="overview-list"></div></dialog><div id="print" class="print-only"></div><noscript>This interactive deck requires JavaScript enabled in your browser. The original PDF slides are available in the same folder.</noscript>
 <script>const DECK={"title": "Trees", "subtitle": "Unique paths · induction · recursive structure", "acts": ["The connection puzzle", "Trees and unique paths", "Leaves and induction", "Spanning and rooted trees", "Traversals and applications"], "slides": [{"act": 0, "title": "How few edges<br>can keep us connected?", "body": "<p>Keep every vertex. Remove as many edges as possible without disconnecting the graph.</p><p>Which edges are essential?</p>", "scene": "graph", "graph": "investigation", "cover": true}, {"act": 0, "title": "Try the two construction problems", "body": "<div class=\"task\"><b>Investigate</b><p>First keep as few edges as possible while connecting every vertex. Then start empty and add as many edges as possible without making a cycle.</p></div><p>Compare your edge counts. State a conjecture.</p>", "scene": "treeEditor"}, {"act": 1, "title": "Which drawings are trees?", "body": "<p>A <em>tree</em> is connected and has no cycles. A <em>forest</em> has no cycles, but may be disconnected.</p><div class=\"task\"><b>Investigate</b><p>Test each drawing against both conditions.</p></div><p>Here graphs are finite, simple, undirected, and nonempty.</p>", "scene": "treeExamples"}, {"act": 1, "title": "How many paths join two vertices?", "body": "<div class=\"task\"><b>Investigate</b><p>Find a path from c to e. Can there be another path with no repeated vertices?</p></div><p>Now add the extra edge. What changes?</p>", "scene": "uniqueExplore"}, {"act": 1, "title": "Two different paths create a cycle", "body": "<p>Two paths may share a beginning and an ending.</p><p>Find where they first separate, then where they next meet. Their two different segments form a cycle.</p>", "scene": "pathCycle"}, {"act": 1, "title": "Trees have exactly one path", "body": "<p><em>Tree ⇒ unique paths.</em> Connectedness supplies a path. A second path would create a cycle.</p><p><em>Unique paths ⇒ tree.</em> Existence gives connectedness. A cycle would give two paths between vertices on it.</p><div class=\"equation\">tree ⇔ exactly one path per pair</div>", "scene": "pathCycle", "complete": true}, {"act": 1, "title": "What if one tree edge disappears?", "body": "<div class=\"task\"><b>Investigate</b><p>Prove that deleting an edge uv from a tree disconnects it. If u and v were still connected, what would that imply about the original tree?</p></div>", "scene": "treeCut"}, {"act": 2, "title": "Count vertices and edges", "body": "<div class=\"task\"><b>Investigate</b><p>Count n and e in these trees. What relationship do you suspect?</p></div><p>Include the smallest tree. A few examples suggest a formula; they do not prove it.</p>", "scene": "treeCounts"}, {"act": 2, "title": "Where can we safely shorten a tree?", "body": "<p>A <em>leaf</em> is a vertex of degree 1.</p><div class=\"task\"><b>Investigate</b><p>Choose a longest path in a tree with at least two vertices. Could one endpoint have another neighbor?</p></div>", "scene": "longestPath"}, {"act": 2, "title": "At least two leaves", "body": "<p>At either endpoint of a longest path, an extra neighbor would create a cycle or extend the path.</p><p>Both are impossible. Each endpoint therefore has degree 1.</p><div class=\"equation\">n ≥ 2 ⇒ at least two leaves</div>", "scene": "longestPath", "conclusion": true}, {"act": 2, "title": "Delete one leaf, keep a tree", "body": "<p>Delete a leaf and its only incident edge.</p><p>No cycle can appear. Paths between remaining vertices survive: a leaf cannot lie inside such a path.</p><div class=\"equation\">(n,e) → (n−1,e−1)</div>", "scene": "leafDelete"}, {"act": 2, "title": "The tree edge formula", "body": "<p>Every tree with n vertices has n−1 edges. We prove it by induction on n.</p><p><em>Base case:</em> a one-vertex tree has no edges.</p><div class=\"equation\">e = 0 = 1 − 1</div>", "scene": "graph", "graph": "single"}, {"act": 2, "title": "Assume it for every smaller tree", "body": "<p><em>Induction hypothesis:</em> every tree with n−1 vertices has n−2 edges.</p><p>Take an arbitrary tree T with n ≥ 2 vertices. Delete a leaf to get a tree T′ with n−1 vertices.</p><div class=\"equation\">|E(T′)| = n−2</div>", "scene": "leafDelete", "smaller": true}, {"act": 2, "title": "Restore the leaf", "body": "<p>Restore the deleted leaf and its one edge.</p><div class=\"equation\">|E(T)| = |E(T′)| + 1</div><div class=\"equation\">= (n−2) + 1 = n−1</div><p>The base case and inductive step establish the formula for every finite tree.</p>", "scene": "leafDelete", "restore": true}, {"act": 2, "title": "Why not delete any vertex?", "body": "<div class=\"task\"><b>Investigate</b><p>A proposed proof deletes an arbitrary vertex, applies induction, then restores one vertex and one edge. Find both problems. Why does choosing a leaf repair them?</p></div>", "scene": "deleteAudit"}, {"act": 3, "title": "Return to the connection puzzle", "body": "<p>A <em>spanning tree</em> keeps every vertex of G, uses only edges of G, and is a tree.</p><div class=\"equation\">V(T) = V(G)     E(T) ⊆ E(G)</div><p>Every spanning tree of this seven-vertex graph must have six edges.</p>", "scene": "spanningView"}, {"act": 3, "title": "Remove cycle edges", "body": "<p>Start with a connected graph. Delete an edge on a cycle.</p><p>The rest of that cycle still connects its endpoints, so connectedness survives.</p><p>When no cycle remains, the result is a spanning tree.</p>", "scene": "spanningSteps", "method": "delete"}, {"act": 3, "title": "Join different components", "body": "<p>Start with every vertex and no edges.</p><p>Add an edge joining two different current components. This cannot create a cycle.</p><p>Connectedness of the original graph guarantees an available connection until just one component remains.</p>", "scene": "spanningSteps", "method": "add"}, {"act": 3, "title": "Why the two edge counts agree", "body": "<p><em>Fewest edges while connected:</em> a cycle would contain an edge we could remove.</p><p><em>Most edges while acyclic:</em> two components could still be joined using an edge of G.</p><div class=\"equation\">Both constructions finish with n−1 edges.</div>", "scene": "spanningCompare"}, {"act": 3, "title": "Construct two different spanning trees", "body": "<div class=\"task\"><b>Investigate</b><p>Return to the opening graph. Build one spanning tree by cycle-edge deletion and a different one by adding edges without creating a cycle.</p></div><p>Explain why both must finish with six edges.</p>", "scene": "treeEditor"}, {"act": 3, "title": "Is the edge count enough?", "body": "<div class=\"task\"><b>Investigate</b><p>This graph has five vertices and four edges. Is it a tree? Which hypothesis is missing?</p></div><p>Check the definition before using a formula.</p>", "scene": "countTrap"}, {"act": 3, "title": "What makes the count decisive?", "body": "<p><em>Connected and e=n−1 ⇒ tree.</em> A spanning tree already uses all n−1 edges; none remain outside it.</p><p><em>Acyclic and e=n−1 ⇒ tree.</em> A forest with c components has</p><div class=\"equation\">e = Σ(nᵢ−1) = n−c.</div><p>Thus e=n−1 forces c=1.</p>", "scene": "forestCount"}, {"act": 3, "title": "Choose a root", "body": "<p>A <em>rooted tree</em> designates one vertex as the root.</p><p>For every other vertex, the next vertex on the unique path toward the root is its <em>parent</em>. Its other neighbors are its children.</p><p>Changing the root changes relationships, not edges.</p>", "scene": "rootTree"}, {"act": 3, "title": "Parents, siblings, and ancestors", "body": "<p><em>Siblings</em> share a parent.</p><p>The <em>ancestors</em> of a vertex lie on the path from its parent to the root. We exclude the vertex itself.</p><p>A vertex and its descendants form its rooted <em>subtree</em>. A rooted leaf has no children.</p>", "scene": "rootTree"}, {"act": 3, "title": "Read the family relationships", "body": "<div class=\"task\"><b>Investigate</b><p>With root f: find its children, the parent of a, the siblings of d, and the ancestors of a. Then root at a: what becomes the parent of f, and how are f and g related?</p></div><p>Ancestors exclude the vertex itself. A rooted leaf has no children.</p>", "scene": "rootTree", "exercise": true}, {"act": 4, "title": "Left and right are part of the structure", "body": "<p>In an <em>ordered binary tree</em>, every vertex has a left-child position and a right-child position. Either may be empty.</p><p>A child and its descendants form a smaller binary tree.</p><div class=\"task\"><b>Investigate</b><p>Would moving D from the right position to the left position change this ordered tree?</p></div>", "scene": "orderedTree", "supp": true}, {"act": 4, "title": "Which operations must happen first?", "body": "<p>In an expression tree, leaves hold operands and internal vertices hold operators.</p><div class=\"task\"><b>Investigate</b><p>Before evaluating the root +, what must be known about its two child subtrees?</p></div><div class=\"equation\">(2 × (a−1)) + (3 × b)</div>", "scene": "expression", "supp": true}, {"act": 4, "title": "Three recursive visit orders", "body": "<p>For an empty subtree, return. Otherwise recurse on each child subtree and visit the root once.</p><div class=\"rules\"><p><strong>Preorder</strong> root · left · right</p><p><strong>Inorder</strong> left · root · right</p><p><strong>Postorder</strong> left · right · root</p></div>", "scene": "traversal", "supp": true}, {"act": 4, "title": "Traverse a new binary tree", "body": "<div class=\"task\"><b>Investigate</b><p>A has left/right children B,C; B has D,E; C has F,G; E has left child H; F has right child I. Draw the tree, then list preorder, inorder, and postorder.</p></div>", "scene": "binaryTask", "supp": true}, {"act": 4, "title": "Same edge count, different total cost", "body": "<p>Every spanning tree has n−1 edges. With edge weights, their total costs can differ.</p><div class=\"task\"><b>Investigate</b><p>Which two edges connect A, B, C at minimum total cost?</p></div><p>A <em>minimum spanning tree</em> minimizes the sum of its edge weights.</p>", "scene": "weightedTree", "supp": true}, {"act": 4, "title": "Shortest routes are a different objective", "body": "<p>A shortest-path tree from A must preserve a shortest route from A to each vertex.</p><p>Compare the two trees: minimum total network cost need not give the shortest A-to-C route.</p>", "scene": "weightedTree", "compare": true, "supp": true}, {"act": 4, "title": "Greedy algorithms: what each chooses", "body": "<div class=\"rules\"><p><strong>Kruskal</strong> A lightest edge between components.</p><p><strong>Prim</strong> A lightest edge leaving the growing tree.</p><p><strong>Dijkstra</strong> Least tentative distance, then update neighbors.</p></div><p>Dijkstra requires nonnegative weights. Full algorithm analysis comes later.</p>", "scene": "weightedTree", "summary": true, "supp": true}, {"act": 4, "title": "Meeting 18, in one slide", "body": "<ul><li>A tree is connected and acyclic.</li><li>Its paths are unique and its edge count is n−1.</li><li>Leaf deletion makes induction possible.</li><li>Spanning trees resolve the connection puzzle.</li><li>A root gives recursive subtrees and traversals.</li></ul><p>Next: planar drawings and Euler’s formula.</p>", "scene": "graph", "graph": "tree18"}], "meeting": 18};
 const $=s=>document.querySelector(s), colors=['#66e5c0','#ff887c','#ffd16f','#b5a0ff','#82bcff'], inks=['#087f6d','#c5473a','#986000','#7451bc','#286bab'];
@@ -347,9 +361,14 @@ resize();let initial=Number(location.hash.slice(1));go(Number.isInteger(initial)
  toolbar.innerHTML=toolButton('use','Interact with the slide (V)','aria-pressed="true"')+toolButton('pen','Pen (P)','aria-pressed="false"')+toolButton('highlight','Highlighter (H)','aria-pressed="false"')+toolButton('erase','Eraser: remove whole strokes (E)','aria-pressed="false"')+'<hr>'+toolButton('undo','Undo ink on this slide (Ctrl+Z)')+toolButton('redo','Redo ink on this slide (Ctrl+Shift+Z)')+'<hr><input id="ink-color" type="color" value="#c62828" title="Ink color" aria-label="Ink color"><select id="ink-width" title="Stroke width" aria-label="Stroke width"><option value="3">3</option><option value="5">5</option><option value="8">8</option></select><hr>'+toolButton('clear','Clear ink on this slide (undo available)')+toolButton('menu','Ink backup, printing, and help')+'<span id="ink-save-status" role="status" aria-live="polite">Ready</span>';
  stage.append(toolbar);
  if(TEXT_ENABLED)toolbar.querySelector('#ink-erase').insertAdjacentHTML('afterend',toolButton('text','Text box (T)','aria-pressed="false"'));
+ const resets=document.createElement('div');resets.id='lectureResetControls';resets.setAttribute('role','group');resets.setAttribute('aria-label','Lecture reset controls');
+ resets.innerHTML='<button id="restartLecture" type="button" title="Reset all demonstrations; keep annotations">↺ Restart lecture</button><button id="resetAnnotations" type="button" title="Clear ink and text on all slides; Undo restores annotations on each slide">Reset annotations</button>';
+ stage.append(resets);
  const menu=document.createElement('dialog');menu.id='ink-menu';
  menu.innerHTML='<button type="button" id="ink-close">Close</button><h2>Write on this copy</h2><p>Choose <b>Pen</b> or <b>Highlighter</b> and write with a mouse, stylus, or touch. Buttons below the diagrams work in every mode. Choose <b>Interact</b> to click directly on a diagram’s edges or vertices. The eraser removes whole strokes.</p><p>Ink is saved per slide in <b>this browser</b>, together with the diagram state. It is not written into the HTML file. Download a backup before switching browsers, moving the file, or clearing browser data.</p><p class="ink-hint">Ink stays at its page position when you change a diagram. Arrow keys and the slide controls still navigate. V = interact · P = pen · H = highlighter · E = eraser. Ctrl/Cmd+Z undoes ink on the current slide.</p><div class="ink-menu-actions"><button type="button" id="ink-export">Download ink backup</button><button type="button" id="ink-load">Load ink backup…</button><button type="button" id="ink-print">Print slides with ink</button></div><p class="ink-hint">Loading a backup replaces the current ink and diagram states. Each slide’s prior ink can be recovered with Undo. Printing preserves the slide’s layout and ink alignment.</p><p id="ink-menu-message" role="status" aria-live="polite"></p>';
  document.body.append(menu);
+ const resources=document.createElement('section');resources.innerHTML='<h3>Reading and related slides</h3>';resources.append(stage.querySelector('.footer>div:first-child'));menu.append(resources);
+ const controlHelp=document.createElement('p');controlHelp.className='ink-hint';controlHelp.textContent='Quick colors remember separate pen and highlighter choices. Writing pauses route playback. On the opening slide, Restart lecture resets all demonstrations and keeps your annotations. Reset annotations clears ink and text across the deck; Undo restores them on each slide.';menu.append(controlHelp);
  if(TEXT_ENABLED){
   const help=document.createElement('p');help.innerHTML='<b>Text boxes:</b> choose <b>T</b>, then click the slide and type. Click an existing box to edit it. Drag its Move handle or resize from its bottom-right corner. Adjust the size and color above the box. Press Escape or Ctrl/Cmd+Enter to finish typing. Use Undo/Redo for ink and completed text edits.';menu.querySelector('h2').after(help);
   for(const p of menu.querySelectorAll('p'))p.innerHTML=p.innerHTML.replaceAll('Ink is saved','Ink and text are saved').replaceAll('ink and diagram states','ink, text, and diagram states').replaceAll('prior ink','prior annotations');
@@ -357,7 +376,7 @@ resize();let initial=Number(location.hash.slice(1));go(Number.isInteger(initial)
  }
  const fileInput=document.createElement('input');fileInput.id='ink-import';fileInput.type='file';fileInput.accept='.json,application/json';fileInput.hidden=true;document.body.append(fileInput);
  const get=id=>document.getElementById(id);
- let ink={},undo={},redo={},mode='use',colorsForTool={pen:'#c62828',highlight:'#f4c430'},width=3;
+ let ink={},undo={},redo={},mode='use',colorsForTool={pen:'#1565c0',highlight:'#fdd835'},width=3;
  let gesture=null,raf=0,saveTimer=0,loadedWarning='',saveFailed=false;
  const strokes=(i=index)=>ink[i]||[];
  const textTools=TEXT_ENABLED?createTextTools():null;
@@ -398,9 +417,12 @@ function createTextTools(){
  function finish(){finishEditing();endDrag();}
  function beginEdit(id,before){
   if(editing?.id===id&&editing.slide===index)return;
+  // A playing route must not replace the editor while someone is typing.
+  stopPlayback();
   finish();selected=id;selectedSlide=index;renderText();
   const s=boxData(id),box=boxElement(id);if(!s||!box)return;
   textColor=s.color;textSize=s.size;if(mode==='text')get('ink-color').value=s.color;
+  updateInkChoices();
   const area=document.createElement('textarea');area.className='ink-text-editor';area.value=s.text;area.placeholder='Type a note…';area.maxLength=5000;area.spellcheck=false;area.setAttribute('aria-label','Slide text box');
   box.querySelector('.ink-text-content').replaceWith(area);
   editing={id,slide:index,before:before||strokes(),area};
@@ -456,7 +478,7 @@ function createTextTools(){
     const options=document.createElement('div');options.className='ink-text-options';options.setAttribute('aria-label','Text box controls');
     const move=document.createElement('button');move.type='button';move.className='ink-text-move';move.textContent='⠿ Move';move.title='Drag to move; arrow keys to nudge';move.setAttribute('aria-label','Move text box');attachHandle(move,s.id,'move');
     const size=document.createElement('select');size.setAttribute('aria-label','Text size');for(const n of [20,24,28,32,40,48,56]){const option=document.createElement('option');option.value=n;option.textContent=n;option.selected=n===s.size;size.append(option);}size.onchange=()=>{textSize=Number(size.value);editStyle(s.id,{size:textSize});};
-    const color=document.createElement('input');color.type='color';color.value=s.color;color.title='Text color';color.setAttribute('aria-label','Text color');color.onchange=()=>{textColor=color.value;editStyle(s.id,{color:textColor});if(mode==='text')get('ink-color').value=textColor;};
+    const color=document.createElement('input');color.type='color';color.value=s.color;color.title='Text color';color.setAttribute('aria-label','Text color');color.onchange=()=>{textColor=color.value;editStyle(s.id,{color:textColor});if(mode==='text')get('ink-color').value=textColor;updateInkChoices();};
     const del=document.createElement('button');del.type='button';del.textContent='Delete';del.setAttribute('aria-label','Delete text box');del.onclick=()=>remove(s.id);
     options.append(move,size,color,del);box.append(options);
     const resize=document.createElement('button');resize.type='button';resize.className='ink-text-resize';resize.title='Drag to change width; height follows the text';resize.setAttribute('aria-label','Resize text box');attachHandle(resize,s.id,'resize');box.append(resize);
@@ -497,6 +519,7 @@ function createTextTools(){
    if(Array.isArray(v.active)&&v.active.length<=12&&v.active.every(x=>validInt(x,0,11)))q.active=[...new Set(v.active)];
    if(v.root===0||v.root===5)q.root=v.root;
    if(['pre','in','post'].includes(v.order))q.order=v.order;
+   if(s.scene==='route'&&[350,700,1400].includes(v.routeDelay))q.routeDelay=v.routeDelay;
    result[i]=q;
   });return result;
  }
@@ -528,7 +551,7 @@ function createTextTools(){
  }
  function drawInk(){raf=0;layer.replaceChildren(...strokes().filter(s=>s.tool!=='text').map(elementForStroke));if(gesture?.stroke&&gesture.slide===index)layer.append(elementForStroke(gesture.stroke));textTools?.render();updateButtons();}
  function requestDraw(){if(!raf)raf=requestAnimationFrame(drawInk);}
- function updateButtons(){get('ink-undo').disabled=!(undo[index]?.length);get('ink-redo').disabled=!(redo[index]?.length);get('ink-clear').disabled=!strokes().length;}
+ function updateButtons(){get('ink-undo').disabled=!(undo[index]?.length);get('ink-redo').disabled=!(redo[index]?.length);get('ink-clear').disabled=!strokes().length;get('resetAnnotations').disabled=!Object.values(ink).some(list=>list.length);}
  function remember(i,before){(undo[i]||(undo[i]=[])).push(before);if(undo[i].length>100)undo[i].shift();redo[i]=[];}
  function finishGesture(cancel=false){textTools?.finish();if(!gesture)return;const g=gesture;gesture=null;
   if(g.stroke&&!cancel){remember(g.slide,strokes(g.slide));ink[g.slide]=[...strokes(g.slide),g.stroke];}
@@ -537,7 +560,8 @@ function createTextTools(){
   drawInk();saveNow();
  }
  function useMode(next){finishGesture();if(toolbar.contains(document.activeElement))document.activeElement.blur();mode=next;layer.classList.toggle('ink-enabled',mode!=='use');for(const name of ['use','pen','highlight','erase',...(TEXT_ENABLED?['text']:[])])get('ink-'+name).setAttribute('aria-pressed',name===mode);
-  get('ink-color').disabled=!['pen','highlight','text'].includes(mode);get('ink-width').disabled=!['pen','highlight'].includes(mode);get('ink-color').value=mode==='text'?textTools.color():colorsForTool[mode]||colorsForTool.pen;textTools?.setMode(mode);
+  if(next!=='use')stopPlayback();
+  get('ink-color').disabled=!['pen','highlight','text'].includes(mode);get('ink-color').value=mode==='text'?textTools.color():colorsForTool[mode]||colorsForTool.pen;textTools?.setMode(mode);updateInkChoices();
  }
  function undoInk(){finishGesture();if(!undo[index]?.length)return;(redo[index]||(redo[index]=[])).push(strokes());ink[index]=undo[index].pop();drawInk();saveNow();}
  function redoInk(){finishGesture();if(!redo[index]?.length)return;(undo[index]||(undo[index]=[])).push(strokes());ink[index]=redo[index].pop();drawInk();saveNow();}
@@ -563,8 +587,26 @@ function createTextTools(){
  if(TEXT_ENABLED){get('ink-text').onclick=()=>useMode('text');for(const [id,label] of [['ink-undo','Undo annotation on this slide (Ctrl+Z)'],['ink-redo','Redo annotation on this slide (Ctrl+Shift+Z)'],['ink-clear','Clear ink and text on this slide (undo available)'],['ink-more','Annotation backup, printing, and help'],['ink-color','Annotation color']]){get(id).title=label;get(id).setAttribute('aria-label',label);}}
  get('ink-undo').onclick=undoInk;get('ink-redo').onclick=redoInk;
  get('ink-clear').onclick=()=>{finishGesture();if(!strokes().length)return;remember(index,strokes());ink[index]=[];drawInk();saveNow();};
- get('ink-color').oninput=e=>{if(mode==='text')textTools.setColor(e.target.value);else if(['pen','highlight'].includes(mode))colorsForTool[mode]=e.target.value;};
- get('ink-width').onchange=e=>width=Number(e.target.value);
+ get('ink-color').insertAdjacentHTML('beforebegin',[
+  ['ink',[['Blue','#1565c0'],['Red','#c62828'],['Black','#111111']]],
+  ['highlight',[['Yellow','#fdd835'],['Orange','#fb8c00']]]
+ ].map(([palette,swatches])=>`<div class="ink-swatches" data-palette="${palette}" role="group" aria-label="${palette==='ink'?'Ink':'Highlighter'} color">`+swatches.map(([name,color])=>`<button type="button" class="ink-swatch" data-ink-color="${color}" title="${name} ${palette==='ink'?'ink':'highlighter'}" aria-label="${name} ${palette==='ink'?'ink':'highlighter'}" aria-pressed="false"><span style="background:${color}"></span></button>`).join('')+'</div>').join(''));
+ get('ink-width').insertAdjacentHTML('beforebegin','<label class="ink-width-label" for="ink-width">Width</label>');
+ get('ink-width').innerHTML=[[3,'Thin'],[5,'Medium'],[8,'Thick']].map(([n,name])=>`<option value="${n}">${name}</option>`).join('');
+ function updateInkChoices(){
+  const color=mode==='text'?textTools.color():(colorsForTool[mode]||colorsForTool.pen);
+  toolbar.querySelectorAll('[data-palette]').forEach(group=>group.hidden=group.dataset.palette!==(mode==='highlight'?'highlight':'ink'));
+  toolbar.querySelectorAll('[data-ink-color]').forEach(button=>button.setAttribute('aria-pressed',button.dataset.inkColor===color));
+  get('ink-width').value=String(width);
+ }
+ function chooseInkColor(color){
+  if(!['pen','highlight','text'].includes(mode))useMode('pen');
+  if(mode==='text')textTools.setColor(color);else colorsForTool[mode]=color;
+  get('ink-color').value=color;updateInkChoices();
+ }
+ toolbar.querySelectorAll('[data-ink-color]').forEach(button=>button.onclick=()=>chooseInkColor(button.dataset.inkColor));
+ get('ink-color').oninput=e=>chooseInkColor(e.target.value);
+ get('ink-width').onchange=e=>{finishGesture();width=Number(e.target.value);useMode(mode==='highlight'?'highlight':'pen');};
  get('ink-menu').querySelector('#ink-close').onclick=()=>menu.close();
  const menuButton=get('ink-more');
  menuButton.onclick=()=>{finishGesture();get('ink-menu-message').textContent=saveFailed?'Browser saving is unavailable. Download a backup to keep your annotations.':`Backups include ink${TEXT_ENABLED?', text,':''} and diagram states for all slides.`;get('ink-menu-message').dataset.failed=saveFailed;menu.showModal();};
@@ -578,8 +620,34 @@ function createTextTools(){
   if((e.ctrlKey||e.metaKey)&&key==='y'){e.preventDefault();e.stopImmediatePropagation();redoInk();return;}
   if(e.ctrlKey||e.metaKey)return;const map={v:'use',p:'pen',h:'highlight',e:'erase',...(TEXT_ENABLED?{t:'text'}:{})};if(map[key]){e.preventDefault();e.stopImmediatePropagation();useMode(map[key]);}
  },true);
+ function stopPlayback(){
+  clearInterval(timer);timer=null;
+  const button=stage.querySelector('[data-action="play"]');if(button)button.textContent='Play';
+ }
+ // Pause without rerendering: an active pen stroke or text editor must stay put.
+ document.addEventListener('pointerdown',e=>{if(e.target.closest('#ink-tools,#ink-layer,#ink-text-layer'))stopPlayback();},true);
+ function updateLectureControls(){
+  resets.hidden=index!==0;
+  const s=DECK.slides[index];if(s.scene!=='route')return;
+  const q=st(),controls=stage.querySelector('#slide .controls'),play=controls.querySelector('[data-action="play"]');
+  play.textContent=timer?'Pause':'Play';
+  controls.insertAdjacentHTML('beforeend','<label class="route-playback">Speed <select id="route-speed" aria-label="Route playback speed">'+[[1400,'Slow'],[700,'Normal'],[350,'Fast']].map(([n,label])=>`<option value="${n}" ${n===(q.routeDelay||700)?'selected':''}>${label}</option>`).join('')+'</select></label>'+`<label class="route-playback">Step <input id="route-progress" aria-label="Route step" type="range" min="0" max="${s.route.length-1}" value="${q.step}" aria-valuetext="${q.step} of ${s.route.length-1}"></label>`);
+ }
+ const baseAction=action;
+ action=function(a,target){
+  if(a!=='play')return baseAction(a,target);
+  if(timer){stopPlayback();return;}
+  const q=st(),s=DECK.slides[index],at=index;
+  if(q.step>=s.route.length-1)q.step=0;
+  timer=setInterval(()=>{if(index!==at){stopPlayback();return;}q.step=Math.min(q.step+1,s.route.length-1);if(q.step===s.route.length-1)stopPlayback();render();},q.routeDelay||700);
+  render();
+ };
+ document.addEventListener('change',e=>{
+  if(!['route-speed','route-progress'].includes(e.target.id))return;
+  stopPlayback();const q=st();if(e.target.id==='route-speed')q.routeDelay=Number(e.target.value);else q.step=Number(e.target.value);render();
+ });
  const baseRender=render;
- render=function(){finishGesture();baseRender();document.title+=TEXT_ENABLED?' · Ink + text copy':' · Ink copy';drawInk();scheduleSave();};
+ render=function(){finishGesture();baseRender();updateLectureControls();document.title+=TEXT_ENABLED?' · Ink + text copy':' · Ink copy';drawInk();scheduleSave();};
  // The base print listener runs first; replace its reflowed pages with exact-layout pages.
  addEventListener('beforeprint',()=>{finishGesture();clearInterval(timer);timer=null;const old=index,container=get('print');container.replaceChildren();
   DECK.slides.forEach((s,i)=>{index=i;const page=document.createElement('section');page.className='ink-print-page';
@@ -589,7 +657,9 @@ function createTextTools(){
  });
  addEventListener('pagehide',()=>{finishGesture();saveNow();});
  addEventListener('blur',()=>finishGesture());
- useMode('use');baseRender();document.title+=TEXT_ENABLED?' · Ink + text copy':' · Ink copy';drawInk();
+ get('restartLecture').onclick=()=>{useMode('use');stopPlayback();state={};go(0);saveNow();status('Lecture reset');get('restartLecture').blur();};
+ get('resetAnnotations').onclick=()=>{useMode('use');stopPlayback();for(const [key,list] of Object.entries(ink))if(list.length)remember(Number(key),list);ink={};drawInk();saveNow();status('Notes reset');get('resetAnnotations').blur();};
+ useMode('use');baseRender();updateLectureControls();document.title+=TEXT_ENABLED?' · Ink + text copy':' · Ink copy';drawInk();
  if(loadedWarning)status('Use backup',true);else status(Object.keys(ink).length?(TEXT_ENABLED?'Notes restored':'Ink restored'):'Ready');
 })();
 </script></body></html>
