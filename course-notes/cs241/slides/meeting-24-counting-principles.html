@@ -1,0 +1,605 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="Interactive CS 241 Meeting 24: sum and product principles, cases, complements, inclusion-exclusion, and the pigeonhole principle."><title>Meeting 24 · Counting principles</title><style>
+:root{color-scheme:light;--bg:#ffffff;--panel:#f2f5fa;--ink:#172439;--muted:#526078;--mint:#087f6d;--coral:#c5473a;--gold:#986000;--violet:#7451bc;--blue:#286bab}
+*{box-sizing:border-box}body{margin:0;background:#ffffff;color:var(--ink);font-family:'Aptos','Segoe UI',sans-serif;overflow:hidden}button,select{font:inherit}button,a,select{-webkit-tap-highlight-color:transparent}button{cursor:pointer;background:transparent;color:var(--ink);border:1px solid #b5c0cf;border-radius:8px;padding:10px 17px;font-size:19px}button:hover{background:#edf2f7}button:focus-visible,a:focus-visible,select:focus-visible,[tabindex]:focus-visible{outline:3px solid var(--gold);outline-offset:5px}button:disabled{opacity:.35;cursor:default}a{color:var(--mint)}#stage{width:1600px;height:900px;position:absolute;left:50%;top:50%;transform-origin:center;background:var(--bg);overflow:hidden}.brand{position:absolute;top:35px;left:64px;font-size:20px;letter-spacing:.14em;color:var(--muted)}.brand b{color:var(--mint);margin-right:22px}.topnav{position:absolute;right:64px;top:28px;display:flex;gap:12px;align-items:center}select{background:var(--bg);color:var(--ink);border:1px solid #b5c0cf;border-radius:8px;padding:10px;font-size:18px;max-width:260px}#slide{position:absolute;inset:104px 64px 94px}.eyebrow{font-size:18px;color:var(--mint);text-transform:uppercase;letter-spacing:.17em;margin-bottom:12px}h1{font-size:60px;line-height:1.08;letter-spacing:-.035em;margin:0 0 30px;font-weight:700;max-width:1420px}.content{display:grid;grid-template-columns:43% 57%;gap:0;height:480px}.text{padding-right:42px;align-self:center;font-size:27px;line-height:1.42}.text p{margin:0 0 24px}.text p:last-child{margin-bottom:0}em{font-style:normal;color:var(--mint);font-weight:650}.equation{font-family:'Cambria Math','Cambria',serif;font-size:37px;line-height:1.4;margin:17px 0;color:var(--gold)}.task{border-left:4px solid var(--gold);padding:3px 0 3px 23px}.task b{font-size:17px;text-transform:uppercase;letter-spacing:.15em;color:var(--gold);display:block;margin-bottom:12px}.task+p{margin-top:22px;color:var(--muted)}ul{margin:0;padding-left:26px}li{margin-bottom:18px}.rules strong{display:inline-block;min-width:145px;color:var(--mint)}.rules p{border-bottom:1px solid #d7dfeb;padding-bottom:14px}.visual{display:flex;flex-direction:column;justify-content:center;min-width:0;position:relative}.visual svg{width:100%;height:410px;overflow:visible}.caption{font-size:19px;color:var(--muted);text-align:center;min-height:27px;margin-top:6px}.controls{display:flex;gap:10px;align-items:center;justify-content:center;flex-wrap:wrap;margin-top:13px;min-height:44px}.status{font-size:20px;text-align:center;margin-top:12px;color:var(--gold);min-height:29px}.cover h1{font-size:82px;max-width:800px;position:absolute;top:45px}.cover .content{height:620px;grid-template-columns:43% 57%}.cover .text{align-self:end;padding-bottom:44px}.cover .visual{padding-top:0}.cover .visual svg{height:470px}.footer{position:absolute;bottom:27px;left:64px;right:64px;display:flex;align-items:center;justify-content:space-between;font-size:18px;color:var(--muted)}.footer .right{display:flex;gap:12px;align-items:center}#counter{min-width:72px;text-align:center}.track{position:absolute;bottom:0;height:4px;left:0;background:var(--mint);transition:width .2s}.source{font-size:17px;color:var(--muted);text-decoration:none}.source:hover{text-decoration:underline}svg text{font-family:'Aptos','Segoe UI',sans-serif}svg .edge{stroke:#52647d;stroke-width:4;fill:none;stroke-linecap:round}svg .node{fill:var(--bg);stroke:var(--mint);stroke-width:3}svg .label{fill:var(--ink);font-size:22px;font-weight:600;text-anchor:middle;dominant-baseline:central}svg .small{fill:var(--muted);font-size:18px;text-anchor:middle}svg .big{fill:var(--gold);font-size:36px;text-anchor:middle}svg .face{stroke:none;fill-opacity:.26}.palette button{border-width:3px;color:#101827;font-weight:bold;min-width:48px}.palette button[aria-pressed=true]{outline:3px solid #172439;outline-offset:3px}.palette button:nth-child(1){background:#66e5c0}.palette button:nth-child(2){background:#ff887c}.palette button:nth-child(3){background:#ffd16f}.palette button:nth-child(4){background:#b5a0ff}.interactive{cursor:pointer}.interactive:hover{filter:brightness(1.2)}.solid-table{width:100%;border-collapse:collapse;font-size:25px}.solid-table th{color:var(--mint);font-weight:500}.solid-table td,.solid-table th{padding:14px;text-align:right;border-bottom:1px solid #d7dfeb}.solid-table td:first-child,.solid-table th:first-child{text-align:left}.solid-table td:last-child{color:var(--gold)}dialog{max-width:1050px;max-height:80vh;background:#ffffff;color:var(--ink);border:1px solid #6b7d97;border-radius:16px;padding:35px;font-size:23px;line-height:1.5}dialog::backdrop{background:#000b}dialog h2{margin-top:0}dialog button{float:right;margin-left:30px}.notes-label{color:var(--gold)}.overview-list{display:grid;grid-template-columns:1fr 1fr;gap:10px}.overview-list button{text-align:left;font-size:19px}.print-only{display:none}
+@media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+@media print{@page{size:landscape;margin:8mm}body{overflow:visible;background:white}#stage,dialog{display:none!important}.print-only{display:block}.print-page{break-after:page;background:white;color:#142035;padding:12mm;height:175mm;overflow:hidden}.print-page:last-child{break-after:auto}.print-page h1{font-size:28px;margin-bottom:15px}.print-page .content{height:auto;grid-template-columns:45% 55%}.print-page .text{font-size:15px;padding-right:20px}.print-page .equation{font-size:23px;color:#674600}.print-page p{margin-bottom:10px}.print-page .visual svg{height:115mm}.print-page .controls,.print-page .status{display:none}.print-page em{color:#12674e}.print-page .eyebrow{font-size:12px;color:#12674e}.print-page .caption{font-size:12px;color:#43536b}.print-page .task b{color:#674600}.print-page .visual{background:#ffffff;border-radius:8px;padding:8px}.print-page .solid-table{color:#172439;font-size:15px}.print-page .solid-table td,.print-page .solid-table th{padding:8px}.print-page .text .rules p{padding-bottom:7px}.print-page li{margin-bottom:10px}.print-page .task+p{color:#43536b}.print-page .rules strong{color:#12674e}.print-page .task{border-color:#b98517}}
+
+@media print{.print-page .caption{color:#526078}}
+
+.content{grid-template-columns:40% 60%;height:535px}.text{font-size:25px;line-height:1.36;padding-right:36px}.text p{margin-bottom:19px}.text .task p{margin-bottom:0}h1{font-size:49px;margin-bottom:22px}.eyebrow{font-size:18px;margin-bottom:10px}.equation{font-size:30px;line-height:1.42;margin:15px 0}.visual{justify-content:flex-start}.visual svg{height:355px;flex-shrink:0}.caption{font-size:18px;line-height:1.3;min-height:25px;margin:7px 0}.controls{gap:8px;margin-top:10px;min-height:40px}.controls button,.controls select{font-size:17px;padding:8px 11px}.controls label{display:flex;align-items:center;gap:7px;font-size:17px}.controls input{width:78px;padding:7px;font:inherit;border:1px solid #aab8ca;border-radius:6px}.status{font-size:19px;line-height:1.35;color:#34465d;min-height:46px;margin-top:9px}.status strong{color:#087f6d}.status .fail{color:#b1372a}.cover h1{font-size:76px;max-width:620px;top:43px}.cover .content{height:610px;grid-template-columns:40% 60%}.cover .text{font-size:27px;padding-bottom:30px}.cover .visual{justify-content:center}.cover .visual svg{height:390px}.diagram{min-height:350px}.card-row{display:flex;gap:10px;flex-wrap:wrap;justify-content:center}.playing-card{display:inline-grid;place-items:center;width:92px;height:72px;border:1px solid #aebccd;border-radius:9px;background:#fff;font:29px Georgia,serif;margin:4px}.playing-card.red{color:#b33d37}.playing-card.illegal{background:#ffe5df;text-decoration:line-through;border-color:#bd4b3a}.playing-card.selected{outline:3px solid #276dad;outline-offset:2px}.cards-panel{min-height:350px;text-align:center}.first-card{display:flex;justify-content:center;align-items:center;gap:20px;padding:4px 0 13px;border-bottom:1px solid #d7dfeb;margin-bottom:15px}.cards-panel .small-label{font-size:19px;color:#526078}.token-list{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;padding:20px 10px}.token{background:#e2efe9;border:1px solid #9bb9af;color:#075f51;min-width:44px;padding:9px 11px;border-radius:7px;font-size:21px;text-align:center}.token.secondary{background:#e2eafb;color:#285d96;border-color:#acbdd9}.pair-output{font:29px/1.5 'Cambria Math',Cambria,serif;text-align:center;color:#286bab;min-height:42px;margin:9px 0}.tile:hover rect,.tile:focus-visible rect{stroke:#7451bc;stroke-width:3}.tile{cursor:pointer;outline:none}.tile:focus-visible{outline:3px solid #986000;outline-offset:2px}.plate-slots{display:flex;gap:12px;justify-content:center;padding:48px 5px 12px}.plate-slot{width:100px;min-height:140px;border-bottom:4px solid #276dad;text-align:center;background:#edf3fb;border-radius:9px;padding:12px 5px}.plate-slot strong{font:40px Georgia,serif;color:#286bab;display:block;margin:6px 0 13px}.plate-slot small{font-size:17px;color:#526078}.formula-box{font:30px/1.5 'Cambria Math',Cambria,serif;color:#087f6d;text-align:center;margin:18px 4px;min-height:64px}.bits{display:flex;gap:8px;justify-content:center;padding:44px 0 18px}.bits button{width:58px;height:68px;font:34px 'Cambria Math',serif;border:2px solid #aebdcc;padding:6px}.bits button.prefix{border-color:#b47a0b;background:#fff2d8}.bits button.one{background:#e1eee7;color:#075f51}.suffix-list{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:17px 38px;min-height:330px}.suffix-list button{font:24px monospace}.suffix-list button.selected{background:#e0efe8;border-color:#087f6d}.proof-rows{min-height:325px;display:flex;flex-direction:column;justify-content:center;gap:17px;padding:10px 35px}.proof-row{border-left:4px solid #9bb5ce;background:#f2f6fa;padding:17px 20px;font-size:25px;line-height:1.35}.proof-row.dim{color:#8390a0}.proof-row.active{border-color:#087f6d;background:#eaf4ee}.audit-list{display:grid;gap:13px;min-height:350px;padding:15px}.audit-list button{text-align:left;font-size:23px;line-height:1.3}.audit-list .answer{font-size:19px;color:#087f6d;display:block;margin-top:7px}.survey-data{display:grid;grid-template-columns:repeat(7,1fr);gap:5px;padding:0 10px;margin:0 0 6px;text-align:center}.survey-data div{background:#f1f4f8;border:1px solid #d6dfea;border-radius:5px;padding:5px 0;font-size:18px}.survey-data b{display:block;font-size:18px;font-weight:500;color:#526078;margin-bottom:3px}.venn-wrap{position:relative;height:295px}.venn-wrap svg{height:295px}.region-input{position:absolute;transform:translate(-50%,-50%);width:60px;height:41px;padding:4px;border:1px solid #9aaeca;border-radius:6px;text-align:center;font:24px 'Cambria Math',serif;background:white}.region-input.correct{border:2px solid #087f6d;background:#e3f3e9}.region-input.incorrect{border:2px solid #c5473a;background:#fff0ec}.venn-wrap .region-input{z-index:3}.membership-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;padding:12px 20px;min-height:345px}.membership-card{border:2px solid #c3cedb;padding:13px 7px;font-size:25px;background:#fff;border-radius:10px}.membership-card span{display:block;font-size:17px;margin-top:14px;color:#526078}.membership-card.correct{outline:3px solid #087f6d}.membership-card.incorrect{outline:3px solid #c5473a}.coefficient-table{display:flex;justify-content:center;gap:15px;padding:25px 0 5px}.coefficient{width:160px;border:1px solid #bcc9da;border-radius:10px;padding:17px;text-align:center;font-size:19px;background:#f3f6fa}.coefficient strong{display:block;font:45px 'Cambria Math',serif;margin:13px;color:#087f6d}.coefficient.off{opacity:.32}.membership-dots{display:flex;justify-content:center;gap:22px;padding:18px 0}.membership-dot{height:76px;width:76px;display:grid;place-items:center;border-radius:50%;background:#edf2f7;border:2px dashed #a8b7c9;font-size:27px}.membership-dot.on{background:#e4efe8;border:2px solid #087f6d;color:#075f51}.box-grid{display:flex;justify-content:center;align-items:flex-end;gap:11px;min-height:300px;padding:38px 12px 12px;flex-wrap:wrap}.allocation-box{position:relative;width:92px;height:160px;border:2px solid #9eb0c7;border-top:0;border-radius:0 0 10px 10px;background:linear-gradient(to top,#e5f1ea var(--fill),transparent var(--fill));display:flex;flex-direction:column;justify-content:flex-end;align-items:center;padding:10px 4px}.allocation-box .amount{font:38px 'Cambria Math',serif;color:#087f6d}.allocation-box .name{font-size:16px;color:#526078;margin-top:12px}.allocation-box.maximum{border-color:#986000}.box-grid.many .allocation-box{width:62px;height:130px}.box-grid.many .amount{font-size:29px}.allocation-box:focus-visible{outline:3px solid #986000;outline-offset:4px}.number-task{display:flex;justify-content:space-between;align-items:center;gap:25px;padding:29px 10px;border-bottom:1px solid #d5deea;font-size:25px}.number-task input{width:95px;height:48px;font-size:26px;text-align:center;border:1px solid #a6b5c9;border-radius:6px;position:relative;z-index:3}.number-task.correct input{background:#e0f2e7;border-color:#087f6d}.number-task.incorrect input{background:#ffe9e2;border-color:#c5473a}.quiz-list{min-height:350px;padding:12px}.quiz-line{display:flex;justify-content:space-between;align-items:center;gap:15px;font-size:22px;padding:18px 0;border-bottom:1px solid #d7dfeb}.quiz-line select{width:220px;font-size:18px;position:relative;z-index:3}.quiz-line.correct{color:#087f6d}.quiz-line.incorrect{color:#b13b2c}.summary-rules{padding:18px;display:grid;gap:16px}.summary-rules div{padding:14px 20px;border-left:4px solid #087f6d;background:#f1f6f5;font-size:23px;line-height:1.3}.summary-rules span{display:block;font-size:18px;color:#526078;margin-top:5px}.overview-list button{float:none;margin:0}#notesText{white-space:pre-line}
+@media print{.ink-print-slide .content{height:535px}.ink-print-slide .visual svg{height:355px}.ink-print-slide .venn-wrap svg{height:295px}.ink-print-slide .controls,.ink-print-slide .status{visibility:hidden}.print-page .content{height:auto}.print-page .text{font-size:15px}.print-page .visual svg{height:280px}.print-page .diagram,.print-page .cards-panel,.print-page .proof-rows,.print-page .membership-grid,.print-page .quiz-list{min-height:230px}.print-page .playing-card{width:45px;height:40px;font-size:18px}.print-page .region-input{width:40px;height:28px;font-size:17px}.print-page .pair-output,.print-page .formula-box{font-size:20px}.print-page .proof-row,.print-page .quiz-line,.print-page .summary-rules div{font-size:16px}.print-page .bits{padding-top:15px;gap:5px}.print-page .bits button{width:30px;height:40px;font-size:20px}.print-page .allocation-box{width:50px;height:100px}.print-page .box-grid{min-height:200px;padding-top:15px}.print-page .plate-slot{width:45px;min-height:85px}.print-page .plate-slot strong{font-size:22px}.print-page .plate-slots{padding-top:20px}.print-page .survey-data div{font-size:13px}}
+</style><style>
+#ink-layer{position:absolute;inset:0;width:1600px;height:900px;z-index:2;pointer-events:none;overflow:hidden}
+#ink-layer.ink-enabled{pointer-events:auto;touch-action:none;cursor:crosshair}
+#slide .controls button,#slide .controls select,#slide .controls input{position:relative;z-index:3}
+#stage .topnav,#stage .footer{z-index:4}
+#ink-tools{position:absolute;left:64px;bottom:18px;height:56px;padding:6px 8px;z-index:5;display:flex;align-items:center;gap:5px;background:#f4f7fb;border:1px solid #c3ccda;border-radius:9px;box-shadow:0 3px 12px #17243912}
+#ink-tools button{flex:0 0 40px;width:40px;height:40px;min-width:0;padding:7px;display:grid;place-items:center;border:1px solid transparent;border-radius:6px;font-size:22px;color:#172439;background:transparent;line-height:1}
+#ink-tools button:hover{background:#e3eaf4}
+#ink-tools button[aria-pressed=true]{background:#d9e9ff;border-color:#1b65b4;color:#154e8c}
+#ink-tools button:disabled{opacity:.3}
+#ink-tools svg{width:24px;height:24px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+#ink-tools hr{flex:0 0 1px;width:1px;height:30px;margin:0 4px;border:0;border-left:1px solid #c3ccda}
+#ink-color{display:none}
+.ink-swatches{display:flex;align-items:center;gap:3px}.ink-swatches[hidden]{display:none}
+#ink-tools .ink-swatch{width:32px;min-width:32px;flex:0 0 32px;padding:5px}
+.ink-swatch span{width:21px;height:21px;border-radius:50%;display:block;border:1px solid white}
+#ink-tools .ink-swatch[aria-pressed=true]{outline:2px solid #1b65b4;outline-offset:-1px}
+.ink-width-label{font-size:13px;color:#526078;margin:0 2px 0 8px}
+#ink-width{flex:0 0 88px;font-size:16px;width:88px;height:36px;max-width:none;padding:4px 6px;background:white;border:1px solid #9eacc0;border-radius:5px;margin:0;color:#172439}
+#ink-save-status{flex:0 0 82px;width:82px;font-size:12px;line-height:1.3;text-align:center;color:#45604c;padding:0 4px}
+#ink-save-status[data-failed=true]{color:#a02a20}
+#stage .footer{justify-content:flex-end}
+#lectureResetControls{position:absolute;top:30px;left:520px;z-index:5;display:flex;gap:8px}
+#lectureResetControls[hidden]{display:none}
+#lectureResetControls button{font-size:16px;padding:10px}
+#restartLecture{color:#145aa3;border-color:#aac2df;background:#f4f8fd}
+#resetAnnotations{color:#a43328;border-color:#d8b5b0;background:#fff8f6}
+.route-playback{display:flex;align-items:center;gap:8px;font-size:17px}
+.route-playback select{font-size:17px;padding:7px;max-width:110px}
+.route-playback input{width:115px}
+#ink-menu{width:780px;max-width:90vw}
+#ink-menu p{margin:16px 0}#ink-menu .ink-menu-actions{display:flex;gap:10px;flex-wrap:wrap;margin:20px 0}
+#ink-menu .ink-menu-actions button{float:none;margin:0;font-size:19px}
+#ink-menu .ink-hint{font-size:18px;color:#526078}#ink-menu-message{font-size:18px;color:#087f6d}
+#ink-menu-message[data-failed=true]{color:#a02a20}
+.ink-stroke{pointer-events:none}
+@media print{
+ @page{size:1600px 900px;margin:0}
+ html,body{margin:0;padding:0;width:1600px;background:white;print-color-adjust:exact;-webkit-print-color-adjust:exact}
+ #ink-tools,#ink-menu,#ink-import,#lectureResetControls{display:none!important}
+ .ink-print-page{position:relative;box-sizing:border-box;width:1600px;height:900px;overflow:hidden;break-after:page;page-break-after:always;background:white;color:#172439}
+ .ink-print-page:last-child{break-after:auto;page-break-after:auto}
+ .ink-print-slide{position:absolute;inset:104px 64px 94px}
+ .ink-print-svg{position:absolute;inset:0;width:1600px;height:900px;pointer-events:none;z-index:2}
+ .ink-print-page .controls,.ink-print-page .status{visibility:hidden}
+ .ink-print-page .brand,.ink-print-page .footer{color:#526078}
+}
+#ink-text-layer{position:absolute;inset:0;width:1600px;height:900px;z-index:2;pointer-events:none}
+#ink-layer.ink-text-mode{cursor:text}
+.ink-text-box,.ink-text-print{position:absolute;box-sizing:border-box;border:1px solid transparent;border-radius:5px;line-height:1.25;background:transparent}
+.ink-text-box{pointer-events:none}
+#ink-text-layer[data-mode=text] .ink-text-box,#ink-text-layer[data-mode=use] .ink-text-box{pointer-events:auto;cursor:text}
+#ink-text-layer[data-mode=text] .ink-text-box:hover,.ink-text-box.is-selected{border:1px dashed #1b65b4}
+.ink-text-content,.ink-text-editor{display:block;width:100%;box-sizing:border-box;padding:6px 8px;margin:0;border:0;outline:none;border-radius:0;font:inherit;line-height:inherit;color:inherit;text-align:left;white-space:pre-wrap;overflow-wrap:anywhere;tab-size:4;background:transparent}
+.ink-text-content{height:100%;overflow:hidden}
+.ink-text-editor{height:100%;resize:none;overflow:auto}
+.ink-text-content[data-empty=true]{color:#778399;font-style:italic}
+.ink-text-options{position:absolute;bottom:calc(100% + 4px);left:-1px;display:flex;align-items:center;gap:5px;padding:4px;background:#fff;border:1px solid #b5c0cf;border-radius:7px;box-shadow:0 2px 8px #17243914;white-space:nowrap;cursor:default}
+.ink-text-options button{padding:3px 7px;font-size:14px;height:29px;line-height:20px;border-radius:4px}
+.ink-text-options select{font-size:15px;padding:2px;width:56px;height:29px;border-radius:4px}
+.ink-text-options input{width:32px;height:29px;padding:1px;border:1px solid #b5c0cf;border-radius:4px;background:white}
+.ink-text-options .ink-text-move{cursor:grab;touch-action:none}
+.ink-text-options .ink-text-move:active{cursor:grabbing}
+.ink-text-box .ink-text-resize{position:absolute;right:-7px;bottom:-7px;width:17px;height:17px;padding:0;border:1px solid #1b65b4;border-radius:3px;background:#fff;cursor:nwse-resize;touch-action:none}
+.ink-text-print{z-index:2}
+@media print{#ink-text-layer,.ink-text-options,.ink-text-resize{display:none!important}.ink-text-print{border-color:transparent}}
+</style></head>
+<body><main id="stage"><div class="brand"><b>CS 241</b>MEETING 24 · INK + TEXT</div><nav class="topnav" aria-label="Presentation controls"><select id="act" aria-label="Jump to act"></select><button id="showOverview" title="Slide overview (O)">Slides</button><button id="full" title="Fullscreen (F)">⛶ Fullscreen</button></nav><article id="slide" aria-label="Current slide"></article><footer class="footer"><div><a class="source" id="source" target="_blank" rel="noopener"></a><span> / </span><a class="source" href="meeting-23-pascals-triangle.html">Meeting 23 ↗</a></div><div class="right"><span>← → navigate · O overview</span><button id="previous" aria-label="Previous slide">←</button><span id="counter"></span><button id="next" aria-label="Next slide">→</button></div></footer><div id="progress" class="track"></div></main>
+<dialog id="overview"><button onclick="this.closest('dialog').close()">Close</button><h2>Meeting 24 · Counting principles</h2><div id="overviewList" class="overview-list"></div></dialog><div id="print" class="print-only"></div><noscript>This interactive lecture requires JavaScript.</noscript>
+<script>const DECK={"meeting": 24, "title": "Counting principles", "acts": ["Two cards", "Sets of outcomes", "Stages, cases, complements", "Overlapping outcomes", "Guaranteed repetitions", "Synthesis"], "slides": [{"act": 0, "title": "Red first.<br>Face card second.", "body": "<p>Draw two cards in order from a standard deck, without replacement.</p><div class=\"task\"><b>Try it first</b><p>How many outcomes have a red first card and a face-card second card?</p></div>", "scene": "cards", "cover": true}, {"act": 0, "title": "The first choice changes what remains", "body": "<div class=\"task\"><b>Try it first</b><p>A standard deck has 26 red cards, 12 face cards, and 6 cards that are both. Two cards are drawn in order without replacement. Count outcomes with a red first card and a face-card second card. Explain why 26 · 12 is not correct, then split into disjoint cases.</p></div>", "scene": "cards"}, {"act": 1, "title": "What is one outcome?", "body": "<p>Combining two sets can mean choosing one object or constructing a pair.</p><div class=\"task\"><b>Try it first</b><p>With magnets A–E and 1–3, describe one outcome before choosing a counting rule.</p></div>", "scene": "magnets"}, {"act": 1, "title": "One dish or one of each?", "body": "<div class=\"task\"><b>Try it first</b><p>A restaurant offers 8 appetizers and 14 entrees. Count the choices for exactly one dish, either an appetizer or an entree, and for a meal containing one of each. Describe the outcome set in each case and state why the counts are added or multiplied.</p></div>", "scene": "restaurant"}, {"act": 1, "title": "Add disjoint alternatives", "body": "<p>If A and B are disjoint finite sets, every element of their union belongs to exactly one of them.</p><div class=\"equation\">|A ∪ B| = |A| + |B|</div><div class=\"task\"><b>Try it first</b><p>Why would a shared element invalidate this addition?</p></div>", "scene": "restaurant", "mode": "single", "fixed": true}, {"act": 1, "title": "A pair uses one choice from each set", "body": "<p>A meal records an appetizer and an entree.</p><div class=\"equation\">Ω = A × E</div><div class=\"task\"><b>Try it first</b><p>Choose a cell. Which complete outcome does it represent? How many cells are in each row?</p></div>", "scene": "restaurant", "mode": "pair", "fixed": true}, {"act": 1, "title": "Count the leaves of a choice tree", "body": "<p>Every root-to-leaf path represents one complete outcome.</p><div class=\"task\"><b>Try it first</b><p>Expand one letter branch. Why do five branches contribute equal numbers of outcomes?</p></div>", "scene": "tree"}, {"act": 1, "title": "Equal counts do not require equal choices", "body": "<p>Multiplication needs a fixed number of continuations for every earlier choice.</p><div class=\"task\"><b>Try it first</b><p>Choose two different cards in order. The second card depends on the first, but how many choices remain?</p></div><div class=\"equation\">52 first choices; 51 continuations each</div>", "scene": "uniformCards"}, {"act": 2, "title": "A string is built position by position", "body": "<p>A license plate has three letters followed by three digits. Repetition is allowed.</p><div class=\"task\"><b>Try it first</b><p>For each position, name the available choices and explain why the earlier positions do not reduce their number.</p></div>", "scene": "plates"}, {"act": 2, "title": "A round trip records two routes", "body": "<div class=\"task\"><b>Try it first</b><p>There are 9 routes from a dorm to a classroom and 9 routes back. Count the ordered round trips. Explain precisely why 9 + 9 counts routes in the wrong outcome set and why the product principle applies.</p></div>", "scene": "roundTrips"}, {"act": 2, "title": "Count the easier complement", "body": "<p>Consider 10-bit strings of weight 6. We want at least one 1 among the first three bits.</p><div class=\"task\"><b>Try it first</b><p>What must an excluded string look like? Construct one and check its weight.</p></div>", "scene": "complement"}, {"act": 2, "title": "Fix the prefix, count the suffix", "body": "<p>The complement starts with 000. All six 1s must lie in the remaining seven positions.</p><div class=\"task\"><b>Try it first</b><p>Choose which suffix position contains the only 0. Explain why this lists every excluded string exactly once.</p></div>", "scene": "complementProof"}, {"act": 2, "title": "Return to the two-card outcomes", "body": "<p>Split by whether the first red card is a face card.</p><div class=\"task\"><b>Try it first</b><p>Within each case, does every first choice have the same number of legal second choices?</p></div>", "scene": "cardCases"}, {"act": 2, "title": "A second count checks the same set", "body": "<p>The 26 × 12 rectangle includes every red-first, face-second candidate pair.</p><div class=\"task\"><b>Try it first</b><p>Which cells attempt to draw the very same card twice? Remove only those cells.</p></div>", "scene": "cardGrid"}, {"act": 2, "title": "Split by the first digit’s parity", "body": "<p>Form two-digit strings from {1,2,3,4,5}. Repetition is allowed.</p><div class=\"task\"><b>Try it first</b><p>Select exactly the strings whose digit sum is even. Which two disjoint cases describe them?</p></div>", "scene": "parity"}, {"act": 2, "title": "Justify each operation separately", "body": "<p>One complete outcome must have exactly one representation in the count.</p><div class=\"task\"><b>Try it first</b><p>For the two-card investigation, identify the outcome, the cases, and the factors. Explain coverage and why no outcome appears twice.</p></div>", "scene": "audit"}, {"act": 3, "title": "Seven reported counts.<br>One union.", "body": "<div class=\"task\"><b>Try it first</b><p>In a survey, |A|=20, |B|=13, |C|=26, |A∩B|=9, |A∩C|=15, |B∩C|=7, and |A∩B∩C|=5. Fill the seven regions of a three-set Venn diagram and find how many people like at least one pie.</p></div>", "scene": "pie", "phase": "all"}, {"act": 3, "title": "Separate the disjoint regions first", "body": "<p>Suppose |A|=10, |B|=8, and |A∩B|=6.</p><div class=\"task\"><b>Try it first</b><p>Place the intersection first. What remains only in A and only in B?</p></div>", "scene": "venn2"}, {"act": 3, "title": "A shared element was counted twice", "body": "<p>Adding |A| and |B| counts a shared element once from each set.</p><div class=\"equation\">|A ∪ B| = |A| + |B| − |A ∩ B|</div><div class=\"task\"><b>Try it first</b><p>Track the contribution of one element in both sets.</p></div>", "scene": "multiplicity", "sets": 2}, {"act": 3, "title": "Build the two bit-string sets", "body": "<div class=\"task\"><b>Try it first</b><p>Among 3-bit strings, let A be the strings that start with 1 and B the strings of weight 2. List A, B, and A∩B, then use inclusion–exclusion to find |A∪B|.</p></div>", "scene": "bitSets"}, {"act": 3, "title": "Start with the triple intersection", "body": "<p>For the pie survey, the five people in A∩B∩C belong to every pairwise intersection too.</p><div class=\"task\"><b>Try it first</b><p>Fill the center. Which reported numbers still include those five people?</p></div>", "scene": "pie", "phase": "center"}, {"act": 3, "title": "Remove the center from each pair", "body": "<p>“In both A and B” includes people who also like C.</p><div class=\"equation\">|(A ∩ B) ∖ C| = |A ∩ B| − |A ∩ B ∩ C|</div><div class=\"task\"><b>Try it first</b><p>Find all three regions that belong to exactly two sets.</p></div>", "scene": "pie", "phase": "pairs"}, {"act": 3, "title": "Finish the outer regions", "body": "<p>Each single-set total includes its pair-only regions and the center.</p><div class=\"task\"><b>Try it first</b><p>Fill the remaining three regions. Then sum the seven disjoint parts.</p></div>", "scene": "pie", "phase": "singles"}, {"act": 3, "title": "What happens to one person?", "body": "<p>A person may belong to one, two, or three of the sets.</p><div class=\"task\"><b>Try it first</b><p>Count that person’s contributions: single sets, pairwise intersections, then the triple intersection.</p></div>", "scene": "multiplicity", "sets": 3}, {"act": 3, "title": "The three-set correction", "body": "<div class=\"equation\">|A ∪ B ∪ C|</div><div class=\"equation\">= |A| + |B| + |C|<br>− |A ∩ B| − |A ∩ C| − |B ∩ C|<br>+ |A ∩ B ∩ C|</div><p>Every element of the union has final coefficient 1.</p>", "scene": "pieFormula"}, {"act": 3, "title": "Intersections are common multiples", "body": "<p>In {1,…,50}, count integers divisible by 2, 3, or 5.</p><div class=\"task\"><b>Try it first</b><p>Identify the pairwise and triple intersections before calculating the union.</p></div>", "scene": "multiples"}, {"act": 4, "title": "Too many objects for single occupancy", "body": "<p>Place more than m objects into m boxes. If every box had at most one, there would be at most m objects.</p><div class=\"task\"><b>Try it first</b><p>Try to place 6 objects in 5 boxes while keeping every box at size 1 or less.</p></div>", "scene": "pigeons", "n": 6, "m": 5}, {"act": 4, "title": "Why the ceiling is forced", "body": "<p>Let k = ⌈n/m⌉, with m ≥ 1. Suppose every box contained at most k−1 objects.</p><div class=\"equation\">n ≤ m(k−1) &lt; n</div><p>The contradiction forces at least one box to contain k or more objects.</p>", "scene": "capacity", "n": 53, "m": 6}, {"act": 4, "title": "A guarantee about the largest group", "body": "<p>Store 53 files in 6 folders.</p><div class=\"task\"><b>Try it first</b><p>What lower bound is forced for the largest folder? Does the theorem say “exactly,” “at least,” or “every folder”?</p></div>", "scene": "pigeons", "n": 53, "m": 6}, {"act": 4, "title": "Identify objects, boxes, and the bound", "body": "<div class=\"task\"><b>Try it first</b><p>Use the generalized pigeonhole principle twice. If 73 submissions are assigned among 8 graders, find the guaranteed minimum for the largest number assigned to one grader. If 25 students choose among 7 project topics, find the guaranteed minimum for the largest number of students choosing one topic. Identify pigeons, holes, and each ceiling calculation.</p></div>", "scene": "pigeonTasks"}, {"act": 4, "title": "Can the guarantee be improved?", "body": "<p>Write n = qm + r, where 0 ≤ r &lt; m. Put q+1 objects in r boxes and q objects in the rest.</p><div class=\"task\"><b>Try it first</b><p>Why does this allocation attain maximum ⌈n/m⌉? Try a divisible total as well.</p></div>", "scene": "pigeons", "n": 25, "m": 7, "sharp": true}, {"act": 5, "title": "Choose a method, then justify it", "body": "<div class=\"task\"><b>Try it first</b><p>For each familiar problem, choose the main counting operation. Explain what one outcome represents and which condition permits that operation.</p></div>", "scene": "quiz"}, {"act": 5, "title": "A count needs an outcome set", "body": "<p>Add disjoint cases. Multiply fixed branch counts. Subtract a complement or correct an overlap.</p><p>For allocations, the average forces a lower bound on the largest group.</p><p><em>Next:</em> permutations and combinations.</p>", "scene": "closing"}]};'use strict';
+const $=s=>document.querySelector(s),C={teal:'#087f6d',blue:'#286bab',purple:'#7451bc',gold:'#986000',coral:'#c5473a',ink:'#172439',muted:'#526078'};
+const FILLS=['#e0efe8','#e5edfa','#efe6f6','#fff0d4','#ffe5df'];
+const BOOK={'3.2':'https://discrete.openmathbooks.org/dmoi4/sec_counting-combine-outcomes.html','3.3':'https://discrete.openmathbooks.org/dmoi4/sec_counting-non-disjoint.html'};
+const RANKS=['A','2','3','4','5','6','7','8','9','10','J','Q','K'],RED=['♥','♦'].flatMap(s=>RANKS.map(r=>r+s)),FACES=['♥','♦','♣','♠'].flatMap(s=>['J','Q','K'].map(r=>r+s));
+const PIE=[1,2,9,4,10,2,5],REGION_NAMES=['A only','B only','C only','A and B only','A and C only','B and C only','A and B and C'];
+const BITSTRINGS=Array.from({length:8},(_,i)=>i.toString(2).padStart(3,'0'));
+let state={},index=0,timer=null;
+const esc=s=>String(s).replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;').replaceAll('"','&quot;');
+const range=(a,b)=>Array.from({length:Math.max(0,b-a+1)},(_,i)=>a+i);
+const sum=xs=>xs.reduce((a,b)=>a+b,0);
+const txt=(x,y,t,size=23,color=C.ink,extra='')=>`<text x="${x}" y="${y}" font-size="${size}" fill="${color}" text-anchor="middle" dominant-baseline="central" ${extra}>${esc(t)}</text>`;
+const svg=(html,label,view='0 0 820 360')=>`<svg viewBox="${view}" role="group" aria-label="${esc(label)}">${html}</svg>`;
+const btn=(label,action,extra='')=>`<button type="button" data-action="${action}" ${extra}>${label}</button>`;
+const select=(key,label,options,value)=>`<label>${label}<select data-setting="${key}" aria-label="${label}">${options.map(([v,t])=>`<option value="${v}" ${String(value)===String(v)?'selected':''}>${esc(t)}</option>`).join('')}</select></label>`;
+const panel=(art,caption,controls,status='')=>art+`<div class="caption">${caption}</div><div class="controls">${controls}</div><div class="status" aria-live="polite">${status}</div>`;
+const steps=(q,max)=>btn('Next step','step',`data-max="${max}" ${q.step>=max?'disabled':''}`)+btn('Previous','back',q.step===0?'disabled':'')+btn('Start again','reset');
+const tile=(x,y,w,h,label,action,attrs='',fill='white',size=22,accessible=label)=>`<g class="tile" role="button" tabindex="0" data-action="${action}" ${attrs} aria-label="${esc(accessible)}"><rect x="${x}" y="${y}" width="${w}" height="${h}" rx="5" fill="${fill}" stroke="#aebed2"/>${txt(x+w/2,y+h/2,label,size)}</g>`;
+function binomial(n,k){if(k<0||k>n)return 0;let result=1;for(let j=1;j<=Math.min(k,n-k);j++)result=result*(n-j+1)/j;return Math.round(result);}
+function balanced(n,m){const q=Math.floor(n/m),r=n%m;return Array.from({length:m},(_,i)=>q+(i<r?1:0));}
+function pigeonBound(n,m){return Math.ceil(n/m);}
+function exactRegions(a,b,c,ab,ac,bc,abc){return [a-ab-ac+abc,b-ab-bc+abc,c-ac-bc+abc,ab-abc,ac-abc,bc-abc,abc];}
+function coefficient(k,step){return (step>=1?k:0)-(step>=2?binomial(k,2):0)+(step>=3?binomial(k,3):0);}
+function cardPairs(){return RED.flatMap(a=>FACES.filter(b=>a!==b).map(b=>[a,b]));}
+function parityPairs(){return range(1,5).flatMap(a=>range(1,5).filter(b=>(a+b)%2===0).map(b=>[a,b]));}
+function bitMembership(v){const a=v[0]==='1',b=[...v].filter(x=>x==='1').length===2;return a?(b?2:1):(b?3:0);}
+function freshState(s){const m=s.m||6;return {reveal:false,checked:false,step:0,mode:s.mode||'single',firstCard:1,second:-1,branch:0,repetition:true,cell:-1,mask:0,bits:[0,0,0,1,1,1,1,1,1,1],suffixZero:0,regions:Array(7).fill(''),memberships:Array(8).fill(-1),k:s.sets===2?2:3,n:s.n||53,m,bins:Array(m).fill(0),answers:['?','?','?','?'],inputs:['',''],focus:-1,divisor:'union'};}
+function st(){return state[index]||(state[index]=freshState(DECK.slides[index]));}
+function cleanDeckStates(raw){
+ const out={},int=(v,a,b)=>Number.isInteger(v)&&v>=a&&v<=b;
+ if(!raw||typeof raw!=='object'||Array.isArray(raw))return out;
+ for(const [key,v] of Object.entries(raw)){const i=Number(key);if(!int(i,0,DECK.slides.length-1)||!v||typeof v!=='object')continue;const s=DECK.slides[i],q=freshState(s);
+  for(const [k,a,b] of [['step',0,7],['firstCard',0,25],['second',-1,11],['branch',0,5],['cell',-1,311],['mask',0,33554431],['suffixZero',0,6],['k',0,3],['n',0,120],['m',1,12],['focus',-1,4]])if(int(v[k],a,b))q[k]=v[k];
+  for(const k of ['reveal','checked','repetition'])if(typeof v[k]==='boolean')q[k]=v[k];
+  if(['single','pair'].includes(v.mode))q.mode=v.mode;if(s.fixed)q.mode=s.mode;
+  if(['union','2','3','5','6','10','15','30'].includes(v.divisor))q.divisor=v.divisor;
+  if(Array.isArray(v.bits)&&v.bits.length===10&&v.bits.every(x=>x===0||x===1))q.bits=[...v.bits];
+  for(const [field,length,max] of [['regions',7,100],['inputs',2,120]])if(Array.isArray(v[field])&&v[field].length===length&&v[field].every(x=>x===''||(/^\d{1,3}$/.test(String(x))&&Number(x)<=max)))q[field]=v[field].map(String);
+  if(Array.isArray(v.memberships)&&v.memberships.length===8&&v.memberships.every(x=>int(x,-1,3)))q.memberships=[...v.memberships];
+  q.bins=Array(q.m).fill(0);if(Array.isArray(v.bins)&&v.bins.length===q.m&&v.bins.every(x=>int(x,0,q.n))&&sum(v.bins)<=q.n)q.bins=[...v.bins];
+  if(Array.isArray(v.answers)&&v.answers.length===4&&v.answers.every(x=>['?','sum','product','pie','pigeon'].includes(x)))q.answers=[...v.answers];
+  q.k=Math.min(q.k,s.sets||3);out[i]=q;
+ }return out;
+}
+function cards(q){
+ const chosen=RED[q.firstCard],legal=FACES.filter(c=>c!==chosen).length;
+ const art=`<div class="cards-panel"><div class="first-card"><span class="small-label">First card</span><span class="playing-card red">${chosen}</span><span class="small-label">Second card: choose a face</span></div><div class="card-row">${FACES.map((c,i)=>`<button class="playing-card ${i<6?'red':''} ${q.reveal&&c===chosen?'illegal':''} ${q.second===i?'selected':''}" data-action="second" data-value="${i}" aria-label="Test second card ${c}">${c}</button>`).join('')}</div></div>`;
+ const result=q.second>=0?(FACES[q.second]===chosen?'<span class="fail">The same physical card cannot be drawn twice.</span>':'This ordered pair is allowed.'):q.reveal?`<strong>${legal} legal face cards remain.</strong> ${legal===11?'The first card removed one face card.':'The first card was not a face card.'}`:'Predict the number of legal second cards, then inspect.';
+ return panel(art,'Different cards with the same rank are still different physical cards.',select('firstCard','First card',RED.map((c,i)=>[i,c]),q.firstCard)+btn('Show legal choices','reveal')+btn('Start again','reset'),result);
+}
+function magnets(q){
+ let art=q.mode==='single'?`<div class="diagram"><div class="token-list">${['A','B','C','D','E'].map(x=>`<span class="token">${x}</span>`).join('')}</div><div class="token-list">${[1,2,3].map(x=>`<span class="token secondary">${x}</span>`).join('')}</div><div class="formula-box">One magnet is one outcome.</div></div>`:grid(5,3,q.cell,(r,c)=>String.fromCharCode(65+r)+(c+1));
+ return panel(art,q.mode==='single'?'Ω = {A,B,C,D,E,1,2,3}':'Ω = {A,B,C,D,E} × {1,2,3}',select('mode','Outcome',[['single','One magnet'],['pair','Letter–numeral pair']],q.mode)+btn('Reveal count','reveal'),q.reveal?`<strong>${q.mode==='single'?'5 + 3 = 8':'5 × 3 = 15'} outcomes.</strong>`:'Describe what distinguishes two outcomes.');
+}
+function grid(rows,cols,selected,label){
+ const cell=Math.min(44,630/cols,280/rows),w=cell*cols,h=cell*rows,x0=(820-w)/2,y0=(350-h)/2;let art='';
+ for(let r=0;r<rows;r++)for(let c=0;c<cols;c++){const k=r*cols+c;art+=tile(x0+c*cell,y0+r*cell,cell-3,cell-3,rows*cols<=25?label(r,c):'', 'cell',`data-value="${k}" data-row="${r}" data-col="${c}"`,selected===k?FILLS[2]:FILLS[r%2],rows*cols<=25?18:13,label(r,c));}
+ art+=txt(410,15,`${rows} first-stage choices × ${cols} second-stage choices`,22,C.muted);
+ if(selected>=0&&selected<rows*cols)art+=txt(410,337,'Selected outcome: '+label(Math.floor(selected/cols),selected%cols),25,C.blue);
+ return svg(art,'Grid of complete ordered outcomes');
+}
+function restaurant(s,q){
+ const pair=q.mode==='pair';let art=pair?grid(8,14,q.cell,(r,c)=>`(A${r+1}, E${c+1})`):`<div class="diagram"><div class="token-list">${range(1,8).map(x=>`<span class="token">A${x}</span>`).join('')}</div><div class="token-list">${range(1,14).map(x=>`<span class="token secondary">E${x}</span>`).join('')}</div></div>`;
+ return panel(art,pair?'Each cell records one appetizer and one entree.':'Appetizer labels and entree labels name different dishes.',(s.fixed?'':select('mode','Choose',[['single','Exactly one dish'],['pair','One of each']],q.mode))+btn('Reveal count','reveal')+btn('Start again','reset'),q.reveal?`<strong>${pair?'8 × 14 = 112 meals.':'8 + 14 = 22 dishes.'}</strong>`:'Count only after identifying a complete outcome.');
+}
+function tree(q){let art=txt(50,180,'start',22);const ys=[35,105,175,245,315];
+ ys.forEach((y,i)=>{art+=`<line x1="95" y1="180" x2="250" y2="${y}" stroke="#9bb0c9" stroke-width="2"/>`+txt(272,y,String.fromCharCode(65+i),25,C.teal);if(i<q.branch){for(let j=0;j<3;j++){const yy=y+(j-1)*22;art+=`<line x1="300" y1="${y}" x2="520" y2="${yy}" stroke="#9bb0c9" stroke-width="2"/>`+txt(575,yy,String.fromCharCode(65+i)+(j+1),21,C.blue);}}});
+ return panel(svg(art,'A five-by-three choice tree'),'Branches are disjoint; a path ends at one ordered outcome.',btn('Expand a branch','branch',q.branch===5?'disabled':'')+btn('Start again','reset'),q.branch===5?'<strong>3 + 3 + 3 + 3 + 3 = 5 × 3 = 15 leaves.</strong>':`${q.branch} of 5 letter branches expanded.`);
+}
+function uniformCards(q){const card=RED[q.firstCard];let art=`<div class="diagram"><div class="first-card"><span class="playing-card red">${card}</span><span style="font-size:28px">is removed from the deck</span></div><div class="formula-box">52 cards − 1 selected card</div><div class="formula-box">${q.reveal?'51 possible second cards':'How many second choices?'}</div></div>`;return panel(art,'The available labels change; the continuation count stays the same.',select('firstCard','Choose another first card',RED.map((c,i)=>[i,c]),q.firstCard)+btn('Reveal count','reveal'),q.reveal?'<strong>52 × 51 = 2,652 ordered draws.</strong> Each uses two different cards.':'Dependence of the choices does not prevent a counting product.');}
+function plates(q){const counts=q.repetition?[26,26,26,10,10,10]:[26,25,24,10,9,8],product=counts.reduce((a,b)=>a*b,1);const art='<div class="diagram"><div class="plate-slots">'+counts.map((n,i)=>`<div class="plate-slot"><small>${i<3?'letter':'digit'} ${i%3+1}</small><strong>${i<q.step?n:'?'}</strong><small>choices</small></div>`).join('')+'</div><div class="formula-box">'+(q.step===6?counts.join(' × ')+'<br>= '+product.toLocaleString('en-US'):'Name the choices before revealing the next factor.')+'</div></div>';return panel(art,q.repetition?'Repetition is allowed in every position.':'No repeated letter or digit; 0 is allowed in a digit position.',btn('Next position','step',`data-max="6" ${q.step>=6?'disabled':''}`)+btn(q.repetition?'Compare no repetition':'Allow repetition','repeat')+btn('Start again','reset'),q.step===6?'Every factor counts continuations of every earlier choice.':'The first digit may be 0: these are plates, not six-digit numbers.');}
+function roundTrips(q){return panel(grid(9,9,q.cell,(r,c)=>`(out ${r+1}, back ${c+1})`),'Returning along the same route is allowed.',btn('Reveal count','reveal')+btn('Start again','reset'),q.reveal?'<strong>9 × 9 = 81 ordered round trips.</strong> The diagonal contributes 9 of them.':'Choose a grid cell and explain its two coordinates.');}
+function complement(q){const weight=sum(q.bits),desired=q.bits.slice(0,3).some(x=>x===1);const art='<div class="diagram"><div class="bits">'+q.bits.map((v,i)=>`<button class="${i<3?'prefix ':''}${v?'one':''}" data-action="bit" data-value="${i}" aria-label="Toggle bit ${i+1}">${v}</button>`).join('')+'</div><div class="pair-output">First three positions are outlined in gold.</div><div class="formula-box">'+(q.checked?`Weight = ${weight}`:'Construct a 10-bit string of weight 6.')+'</div></div>';return panel(art,'Click a bit to switch between 0 and 1.',btn('Check the string','check')+btn('Start again','reset'),q.checked?(weight!==6?'<span class="fail">This string is outside the universe: its weight must be 6.</span>':desired?'<strong>Valid and included:</strong> at least one of the first three bits is 1.':'<strong>Valid but excluded:</strong> its first three bits are 000.'):'Which prefix describes the entire complement?');}
+function complementProof(q){const strings=range(0,6).map(z=>'000'+range(0,6).map(i=>i===z?'0':'1').join(''));const art='<div class="suffix-list">'+strings.map((v,i)=>`<button class="${q.suffixZero===i?'selected':''}" data-action="suffix" data-value="${i}">${v}</button>`).join('')+'</div>';return panel(art,'Each excluded string is identified by its unique suffix zero.',btn('Reveal the subtraction','reveal'),q.reveal?'<strong>C(10,6) − C(7,6) = 210 − 7 = 203.</strong>':'Seven suffix positions; no excluded string is missing or duplicated.');}
+function cardCases(q){const lines=['First red card is not a face: 20 choices.','Every such choice leaves 12 face cards: 20 × 12 = 240.','First red card is a face: 6 choices, each leaving 11 faces.','The cases are disjoint: 240 + 6 × 11 = 306.'];return panel('<div class="proof-rows">'+lines.map((x,i)=>`<div class="proof-row ${i<q.step?'active':'dim'}">${i<q.step?x:'Case '+(i<2?'1':'2')+': explain the next step.'}</div>`).join('')+'</div>','Every valid outcome belongs to exactly one first-card case.',steps(q,4),q.step===4?'<strong>306 ordered pairs.</strong>':'Use a product within each case and a sum between the cases.');}
+function cardGrid(q){let art=txt(422,16,'First red card (26 columns)',21,C.muted);const x0=126,y0=72,w=23,h=20;
+ RED.forEach((c,i)=>art+=`<text x="${x0+i*w+10}" y="53" font-size="13" fill="${C.coral}" text-anchor="middle" transform="rotate(-45 ${x0+i*w+10} 53)">${c}</text>`);
+ FACES.forEach((c,j)=>{art+=txt(91,y0+j*h+8,c,17,j<6?C.coral:C.ink);RED.forEach((a,i)=>{const bad=a===c,k=j*26+i,selected=q.cell===k;art+=`<g class="tile" tabindex="0" role="button" data-action="cell" data-value="${k}" aria-label="Ordered pair ${a}, ${c}"><rect x="${x0+i*w}" y="${y0+j*h}" width="20" height="17" rx="2" fill="${q.reveal&&bad?FILLS[4]:selected?FILLS[2]:FILLS[0]}" stroke="${q.reveal&&bad?C.coral:'#a9c2b8'}"/>${q.reveal&&bad?txt(x0+i*w+10,y0+j*h+8,'×',17,C.coral):''}</g>`;});});
+ const focus=q.cell>=0?`(${RED[q.cell%26]}, ${FACES[Math.floor(q.cell/26)]})`:'';
+ return panel(svg(art,'All 312 candidate card pairs'),'Second face card: 12 rows. '+(focus?'Selected: '+focus:''),btn('Remove self-pairs','reveal')+btn('Start again','reset'),q.reveal?'<strong>26 × 12 − 6 = 306.</strong> Exactly the six shared red face cards produce forbidden self-pairs.':'Which cells use the same physical card twice?');}
+function parity(q){let art=txt(420,20,'Second digit',23,C.muted);range(1,5).forEach(b=>art+=txt(250+(b-1)*92,58,b,23));range(1,5).forEach(a=>{art+=txt(175,105+(a-1)*47,a,23);range(1,5).forEach(b=>{const k=(a-1)*5+b-1,on=!!(q.mask&(1<<k)),valid=(a+b)%2===0,x=211+(b-1)*92,y=84+(a-1)*47;art+=tile(x,y,78,39,`${a}${b}`,'parity',`data-value="${k}"`,q.checked&&on!==valid?FILLS[4]:on?FILLS[0]:'white',21);});});const correct=parityPairs().reduce((mask,[a,b])=>mask|(1<<((a-1)*5+b-1)),0),exact=q.mask===correct;return panel(svg(art,'All 25 two-digit strings'),'First digit labels the row. Repeated digits are allowed.',btn('Check selection','check')+btn('Show parity cases','reveal')+btn('Start again','reset'),q.checked?(exact?'<strong>Exactly right: 3 × 3 + 2 × 2 = 13 strings.</strong>':'<span class="fail">Some cells are missing or extra. An even sum needs equal parities.</span>'):q.reveal?'<strong>Odd–odd: 9. Even–even: 4.</strong> The cases are disjoint.':'Click each valid string; each cell represents one ordered outcome.');}
+function audit(q){const questions=['What is one complete outcome?','Why are the two cases exhaustive?','Why are the cases disjoint?','Why may we multiply within a case?','Why is each outcome counted once?'],answers=['An ordered pair of different cards: red first, face second.','Every first red card either is a face or is not a face.','A first card cannot be both a face and a nonface.','Each nonface first choice has 12 continuations; each face first choice has 11.','The first card selects one case and one branch; the second card selects one leaf.'];return panel('<div class="audit-list">'+questions.map((x,i)=>`<button data-action="focus" data-value="${i}">${x}${q.focus===i?`<span class="answer">${answers[i]}</span>`:''}</button>`).join('')+'</div>','A counting argument needs coverage and uniqueness.',btn('Hide explanations','reset'),'Choose a question after trying to explain it.');}
+function pie(q){const labels=['A','B','C','A∩B','A∩C','B∩C','A∩B∩C'],given=[20,13,26,9,15,7,5],pos=[[30,32],[70,32],[50,85],[50,26],[36,59],[64,59],[50,50]];let diagram='<svg viewBox="0 0 820 295" aria-label="Seven disjoint regions of the pie Venn diagram"><circle cx="340" cy="100" r="103" fill="#dcefe7" fill-opacity=".55" stroke="#70a58e" stroke-width="2"/><circle cx="480" cy="100" r="103" fill="#e2eafb" fill-opacity=".55" stroke="#88a8d0" stroke-width="2"/><circle cx="410" cy="185" r="103" fill="#f0e3f7" fill-opacity=".5" stroke="#b696c7" stroke-width="2"/>'+txt(222,25,'A',24,C.teal)+txt(599,25,'B',24,C.blue)+txt(560,271,'C',24,C.purple)+'</svg>';
+ // Input centers correspond to exact regions inside the three circles.
+ const coords=[[277,100],[543,100],[410,260],[410,45],[340,183],[480,183],[410,130]];
+ let fields=coords.map(([x,y],i)=>`<input class="region-input ${q.checked?(q.regions[i]!==''&&Number(q.regions[i])===PIE[i]?'correct':'incorrect'):''}" style="left:${100*x/820}%;top:${100*y/295}%" type="number" min="0" max="100" value="${esc(q.regions[i])}" data-region="${i}" aria-label="${REGION_NAMES[i]} count">`).join('');
+ const art='<div class="survey-data">'+labels.map((x,i)=>`<div><b>${x}</b>${given[i]}</div>`).join('')+'</div><div class="venn-wrap">'+diagram+fields+'</div>';
+ const correct=q.regions.every((v,i)=>v!==''&&Number(v)===PIE[i]);
+ return panel(art,'Outside all three sets: unknown; the survey total was not given.',btn('Check regions','check')+btn('Reveal next layer','pieLayer',q.step>=3?'disabled':'')+btn('Start again','reset'),q.checked?(correct?'<strong>All seven regions correct. Their sum is 33.</strong>':'<span class="fail">Check the marked regions. Pairwise totals include the center.</span>'):q.step===3?'<strong>1 + 2 + 9 + 4 + 10 + 2 + 5 = 33.</strong>':'Fill the center, then the pair-only regions, then the single-only regions.');}
+function venn2(q){const vals=[4,6,2],show=[q.step>=2,q.step>=1,q.step>=2];const art=`<circle cx="330" cy="166" r="137" fill="${FILLS[0]}" stroke="#77a18d" stroke-width="2"/><circle cx="490" cy="166" r="137" fill="${FILLS[1]}" fill-opacity=".65" stroke="#87a7cf" stroke-width="2"/>${txt(220,35,'|A| = 10',25,C.teal)}${txt(598,35,'|B| = 8',25,C.blue)}${txt(270,168,show[0]?vals[0]:'?',42,C.teal)}${txt(410,168,show[1]?vals[1]:'?',42,C.gold)}${txt(550,168,show[2]?vals[2]:'?',42,C.blue)}${txt(410,330,'|A ∩ B| = 6',25,C.muted)}`;return panel(svg(art,'A two-set Venn diagram'),'The three exact regions form a disjoint union.',steps(q,3),q.step===3?'<strong>4 + 6 + 2 = 12.</strong> Equivalently 10 + 8 − 6 = 12.':'Which reported number belongs in the overlap?');}
+function multiplicity(s,q){const m=s.sets,k=Math.min(q.k,m),max=m;let art='<div class="diagram"><div class="membership-dots">'+range(0,m-1).map(i=>`<div class="membership-dot ${i<k?'on':''}">${'ABC'[i]}</div>`).join('')+'</div><div class="coefficient-table">'+[['Single sets',k],['Pairs',binomial(k,2)],['Triples',binomial(k,3)]].slice(0,m).map(([name,n],i)=>`<div class="coefficient ${q.step<=i?'off':''}">${name}<strong>${q.step>i?(i===1?'−':'+')+n:'?'}</strong></div>`).join('')+'</div><div class="formula-box">'+(q.step?`Contribution so far: ${coefficient(k,q.step)}`:'Track one element, not the whole set.')+'</div></div>';return panel(art,`The tracked element belongs to exactly ${k} set${k===1?'':'s'}.`,select('k','Memberships',range(0,m).map(i=>[i,String(i)]),k)+steps(q,max),q.step===max?`<strong>Final contribution: ${k?1:0}.</strong> ${k?'Every union element is counted once.':'An outside element is counted zero times.'}`:'Predict the next contribution before revealing it.');}
+function bitSets(q){const names=['Neither','A only','Both','B only'],fills=['#f2f4f7',FILLS[0],FILLS[2],FILLS[1]],expected=BITSTRINGS.map(bitMembership);return panel('<div class="membership-grid">'+BITSTRINGS.map((bits,i)=>`<button class="membership-card ${q.checked?(q.memberships[i]===expected[i]?'correct':'incorrect'):''}" style="background:${q.memberships[i]<0?'white':fills[q.memberships[i]]}" data-action="membership" data-value="${i}">${bits}<span>${q.memberships[i]<0?'Unassigned':names[q.memberships[i]]}</span></button>`).join('')+'</div>','A: starts with 1. B: has exactly two 1s. Click a string to cycle its category.',btn('Check categories','check')+btn('Start again','reset'),q.checked?(q.memberships.every((v,i)=>v===expected[i])?'<strong>|A ∪ B| = 4 + 3 − 2 = 5.</strong>':'<span class="fail">Check the marked strings against both definitions.</span>'):'List A, B, and their intersection before counting the union.');}
+function pieFormula(q){const rows=['|A| + |B| + |C| = 20 + 13 + 26 = 59','|A∩B| + |A∩C| + |B∩C| = 9 + 15 + 7 = 31','|A∩B∩C| = 5','|A∪B∪C| = 59 − 31 + 5 = 33'];return panel('<div class="proof-rows">'+rows.map((x,i)=>`<div class="proof-row ${i<q.step?'active':'dim'}">${i<q.step?x:['Add single-set counts.','Subtract pairwise counts.','Restore the triple intersection.','Combine the three contributions.'][i]}</div>`).join('')+'</div>','The pairwise terms include people who belong to all three sets.',steps(q,4),q.step===4?'<strong>The union contains 33 people.</strong>':'Explain the sign of each term.');}
+function multiples(q){const predicate=n=>q.divisor==='union'?[2,3,5].some(d=>n%d===0):n%Number(q.divisor)===0;let art='';for(let n=1;n<=50;n++){const x=123+((n-1)%10)*58,y=28+Math.floor((n-1)/10)*58,on=q.reveal&&predicate(n);art+=tile(x,y,49,47,String(n),'number',`data-value="${n}"`,on?FILLS[0]:q.cell===n?FILLS[2]:'white',22);}const count=range(1,50).filter(predicate).length;return panel(svg(art,'Numbers1 to50 and their divisibility'),'For these coprime divisors, common multiples use 6, 10, 15, and 30.',select('divisor','Highlight',[['union','2 or 3 or 5'],['2','Multiples of 2'],['3','Multiples of 3'],['5','Multiples of 5'],['6','2 and 3'],['10','2 and 5'],['15','3 and 5'],['30','2 and 3 and 5']],q.divisor)+btn('Reveal set','reveal')+btn('Start again','reset'),q.reveal?`<strong>${count} numbers.</strong> ${q.divisor==='union'?'25 + 16 + 10 − 8 − 5 − 3 + 1 = 36.':''}`:q.cell>0?`${q.cell} is divisible by ${[2,3,5].filter(d=>q.cell%d===0).join(', ')||'none of 2, 3, 5'}.`:'Click a number to inspect it, or choose a set to reveal.');}
+function allocationArt(q,capacity=false){const max=Math.max(1,...q.bins),scale=Math.max(max,Math.ceil(q.n/q.m)),cap=Math.max(0,Math.ceil(q.n/q.m)-1);return `<div class="box-grid ${q.m>8?'many':''}">${q.bins.map((count,i)=>`<button class="allocation-box ${count===max?'maximum':''}" style="--fill:${100*count/scale}%" data-action="box" data-value="${i}" aria-label="Place one object in box ${i+1}; currently ${count}"><span class="amount">${capacity?(q.reveal?cap:'?'):count}</span><span class="name">box ${i+1}</span></button>`).join('')}</div>`;}
+function pigeonInputs(q){return `<label>Objects n <input type="number" min="0" max="120" value="${q.n}" data-number="n" aria-label="Number of objects"></label><label>Boxes m <input type="number" min="1" max="12" value="${q.m}" data-number="m" aria-label="Number of boxes"></label>`;}
+function pigeons(s,q){const placed=sum(q.bins),max=Math.max(0,...q.bins),bound=pigeonBound(q.n,q.m);let controls=btn('Place all evenly','balance')+btn('Put all in box 1','concentrate')+btn('Reveal bound','reveal')+btn('Start again','reset');if(s.sharp)controls=pigeonInputs(q)+controls;return panel(allocationArt(q),`${placed} placed; ${q.n-placed} remain. ${q.m} boxes; click a box to place one object.`,controls,q.reveal?`<strong>Some box must contain at least ⌈${q.n}/${q.m}⌉ = ${bound}.</strong> ${placed===q.n?'Current largest: '+max+'.':'Complete the allocation before comparing its largest box.'}`:placed===q.n?`All ${q.n} objects placed. Largest box: ${max}. What is forced in every allocation?`:'Try to keep the largest box as small as possible.');}
+function capacity(q){const k=Math.ceil(q.n/q.m),cap=k-1,total=q.m*cap;const art=allocationArt(q,true);return panel(art,`Supposed capacity: every box has at most ${k} − 1 objects.`,btn('Fill to the supposed cap','reveal'),q.reveal?`<strong>${q.m} × ${cap} = ${total} &lt; ${q.n}.</strong> ${q.n-total} objects cannot fit under that assumption.`:'The failure of this capacity assumption proves the guarantee.');}
+function pigeonTasks(q){const correct=[10,4],rows=['73 submissions, 8 graders','25 students, 7 topics'];return panel('<div class="diagram">'+rows.map((row,i)=>`<label class="number-task ${q.checked?(Number(q.inputs[i])===correct[i]&&q.inputs[i]!==''?'correct':'incorrect'):''}"><span>${row}<br><small>Guaranteed lower bound on the largest group</small></span><input type="number" min="0" max="120" value="${esc(q.inputs[i])}" data-input="${i}" aria-label="Bound for ${row}"></label>`).join('')+'</div>','Identify the objects and the boxes in each application.',btn('Check bounds','check')+btn('Start again','reset'),q.checked?(q.inputs.every((v,i)=>v!==''&&Number(v)===correct[i])?'<strong>⌈73/8⌉ = 10; ⌈25/7⌉ = 4.</strong>':'<span class="fail">Use a ceiling, and state the result as “at least.”</span>'):'These are guaranteed lower bounds, not exact maximum loads.');}
+function quiz(q){const prompts=['Exactly one restaurant dish','One ordered round trip','Starts with 1 or has weight 2','Largest load among 8 graders'],correct=['sum','product','pie','pigeon'],options=[['?','Choose'],['sum','Sum principle'],['product','Product principle'],['pie','Inclusion–exclusion'],['pigeon','Pigeonhole']];return panel('<div class="quiz-list">'+prompts.map((prompt,i)=>`<label class="quiz-line ${q.checked?(q.answers[i]===correct[i]?'correct':'incorrect'):''}"><span>${prompt}</span><select data-answer="${i}" aria-label="Method for ${prompt}">${options.map(([v,l])=>`<option value="${v}" ${v===q.answers[i]?'selected':''}>${l}</option>`).join('')}</select></label>`).join('')+'</div>','Explain the needed condition for each chosen principle.',btn('Check methods','check')+btn('Start again','reset'),q.checked?`<strong>${q.answers.filter((x,i)=>x===correct[i]).length} of 4 correct.</strong> Feedback is local and ungraded.`:'A method’s name is the beginning of the explanation.');}
+function closing(){return '<div class="summary-rules"><div>Define Ω<span>What distinguishes two complete outcomes?</span></div><div>Add or multiply<span>Disjoint cases or fixed continuation counts?</span></div><div>Use a complement or a correction<span>Are exclusions easier? Are cases overlapping?</span></div><div>Count each element’s contribution<span>Inclusion–exclusion leaves coefficient 1.</span></div><div>Compare total objects with total capacity<span>Some box contains at least ⌈n/m⌉.</span></div></div>';}
+function renderScene(s,q){switch(s.scene){case'cards':return cards(q);case'magnets':return magnets(q);case'restaurant':return restaurant(s,q);case'tree':return tree(q);case'uniformCards':return uniformCards(q);case'plates':return plates(q);case'roundTrips':return roundTrips(q);case'complement':return complement(q);case'complementProof':return complementProof(q);case'cardCases':return cardCases(q);case'cardGrid':return cardGrid(q);case'parity':return parity(q);case'audit':return audit(q);case'pie':return pie(q);case'venn2':return venn2(q);case'multiplicity':return multiplicity(s,q);case'bitSets':return bitSets(q);case'pieFormula':return pieFormula(q);case'multiples':return multiples(q);case'pigeons':return pigeons(s,q);case'capacity':return capacity(q);case'pigeonTasks':return pigeonTasks(q);case'quiz':return quiz(q);case'closing':return closing();default:throw Error('Unknown scene '+s.scene);}}
+function slideContent(s,q){let body=s.body;if(s.scene==='plates'&&!q.repetition)body='<p>Compare three different letters followed by three different digits.</p><div class="task"><b>Try it first</b><p>How many choices remain at each position? Explain why each stage still has a fixed number of continuations.</p></div>';return `<div class="eyebrow">${s.act===0?'Opening investigation':s.act===5?'Synthesis':`Act ${s.act} / ${DECK.acts[s.act]}`}</div><h1>${s.title}</h1><div class="content"><div class="text">${body}</div><div class="visual">${renderScene(s,q)}</div></div>`;}
+function render(){const s=DECK.slides[index];$('#slide').className=s.cover?'cover':'';$('#slide').innerHTML=slideContent(s,st());$('#counter').textContent=`${index+1} / ${DECK.slides.length}`;$('#previous').disabled=index===0;$('#next').disabled=index===DECK.slides.length-1;$('#progress').style.width=`${100*(index+1)/DECK.slides.length}%`;$('#act').value=s.act;const sec=s.act===3?'3.3':'3.2';$('#source').textContent=s.act===4?'Course supplement · Pigeonhole principle':s.act===5?'DMOI 4e · §§3.2–3.3 + supplement':`DMOI 4e · §${sec}`;if(s.act===4)$('#source').removeAttribute('href');else $('#source').href=BOOK[sec];document.title=`24 · ${s.title.replace(/<[^>]*>/g,' ')} · CS 241`;}
+function go(n){clearInterval(timer);timer=null;index=Math.max(0,Math.min(DECK.slides.length-1,n));history.replaceState(null,'',`#${index+1}`);render();}
+function action(a,target){const s=DECK.slides[index],q=st(),v=Number(target.dataset.value);clearInterval(timer);timer=null;
+ if(a==='reveal')q.reveal=true;if(a==='check')q.checked=true;if(a==='reset')state[index]=freshState(s);
+ if(a==='second'){q.second=v;q.reveal=false;}if(a==='cell'||a==='number')q.cell=v;
+ if(a==='branch')q.branch=Math.min(5,q.branch+1);if(a==='step')q.step=Math.min(Number(target.dataset.max),q.step+1);if(a==='back')q.step=Math.max(0,q.step-1);
+ if(a==='repeat'){q.repetition=!q.repetition;q.step=0;}
+ if(a==='bit'){q.bits[v]=1-q.bits[v];q.checked=false;}if(a==='suffix')q.suffixZero=v;
+ if(a==='parity'){q.mask^=1<<v;q.checked=false;}
+ if(a==='focus')q.focus=q.focus===v?-1:v;
+ if(a==='pieLayer'){q.step=Math.min(3,q.step+1);const inds=q.step===1?[6]:q.step===2?[3,4,5]:[0,1,2];inds.forEach(i=>q.regions[i]=String(PIE[i]));q.checked=false;}
+ if(a==='membership'){q.memberships[v]=(q.memberships[v]+1)%4;q.checked=false;}
+ if(a==='box'&&s.scene!=='capacity'&&sum(q.bins)<q.n)q.bins[v]++;
+ if(a==='balance')q.bins=balanced(q.n,q.m);if(a==='concentrate')q.bins=Array.from({length:q.m},(_,i)=>i===0?q.n:0);
+ render();
+}
+function activate(target){const key=target.dataset.focusKey;action(target.dataset.action,target);if(key)Array.from(document.querySelectorAll('#slide [data-focus-key]')).find(el=>el.dataset.focusKey===key)?.focus();}
+document.addEventListener('click',e=>{const target=e.target.closest('[data-action]');if(target)activate(target);const jump=e.target.closest('[data-jump]');if(jump){$('#overview').close();go(Number(jump.dataset.jump));}});
+function storeAnswerInput(t){
+ if(!t.matches('[data-region],[data-input]'))return false;
+ const q=st(),region=t.matches('[data-region]'),field=region?'regions':'inputs',i=Number(region?t.dataset.region:t.dataset.input),max=region?100:120;
+ const value=t.value===''?'':String(Math.max(0,Math.min(max,Math.trunc(Number(t.value)||0))));
+ q[field][i]=value;q.checked=false;if(t.value!==value)t.value=value;
+ document.querySelectorAll('#slide .correct,#slide .incorrect').forEach(el=>el.classList.remove('correct','incorrect'));
+ const status=document.querySelector('#slide .status');if(status)status.textContent='Answers updated. Check them when ready.';
+ document.dispatchEvent(new Event('deck-state-change'));return true;
+}
+function storeAllocationInput(t){
+ const key=t.dataset.number;if(!['n','m'].includes(key))return false;
+ const q=st(),value=Math.max(key==='m'?1:0,Math.min(key==='m'?12:120,Math.trunc(Number(t.value)||0)));
+ if(q[key]!==value){q[key]=value;q.bins=Array(q.m).fill(0);q.reveal=false;}
+ if(t.value!==String(value))t.value=String(value);
+ const boxes=document.querySelector('#slide .box-grid');if(boxes)boxes.outerHTML=allocationArt(q);
+ const caption=document.querySelector('#slide .caption');if(caption)caption.textContent=`${sum(q.bins)} placed; ${q.n-sum(q.bins)} remain. ${q.m} boxes; click a box to place one object.`;
+ const status=document.querySelector('#slide .status');if(status)status.textContent='Try to keep the largest box as small as possible.';
+ document.dispatchEvent(new Event('deck-state-change'));return true;
+}
+document.addEventListener('input',e=>{if(!storeAnswerInput(e.target))storeAllocationInput(e.target);});
+document.addEventListener('change',e=>{const q=st(),t=e.target;
+ if(storeAnswerInput(t)||storeAllocationInput(t))return;
+ if(t.matches('[data-answer]')){q.answers[Number(t.dataset.answer)]=t.value;q.checked=false;render();return;}
+
+ const key=t.dataset.setting;if(!key)return;q[key]=['mode','divisor'].includes(key)?t.value:Number(t.value);q.reveal=false;q.checked=false;q.second=-1;q.cell=-1;if(key==='k')q.step=0;render();
+});
+document.addEventListener('keydown',e=>{const target=e.target.closest('[role="button"][data-action]');if(target&&['Enter',' '].includes(e.key)){e.preventDefault();activate(target);return;}if(document.querySelector('dialog[open]')||e.target.closest('button,select,a,input,textarea,[role=button]'))return;if(['ArrowRight','PageDown',' '].includes(e.key)){e.preventDefault();go(index+1);}if(['ArrowLeft','PageUp'].includes(e.key)){e.preventDefault();go(index-1);}if(e.key==='Home')go(0);if(e.key==='End')go(DECK.slides.length-1);if(e.key.toLowerCase()==='o')$('#overview').showModal();if(e.key.toLowerCase()==='f')fullscreen();});
+function fullscreen(){if(document.fullscreenElement)document.exitFullscreen();else document.documentElement.requestFullscreen().catch(()=>{});}
+function pauseDeckAnimations(){document.querySelector('#slide').getAnimations({subtree:true}).forEach(a=>a.pause());}
+$('#previous').onclick=()=>go(index-1);$('#next').onclick=()=>go(index+1);$('#full').onclick=fullscreen;$('#showOverview').onclick=()=>$('#overview').showModal();$('#act').innerHTML=DECK.acts.map((a,i)=>`<option value="${i}">${i===0?'Opening':i===5?'Synthesis':'Act '+i} · ${a}</option>`).join('');$('#act').onchange=e=>go(DECK.slides.findIndex(s=>s.act===Number(e.target.value)));$('#overviewList').innerHTML=DECK.slides.map((s,i)=>`<button data-jump="${i}">${String(i+1).padStart(2,'0')} · ${s.title.replaceAll('<br>',' ')}</button>`).join('');
+function resize(){const scale=Math.min(innerWidth/1600,innerHeight/900);$('#stage').style.transform=`translate(-50%,-50%) scale(${scale})`;}
+addEventListener('resize',resize);addEventListener('hashchange',()=>{const n=Number(location.hash.slice(1));if(Number.isInteger(n)&&n>=1&&n<=DECK.slides.length)go(n-1);});addEventListener('beforeprint',()=>{const old=index;$('#print').innerHTML=DECK.slides.map((s,i)=>{index=i;return `<section class="print-page">${slideContent(s,st())}</section>`;}).join('');index=old;});resize();const initial=Number(location.hash.slice(1));go(Number.isInteger(initial)&&initial>0?initial-1:0);
+</script><script>
+// This module is isolated from deck controls, except for the render/print hooks.
+(()=>{
+ 'use strict';
+ const TEXT_ENABLED=true;
+ const NS='http://www.w3.org/2000/svg',W=1600,H=900;
+ const hash=s=>{let h=2166136261;for(const ch of s){h^=ch.charCodeAt(0);h=Math.imul(h,16777619);}return (h>>>0).toString(16);};
+ const fingerprint=DECK.annotationId||(`m${DECK.meeting}-`+hash(DECK.slides.map(s=>s.title).join('\n')));
+ const storagePrefix=TEXT_ENABLED?'cs241-ink-text-copy-v1:':'cs241-ink-copy-v1:';
+ const storageKey=storagePrefix+fingerprint;
+ const icons={
+  use:'<path d="M5 3v17l4-5 4 7 3-2-4-6 7-1Z"/>',
+  pen:'<path d="m4 16 12-12 4 4L8 20l-5 1Z"/><path d="m13 7 4 4M4 16l4 4"/>',
+  highlight:'<path d="m7 15 7-12 7 4-7 12Z"/><path d="m7 15-3 4 6 3 4-3M3 22h18"/>',
+  erase:'<path d="m3 14 11-11 8 8-10 10H9Z"/><path d="m7 10 8 8M12 21h9"/>',
+  text:'<path d="M4 5V3h16v2M12 3v18M8 21h8"/>',
+  undo:'<path d="M8 5 3 10l5 5M4 10h10a6 6 0 0 1 0 12"/>',
+  redo:'<path d="m16 5 5 5-5 5M20 10H10a6 6 0 0 0 0 12"/>',
+  clear:'<path d="M3 6h18M8 6V3h8v3M6 6l1 15h10l1-15M10 10v7M14 10v7"/>',
+  menu:'<circle cx="5" cy="12" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/>'
+ };
+ const toolButton=(name,label,extra='')=>`<button type="button" id="ink-${name==='menu'?'more':name}" title="${label}" aria-label="${label}" ${extra}><svg viewBox="0 0 24 24" aria-hidden="true">${icons[name]}</svg></button>`;
+ const stage=document.getElementById('stage'),layer=document.createElementNS(NS,'svg');
+ layer.id='ink-layer';layer.setAttribute('viewBox',`0 0 ${W} ${H}`);layer.setAttribute('aria-label','Slide annotation layer');
+ stage.append(layer);
+ const toolbar=document.createElement('div');toolbar.id='ink-tools';toolbar.setAttribute('role','toolbar');toolbar.setAttribute('aria-label','Writing tools');
+ toolbar.innerHTML=toolButton('use','Interact with the slide (V)','aria-pressed="true"')+toolButton('pen','Pen (P)','aria-pressed="false"')+toolButton('highlight','Highlighter (H)','aria-pressed="false"')+toolButton('erase','Eraser: remove whole strokes (E)','aria-pressed="false"')+'<hr>'+toolButton('undo','Undo ink on this slide (Ctrl+Z)')+toolButton('redo','Redo ink on this slide (Ctrl+Shift+Z)')+'<hr><input id="ink-color" type="color" value="#c62828" title="Ink color" aria-label="Ink color"><select id="ink-width" title="Stroke width" aria-label="Stroke width"><option value="3">3</option><option value="5">5</option><option value="8">8</option></select><hr>'+toolButton('clear','Clear ink on this slide (undo available)')+toolButton('menu','Ink backup, printing, and help')+'<span id="ink-save-status" role="status" aria-live="polite">Ready</span>';
+ stage.append(toolbar);
+ if(TEXT_ENABLED)toolbar.querySelector('#ink-erase').insertAdjacentHTML('afterend',toolButton('text','Text box (T)','aria-pressed="false"'));
+ const resets=document.createElement('div');resets.id='lectureResetControls';resets.setAttribute('role','group');resets.setAttribute('aria-label','Lecture reset controls');
+ resets.innerHTML='<button id="restartLecture" type="button" title="Reset all demonstrations; keep annotations">↺ Restart lecture</button><button id="resetAnnotations" type="button" title="Clear ink and text on all slides; Undo restores annotations on each slide">Reset annotations</button>';
+ stage.append(resets);
+ const menu=document.createElement('dialog');menu.id='ink-menu';
+ menu.innerHTML='<button type="button" id="ink-close">Close</button><h2>Write on this copy</h2><p>Choose <b>Pen</b> or <b>Highlighter</b> and write with a mouse, stylus, or touch. Buttons below the diagrams work in every mode. Choose <b>Interact</b> to click directly on a diagram’s edges or vertices. The eraser removes whole strokes.</p><p>Ink is saved per slide in <b>this browser</b>, together with the diagram state. It is not written into the HTML file. Download a backup before switching browsers, moving the file, or clearing browser data.</p><p class="ink-hint">Ink stays at its page position when you change a diagram. Arrow keys and the slide controls still navigate. V = interact · P = pen · H = highlighter · E = eraser. Ctrl/Cmd+Z undoes ink on the current slide.</p><div class="ink-menu-actions"><button type="button" id="ink-export">Download ink backup</button><button type="button" id="ink-load">Load ink backup…</button><button type="button" id="ink-print">Print slides with ink</button></div><p class="ink-hint">Loading a backup replaces the current ink and diagram states. Each slide’s prior ink can be recovered with Undo. Printing preserves the slide’s layout and ink alignment.</p><p id="ink-menu-message" role="status" aria-live="polite"></p>';
+ document.body.append(menu);
+ const resources=document.createElement('section');resources.innerHTML='<h3>Reading and related slides</h3>';resources.append(stage.querySelector('.footer>div:first-child'));menu.append(resources);
+ const controlHelp=document.createElement('p');controlHelp.className='ink-hint';controlHelp.textContent='Quick colors remember separate pen and highlighter choices. Writing pauses route playback. On the opening slide, Restart lecture resets all demonstrations and keeps your annotations. Reset annotations clears ink and text across the deck; Undo restores them on each slide.';menu.append(controlHelp);
+ if(TEXT_ENABLED){
+  const help=document.createElement('p');help.innerHTML='<b>Text boxes:</b> choose <b>T</b>, then click the slide and type. Click an existing box to edit it. Drag its Move handle or resize from its bottom-right corner. Adjust the size and color above the box. Press Escape or Ctrl/Cmd+Enter to finish typing. Use Undo/Redo for ink and completed text edits.';menu.querySelector('h2').after(help);
+  for(const p of menu.querySelectorAll('p'))p.innerHTML=p.innerHTML.replaceAll('Ink is saved','Ink and text are saved').replaceAll('ink and diagram states','ink, text, and diagram states').replaceAll('prior ink','prior annotations');
+  menu.querySelector('#ink-export').textContent='Download annotation backup';menu.querySelector('#ink-load').textContent='Load annotation backup…';menu.querySelector('#ink-print').textContent='Print slides with annotations';
+ }
+ const fileInput=document.createElement('input');fileInput.id='ink-import';fileInput.type='file';fileInput.accept='.json,application/json';fileInput.hidden=true;document.body.append(fileInput);
+ const get=id=>document.getElementById(id);
+ let ink={},undo={},redo={},mode='use',colorsForTool={pen:'#1565c0',highlight:'#fdd835'},width=3;
+ let gesture=null,raf=0,saveTimer=0,loadedWarning='',saveFailed=false;
+ const strokes=(i=index)=>ink[i]||[];
+ const textTools=TEXT_ENABLED?createTextTools():null;
+ // Included inside the annotation module only for an ink + text copy.
+function createTextTools(){
+ const textLayer=document.createElement('div');textLayer.id='ink-text-layer';stage.append(textLayer);
+ let selected=null,selectedSlide=-1,editing=null,drag=null,textColor='#172439',textSize=28;
+ const clamp=(x,a,b)=>Math.max(a,Math.min(b,x));
+ const boxData=(id,i=index)=>strokes(i).find(s=>s.tool==='text'&&s.id===id);
+ const boxElement=id=>Array.from(textLayer.children).find(e=>e.dataset.textId===id);
+ function applyStyle(el,s){Object.assign(el.style,{left:s.x+'px',top:s.y+'px',width:s.w+'px',height:s.h+'px',fontSize:s.size+'px',color:s.color});}
+ function content(s,placeholder=false){const el=document.createElement('div');el.className='ink-text-content';el.textContent=s.text||(placeholder?'Type a note…':'');el.dataset.empty=placeholder&&!s.text;return el;}
+ function fit(s){
+  const measure=document.createElement('div');measure.className='ink-text-content';
+  Object.assign(measure.style,{position:'absolute',left:'-10000px',top:'0',visibility:'hidden',width:(s.w-2)+'px',height:'auto',fontSize:s.size+'px',lineHeight:'1.25'});
+  measure.textContent=s.text+'\u200b';textLayer.append(measure);
+  const h=clamp(measure.scrollHeight+2,48,702);measure.remove();
+  return {...s,h,x:clamp(s.x,64,W-64-s.w),y:clamp(s.y,104,H-94-h)};
+ }
+ function replace(id,changes,i=index){let updated;ink[i]=strokes(i).map(s=>{if(s.tool!=='text'||s.id!==id)return s;updated=fit({...s,...changes});return updated;});return updated;}
+ function changed(a,b){return JSON.stringify(a)!==JSON.stringify(b);}
+ function finishEditing(){
+  if(!editing)return;
+  const session=editing;editing=null;
+  const current=boxData(session.id,session.slide);
+  if(changed(session.before,strokes(session.slide)))remember(session.slide,session.before);
+  if(current&&session.area.isConnected)session.area.replaceWith(content(current,true));
+  updateButtons();saveNow();
+ }
+ function endDrag(cancel=false){
+  if(!drag)return;
+  const session=drag;drag=null;
+  if(session.handle.hasPointerCapture(session.pointerId))session.handle.releasePointerCapture(session.pointerId);
+  if(cancel)ink[session.slide]=session.before;
+  else if(changed(session.before,strokes(session.slide)))remember(session.slide,session.before);
+  renderText();updateButtons();saveNow();
+ }
+ function finish(){finishEditing();endDrag();}
+ function beginEdit(id,before){
+  if(editing?.id===id&&editing.slide===index)return;
+  // A playing route must not replace the editor while someone is typing.
+  stopPlayback();
+  finish();selected=id;selectedSlide=index;renderText();
+  const s=boxData(id),box=boxElement(id);if(!s||!box)return;
+  textColor=s.color;textSize=s.size;if(mode==='text')get('ink-color').value=s.color;
+  updateInkChoices();
+  const area=document.createElement('textarea');area.className='ink-text-editor';area.value=s.text;area.placeholder='Type a note…';area.maxLength=5000;area.spellcheck=false;area.setAttribute('aria-label','Slide text box');
+  box.querySelector('.ink-text-content').replaceWith(area);
+  editing={id,slide:index,before:before||strokes(),area};
+  area.addEventListener('input',()=>{if(!editing||editing.area!==area)return;const current=replace(id,{text:area.value},editing.slide);applyStyle(box,current);scheduleSave();});
+  area.addEventListener('blur',finishEditing);
+  area.addEventListener('keydown',e=>{
+   e.stopPropagation();
+   if(e.key==='Escape'||((e.ctrlKey||e.metaKey)&&e.key==='Enter')){e.preventDefault();finishEditing();}
+  });
+  area.focus();area.setSelectionRange(area.value.length,area.value.length);
+ }
+ function editStyle(id,changes){
+  finish();const before=strokes();if(!boxData(id))return;replace(id,changes);
+  if(changed(before,strokes()))remember(index,before);
+  renderText();updateButtons();saveNow();
+ }
+ function remove(id){finish();const before=strokes();ink[index]=before.filter(s=>s.tool!=='text'||s.id!==id);if(changed(before,strokes()))remember(index,before);selected=null;renderText();updateButtons();saveNow();}
+ function startDrag(e,id,kind,handle){
+  if(e.pointerType==='mouse'&&e.button!==0)return;
+  e.preventDefault();e.stopPropagation();finishEditing();
+  const s=boxData(id);if(!s)return;
+  selected=id;selectedSlide=index;
+  drag={id,kind,handle,pointerId:e.pointerId,slide:index,before:strokes(),start:point(e),original:s};handle.setPointerCapture(e.pointerId);
+ }
+ function attachHandle(handle,id,kind){
+  handle.addEventListener('pointerdown',e=>startDrag(e,id,kind,handle));
+  handle.addEventListener('pointermove',e=>{
+   if(!drag||e.pointerId!==drag.pointerId)return;e.preventDefault();
+   const p=point(e),dx=p[0]-drag.start[0],dy=p[1]-drag.start[1],s=drag.original;
+   const change=kind==='move'?{x:s.x+dx,y:s.y+dy}:{w:clamp(s.w+dx,140,W-64-s.x)};
+   const current=replace(id,change,drag.slide);applyStyle(boxElement(id),current);scheduleSave();
+  });
+  handle.addEventListener('pointerup',e=>{if(drag?.pointerId===e.pointerId)endDrag();});
+  handle.addEventListener('pointercancel',e=>{if(drag?.pointerId===e.pointerId)endDrag(true);});
+  handle.addEventListener('lostpointercapture',e=>{if(drag?.pointerId===e.pointerId)endDrag();});
+  handle.addEventListener('keydown',e=>{
+   if(!['ArrowLeft','ArrowRight','ArrowUp','ArrowDown','Delete','Backspace'].includes(e.key))return;e.preventDefault();e.stopPropagation();
+   if(['Delete','Backspace'].includes(e.key)){remove(id);return;}
+   const s=boxData(id),delta=e.shiftKey?20:5,dx=e.key==='ArrowLeft'?-delta:e.key==='ArrowRight'?delta:0,dy=e.key==='ArrowUp'?-delta:e.key==='ArrowDown'?delta:0;
+   editStyle(id,kind==='move'?{x:s.x+dx,y:s.y+dy}:{w:clamp(s.w+dx+dy,140,W-64-s.x)});
+   boxElement(id)?.querySelector(kind==='move'?'.ink-text-move':'.ink-text-resize').focus();
+  });
+ }
+ function renderText(){
+  textLayer.dataset.mode=mode;if(editing||drag)return;
+  if(selectedSlide!==index||!boxData(selected))selected=null;
+  textLayer.replaceChildren();
+  for(const s of strokes().filter(s=>s.tool==='text')){
+   const box=document.createElement('div');box.className='ink-text-box';box.dataset.textId=s.id;applyStyle(box,s);box.append(content(s,true));
+   const active=s.id===selected&&['use','text'].includes(mode);box.classList.toggle('is-selected',active);
+   box.addEventListener('click',e=>{if(!e.target.closest('button,input,select,textarea')&&['use','text'].includes(mode))beginEdit(s.id);});
+   if(active){
+    const options=document.createElement('div');options.className='ink-text-options';options.setAttribute('aria-label','Text box controls');
+    const move=document.createElement('button');move.type='button';move.className='ink-text-move';move.textContent='⠿ Move';move.title='Drag to move; arrow keys to nudge';move.setAttribute('aria-label','Move text box');attachHandle(move,s.id,'move');
+    const size=document.createElement('select');size.setAttribute('aria-label','Text size');for(const n of [20,24,28,32,40,48,56]){const option=document.createElement('option');option.value=n;option.textContent=n;option.selected=n===s.size;size.append(option);}size.onchange=()=>{textSize=Number(size.value);editStyle(s.id,{size:textSize});};
+    const color=document.createElement('input');color.type='color';color.value=s.color;color.title='Text color';color.setAttribute('aria-label','Text color');color.onchange=()=>{textColor=color.value;editStyle(s.id,{color:textColor});if(mode==='text')get('ink-color').value=textColor;updateInkChoices();};
+    const del=document.createElement('button');del.type='button';del.textContent='Delete';del.setAttribute('aria-label','Delete text box');del.onclick=()=>remove(s.id);
+    options.append(move,size,color,del);box.append(options);
+    const resize=document.createElement('button');resize.type='button';resize.className='ink-text-resize';resize.title='Drag to change width; height follows the text';resize.setAttribute('aria-label','Resize text box');attachHandle(resize,s.id,'resize');box.append(resize);
+   }
+   textLayer.append(box);
+  }
+ }
+ return {
+  finish,render:renderText,
+  color:()=>selected&&boxData(selected)?boxData(selected).color:textColor,
+  setColor(color){textColor=color;if(selected&&selectedSlide===index)editStyle(selected,{color});},
+  setMode(next){if(!['use','text'].includes(next))selected=null;layer.classList.toggle('ink-text-mode',next==='text');renderText();},
+  add(p){
+   finish();const before=strokes(),id='text-'+(globalThis.crypto?.randomUUID?.()||Date.now()+'-'+Math.random().toString(36).slice(2));
+   const s=fit({tool:'text',id,x:p[0],y:p[1],w:360,h:48,text:'',size:textSize,color:textColor});
+   ink[index]=[...before,s];beginEdit(id,before);scheduleSave();
+  },
+  validate(s){
+   if(typeof s.id!=='string'||!/^[a-zA-Z0-9_-]{1,80}$/.test(s.id)||typeof s.text!=='string'||s.text.length>5000||!/^#[0-9a-f]{6}$/i.test(s.color)||![20,24,28,32,40,48,56].includes(s.size)||![s.x,s.y,s.w,s.h].every(Number.isFinite)||s.x<0||s.y<0||s.w<140||s.h<48||s.x+s.w>W||s.y+s.h>H)throw Error('Invalid text box.');
+   return {tool:'text',id:s.id,x:s.x,y:s.y,w:s.w,h:s.h,text:s.text,size:s.size,color:s.color};
+  },
+  print(page,i){for(const s of strokes(i).filter(s=>s.tool==='text')){const box=document.createElement('div');box.className='ink-text-print';applyStyle(box,s);box.append(content(s));page.append(box);}}
+ };
+}
+
+ function validInt(x,lo,hi){return Number.isInteger(x)&&x>=lo&&x<=hi;}
+ function cleanStates(raw){if(typeof cleanDeckStates==='function')return cleanDeckStates(raw);let result={};if(!raw||typeof raw!=='object'||Array.isArray(raw))return result;
+  Object.entries(raw).forEach(([key,v])=>{const i=Number(key);if(!validInt(i,0,DECK.slides.length-1)||!v||typeof v!=='object')return;
+   const s=DECK.slides[i],max=s.scene==='route'?s.route.length-1:({pathCycle:3,longestPath:2,deleteAudit:2,spanningSteps:6,traversal:9,weightedTree:2,uniqueExplore:1,boundaryWalk:3,spiderModel:3,build:3,districtMap:2}[s.scene]||0);
+   const q={step:validInt(v.step,0,max)?v.step:0,toggle:v.toggle===true,palette:validInt(v.palette,0,colors.length-1)?v.palette:0,assigned:[],face:-1};
+   const colorCount=s.scene==='districtMap'?districtGraph.p.length:s.scene==='map'?4:s.scene==='colorGraph'?G[s.graph].p.length:0;
+   if(Array.isArray(v.assigned))q.assigned=Array.from(v.assigned.slice(0,colorCount),c=>validInt(c,-1,colors.length-1)?c:-1);
+   if(s.scene==='faces'&&validInt(v.face,-1,s.graph==='cube'?5:2))q.face=v.face;
+   // Feedback is plain text inserted by the base renderer; never restore markup.
+   if(typeof v.message==='string')q.message=v.message.slice(0,1000).replace(/[<>&]/g,'');
+   if(validInt(v.example,0,s.scene==='countLab'?countExamples.length-1:3))q.example=v.example;
+   if(Array.isArray(v.countShown))q.countShown=v.countShown.slice(0,4).map(x=>x===true);
+   if(Array.isArray(v.active)&&v.active.length<=12&&v.active.every(x=>validInt(x,0,11)))q.active=[...new Set(v.active)];
+   if(v.root===0||v.root===5)q.root=v.root;
+   if(['pre','in','post'].includes(v.order))q.order=v.order;
+   if(s.scene==='route'&&[350,700,1400].includes(v.routeDelay))q.routeDelay=v.routeDelay;
+   result[i]=q;
+  });return result;
+ }
+ function migratePayload(data){
+  if(data.deck===fingerprint)return data;
+  const migrations=Array.isArray(DECK.annotationMigrations)?DECK.annotationMigrations:[];
+  const matches=migrations.filter(m=>m&&m.deck===data.deck);
+  if(matches.length!==1)throw Error(`This backup does not match this version of meeting ${DECK.meeting}.`);
+  const map=matches[0].slideMap;
+  // A legacy slide must have exactly one distinct, valid destination. Reject
+  // holes, duplicate targets, and noninteger indices before moving any notes.
+  if(!Array.isArray(map)||!map.length||!Array.from(map).every(i=>validInt(i,0,DECK.slides.length-1))||new Set(map).size!==map.length)throw Error('Invalid annotation migration map.');
+  const oldIndex=key=>/^(0|[1-9]\d*)$/.test(key)&&validInt(Number(key),0,map.length-1)?Number(key):-1;
+  const slides={},states={};
+  for(const [key,list] of Object.entries(data.slides)){
+   const i=oldIndex(key);if(i<0)throw Error('Invalid legacy slide data.');
+   slides[map[i]]=list;
+  }
+  // Malformed demonstration states are ignored, as in cleanStates. Invalid
+  // ink indices above are fatal: silently dropping or moving notes is unsafe.
+  if(data.states&&typeof data.states==='object'&&!Array.isArray(data.states))for(const [key,value] of Object.entries(data.states)){
+   const i=oldIndex(key);if(i>=0)states[map[i]]=value;
+  }
+  return {...data,deck:fingerprint,slides,states};
+ }
+ function validatePayload(data){
+  if(!data||!(data.version===1||(TEXT_ENABLED&&data.version===2))||!data.slides||typeof data.slides!=='object'||Array.isArray(data.slides))throw Error(`This backup does not match this version of meeting ${DECK.meeting}.`);
+  data=migratePayload(data);
+  let result={},total=0;
+  for(const [key,list] of Object.entries(data.slides)){
+   const i=Number(key);if(!validInt(i,0,DECK.slides.length-1)||!Array.isArray(list)||list.length>10000)throw Error('Invalid slide data.');
+   const textIds=new Set();result[i]=list.map(s=>{
+    if(s?.tool==='text'&&textTools){const box=textTools.validate(s);if(textIds.has(box.id))throw Error('Duplicate text box.');textIds.add(box.id);return box;}
+    if(!s||!['pen','highlight'].includes(s.tool)||!/^#[0-9a-f]{6}$/i.test(s.color)||!Number.isFinite(s.width)||s.width<1||s.width>100||!Array.isArray(s.points)||!s.points.length)throw Error('Invalid ink stroke.');
+    total+=s.points.length;if(total>1500000)throw Error('The backup contains too many points.');
+    const points=s.points.map(p=>{if(!Array.isArray(p)||p.length!==2||!p.every(Number.isFinite)||p[0]<0||p[0]>W||p[1]<0||p[1]>H)throw Error('Invalid ink coordinates.');return [p[0],p[1]];});
+    return {tool:s.tool,color:s.color,width:s.width,points};
+   });
+  }
+  return {slides:result,states:cleanStates(data.states)};
+ }
+ try{
+  let raw=localStorage.getItem(storageKey),legacy=false;
+  // A present current key always wins, even if it cannot be parsed. Do not
+  // replace newer work with an older backup after a validation failure.
+  if(raw===null&&Array.isArray(DECK.annotationMigrations))for(const migration of DECK.annotationMigrations){
+   if(!migration||typeof migration.deck!=='string'||migration.deck===fingerprint)continue;
+   const candidate=localStorage.getItem(storagePrefix+migration.deck);
+   if(candidate===null)continue;
+   const data=JSON.parse(candidate);
+   if(data?.deck!==migration.deck)throw Error('Stored annotations do not match their legacy storage key.');
+   raw=candidate;legacy=true;break;
+  }
+  if(raw){const data=validatePayload(JSON.parse(raw));ink=data.slides;state=data.states;if(legacy)saveNow();}
+ }
+ catch(e){loadedWarning='Browser storage could not be loaded. Use backups for this session.';saveFailed=true;}
+ function payload(){return {version:TEXT_ENABLED?2:1,deck:fingerprint,title:`CS 241 · Meeting ${DECK.meeting} · ${DECK.title}`,savedAt:new Date().toISOString(),slides:ink,states:cleanStates(state)};}
+ function status(message,failed=false){const e=get('ink-save-status');e.textContent=message;e.dataset.failed=failed;e.title=failed?'Automatic browser saving failed. Download an annotation backup.':`Ink${TEXT_ENABLED?', text,':''} and diagram states are saved in this browser, not in the HTML file.`;}
+ function saveNow(){clearTimeout(saveTimer);try{localStorage.setItem(storageKey,JSON.stringify(payload()));saveFailed=false;status('Saved locally');}catch(e){saveFailed=true;status('Use backup',true);}}
+ function scheduleSave(){clearTimeout(saveTimer);saveTimer=setTimeout(saveNow,180);}
+ // Answer fields can update state without replacing the focused input or its next click target.
+ document.addEventListener('deck-state-change',scheduleSave);
+ function elementForStroke(s){let el;
+  if(s.points.length===1){el=document.createElementNS(NS,'circle');el.setAttribute('cx',s.points[0][0]);el.setAttribute('cy',s.points[0][1]);el.setAttribute('r',s.width/2);el.setAttribute('fill',s.color);}
+  else{el=document.createElementNS(NS,'path');el.setAttribute('d',s.points.map((p,i)=>(i?'L':'M')+p.join(' ')).join(' '));el.setAttribute('fill','none');el.setAttribute('stroke',s.color);el.setAttribute('stroke-width',s.width);el.setAttribute('stroke-linecap','round');el.setAttribute('stroke-linejoin','round');}
+  el.setAttribute('opacity',s.tool==='highlight'?'.27':'1');el.setAttribute('class','ink-stroke');return el;
+ }
+ function drawInk(){raf=0;layer.replaceChildren(...strokes().filter(s=>s.tool!=='text').map(elementForStroke));if(gesture?.stroke&&gesture.slide===index)layer.append(elementForStroke(gesture.stroke));textTools?.render();updateButtons();}
+ function requestDraw(){if(!raf)raf=requestAnimationFrame(drawInk);}
+ function updateButtons(){get('ink-undo').disabled=!(undo[index]?.length);get('ink-redo').disabled=!(redo[index]?.length);get('ink-clear').disabled=!strokes().length;get('resetAnnotations').disabled=!Object.values(ink).some(list=>list.length);}
+ function remember(i,before){(undo[i]||(undo[i]=[])).push(before);if(undo[i].length>100)undo[i].shift();redo[i]=[];}
+ function finishGesture(cancel=false){textTools?.finish();if(!gesture)return;const g=gesture;gesture=null;
+  if(g.stroke&&!cancel){remember(g.slide,strokes(g.slide));ink[g.slide]=[...strokes(g.slide),g.stroke];}
+  if(g.before){if(cancel)ink[g.slide]=g.before;else if(g.erased)remember(g.slide,g.before);}
+  if(layer.hasPointerCapture(g.pointerId))layer.releasePointerCapture(g.pointerId);
+  drawInk();saveNow();
+ }
+ function useMode(next){finishGesture();if(toolbar.contains(document.activeElement))document.activeElement.blur();mode=next;layer.classList.toggle('ink-enabled',mode!=='use');for(const name of ['use','pen','highlight','erase',...(TEXT_ENABLED?['text']:[])])get('ink-'+name).setAttribute('aria-pressed',name===mode);
+  if(next!=='use')stopPlayback();
+  get('ink-color').disabled=!['pen','highlight','text'].includes(mode);get('ink-color').value=mode==='text'?textTools.color():colorsForTool[mode]||colorsForTool.pen;textTools?.setMode(mode);updateInkChoices();
+ }
+ function undoInk(){finishGesture();if(!undo[index]?.length)return;(redo[index]||(redo[index]=[])).push(strokes());ink[index]=undo[index].pop();drawInk();saveNow();}
+ function redoInk(){finishGesture();if(!redo[index]?.length)return;(undo[index]||(undo[index]=[])).push(strokes());ink[index]=redo[index].pop();drawInk();saveNow();}
+ function point(e){const r=layer.getBoundingClientRect();return [Math.round(Math.max(0,Math.min(W,(e.clientX-r.left)*W/r.width))*10)/10,Math.round(Math.max(0,Math.min(H,(e.clientY-r.top)*H/r.height))*10)/10];}
+ function pointSegment(p,a,b){const dx=b[0]-a[0],dy=b[1]-a[1],len=dx*dx+dy*dy,t=len?Math.max(0,Math.min(1,((p[0]-a[0])*dx+(p[1]-a[1])*dy)/len)):0;return Math.hypot(p[0]-a[0]-t*dx,p[1]-a[1]-t*dy);}
+ function segmentsDistance(a,b,c,d){const cross=(u,v,w)=>(v[0]-u[0])*(w[1]-u[1])-(v[1]-u[1])*(w[0]-u[0]);let x=cross(a,b,c),y=cross(a,b,d),z=cross(c,d,a),w=cross(c,d,b);
+  if(((x>0&&y<0)||(x<0&&y>0))&&((z>0&&w<0)||(z<0&&w>0)))return 0;
+  return Math.min(pointSegment(a,c,d),pointSegment(b,c,d),pointSegment(c,a,b),pointSegment(d,a,b));
+ }
+ function eraseBetween(a,b){const g=gesture;if(!g)return;const before=strokes(g.slide);ink[g.slide]=before.filter(s=>{if(s.tool==='text')return true;const radius=10+s.width/2;if(s.points.length===1)return pointSegment(s.points[0],a,b)>radius;for(let j=1;j<s.points.length;j++)if(segmentsDistance(a,b,s.points[j-1],s.points[j])<=radius)return false;return true;});if(ink[g.slide].length!==before.length)g.erased=true;requestDraw();}
+ layer.addEventListener('pointerdown',e=>{if(mode==='use'||gesture||(e.pointerType==='mouse'&&e.button!==0))return;e.preventDefault();const p=point(e),eraser=mode==='erase'||e.button===5;
+  if(mode==='text'){textTools.add(p);return;}
+  gesture={slide:index,pointerId:e.pointerId,last:p};layer.setPointerCapture(e.pointerId);
+  if(eraser){gesture.before=strokes();gesture.erased=false;eraseBetween(p,p);}else gesture.stroke={tool:mode,color:colorsForTool[mode],width:mode==='highlight'?width*6:width,points:[p]};requestDraw();
+ });
+ layer.addEventListener('pointermove',e=>{if(!gesture||e.pointerId!==gesture.pointerId)return;e.preventDefault();const samples=e.getCoalescedEvents?.()||[],events=samples.length?samples:[e];
+  for(const sample of events){const p=point(sample);if(gesture.before)eraseBetween(gesture.last,p);else if(Math.hypot(p[0]-gesture.last[0],p[1]-gesture.last[1])>.5)gesture.stroke.points.push(p);gesture.last=p;}requestDraw();
+ });
+ layer.addEventListener('pointerup',e=>{if(!gesture||e.pointerId!==gesture.pointerId)return;e.preventDefault();const p=point(e);if(gesture.before)eraseBetween(gesture.last,p);else if(Math.hypot(p[0]-gesture.last[0],p[1]-gesture.last[1])>.5)gesture.stroke.points.push(p);finishGesture();});
+ layer.addEventListener('pointercancel',e=>{if(gesture?.pointerId===e.pointerId)finishGesture(true);});
+ layer.addEventListener('lostpointercapture',e=>{if(gesture?.pointerId===e.pointerId)finishGesture();});
+ for(const name of ['use','pen','highlight','erase'])get('ink-'+name).onclick=()=>useMode(name);
+ if(TEXT_ENABLED){get('ink-text').onclick=()=>useMode('text');for(const [id,label] of [['ink-undo','Undo annotation on this slide (Ctrl+Z)'],['ink-redo','Redo annotation on this slide (Ctrl+Shift+Z)'],['ink-clear','Clear ink and text on this slide (undo available)'],['ink-more','Annotation backup, printing, and help'],['ink-color','Annotation color']]){get(id).title=label;get(id).setAttribute('aria-label',label);}}
+ get('ink-undo').onclick=undoInk;get('ink-redo').onclick=redoInk;
+ get('ink-clear').onclick=()=>{finishGesture();if(!strokes().length)return;remember(index,strokes());ink[index]=[];drawInk();saveNow();};
+ get('ink-color').insertAdjacentHTML('beforebegin',[
+  ['ink',[['Blue','#1565c0'],['Red','#c62828'],['Black','#111111']]],
+  ['highlight',[['Yellow','#fdd835'],['Orange','#fb8c00']]]
+ ].map(([palette,swatches])=>`<div class="ink-swatches" data-palette="${palette}" role="group" aria-label="${palette==='ink'?'Ink':'Highlighter'} color">`+swatches.map(([name,color])=>`<button type="button" class="ink-swatch" data-ink-color="${color}" title="${name} ${palette==='ink'?'ink':'highlighter'}" aria-label="${name} ${palette==='ink'?'ink':'highlighter'}" aria-pressed="false"><span style="background:${color}"></span></button>`).join('')+'</div>').join(''));
+ get('ink-width').insertAdjacentHTML('beforebegin','<label class="ink-width-label" for="ink-width">Width</label>');
+ get('ink-width').innerHTML=[[3,'Thin'],[5,'Medium'],[8,'Thick']].map(([n,name])=>`<option value="${n}">${name}</option>`).join('');
+ function updateInkChoices(){
+  const color=mode==='text'?textTools.color():(colorsForTool[mode]||colorsForTool.pen);
+  toolbar.querySelectorAll('[data-palette]').forEach(group=>group.hidden=group.dataset.palette!==(mode==='highlight'?'highlight':'ink'));
+  toolbar.querySelectorAll('[data-ink-color]').forEach(button=>button.setAttribute('aria-pressed',button.dataset.inkColor===color));
+  get('ink-width').value=String(width);
+ }
+ function chooseInkColor(color){
+  if(!['pen','highlight','text'].includes(mode))useMode('pen');
+  if(mode==='text')textTools.setColor(color);else colorsForTool[mode]=color;
+  get('ink-color').value=color;updateInkChoices();
+ }
+ toolbar.querySelectorAll('[data-ink-color]').forEach(button=>button.onclick=()=>chooseInkColor(button.dataset.inkColor));
+ get('ink-color').oninput=e=>chooseInkColor(e.target.value);
+ get('ink-width').onchange=e=>{finishGesture();width=Number(e.target.value);useMode(mode==='highlight'?'highlight':'pen');};
+ get('ink-menu').querySelector('#ink-close').onclick=()=>menu.close();
+ const menuButton=get('ink-more');
+ menuButton.onclick=()=>{finishGesture();get('ink-menu-message').textContent=saveFailed?'Browser saving is unavailable. Download a backup to keep your annotations.':`Backups include ink${TEXT_ENABLED?', text,':''} and diagram states for all slides.`;get('ink-menu-message').dataset.failed=saveFailed;menu.showModal();};
+ get('ink-export').onclick=()=>{finishGesture();const blob=new Blob([JSON.stringify(payload(),null,2)],{type:'application/json'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=`meeting-${DECK.meeting}-ink${TEXT_ENABLED?'-text':''}-backup.json`;a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);get('ink-menu-message').textContent='Annotation backup downloaded.';get('ink-menu-message').dataset.failed=false;};
+ get('ink-load').onclick=()=>{fileInput.value='';fileInput.click();};
+ fileInput.onchange=async()=>{const f=fileInput.files[0];if(!f)return;try{if(f.size>40000000)throw Error('The backup file is too large.');const loaded=validatePayload(JSON.parse(await f.text()));finishGesture();clearInterval(timer);timer=null;for(let i=0;i<DECK.slides.length;i++)remember(i,strokes(i));ink=loaded.slides;state=loaded.states;render();saveNow();get('ink-menu-message').textContent='Backup loaded. Previous ink is available with Undo on each slide.';get('ink-menu-message').dataset.failed=false;}catch(e){get('ink-menu-message').textContent='Could not load backup: '+e.message;get('ink-menu-message').dataset.failed=true;}};
+ get('ink-print').onclick=()=>{finishGesture();menu.close();window.print();};
+ // Run before the original keyboard listener, without changing its navigation keys.
+ document.addEventListener('keydown',e=>{if(document.querySelector('dialog[open]')||e.target.closest('input,select,textarea')||e.altKey)return;const key=e.key.toLowerCase();
+  if((e.ctrlKey||e.metaKey)&&key==='z'){e.preventDefault();e.stopImmediatePropagation();e.shiftKey?redoInk():undoInk();return;}
+  if((e.ctrlKey||e.metaKey)&&key==='y'){e.preventDefault();e.stopImmediatePropagation();redoInk();return;}
+  if(e.ctrlKey||e.metaKey)return;const map={v:'use',p:'pen',h:'highlight',e:'erase',...(TEXT_ENABLED?{t:'text'}:{})};if(map[key]){e.preventDefault();e.stopImmediatePropagation();useMode(map[key]);}
+ },true);
+ function stopPlayback(){
+  clearInterval(timer);timer=null;
+  if(typeof pauseDeckAnimations==='function')pauseDeckAnimations();
+  const button=stage.querySelector('[data-action="play"]');if(button)button.textContent='Play';
+ }
+ // Pause without rerendering: an active pen stroke or text editor must stay put.
+ document.addEventListener('pointerdown',e=>{if(e.target.closest('#ink-tools,#ink-layer,#ink-text-layer'))stopPlayback();},true);
+ function updateLectureControls(){
+  resets.hidden=index!==0;
+  const s=DECK.slides[index];if(s.scene!=='route')return;
+  const q=st(),controls=stage.querySelector('#slide .controls'),play=controls.querySelector('[data-action="play"]');
+  play.textContent=timer?'Pause':'Play';
+  controls.insertAdjacentHTML('beforeend','<label class="route-playback">Speed <select id="route-speed" aria-label="Route playback speed">'+[[1400,'Slow'],[700,'Normal'],[350,'Fast']].map(([n,label])=>`<option value="${n}" ${n===(q.routeDelay||700)?'selected':''}>${label}</option>`).join('')+'</select></label>'+`<label class="route-playback">Step <input id="route-progress" aria-label="Route step" type="range" min="0" max="${s.route.length-1}" value="${q.step}" aria-valuetext="${q.step} of ${s.route.length-1}"></label>`);
+ }
+ const baseAction=action;
+ action=function(a,target){
+  if(a!=='play')return baseAction(a,target);
+  if(timer){stopPlayback();return;}
+  const q=st(),s=DECK.slides[index],at=index;
+  if(q.step>=s.route.length-1)q.step=0;
+  timer=setInterval(()=>{if(index!==at){stopPlayback();return;}q.step=Math.min(q.step+1,s.route.length-1);if(q.step===s.route.length-1)stopPlayback();render();},q.routeDelay||700);
+  render();
+ };
+ document.addEventListener('change',e=>{
+  if(!['route-speed','route-progress'].includes(e.target.id))return;
+  stopPlayback();const q=st();if(e.target.id==='route-speed')q.routeDelay=Number(e.target.value);else q.step=Number(e.target.value);render();
+ });
+ const baseRender=render;
+ render=function(){finishGesture();baseRender();updateLectureControls();if(DECK.copyLabel!==false)document.title+=TEXT_ENABLED?' · Ink + text copy':' · Ink copy';drawInk();scheduleSave();};
+ // The base print listener runs first; replace its reflowed pages with exact-layout pages.
+ addEventListener('beforeprint',()=>{finishGesture();clearInterval(timer);timer=null;const old=index,container=get('print');container.replaceChildren();
+  DECK.slides.forEach((s,i)=>{index=i;const page=document.createElement('section');page.className='ink-print-page';
+   const customLayout=typeof slideClass==='function';
+   const markup=customLayout?slideContent(s,st()):`<div class="eyebrow">${s.act===0?'Opening investigation':`Act ${s.act} / ${DECK.acts[s.act]}`}</div><h1>${s.title}</h1><div class="content"><div class="text">${s.body}</div><div class="visual">${renderScene(s,st())}</div></div>`;
+   page.innerHTML=`<div class="brand"><b>CS 241</b>MEETING ${DECK.meeting}</div><article class="ink-print-slide ${customLayout?slideClass(s):(s.cover?'cover':'')}">${markup}</article><footer class="footer"><span>Meeting ${DECK.meeting} · ${DECK.title}</span><span>${i+1} / ${DECK.slides.length}</span></footer>`;
+   const svg=document.createElementNS(NS,'svg');svg.setAttribute('viewBox',`0 0 ${W} ${H}`);svg.setAttribute('class','ink-print-svg');strokes(i).filter(s=>s.tool!=='text').forEach(s=>svg.append(elementForStroke(s)));page.append(svg);textTools?.print(page,i);container.append(page);
+  });index=old;
+ });
+ addEventListener('pagehide',()=>{finishGesture();saveNow();});
+ addEventListener('blur',()=>finishGesture());
+ get('restartLecture').onclick=()=>{useMode('use');stopPlayback();state={};go(0);saveNow();status('Lecture reset');get('restartLecture').blur();};
+ get('resetAnnotations').onclick=()=>{useMode('use');stopPlayback();for(const [key,list] of Object.entries(ink))if(list.length)remember(Number(key),list);ink={};drawInk();saveNow();status('Notes reset');get('resetAnnotations').blur();};
+ useMode('use');baseRender();updateLectureControls();if(DECK.copyLabel!==false)document.title+=TEXT_ENABLED?' · Ink + text copy':' · Ink copy';drawInk();
+ if(loadedWarning)status('Use backup',true);else status(Object.keys(ink).length?(TEXT_ENABLED?'Notes restored':'Ink restored'):'Ready');
+})();
+</script></body></html>

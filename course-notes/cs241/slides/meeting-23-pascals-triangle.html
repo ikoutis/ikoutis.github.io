@@ -1,0 +1,646 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="Interactive CS 241 Meeting 23: Pascal's triangle, paths, bit strings, subsets and counting proofs."><title>Meeting 23 · Pascal’s triangle</title><style>
+:root{color-scheme:light;--bg:#ffffff;--panel:#f2f5fa;--ink:#172439;--muted:#526078;--mint:#087f6d;--coral:#c5473a;--gold:#986000;--violet:#7451bc;--blue:#286bab}
+*{box-sizing:border-box}body{margin:0;background:#ffffff;color:var(--ink);font-family:'Aptos','Segoe UI',sans-serif;overflow:hidden}button,select{font:inherit}button,a,select{-webkit-tap-highlight-color:transparent}button{cursor:pointer;background:transparent;color:var(--ink);border:1px solid #b5c0cf;border-radius:8px;padding:10px 17px;font-size:19px}button:hover{background:#edf2f7}button:focus-visible,a:focus-visible,select:focus-visible,[tabindex]:focus-visible{outline:3px solid var(--gold);outline-offset:5px}button:disabled{opacity:.35;cursor:default}a{color:var(--mint)}#stage{width:1600px;height:900px;position:absolute;left:50%;top:50%;transform-origin:center;background:var(--bg);overflow:hidden}.brand{position:absolute;top:35px;left:64px;font-size:20px;letter-spacing:.14em;color:var(--muted)}.brand b{color:var(--mint);margin-right:22px}.topnav{position:absolute;right:64px;top:28px;display:flex;gap:12px;align-items:center}select{background:var(--bg);color:var(--ink);border:1px solid #b5c0cf;border-radius:8px;padding:10px;font-size:18px;max-width:260px}#slide{position:absolute;inset:104px 64px 94px}.eyebrow{font-size:18px;color:var(--mint);text-transform:uppercase;letter-spacing:.17em;margin-bottom:12px}h1{font-size:60px;line-height:1.08;letter-spacing:-.035em;margin:0 0 30px;font-weight:700;max-width:1420px}.content{display:grid;grid-template-columns:43% 57%;gap:0;height:480px}.text{padding-right:42px;align-self:center;font-size:27px;line-height:1.42}.text p{margin:0 0 24px}.text p:last-child{margin-bottom:0}em{font-style:normal;color:var(--mint);font-weight:650}.equation{font-family:'Cambria Math','Cambria',serif;font-size:37px;line-height:1.4;margin:17px 0;color:var(--gold)}.task{border-left:4px solid var(--gold);padding:3px 0 3px 23px}.task b{font-size:17px;text-transform:uppercase;letter-spacing:.15em;color:var(--gold);display:block;margin-bottom:12px}.task+p{margin-top:22px;color:var(--muted)}ul{margin:0;padding-left:26px}li{margin-bottom:18px}.rules strong{display:inline-block;min-width:145px;color:var(--mint)}.rules p{border-bottom:1px solid #d7dfeb;padding-bottom:14px}.visual{display:flex;flex-direction:column;justify-content:center;min-width:0;position:relative}.visual svg{width:100%;height:410px;overflow:visible}.caption{font-size:19px;color:var(--muted);text-align:center;min-height:27px;margin-top:6px}.controls{display:flex;gap:10px;align-items:center;justify-content:center;flex-wrap:wrap;margin-top:13px;min-height:44px}.status{font-size:20px;text-align:center;margin-top:12px;color:var(--gold);min-height:29px}.cover h1{font-size:82px;max-width:800px;position:absolute;top:45px}.cover .content{height:620px;grid-template-columns:43% 57%}.cover .text{align-self:end;padding-bottom:44px}.cover .visual{padding-top:0}.cover .visual svg{height:470px}.footer{position:absolute;bottom:27px;left:64px;right:64px;display:flex;align-items:center;justify-content:space-between;font-size:18px;color:var(--muted)}.footer .right{display:flex;gap:12px;align-items:center}#counter{min-width:72px;text-align:center}.track{position:absolute;bottom:0;height:4px;left:0;background:var(--mint);transition:width .2s}.source{font-size:17px;color:var(--muted);text-decoration:none}.source:hover{text-decoration:underline}svg text{font-family:'Aptos','Segoe UI',sans-serif}svg .edge{stroke:#52647d;stroke-width:4;fill:none;stroke-linecap:round}svg .node{fill:var(--bg);stroke:var(--mint);stroke-width:3}svg .label{fill:var(--ink);font-size:22px;font-weight:600;text-anchor:middle;dominant-baseline:central}svg .small{fill:var(--muted);font-size:18px;text-anchor:middle}svg .big{fill:var(--gold);font-size:36px;text-anchor:middle}svg .face{stroke:none;fill-opacity:.26}.palette button{border-width:3px;color:#101827;font-weight:bold;min-width:48px}.palette button[aria-pressed=true]{outline:3px solid #172439;outline-offset:3px}.palette button:nth-child(1){background:#66e5c0}.palette button:nth-child(2){background:#ff887c}.palette button:nth-child(3){background:#ffd16f}.palette button:nth-child(4){background:#b5a0ff}.interactive{cursor:pointer}.interactive:hover{filter:brightness(1.2)}.solid-table{width:100%;border-collapse:collapse;font-size:25px}.solid-table th{color:var(--mint);font-weight:500}.solid-table td,.solid-table th{padding:14px;text-align:right;border-bottom:1px solid #d7dfeb}.solid-table td:first-child,.solid-table th:first-child{text-align:left}.solid-table td:last-child{color:var(--gold)}dialog{max-width:1050px;max-height:80vh;background:#ffffff;color:var(--ink);border:1px solid #6b7d97;border-radius:16px;padding:35px;font-size:23px;line-height:1.5}dialog::backdrop{background:#000b}dialog h2{margin-top:0}dialog button{float:right;margin-left:30px}.notes-label{color:var(--gold)}.overview-list{display:grid;grid-template-columns:1fr 1fr;gap:10px}.overview-list button{text-align:left;font-size:19px}.print-only{display:none}
+@media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+@media print{@page{size:landscape;margin:8mm}body{overflow:visible;background:white}#stage,dialog{display:none!important}.print-only{display:block}.print-page{break-after:page;background:white;color:#142035;padding:12mm;height:175mm;overflow:hidden}.print-page:last-child{break-after:auto}.print-page h1{font-size:28px;margin-bottom:15px}.print-page .content{height:auto;grid-template-columns:45% 55%}.print-page .text{font-size:15px;padding-right:20px}.print-page .equation{font-size:23px;color:#674600}.print-page p{margin-bottom:10px}.print-page .visual svg{height:115mm}.print-page .controls,.print-page .status{display:none}.print-page em{color:#12674e}.print-page .eyebrow{font-size:12px;color:#12674e}.print-page .caption{font-size:12px;color:#43536b}.print-page .task b{color:#674600}.print-page .visual{background:#ffffff;border-radius:8px;padding:8px}.print-page .solid-table{color:#172439;font-size:15px}.print-page .solid-table td,.print-page .solid-table th{padding:8px}.print-page .text .rules p{padding-bottom:7px}.print-page li{margin-bottom:10px}.print-page .task+p{color:#43536b}.print-page .rules strong{color:#12674e}.print-page .task{border-color:#b98517}}
+
+@media print{.print-page .caption{color:#526078}}
+
+.content{grid-template-columns:40% 60%;height:550px}.text{font-size:25px;line-height:1.38;padding-right:40px}.text p{margin-bottom:20px}h1{font-size:51px;margin-bottom:22px}.equation{font-size:31px;line-height:1.5}.eyebrow{font-size:18px;margin-bottom:10px}.visual{justify-content:flex-start}.visual svg{height:365px}.caption{font-size:19px;line-height:1.3;min-height:27px;margin:7px 0 0}.controls{gap:8px;margin-top:10px;min-height:40px}.controls button,.controls select{font-size:17px;padding:8px 11px}.controls label{font-size:17px;display:flex;align-items:center;gap:7px}.controls input{font:20px 'Segoe UI',sans-serif;width:86px;border:1px solid #b5c0cf;border-radius:5px;padding:7px;background:white;color:#172439}.status{font-size:19px;line-height:1.35;color:#34465d;min-height:53px;margin-top:9px}.status strong{color:#087f6d}.fail{color:#ad392e}.cover h1{font-size:76px;max-width:650px;top:45px}.cover .content{height:620px;grid-template-columns:40% 60%}.cover .text{font-size:26px;align-self:end;padding-bottom:34px}.cover .visual{justify-content:center}.cover .visual svg{height:415px}.binom{display:inline-flex;position:relative;vertical-align:middle;flex-direction:column;line-height:1.05;text-align:center;padding:0 .4em;margin:0 .1em;font-family:'Cambria Math',Cambria,serif;font-size:.94em}.binom:before,.binom:after{position:absolute;top:0;bottom:0;width:.22em;content:'';border:1.5px solid currentColor;border-top-color:transparent;border-bottom-color:transparent}.binom:before{left:0;border-right:0;border-radius:100% 0 0 100%}.binom:after{right:0;border-left:0;border-radius:0 100% 100% 0}.task .binom{font-size:.85em}.task sup,.task sub{font-size:.65em}.cell-pick{cursor:pointer}.cell-pick:hover rect,.cell-pick:focus-visible rect{stroke:#7451bc;stroke-width:3}.cell-pick:focus-visible{outline:0}.model-panel{min-height:365px;padding:9px 8px}.bit-row,.element-row{display:flex;justify-content:center;gap:7px;flex-wrap:nowrap}.bit-row button,.element-row button{font-size:24px;min-width:45px;width:45px;height:44px;padding:3px;border-radius:6px}.bit-row button.on{background:#dcefe7;border-color:#087f6d;color:#075f51}.element-row button{border-radius:50%;height:43px;width:43px;min-width:43px}.element-row button.on{background:#e1eafa;border-color:#286bab;color:#1c5188}.position-labels{display:flex;justify-content:center;gap:7px;font-size:15px;color:#6a798c;margin-bottom:5px}.position-labels span{width:45px;text-align:center}.model-label{font-size:18px;color:#526078;letter-spacing:.03em;text-align:center;margin:6px 0 9px}.model-readout{font:26px/1.35 'Cambria Math',Cambria,serif;text-align:center;margin:12px 0;color:#286bab;min-height:32px}.model-panel .path-mini{height:175px;margin-top:5px}.model-panel .path-mini svg{height:175px}.bit-row.compact{gap:5px}.bit-row.compact button{min-width:38px;width:38px;font-size:23px}.catalog{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin:18px 8px}.catalog button{font:19px 'Cascadia Mono',Consolas,monospace;padding:8px 5px}.catalog button.selected{background:#dcefe7;border-color:#087f6d}.ghost-panel{height:210px;display:grid;place-items:center;border:1px dashed #b5c0cf;border-radius:12px;color:#6a798c;font-size:22px;margin:20px 14px}.split-panels{display:grid;grid-template-columns:1fr 1fr;gap:18px;min-height:350px;padding:20px 8px 0}.split-box{border-top:4px solid #286bab;background:#f3f6fc;border-radius:8px;padding:15px 12px;min-width:0}.split-box:last-child{border-color:#087f6d;background:#f0f8f5}.split-box h3{font-size:22px;font-weight:600;margin:0 0 14px;text-align:center}.object-list{display:grid;grid-template-columns:1fr 1fr;gap:7px;font:19px/1.35 'Cascadia Mono',Consolas,monospace;text-align:center}.object-list small{color:#6a798c}.split-total{text-align:center;font-size:25px;margin-top:18px;color:#087f6d}.proof-board{min-height:370px;margin:8px 15px}.proof-step{font-size:25px;line-height:1.4;padding:16px 20px;border-bottom:1px solid #c9d7e7;min-height:76px}.proof-step strong{color:#087f6d}.proof-step.muted{color:#8c98a8;border-bottom-style:dashed}.proof-board .equation{text-align:center;font-size:29px;margin:20px 0}.row-groups{display:flex;justify-content:center;gap:8px;min-height:350px;padding:18px 4px 0}.weight-group{flex:1;min-width:0;text-align:center;background:#f2f5fa;border-radius:10px;padding:12px 3px}.weight-group.active{background:#dcefe7;outline:2px solid #087f6d}.weight-group h3{font-size:20px;margin:0 0 12px;color:#526078}.weight-group .mini-string{font:14px/1.4 'Cascadia Mono',Consolas,monospace;white-space:nowrap}.weight-group .count{font-size:25px;margin-top:12px;color:#087f6d}.row-sum{font-size:26px;text-align:center;margin-top:18px;color:#087f6d}.encode-panel{padding:20px 15px;min-height:365px}.encode-panel .encode-task{margin:12px 0 27px}.encode-panel .model-label{font-size:22px}.saved-paths{font:17px/1.6 'Cascadia Mono',Consolas,monospace;max-width:800px;text-align:center;color:#286bab;min-height:28px}.pair-paths{display:grid;grid-template-columns:1fr 1fr;gap:20px;min-height:350px;align-items:center}.pair-paths svg{height:300px}.pair-paths .caption{font-size:21px}.complement-panel{padding:22px 0;min-height:355px}.complement-arrow{font-size:44px;text-align:center;color:#087f6d;margin:12px}.first-up-picks{display:flex;justify-content:center;gap:8px}.first-up-picks button[aria-pressed=true]{background:#dcefe7;border-color:#087f6d}.quiz-form{display:grid;gap:8px;min-height:360px;padding:14px 6px}.quiz-line{display:flex;justify-content:space-between;gap:16px;align-items:center;border-bottom:1px solid #d8e0e9;padding:12px 0;font-size:22px;line-height:1.3}.quiz-line select{min-width:160px;font-size:18px}.quiz-line.correct{color:#087f6d}.quiz-line.incorrect{color:#ad392e}.overview-list button{float:none;margin:0}#notesText{white-space:pre-line}.text li{margin-bottom:14px}.step-equation{font-size:24px;text-align:center;color:#087f6d;margin:8px 0}.controls .active{background:#dcefe7;border-color:#087f6d}
+@media print{.ink-print-slide .content{height:550px}.ink-print-slide .visual svg{height:365px}.ink-print-slide .model-panel .path-mini svg{height:175px}.ink-print-slide .pair-paths svg{height:300px}.ink-print-slide .controls,.ink-print-slide .status{visibility:hidden}.print-page .model-panel,.print-page .proof-board,.print-page .split-panels,.print-page .row-groups{min-height:0}.print-page .proof-step{font-size:16px;padding:7px;min-height:40px}.print-page .bit-row button,.print-page .element-row button{font-size:16px;width:30px;min-width:30px;height:30px}.print-page .model-label,.print-page .model-readout,.print-page .caption{font-size:13px}.print-page .row-groups{gap:4px}.print-page .weight-group h3{font-size:14px}.print-page .weight-group .mini-string{font-size:9px}.print-page .object-list{font-size:12px}.print-page .split-box h3{font-size:16px}.print-page .model-panel .path-mini svg{height:140px}}
+
+/* Larger counting models and navigable section separators. */
+.wide-visual .content{grid-template-columns:31% 69%}
+.wide-visual .text{padding-right:36px}
+.model-panel{width:100%;box-sizing:border-box;min-height:0}
+.model-label{font-size:21px;margin:4px 0 10px}
+.model-readout{font-size:30px}
+.model-count{text-align:center;margin:20px auto 8px;max-width:640px}
+.count-label{font-size:23px;line-height:1.3;color:#34465d;margin-bottom:10px}
+.count-equation{font:44px/1.15 'Cambria Math',Cambria,serif;color:#172439}
+.count-equation strong{color:#087f6d;font-weight:600}
+.model-bits .bit-row button{width:62px;min-width:62px;height:58px;font-size:32px}
+.model-bits .position-labels span{width:62px;font-size:18px}
+.bit-measures{display:flex;justify-content:center;gap:90px;margin:24px 0 18px;text-align:center}
+.bit-measures>div{min-width:170px}
+.bit-measures span{display:block;font-size:25px;color:#34465d}
+.bit-measures strong{display:block;font:56px/1.15 'Cambria Math',Cambria,serif;color:#087f6d;margin:4px 0}
+.bit-measures small{font-size:19px;color:#526078}
+.path-count-row{display:grid;grid-template-columns:60% 40%;align-items:center;margin-top:12px}
+.path-count-row .model-count{margin:0 10px}
+.path-large,.path-large svg{height:330px;width:100%}
+.model-panel .path-mini,.model-panel .path-mini svg{height:225px;width:100%;margin:0}
+.compact-path{grid-template-columns:56% 44%;margin-top:2px}
+.compact-path .count-equation{font-size:38px}
+.compact-path .count-label{font-size:22px}
+.model-lattice .bit-row.compact{gap:8px}
+.model-lattice .bit-row.compact button{width:46px;min-width:46px;font-size:27px;height:46px}
+.model-lattice .position-labels{gap:8px;font-size:17px}
+.model-lattice .position-labels span{width:46px}
+.collection-prompt{font-size:26px;color:#526078;text-align:center;margin:40px 0}
+.model-catalog .catalog button{font-size:24px;padding:10px 6px}
+.model-catalog .catalog{margin:22px 8px}
+.model-subsets .model-count{margin-top:45px}
+.status.has-math{font-size:27px;min-height:65px}
+.section-slide .section-heading{border-left:5px solid #087f6d;margin-top:130px;padding:12px 0 12px 42px;max-width:1200px}
+.section-slide .eyebrow{font-size:21px;margin-bottom:24px}
+.section-slide h1{font-size:76px;line-height:1.12;margin:0 0 30px;max-width:1150px;letter-spacing:-1.5px}
+.section-description{font-size:29px;line-height:1.5;color:#526078;max-width:1000px}
+.section-description p{margin:0}
+@media print{
+ .ink-print-slide .path-large,.ink-print-slide .path-large svg{height:330px}
+ .ink-print-slide .model-panel .path-mini,.ink-print-slide .model-panel .path-mini svg{height:225px}
+ .print-page.section-slide .section-heading{margin-top:65px}
+ .print-page.section-slide h1{font-size:45px}
+ .print-page.section-slide .section-description{font-size:20px}
+}
+</style><style>
+#ink-layer{position:absolute;inset:0;width:1600px;height:900px;z-index:2;pointer-events:none;overflow:hidden}
+#ink-layer.ink-enabled{pointer-events:auto;touch-action:none;cursor:crosshair}
+#slide .controls button,#slide .controls select,#slide .controls input{position:relative;z-index:3}
+#stage .topnav,#stage .footer{z-index:4}
+#ink-tools{position:absolute;left:64px;bottom:18px;height:56px;padding:6px 8px;z-index:5;display:flex;align-items:center;gap:5px;background:#f4f7fb;border:1px solid #c3ccda;border-radius:9px;box-shadow:0 3px 12px #17243912}
+#ink-tools button{flex:0 0 40px;width:40px;height:40px;min-width:0;padding:7px;display:grid;place-items:center;border:1px solid transparent;border-radius:6px;font-size:22px;color:#172439;background:transparent;line-height:1}
+#ink-tools button:hover{background:#e3eaf4}
+#ink-tools button[aria-pressed=true]{background:#d9e9ff;border-color:#1b65b4;color:#154e8c}
+#ink-tools button:disabled{opacity:.3}
+#ink-tools svg{width:24px;height:24px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+#ink-tools hr{flex:0 0 1px;width:1px;height:30px;margin:0 4px;border:0;border-left:1px solid #c3ccda}
+#ink-color{display:none}
+.ink-swatches{display:flex;align-items:center;gap:3px}.ink-swatches[hidden]{display:none}
+#ink-tools .ink-swatch{width:32px;min-width:32px;flex:0 0 32px;padding:5px}
+.ink-swatch span{width:21px;height:21px;border-radius:50%;display:block;border:1px solid white}
+#ink-tools .ink-swatch[aria-pressed=true]{outline:2px solid #1b65b4;outline-offset:-1px}
+.ink-width-label{font-size:13px;color:#526078;margin:0 2px 0 8px}
+#ink-width{flex:0 0 88px;font-size:16px;width:88px;height:36px;max-width:none;padding:4px 6px;background:white;border:1px solid #9eacc0;border-radius:5px;margin:0;color:#172439}
+#ink-save-status{flex:0 0 82px;width:82px;font-size:12px;line-height:1.3;text-align:center;color:#45604c;padding:0 4px}
+#ink-save-status[data-failed=true]{color:#a02a20}
+#stage .footer{justify-content:flex-end}
+#lectureResetControls{position:absolute;top:30px;left:520px;z-index:5;display:flex;gap:8px}
+#lectureResetControls[hidden]{display:none}
+#lectureResetControls button{font-size:16px;padding:10px}
+#restartLecture{color:#145aa3;border-color:#aac2df;background:#f4f8fd}
+#resetAnnotations{color:#a43328;border-color:#d8b5b0;background:#fff8f6}
+.route-playback{display:flex;align-items:center;gap:8px;font-size:17px}
+.route-playback select{font-size:17px;padding:7px;max-width:110px}
+.route-playback input{width:115px}
+#ink-menu{width:780px;max-width:90vw}
+#ink-menu p{margin:16px 0}#ink-menu .ink-menu-actions{display:flex;gap:10px;flex-wrap:wrap;margin:20px 0}
+#ink-menu .ink-menu-actions button{float:none;margin:0;font-size:19px}
+#ink-menu .ink-hint{font-size:18px;color:#526078}#ink-menu-message{font-size:18px;color:#087f6d}
+#ink-menu-message[data-failed=true]{color:#a02a20}
+.ink-stroke{pointer-events:none}
+@media print{
+ @page{size:1600px 900px;margin:0}
+ html,body{margin:0;padding:0;width:1600px;background:white;print-color-adjust:exact;-webkit-print-color-adjust:exact}
+ #ink-tools,#ink-menu,#ink-import,#lectureResetControls{display:none!important}
+ .ink-print-page{position:relative;box-sizing:border-box;width:1600px;height:900px;overflow:hidden;break-after:page;page-break-after:always;background:white;color:#172439}
+ .ink-print-page:last-child{break-after:auto;page-break-after:auto}
+ .ink-print-slide{position:absolute;inset:104px 64px 94px}
+ .ink-print-svg{position:absolute;inset:0;width:1600px;height:900px;pointer-events:none;z-index:2}
+ .ink-print-page .controls,.ink-print-page .status{visibility:hidden}
+ .ink-print-page .brand,.ink-print-page .footer{color:#526078}
+}
+#ink-text-layer{position:absolute;inset:0;width:1600px;height:900px;z-index:2;pointer-events:none}
+#ink-layer.ink-text-mode{cursor:text}
+.ink-text-box,.ink-text-print{position:absolute;box-sizing:border-box;border:1px solid transparent;border-radius:5px;line-height:1.25;background:transparent}
+.ink-text-box{pointer-events:none}
+#ink-text-layer[data-mode=text] .ink-text-box,#ink-text-layer[data-mode=use] .ink-text-box{pointer-events:auto;cursor:text}
+#ink-text-layer[data-mode=text] .ink-text-box:hover,.ink-text-box.is-selected{border:1px dashed #1b65b4}
+.ink-text-content,.ink-text-editor{display:block;width:100%;box-sizing:border-box;padding:6px 8px;margin:0;border:0;outline:none;border-radius:0;font:inherit;line-height:inherit;color:inherit;text-align:left;white-space:pre-wrap;overflow-wrap:anywhere;tab-size:4;background:transparent}
+.ink-text-content{height:100%;overflow:hidden}
+.ink-text-editor{height:100%;resize:none;overflow:auto}
+.ink-text-content[data-empty=true]{color:#778399;font-style:italic}
+.ink-text-options{position:absolute;bottom:calc(100% + 4px);left:-1px;display:flex;align-items:center;gap:5px;padding:4px;background:#fff;border:1px solid #b5c0cf;border-radius:7px;box-shadow:0 2px 8px #17243914;white-space:nowrap;cursor:default}
+.ink-text-options button{padding:3px 7px;font-size:14px;height:29px;line-height:20px;border-radius:4px}
+.ink-text-options select{font-size:15px;padding:2px;width:56px;height:29px;border-radius:4px}
+.ink-text-options input{width:32px;height:29px;padding:1px;border:1px solid #b5c0cf;border-radius:4px;background:white}
+.ink-text-options .ink-text-move{cursor:grab;touch-action:none}
+.ink-text-options .ink-text-move:active{cursor:grabbing}
+.ink-text-box .ink-text-resize{position:absolute;right:-7px;bottom:-7px;width:17px;height:17px;padding:0;border:1px solid #1b65b4;border-radius:3px;background:#fff;cursor:nwse-resize;touch-action:none}
+.ink-text-print{z-index:2}
+@media print{#ink-text-layer,.ink-text-options,.ink-text-resize{display:none!important}.ink-text-print{border-color:transparent}}
+</style></head>
+<body><main id="stage"><div class="brand"><b>CS 241</b>MEETING 23</div><nav class="topnav" aria-label="Presentation controls"><select id="act" aria-label="Jump to act"></select><button id="showOverview" title="Slide overview (O)">Slides</button><button id="full" title="Fullscreen (F)">⛶ Fullscreen</button></nav><article id="slide" aria-label="Current slide"></article><footer class="footer"><div><a class="source" id="source" target="_blank" rel="noopener"></a><span> / </span><a class="source" href="meeting-22-classes-and-databases.html">Meeting 22 ↗</a></div><div class="right"><span>← → navigate · O overview</span><button id="previous" aria-label="Previous slide">←</button><span id="counter"></span><button id="next" aria-label="Next slide">→</button></div></footer><div id="progress" class="track"></div></main>
+<dialog id="overview"><button onclick="this.closest('dialog').close()">Close</button><h2>Meeting 23 · Pascal’s triangle</h2><div id="overviewList" class="overview-list"></div></dialog><div id="print" class="print-only"></div><noscript>This interactive lecture requires JavaScript.</noscript>
+<script>const DECK={"meeting": 23, "title": "Pascal’s triangle", "copyLabel": false, "acts": ["Rook paths", "Constructing Pascal’s triangle", "Lattice paths, bit strings, and subsets", "Pascal’s recurrence and symmetry", "Row and diagonal identities", "Review and applications"], "slides": [{"act": 0, "title": "Rook paths", "body": "<p>Move one square right or down at each step. The endpoint is fixed; the order of the moves can change.</p><div class=\"task\"><b>Try it first</b><p>Build a path. How could we count every possible path?</p></div>", "scene": "rook", "rows": 7, "cols": 7, "cover": true, "id": "m23-content-01"}, {"act": 0, "title": "Listing rook paths", "body": "<div class=\"task\"><b>Try it first</b><p>A rook starts at the upper-left square and moves only one square down or right. List all paths to the square two rows down and two columns right. Then count paths to the square three rows down and two columns right by separating paths according to their final move.</p></div>", "scene": "rook", "rows": 2, "cols": 2, "activity": "collect", "id": "m23-content-02"}, {"act": 1, "title": "Constructing Pascal’s triangle", "body": "<p>Boundary values, the recurrence, and row and column notation.</p>", "scene": "section", "id": "m23-section-1", "section": true}, {"act": 1, "title": "Boundary path counts", "body": "<div class=\"task\"><b>Try it first</b><p>Count the paths to each square on the top edge and left edge.</p></div><p>A boundary route has no choice of direction. The starting square has one path of length zero.</p>", "scene": "gridCounts", "activity": "boundary", "rows": 4, "cols": 4, "id": "m23-content-03"}, {"act": 1, "title": "Path counts by final move", "body": "<div class=\"task\"><b>Try it first</b><p>Reach the square three rows down and two columns right. Which paths finish with D? Which finish with R?</p></div><p>Every path belongs to exactly one of these two groups.</p>", "scene": "rook", "rows": 3, "cols": 2, "activity": "split", "id": "m23-content-04"}, {"act": 1, "title": "Recurrence for path counts", "body": "<p>Let P(r,c) count routes with r down moves and c right moves.</p><div class=\"equation\">P(r,c) = P(r−1,c) + P(r,c−1)</div><div class=\"task\"><b>Try it first</b><p>Select an interior square. Explain both terms before revealing its count.</p></div>", "scene": "gridCounts", "activity": "recurrence", "rows": 4, "cols": 4, "id": "m23-content-05"}, {"act": 1, "title": "From path grid to Pascal’s triangle", "body": "<p>A square r moves down and c moves right is r+c steps from the start.</p><div class=\"task\"><b>Try it first</b><p>Follow one diagonal. Then rearrange the grid by total path length.</p></div>", "scene": "gridTriangle", "id": "m23-content-06"}, {"act": 1, "title": "Constructing Pascal’s triangle", "body": "<p>Begin and end each row with 1. Each interior entry is the sum of its two predecessors.</p><div class=\"task\"><b>Try it first</b><p>Select an interior entry. Which two entries produce it?</p></div>", "scene": "triangle", "activity": "parents", "n": 6, "k": 3, "id": "m23-content-07"}, {"act": 1, "title": "Constructing rows 5 and 6", "body": "<div class=\"task\"><b>Try it first</b><p>Starting with rows 0 through 4 of Pascal's triangle, 1; 1,1; 1,2,1; 1,3,3,1; 1,4,6,4,1, construct rows 5 and 6. State the boundary rule and the rule for every interior entry.</p></div>", "scene": "triangle", "activity": "fill", "n": 5, "k": 0, "id": "m23-content-08"}, {"act": 1, "title": "Binomial coefficient notation", "body": "<p>Rows and columns both start at 0. The entry in row n and column k is</p><div class=\"equation\"><span class=\"binom\" aria-label=\"n choose k\"><span>n</span><span>k</span></span> — “n choose k.”</div><div class=\"task\"><b>Try it first</b><p>Locate row 4, column 2. What would row 0, column 0 mean?</p></div>", "scene": "triangle", "activity": "notation", "n": 4, "k": 2, "maxrow": 4, "id": "m23-content-09"}, {"act": 2, "title": "Lattice paths, bit strings, and subsets", "body": "<p>Lattice paths, bit strings, subsets, and the bijections between them.</p>", "scene": "section", "id": "m23-section-2", "section": true}, {"act": 2, "title": "Lattice paths and position choices", "body": "<p>A shortest path from (0,0) to (4,7) has eleven moves: four right and seven up.</p><div class=\"task\"><b>Try it first</b><p>Choose which seven of the eleven positions are up moves. What remains undecided?</p></div>", "scene": "models", "id": "m23-lattice-path-positions", "layout": "wide-visual", "activity": "lattice", "n": 11, "k": 7}, {"act": 2, "title": "Bit-string length and weight", "body": "<p>A bit string is a sequence of 0s and 1s. Its <em>length</em> is the number of positions; its <em>weight</em> is the number of 1s.</p><div class=\"task\"><b>Try it first</b><p>Change the bits. Record the length and weight before and after each change.</p></div>", "scene": "models", "id": "m23-bit-string-length-weight", "activity": "bits", "n": 5, "k": 3, "bits": [1, 0, 1, 0, 1]}, {"act": 2, "title": "Counting strings of fixed weight", "body": "<p>Each weight-3 string has exactly three selected positions among five.</p><div class=\"task\"><b>Try it first</b><p>Construct a string of weight 3. Then inspect the whole set. How can we know the list is complete?</p></div>", "scene": "models", "activity": "catalog", "n": 5, "k": 3, "id": "m23-content-12"}, {"act": 2, "title": "Subsets and incidence strings", "body": "<p>Fix the coordinate order 1,2,…,n. Put a 1 in position i exactly when i belongs to the subset.</p><div class=\"task\"><b>Try it first</b><p>Choose a subset, then encode it. What does its size become?</p></div>", "scene": "models", "activity": "subsets", "n": 5, "k": 3, "bits": [1, 0, 1, 0, 1], "id": "m23-content-13"}, {"act": 2, "title": "Paths, bit strings, and subsets", "body": "<div class=\"task\"><b>Try it first</b><p>Find one binomial coefficient that answers all three questions: shortest lattice paths from (0,0) to (4,3); 7-bit strings of weight 3; and 3-element subsets of a 7-element set. Explain which three positions or objects are being chosen in each model.</p></div>", "scene": "models", "activity": "three", "n": 7, "k": 3, "id": "m23-content-14"}, {"act": 2, "title": "Encoding and decoding subsets", "body": "<div class=\"task\"><b>Try it first</b><p>Using coordinate order 1,2,3,4,5,6, encode {1,3,5,6} as a bit string and decode 001010 as a subset. Explain why this correspondence preserves subset size as bit-string weight.</p></div>", "scene": "encode", "id": "m23-content-15"}, {"act": 2, "title": "Bijections between counting models", "body": "<p>A subset determines exactly one bit string. Reading its 1-positions recovers exactly the original subset.</p><div class=\"task\"><b>Try it first</b><p>Change one representation. Explain how to reconstruct it from either of the others.</p></div>", "scene": "models", "activity": "three", "n": 5, "k": 3, "bits": [1, 0, 1, 0, 1], "id": "m23-content-16"}, {"act": 3, "title": "Pascal’s recurrence and symmetry", "body": "<p>Case splits for the recurrence; complementation and reflection for symmetry.</p>", "scene": "section", "id": "m23-section-3", "section": true}, {"act": 3, "title": "Partitioning strings by their last bit", "body": "<p>Consider all six-bit strings of weight three.</p><div class=\"task\"><b>Try it first</b><p>Group them by their last bit. What happens to length and weight when that bit is removed?</p></div>", "scene": "split", "n": 6, "k": 3, "id": "m23-content-17"}, {"act": 3, "title": "Pascal’s recurrence: bit-string proof", "body": "<p>For 1 ≤ k ≤ n−1, every n-bit string of weight k ends in exactly one of 0 and 1.</p><div class=\"task\"><b>Try it first</b><p>Count each group. Give the inverse operation that recovers the original string.</p></div>", "scene": "proof", "proof": "lastBit", "id": "m23-content-18"}, {"act": 3, "title": "Subsets with a distinguished element", "body": "<p>The last position can instead stand for a distinguished element x.</p><div class=\"task\"><b>Try it first</b><p>Sort the three-element subsets of {1,…,6} by whether they contain 6. Remove 6 from the first group.</p></div>", "scene": "split", "activity": "subsets", "n": 6, "k": 3, "id": "m23-content-19"}, {"act": 3, "title": "Pascal’s recurrence: subset proof", "body": "<div class=\"task\"><b>Try it first</b><p>Let S be an n-element set with distinguished element x. Partition the k-element subsets of S into those containing x and those omitting it. Count each part and derive <span class=\"binom\" aria-label=\"n choose k\"><span>n</span><span>k</span></span>=<span class=\"binom\" aria-label=\"n−1 choose k−1\"><span>n−1</span><span>k−1</span></span>+<span class=\"binom\" aria-label=\"n−1 choose k\"><span>n−1</span><span>k</span></span>.</p></div>", "scene": "proof", "proof": "subset", "id": "m23-content-20"}, {"act": 3, "title": "Boundary binomial coefficients", "body": "<p>There is one empty subset and one full subset.</p><div class=\"equation\"><span class=\"binom\" aria-label=\"n choose 0\"><span>n</span><span>0</span></span> = <span class=\"binom\" aria-label=\"n choose n\"><span>n</span><span>n</span></span> = 1</div><div class=\"task\"><b>Try it first</b><p>What happens when n = 0? How many different subsets are there then?</p></div>", "scene": "boundary", "n": 4, "id": "m23-content-21"}, {"act": 3, "title": "Symmetry by complementation", "body": "<p>A k-element subset has an (n−k)-element complement.</p><div class=\"equation\"><span class=\"binom\" aria-label=\"n choose k\"><span>n</span><span>k</span></span> = <span class=\"binom\" aria-label=\"n choose n−k\"><span>n</span><span>n−k</span></span></div><div class=\"task\"><b>Try it first</b><p>Complement the selected subset twice. Why does this establish a bijection?</p></div>", "scene": "complement", "n": 6, "bits": [1, 0, 1, 0, 0, 0], "id": "m23-content-22"}, {"act": 3, "title": "Symmetry by path reflection", "body": "<p>Reflection across y=x exchanges right and up moves.</p><div class=\"task\"><b>Try it first</b><p>Build a path to (4,3). Reflect it. What is the new endpoint?</p></div>", "scene": "reflect", "n": 7, "k": 3, "bits": [1, 0, 1, 0, 0, 1, 0], "id": "m23-content-23"}, {"act": 4, "title": "Row and diagonal identities", "body": "<p>Row sums, the hockey-stick identity, and their counting arguments.</p>", "scene": "section", "id": "m23-section-4", "section": true}, {"act": 4, "title": "Subsets grouped by size", "body": "<p>The kth entry counts subsets of size k.</p><div class=\"task\"><b>Try it first</b><p>Sort all subsets of a four-element set by size. Does any subset occur twice? Is any omitted?</p></div>", "scene": "rowSum", "n": 4, "id": "m23-content-24"}, {"act": 4, "title": "The row-sum identity", "body": "<p>Each of n positions has two possibilities: included or omitted.</p><div class=\"equation\">All subsets: 2<sup>n</sup></div><div class=\"task\"><b>Try it first</b><p>Explain why adding the counts for sizes 0 through n counts the same collection.</p></div>", "scene": "rowSum", "n": 5, "activity": "proof", "id": "m23-content-25"}, {"act": 4, "title": "The hockey-stick identity", "body": "<div class=\"task\"><b>Try it first</b><p>Add the highlighted diagonal entries. Find their total elsewhere in the triangle.</p></div><p>Change the diagonal or its endpoint. Which pattern persists?</p>", "scene": "hockey", "n": 5, "k": 2, "id": "m23-content-26"}, {"act": 4, "title": "Hockey-stick identity: recurrence proof", "body": "<p>Use the recurrence repeatedly, starting at the top of the highlighted diagonal.</p><div class=\"task\"><b>Try it first</b><p>Combine the running sum with the next entry. Which entry replaces them?</p></div>", "scene": "hockey", "n": 5, "k": 2, "activity": "proof", "id": "m23-content-27"}, {"act": 4, "title": "Path cases for the first up move", "body": "<p>For paths to (4,3), the first up move may occur after 0,1,2,3, or 4 right moves.</p><div class=\"task\"><b>Try it first</b><p>Fix that first up move. Count the remaining path. Why are these five cases disjoint?</p></div>", "scene": "firstUp", "id": "m23-content-28"}, {"act": 4, "title": "Verifying triangle identities", "body": "<div class=\"task\"><b>Try it first</b><p>Use rows 5 and 6 of Pascal's triangle to verify one numerical example of each pattern: mirror symmetry <span class=\"binom\" aria-label=\"n choose k\"><span>n</span><span>k</span></span>=<span class=\"binom\" aria-label=\"n choose n−k\"><span>n</span><span>n−k</span></span>, row sum Σ<sub>k=0</sub><sup>n</sup><span class=\"binom\" aria-label=\"n choose k\"><span>n</span><span>k</span></span>=2<sup>n</sup>, and the local Pascal recurrence.</p></div>", "scene": "triangle", "activity": "identities", "n": 6, "k": 3, "id": "m23-content-29"}, {"act": 5, "title": "Review and applications", "body": "<p>Applications of the counting models and a review of their proofs.</p>", "scene": "section", "id": "m23-section-5", "section": true}, {"act": 5, "title": "Counting paths across the chessboard", "body": "<div class=\"task\"><b>Try it first</b><p>How many right and down moves does a corner-to-corner path use? Which row and column give its count?</p></div><p>Explain the encoding before looking up the entry.</p>", "scene": "rook", "rows": 7, "cols": 7, "activity": "return", "id": "m23-content-30"}, {"act": 5, "title": "Choosing a counting model", "body": "<div class=\"task\"><b>Try it first</b><p>Select the correct count, then explain what n and k mean in each case.</p></div><p>A path length is the sum of the two coordinate changes.</p>", "scene": "quiz", "id": "m23-content-31"}, {"act": 5, "title": "Writing a counting proof", "body": "<p>Name the objects. Fix the correspondence or the case split. Explain why no object is lost or counted twice.</p><div class=\"task\"><b>Try it first</b><p>Choose one identity from today and explain its equality without calculating either side.</p></div>", "scene": "proof", "proof": "strategy", "id": "m23-content-32"}, {"act": 5, "title": "Pascal’s triangle: summary", "body": "<ul><li>Boundary ones and predecessor sums build the triangle.</li><li>Paths, bit strings, and subsets encode the same choices.</li><li>A case split proves the recurrence.</li><li>Bijections explain symmetry.</li><li>Row and diagonal sums count complete collections.</li></ul><p><em>Next:</em> counting in stages, cases, and overlapping sets.</p>", "scene": "triangle", "activity": "summary", "n": 6, "k": 3, "id": "m23-content-33"}]};'use strict';
+const $=s=>document.querySelector(s),C={teal:'#087f6d',blue:'#286bab',purple:'#7451bc',gold:'#986000',coral:'#c5473a',ink:'#172439',muted:'#526078'};
+let state={},index=0,timer=null;
+const esc=s=>String(s).replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;').replaceAll('"','&quot;');
+const range=(a,b)=>Array.from({length:Math.max(0,b-a+1)},(_,i)=>a+i);
+const setText=a=>a.length?'{'+a.join(', ')+'}':'∅';
+const weight=a=>a.reduce((x,y)=>x+y,0);
+const positions=a=>a.flatMap((x,i)=>x?[i+1]:[]);
+const binom=(n,k)=>`<span class="binom" aria-label="${esc(n)} choose ${esc(k)}"><span>${esc(n)}</span><span>${esc(k)}</span></span>`;
+function count(n,k){if(!Number.isInteger(n)||!Number.isInteger(k)||n<0||k<0||k>n)return 0;k=Math.min(k,n-k);let v=1;for(let i=1;i<=k;i++)v=v*(n-k+i)/i;return Math.round(v);}
+function strings(n,k){if(n===0)return k===0?[[]]:[];if(k<0||k>n)return[];return [...strings(n-1,k).map(x=>[0,...x]),...strings(n-1,k-1).map(x=>[1,...x])];}
+function allStrings(n){return range(0,n).flatMap(k=>strings(n,k));}
+const btn=(label,action,extra='')=>`<button type="button" data-action="${action}" ${extra}>${label}</button>`;
+const select=(key,label,values,current)=>`<label>${label}<select data-setting="${key}" aria-label="${label}">${values.map(v=>`<option value="${v}" ${current===v?'selected':''}>${v}</option>`).join('')}</select></label>`;
+const svg=(body,label,view='0 0 820 370')=>`<svg viewBox="${view}" role="group" aria-label="${esc(label)}">${body}</svg>`;
+const txt=(x,y,t,size=22,color=C.ink,extra='')=>`<text x="${x}" y="${y}" text-anchor="middle" dominant-baseline="central" font-size="${size}" fill="${color}" ${extra}>${esc(t)}</text>`;
+const controls=body=>`<div class="controls">${body}</div>`;
+const status=body=>`<div class="status ${body.includes('class="binom"')?'has-math':''}" aria-live="polite">${body}</div>`;
+function freshState(s){const n=s.scene==='encode'?6:(s.n??5);return {n,k:s.k??2,bits:s.bits?[...s.bits]:Array(n).fill(0),bits2:Array(6).fill(0),path:'',saved:[],r:2,c:2,reveal:false,all:false,checked:false,step:0,toggle:false,entries:{},entry:'',message:'',j:0,answers:['?','?','?','?']};}
+function st(){return state[index]||(state[index]=freshState(DECK.slides[index]));}
+function cleanDeckStates(raw){const out={},integer=(v,a,b)=>Number.isInteger(v)&&v>=a&&v<=b;if(!raw||typeof raw!=='object'||Array.isArray(raw))return out;
+ for(const [key,v] of Object.entries(raw)){const i=Number(key);if(!integer(i,0,DECK.slides.length-1)||!v||typeof v!=='object'||Array.isArray(v))continue;const s=DECK.slides[i],q=freshState(s);
+  for(const [k,a,b] of [['n',0,11],['k',0,11],['r',0,4],['c',0,4],['step',0,12],['j',0,4]])if(integer(v[k],a,b))q[k]=v[k];
+  if(s.scene==='rowSum')q.n=Math.min(5,q.n);if(s.scene==='hockey')q.n=Math.min(7,q.n);if(['boundary','complement'].includes(s.scene))q.n=Math.min(6,q.n);if(['models','split','reflect'].includes(s.scene))q.n=s.n;if(s.scene==='encode')q.n=6;
+  q.k=Math.min(q.k,q.n);for(const key of ['reveal','all','checked','toggle'])q[key]=v[key]===true;
+  if(Array.isArray(v.bits)&&v.bits.length===q.n&&v.bits.every(x=>x===0||x===1))q.bits=[...v.bits];else q.bits=Array(q.n).fill(0);
+  if(Array.isArray(v.bits2)&&v.bits2.length===6&&v.bits2.every(x=>x===0||x===1))q.bits2=[...v.bits2];
+  const validPath=x=>typeof x==='string'&&/^[DR]*$/.test(x)&&x.length<=14&&x.split('D').length-1<=(s.rows??7)&&x.split('R').length-1<=(s.cols??7);
+  if(validPath(v.path))q.path=v.path;if(Array.isArray(v.saved))q.saved=[...new Set(v.saved.filter(x=>validPath(x)&&x.length===(s.rows??0)+(s.cols??0)))].slice(0,20);
+  if(v.entries&&typeof v.entries==='object'&&!Array.isArray(v.entries))for(const [cell,value] of Object.entries(v.entries))if(/^[56],[0-6]$/.test(cell)&&Number(cell[2])<=Number(cell[0])&&integer(value,0,1000))q.entries[cell]=value;
+  if(typeof v.entry==='string'&&/^\d{0,4}$/.test(v.entry))q.entry=v.entry;
+  if(Array.isArray(v.answers)&&v.answers.length===4&&v.answers.every(x=>['?','8,5','3,5','11,5','16,5','7,2','7,3','1','0','2'].includes(x)))q.answers=[...v.answers];
+  out[i]=q;
+ }return out;
+}
+function pathDrawing(bits,{width=820,height=260,target=null,reflect=false}={}){const w=weight(bits),n=bits.length,tx=target?target[0]:n-w,ty=target?target[1]:w,xx=Math.max(1,n-w,tx),yy=Math.max(1,w,ty),size=Math.min((width-90)/xx,(height-65)/yy),left=(width-xx*size)/2,base=height-31;
+ let body='';for(let x=0;x<=xx;x++)for(let y=0;y<=yy;y++)body+=`<circle cx="${left+x*size}" cy="${base-y*size}" r="3.5" fill="#c7d2df"/>`;
+ body+=txt(left-18,base+18,'(0,0)',15,C.muted)+`<circle cx="${left+tx*size}" cy="${base-ty*size}" r="9" fill="none" stroke="${C.gold}" stroke-width="2" stroke-dasharray="4 3"/>`+txt(left+tx*size,base-ty*size-19,`(${tx},${ty})`,16,C.muted);
+ let x=0,y=0;for(const b of bits){const nx=x+(b?0:1),ny=y+(b?1:0);body+=`<line x1="${left+x*size}" y1="${base-y*size}" x2="${left+nx*size}" y2="${base-ny*size}" stroke="${b?C.teal:C.blue}" stroke-width="5" stroke-linecap="round"/>`;x=nx;y=ny;}
+ body+=`<circle cx="${left+x*size}" cy="${base-y*size}" r="6" fill="${C.purple}"/>`;return svg(body,'Lattice path; 1 is up and 0 is right',`0 0 ${width} ${height}`);
+}
+function rook(s,q){const r=s.rows,c=s.cols,step=Math.min(64,290/(r+1)),left=(820-(c+1)*step)/2,top=19;let body='';
+ for(let y=0;y<=r;y++)for(let x=0;x<=c;x++)body+=`<rect x="${left+x*step}" y="${top+y*step}" width="${step}" height="${step}" rx="2" fill="${(x+y)%2?'#e6edf5':'#f8fafc'}" stroke="#bccbdc"/>`;
+ let x=0,y=0;const cx=v=>left+(v+.5)*step,cy=v=>top+(v+.5)*step;
+ for(const move of q.path){const nx=x+(move==='R'),ny=y+(move==='D');body+=`<line x1="${cx(x)}" y1="${cy(y)}" x2="${cx(nx)}" y2="${cy(ny)}" stroke="${move==='D'?C.teal:C.blue}" stroke-width="5" stroke-linecap="round"/>`;x=nx;y=ny;}
+ body+=`<circle cx="${cx(0)}" cy="${cy(0)}" r="7" fill="${C.ink}"/><circle cx="${cx(x)}" cy="${cy(y)}" r="9" fill="${C.purple}"/><rect x="${cx(c)-12}" y="${cy(r)-12}" width="24" height="24" fill="none" stroke="${C.gold}" stroke-width="3"/>`;
+ if(s.activity==='split'){body+=txt(cx(c),cy(r-1)-15,q.reveal?'6 + final D':'from above',18,C.teal)+txt(cx(c-1)-70,cy(r),q.reveal?'4 + final R':'from left',18,C.blue);}
+ let caption=(s.activity==='return'&&!q.reveal?'':`${r} down + ${c} right · `)+`current path: ${q.path||'empty path'}`;
+ let extra=s.activity==='collect'?btn('Save path','savePath',q.path.length!==r+c?'disabled':''):s.activity==='split'?btn('Reveal both groups','reveal'):s.activity==='return'?btn('Reveal count','reveal'):'';
+ const result=s.activity==='split'&&q.reveal?'Final D: 6 routes · final R: 4 routes · total 10.':s.activity==='return'&&q.reveal?`${binom(14,7)} = <strong>3432</strong> paths`:q.message||'';
+ return svg(body,'Rook board with unit down/right path')+`<div class="caption">${caption}</div>`+controls(btn('Right →','right',x===c?'disabled':'')+btn('Down ↓','down',y===r?'disabled':'')+btn('Undo','undoPath',!q.path?'disabled':'')+btn('Clear path','clearPath')+extra)+(q.saved.length?`<div class="saved-paths">Saved ${q.saved.length}: ${q.saved.map(p=>esc(p)).join(' · ')}</div>`:'')+status(result);
+}
+function gridCounts(s,q){const step=64,left=200,top=27;let body='';
+ for(let r=0;r<=4;r++)for(let c=0;c<=4;c++){const focus=r===q.r&&c===q.c,parent=(r===q.r-1&&c===q.c)||(r===q.r&&c===q.c-1),boundary=r===0||c===0;
+  const show=s.activity==='boundary'?q.reveal&&boundary:boundary||parent||q.all||(focus&&q.reveal);
+  body+=`<g class="cell-pick" role="button" tabindex="0" data-action="gridCell" data-r="${r}" data-c="${c}" aria-label="${r} down, ${c} right"><rect x="${left+c*step}" y="${top+r*step}" width="${step-4}" height="${step-4}" rx="7" fill="${focus?'#f9edce':parent?'#dcefe7':'#f3f6fb'}" stroke="${focus?C.gold:parent?C.teal:'#c2cfdf'}"/>${txt(left+c*step+29,top+r*step+29,show?count(r+c,r):'?',24)}</g>`;
+ }
+ const value=s.activity==='boundary'?'The empty path and every one-direction path count as one.':q.r===0||q.c===0?'Boundary: only one direction is available.':`P(${q.r},${q.c}) = P(${q.r-1},${q.c}) + P(${q.r},${q.c-1})${q.reveal?' = '+count(q.r+q.c-1,q.r-1)+' + '+count(q.r+q.c-1,q.r)+' = '+count(q.r+q.c,q.r):''}`;
+ return svg(body,'Path counts on a grid')+controls(btn(s.activity==='boundary'?'Reveal boundary':'Reveal selected count','reveal')+(s.activity==='boundary'?'':btn('Show all counts','all'))+btn('Reset','reset'))+status(q.reveal||s.activity!=='boundary'?value:'Predict the boundary values before revealing them.');
+}
+function gridTriangle(q){let body='';const loc=(r,c)=>q.toggle?[410+(r-(r+c)/2)*78,28+(r+c)*46]:[170+c*62,28+r*46];
+ for(let r=0;r<=6;r++)for(let c=0;c<=6-r;c++){const [x,y]=loc(r,c),focus=r===3&&c===3,parent=(r===2&&c===3)||(r===3&&c===2);body+=`<rect x="${x-26}" y="${y-17}" width="52" height="35" rx="7" fill="${focus?'#f9edce':parent?'#dcefe7':'#f2f5fa'}" stroke="${focus?C.gold:parent?C.teal:'#c4d0e1'}"/>`+txt(x,y,count(r+c,r),21);}
+ return svg(body,q.toggle?'The path grid rearranged as Pascal’s triangle':'Triangular part of the path grid')+controls(btn(q.toggle?'Return to grid':'Arrange by path length','toggle'))+status('The highlighted square has r = 3, c = 3. Its triangle position is n = 6, k = 3.');
+}
+function triangle(s,q){const max=s.maxrow??6,step=78,dy=44;let body='';
+ for(let n=0;n<=max;n++)for(let k=0;k<=n;k++){const x=410+(k-n/2)*step,y=30+n*dy,focus=n===q.n&&k===q.k,parent=q.n>0&&n===q.n-1&&(k===q.k-1||k===q.k),mirror=s.activity==='identities'&&n===q.n&&k===n-q.k,editable=s.activity==='fill'&&n>=5,key=`${n},${k}`;
+  let value=editable?(key in q.entries?q.entries[key]:'?'):count(n,k),fill=focus?'#fff0d4':parent?'#dcefe7':mirror?'#e5dff6':'#f3f6fa',stroke=focus?C.gold:parent?C.teal:mirror?C.purple:'#c5d1df';
+  if(editable&&q.checked&&key in q.entries){fill=q.entries[key]===count(n,k)?'#dcefe7':'#ffe6df';stroke=q.entries[key]===count(n,k)?C.teal:C.coral;}
+  body+=`<g class="cell-pick" role="button" tabindex="0" data-action="triangleCell" data-n="${n}" data-k="${k}" aria-label="Row ${n}, column ${k}"><rect x="${x-28}" y="${y-18}" width="56" height="36" rx="8" fill="${fill}" stroke="${stroke}" stroke-width="${focus?2.5:1}"/>${txt(x,y,value,22)}</g>`;
+ }
+ let panel='',feedback=`Selected row ${q.n}, column ${q.k}: ${binom(q.n,q.k)}`;
+ if(s.activity==='fill'){panel=controls(`<label>Entry <input id="entryValue" inputmode="numeric" maxlength="4" aria-label="Value for selected triangle entry" value="${esc(q.entry)}"></label>`+btn('Enter','enterCell',q.n<5?'disabled':'')+btn('Check rows','check')+btn('Clear work','reset'));const filled=Object.keys(q.entries).length,correct=Object.entries(q.entries).filter(([key,v])=>{const[n,k]=key.split(',').map(Number);return v===count(n,k);}).length;feedback=q.checked?`${correct} of ${filled} entered values are correct; ${13-filled} entries are still blank.`:q.n<5?'Select an entry in row 5 or 6.':`Enter a value for row ${q.n}, column ${q.k}.`;
+ }else if(s.activity==='identities'){panel=controls(btn('Check row sum','reveal')+btn('Reset selection','reset'));if(q.reveal)feedback+=` · row sum ${range(0,q.n).reduce((a,k)=>a+count(q.n,k),0)} = 2<sup>${q.n}</sup>`;
+ }else if(s.activity==='parents'&&q.k>0&&q.k<q.n)feedback+=` = ${count(q.n-1,q.k-1)} + ${count(q.n-1,q.k)}`;
+ else if(s.activity==='parents')feedback+=' = 1 (boundary)';
+ return svg(body,'Clickable Pascal triangle')+panel+status(feedback);
+}
+function bitRow(bits,key='bit',labels=true){return (labels?`<div class="position-labels">${bits.map((_,i)=>`<span>${i+1}</span>`).join('')}</div>`:'')+`<div class="bit-row ${bits.length>8?'compact':''}">${bits.map((b,i)=>btn(b,key,`data-i="${i}" class="${b?'on':''}" aria-label="Position ${i+1}: ${b}" aria-pressed="${b===1}"`)).join('')}</div>`;}
+function elementRow(bits,key='bit'){return `<div class="element-row">${bits.map((b,i)=>btn(i+1,key,`data-i="${i}" class="${b?'on':''}" aria-label="Element ${i+1}" aria-pressed="${b===1}"`)).join('')}</div>`;}
+function models(s,q){const w=weight(q.bits),valid=w===s.k,lattice=s.activity==='lattice',showPath=['lattice','three'].includes(s.activity),showSubset=['subsets','three'].includes(s.activity);
+ const collection=lattice?`Paths to (${s.n-s.k}, ${s.k})`:s.activity==='subsets'?`${s.k}-element subsets of {1,…,${s.n}}`:`${s.n}-bit strings with exactly ${s.k} ones`;
+ const total=`<div class="model-count" aria-live="polite"><div class="count-label">${collection}</div><div class="count-equation">${binom(s.n,s.k)} = <strong>${q.reveal||q.all?count(s.n,s.k):'?'}</strong></div></div>`;
+ let body=`<div class="model-label">${lattice?'Move positions · 1 = up · 0 = right':'Positions are numbered left to right'}</div>${bitRow(q.bits)}`;
+ if(showSubset)body+=(s.activity==='three'?'':`<div class="model-label">Included elements</div>${elementRow(q.bits)}`)+`<div class="model-readout">Subset: ${setText(positions(q.bits))}</div>`;
+ if(lattice)body+=`<div class="path-count-row"><div class="path-large">${pathDrawing(q.bits,{width:520,height:330,target:[s.n-s.k,s.k]})}</div>${total}</div>`;
+ else if(showPath)body+=`<div class="path-count-row compact-path"><div class="path-mini">${pathDrawing(q.bits,{width:440,height:225,target:[s.n-s.k,s.k]})}</div>${total}</div><div class="caption">1 = up · 0 = right · target (${s.n-s.k},${s.k})</div>`;
+ if(s.activity==='bits')body+=`<div class="bit-measures"><div><span>Length</span><strong>${q.bits.length}</strong><small>all positions</small></div><div><span>Weight</span><strong>${w}</strong><small>positions containing 1</small></div></div>${total}`;
+ if(s.activity==='catalog')body+=(q.all?`<div class="catalog">${strings(s.n,s.k).map(bits=>btn(bits.join(''),'pickString',`data-bits="${bits.join('')}" class="${bits.join('')===q.bits.join('')?'selected':''}"`)).join('')}</div>`:'<div class="collection-prompt">List all the strings of weight 3.</div>')+total;
+ if(s.activity==='subsets')body+=total;
+ const ctl=(s.activity==='catalog'?btn('Show collection','all'):btn('Show count','reveal'))+btn('Clear selection','clearBits');
+ const msg=s.activity==='bits'?`Changing bits changes the weight; the length stays ${s.n}.`:valid?lattice?`The path reaches (${s.n-s.k}, ${s.k}): ${s.k} up and ${s.n-s.k} right moves.`:'This selection belongs to the collection.':`Choose exactly ${s.k} positions. Currently selected: ${w}.`;
+ return `<div class="model-panel model-${s.activity}">${body}</div>`+controls(ctl)+status(msg);
+}
+function encode(q){const first=Array.from({length:6},(_,i)=>q.bits[i]||0),good1=first.join('')==='101011',good2=q.bits2.join('')==='001010';return `<div class="encode-panel"><div class="encode-task"><div class="model-label">Encode {1,3,5,6}: set each bit</div>${bitRow(first)}</div><div class="encode-task"><div class="model-label">Decode 001010: choose its elements</div>${elementRow(q.bits2,'bit2')}<div class="model-readout">${setText(positions(q.bits2))}</div></div></div>`+controls(btn('Check both translations','check')+btn('Reset','reset'))+status(q.checked?`Encoding: ${good1?'correct':'check which positions are included'}. Decoding: ${good2?'correct':'check the positions of the 1s'}.`:'Check that size and weight agree in both directions.');}
+function split(s,q){const list=strings(s.n,s.k),groups=[list.filter(x=>x.at(-1)===0),list.filter(x=>x.at(-1)===1)],sub=s.activity==='subsets';let body='<div class="split-panels">';
+ for(let b=0;b<=1;b++){const heading=sub?(q.toggle?(b?'Contained 6 → remove it':'Omitted 6 → keep it'):(b?'Contains 6':'Omits 6')):(q.toggle?`Ended in ${b} → prefix`:`Last bit ${b}`);body+=`<div class="split-box"><h3>${heading}</h3>`;
+  if(q.reveal)body+=`<div class="object-list">${groups[b].map(bits=>`<span>${sub?setText(positions(q.toggle?bits.slice(0,-1):bits)):(q.toggle?bits.slice(0,-1):bits).join('')}</span>`).join('')}</div><div class="split-total">${groups[b].length} objects</div>`;else body+='<div class="ghost-panel">Predict this group.</div>';body+='</div>';
+ }body+='</div>';return body+controls(btn('Reveal groups','reveal')+btn(q.toggle?'Restore last position':'Remove last position','toggle',!q.reveal?'disabled':'')+btn('Reset','reset'))+status(q.reveal?(q.toggle?'Both prefixes have length 5. The first group keeps weight 3; the second has weight 2.':'Every object occurs once: exactly one last bit, or exactly one answer about element 6.'):'Which group loses one selected position when you remove the last position?');}
+const PROOFS={
+ lastBit:[['Last bit 0','Remove it: an (n−1)-bit string of weight k. Append 0 to reverse the operation.'],['Last bit 1','Remove it: an (n−1)-bit string of weight k−1. Append 1 to reverse the operation.'],['Add the two counts',`${binom('n','k')} = ${binom('n−1','k')} + ${binom('n−1','k−1')}`]],
+ subset:[['Contains x','Remove x. The remaining k−1 elements form a subset of the other n−1 elements.'],['Omits x','Choose all k elements from the other n−1 elements.'],['Disjoint and exhaustive',`Every subset either contains x or omits x, so ${binom('n','k')} = ${binom('n−1','k−1')} + ${binom('n−1','k')}.`]],
+ strategy:[['Name the collection','What precise set of paths, strings, or subsets is being counted?'],['Describe the construction','Give a reversible map, or a split into disjoint cases that cover every object.'],['Explain the equality','Each side counts the same collection. State the allowed values of the indices.']]
+};
+function proof(s,q){const lines=PROOFS[s.proof],shown=Math.min(q.step,lines.length);return `<div class="proof-board">${lines.map(([head,body],i)=>`<div class="proof-step ${i<shown?'':'muted'}">${i<shown?`<strong>${head}</strong><br>${body}`:`${i+1}. ${s.proof==='strategy'?head:'Develop the argument'}`}</div>`).join('')}</div>`+controls(btn('Previous step','back',q.step===0?'disabled':'')+btn('Reveal next step','step',`data-max="${lines.length}" ${shown===lines.length?'disabled':''}`)+btn('Restart proof','restartSteps'))+status(s.proof==='strategy'?'Use an identity from this meeting.':'Interior recurrence: n ≥ 2 and 1 ≤ k ≤ n−1. Boundary cases have their own counting argument.');}
+function boundary(q){const zeros=Array(q.n).fill(0),ones=Array(q.n).fill(1),body=q.n===0?'<div class="ghost-panel">The empty string ↔ the empty subset ↔ the empty path</div>':`<div class="model-label">Choose nothing</div>${bitRow(zeros,'disabledBit')}<div class="model-readout">∅</div><div class="model-label">Choose everything</div>${bitRow(ones,'disabledBit')}<div class="model-readout">${setText(positions(ones))}</div>`;return `<div class="model-panel">${body}</div>`+controls(select('n','n',range(0,6),q.n))+status(q.n===0?'One object. The empty subset is also the full subset of ∅.':'Each displayed collection has exactly one object.');}
+function complement(q){const b=q.toggle?q.bits.map(x=>1-x):q.bits,other=b.map(x=>1-x);return `<div class="complement-panel"><div class="model-label">Selected subset · size ${weight(b)}</div>${elementRow(b)}<div class="model-readout">${setText(positions(b))}</div><div class="complement-arrow">↕ complement in {1,…,${q.n}}</div><div class="model-readout">${setText(positions(other))} · size ${weight(other)}</div>${bitRow(other,'disabledBit')}</div>`+controls(btn('Complement','toggle')+btn('Reset','reset'))+status(`${binom(q.n,weight(b))} = ${binom(q.n,weight(other))}. Complementing again recovers the starting subset.`);}
+function reflect(s,q){const bits=q.bits,other=bits.map(x=>1-x);return `<div class="pair-paths"><div>${pathDrawing(bits,{width:390,height:300,target:[4,3]})}<div class="caption">Original: 1 = up, 0 = right</div></div><div>${q.reveal?pathDrawing(other,{width:390,height:300,target:[3,4]}):'<div class="ghost-panel">Predict the reflected path.</div>'}<div class="caption">Reflection across y = x</div></div></div>`+controls(btn('Reflect path','reveal')+btn('Next path','nextReflect')+btn('Reset','reset'))+status(q.reveal?'Right becomes up; up becomes right. Reflecting twice restores every step.':'Both paths will have seven moves. Which direction counts exchange?');}
+function rowSum(s,q){const active=q.k<=q.n?q.k:0;let body='<div class="row-groups">';for(let k=0;k<=q.n;k++){const list=strings(q.n,k);body+=`<div class="weight-group ${k===active?'active':''}"><h3>Size ${k}</h3>${q.reveal||s.activity==='proof'?list.map(bits=>`<div class="mini-string">${bits.length?bits.join(''):'empty'}</div>`).join(''):'<div class="mini-string">?</div>'}${q.all?`<div class="count">${list.length}</div>`:''}</div>`;}body+='</div>';
+ return body+controls(select('n','n',range(0,5),q.n)+select('k','Focus size',range(0,q.n),active)+btn('Show objects','reveal')+btn('Show counts','all'))+status(q.all?`${range(0,q.n).map(k=>count(q.n,k)).join(' + ')} = <strong>${2**q.n}</strong> = 2<sup>${q.n}</sup>`:'Each string appears in the group for its weight. The groups cover every possible string.');}
+function hockey(s,q){const n=Math.min(7,q.n),k=Math.min(q.k,n),max=n+1;let body='';for(let r=0;r<=max;r++)for(let c=0;c<=r;c++){const x=410+(c-r/2)*77,y=25+r*39,shaft=c===k&&r>=k&&r<=n,blade=r===n+1&&c===k+1,run=s.activity==='proof'&&r===Math.min(n+1,k+1+q.step)&&c===k+1;body+=`<rect x="${x-27}" y="${y-16}" width="54" height="33" rx="7" fill="${run?'#e5dff6':blade?'#fff0d4':shaft?'#dcefe7':'#f5f7fa'}" stroke="${run?C.purple:blade?C.gold:shaft?C.teal:'#ccd6e2'}"/>`+txt(x,y,blade&&!q.reveal&&s.activity!=='proof'?'?':count(r,c),21);}
+ const at=Math.min(n,k+q.step),sum=range(k,n).reduce((a,i)=>a+count(i,k),0),terms=range(k,n).map(i=>count(i,k)).join(' + '),proof=s.activity==='proof';
+ const ctl=select('n','End row',range(0,7),n)+select('k','Diagonal',range(0,n),k)+(proof?btn('Combine next entry','step',`data-max="${n-k}" ${q.step>=n-k?'disabled':''}`):btn('Reveal total','reveal'))+btn('Reset','reset');
+ const message=proof?(q.step===0?`Start: ${binom(k,k)} = 1 = ${binom(k+1,k+1)}.`:`Sum through row ${at}: ${binom(at+1,k+1)} = ${count(at+1,k+1)}. Combine ${binom(at,k+1)} + ${binom(at,k)}.`):q.reveal?`${terms} = <strong>${sum}</strong> = ${binom(n+1,k+1)}`:'The green entries form the diagonal. Predict the gold entry.';
+ return svg(body,'Pascal triangle with hockey-stick diagonal and its sum')+controls(ctl)+status(message);
+}
+function firstUp(q){const j=q.j,bits=[...Array(j).fill(0),1,...Array(4-j).fill(0),1,1];let drawing=pathDrawing(bits,{height:300,target:[4,3]});return `<div style="min-height:365px">${drawing}<div class="first-up-picks">${range(0,4).map(i=>btn(`${i} rights, then up`,'firstUp',`data-j="${i}" aria-pressed="${i===j}"`)).join('')}</div></div>`+controls(btn('Count this case','reveal')+btn('Sum all five cases','all'))+status(q.all?'15 + 10 + 6 + 3 + 1 = 35. The first up move identifies exactly one case.':q.reveal?`After ${j} right moves and one up move, ${4-j} right and 2 up remain: ${binom(6-j,2)} = ${count(6-j,2)} completions.`:'The colored route is one example from the selected case. Count all completions of its fixed prefix.');}
+const QLINES=[['Paths from (0,0) to (3,5)',['8,5','3,5'],'8,5'],['Eleven-bit strings of weight five',['11,5','16,5'],'11,5'],['Size-3 subsets of {1,…,8} containing 8',['7,2','7,3'],'7,2'],['Number of empty subsets',['1','0','2'],'1']];
+function quiz(q){return `<div class="quiz-form">${QLINES.map(([label,options,correct],i)=>`<div class="quiz-line ${q.checked?(q.answers[i]===correct?'correct':'incorrect'):''}"><span>${label}</span><select data-answer="${i}" aria-label="${esc(label)}"><option value="?">Choose</option>${options.map(v=>`<option value="${v}" ${q.answers[i]===v?'selected':''}>${v.includes(',')?'C('+v+')':v}</option>`).join('')}</select></div>`).join('')}</div>`+controls(btn('Check choices','check')+btn('Reset','reset'))+status(q.checked?`${QLINES.filter((line,i)=>q.answers[i]===line[2]).length} of 4 correct. Explain the meaning of both indices.`:'C(n,k) denotes “n choose k.” This practice is local and ungraded.');}
+function renderScene(s,q){switch(s.scene){case'section':return '';case'rook':return rook(s,q);case'gridCounts':return gridCounts(s,q);case'gridTriangle':return gridTriangle(q);case'triangle':return triangle(s,q);case'models':return models(s,q);case'encode':return encode(q);case'split':return split(s,q);case'proof':return proof(s,q);case'boundary':return boundary(q);case'complement':return complement(q);case'reflect':return reflect(s,q);case'rowSum':return rowSum(s,q);case'hockey':return hockey(s,q);case'firstUp':return firstUp(q);case'quiz':return quiz(q);default:throw Error('Unknown scene '+s.scene);}}
+function slideClass(s){return [s.cover?'cover':'',s.section?'section-slide':'',s.layout||''].filter(Boolean).join(' ');}
+function slideContent(s,q){if(s.section)return `<div class="section-heading"><div class="eyebrow">Section ${s.act}</div><h1>${s.title}</h1><div class="section-description">${s.body}</div></div>`;return `<div class="eyebrow">${s.act===0?'Opening investigation':`Section ${s.act} / ${DECK.acts[s.act]}`}</div><h1>${s.title}</h1><div class="content"><div class="text">${s.body}</div><div class="visual">${renderScene(s,q)}</div></div>`;}
+function render(){const s=DECK.slides[index];$('#slide').className=slideClass(s);$('#slide').innerHTML=slideContent(s,st());$('#counter').textContent=`${index+1} / ${DECK.slides.length}`;$('#previous').disabled=index===0;$('#next').disabled=index===DECK.slides.length-1;$('#progress').style.width=`${100*(index+1)/DECK.slides.length}%`;$('#act').value=s.act;$('#source').textContent='DMOI 4e · §3.1';$('#source').href='https://discrete.openmathbooks.org/dmoi4/sec_counting-pascal.html';document.title=`23 · ${s.title.replace(/<[^>]*>/g,' ')} · CS 241`;}
+function go(n){clearInterval(timer);timer=null;index=Math.max(0,Math.min(DECK.slides.length-1,n));history.replaceState(null,'',`#${index+1}`);render();}
+function action(a,target){const s=DECK.slides[index],q=st();clearInterval(timer);timer=null;q.message='';
+ if(a==='reset')state[index]=freshState(s);if(a==='reveal')q.reveal=true;if(a==='all')q.all=true;if(a==='check')q.checked=true;if(a==='toggle')q.toggle=!q.toggle;
+ if(a==='right'&&q.path.split('R').length-1<s.cols)q.path+='R';if(a==='down'&&q.path.split('D').length-1<s.rows)q.path+='D';if(a==='undoPath')q.path=q.path.slice(0,-1);if(a==='clearPath')q.path='';
+ if(a==='savePath'&&q.path.length===s.rows+s.cols){if(q.saved.includes(q.path))q.message='That path is already saved. Change the order of its moves.';else{q.saved.push(q.path);q.message=q.saved.length===count(s.rows+s.cols,s.rows)?'All distinct paths have been collected. Explain why none are missing.':'Saved. Construct a different path.';}}
+ if(a==='gridCell'){q.r=Number(target.dataset.r);q.c=Number(target.dataset.c);q.reveal=false;}
+ if(a==='triangleCell'){q.n=Number(target.dataset.n);q.k=Number(target.dataset.k);q.entry=String(q.entries[`${q.n},${q.k}`]??'');q.reveal=false;}
+ if(a==='enterCell'&&q.n>=5){const value=$('#entryValue').value;if(/^\d{1,4}$/.test(value)){q.entries[`${q.n},${q.k}`]=Number(value);q.entry=value;q.checked=false;}else q.message='Enter a nonnegative whole number.';}
+ if(a==='bit'){const i=Number(target.dataset.i);if(s.scene==='encode'&&q.bits.length!==6)q.bits=Array(6).fill(0);q.bits[i]=1-q.bits[i];q.checked=false;}
+ if(a==='bit2'){const i=Number(target.dataset.i);q.bits2[i]=1-q.bits2[i];q.checked=false;}
+ if(a==='clearBits')q.bits=Array(q.n).fill(0);if(a==='pickString')q.bits=target.dataset.bits.split('').map(Number);
+ if(a==='step')q.step=Math.min(Number(target.dataset.max),q.step+1);if(a==='back')q.step=Math.max(0,q.step-1);if(a==='restartSteps')q.step=0;
+ if(a==='nextReflect'){const list=strings(7,3),i=list.findIndex(x=>x.join('')===q.bits.join(''));q.bits=list[(i+1)%list.length];q.reveal=false;}
+ if(a==='firstUp'){q.j=Number(target.dataset.j);q.reveal=false;q.all=false;}
+ render();
+}
+function activate(target){const marker={...target.dataset};action(target.dataset.action,target);Array.from(document.querySelectorAll('#slide [data-action]')).find(el=>Object.entries(marker).every(([k,v])=>el.dataset[k]===v))?.focus({preventScroll:true});}
+document.addEventListener('click',e=>{const target=e.target.closest('[data-action]');if(target)activate(target);const jump=e.target.closest('[data-jump]');if(jump){$('#overview').close();go(Number(jump.dataset.jump));}});
+document.addEventListener('input',e=>{if(e.target.id==='entryValue')st().entry=e.target.value.replace(/[^0-9]/g,'').slice(0,4);});
+document.addEventListener('change',e=>{const q=st();if(e.target.matches('[data-answer]')){q.answers[Number(e.target.dataset.answer)]=e.target.value;q.checked=false;render();return;}const key=e.target.dataset.setting;if(!key)return;q[key]=Number(e.target.value);q.k=Math.min(q.k,q.n);q.step=0;q.reveal=false;q.all=false;if(key==='n')q.bits=Array(q.n).fill(0);render();});
+document.addEventListener('keydown',e=>{if(e.target.id==='entryValue'&&e.key==='Enter'){e.preventDefault();action('enterCell',e.target);return;}const target=e.target.closest('[role="button"][data-action]');if(target&&['Enter',' '].includes(e.key)){e.preventDefault();activate(target);return;}if(document.querySelector('dialog[open]')||e.target.closest('button,select,a,input,textarea,[role=button]'))return;if(['ArrowRight','PageDown',' '].includes(e.key)){e.preventDefault();go(index+1);}if(['ArrowLeft','PageUp'].includes(e.key)){e.preventDefault();go(index-1);}if(e.key==='Home')go(0);if(e.key==='End')go(DECK.slides.length-1);if(e.key.toLowerCase()==='o')$('#overview').showModal();if(e.key.toLowerCase()==='f')fullscreen();});
+function fullscreen(){if(document.fullscreenElement)document.exitFullscreen();else document.documentElement.requestFullscreen().catch(()=>{});}
+function pauseDeckAnimations(){document.querySelector('#slide').getAnimations({subtree:true}).forEach(a=>a.pause());}
+$('#previous').onclick=()=>go(index-1);$('#next').onclick=()=>go(index+1);$('#full').onclick=fullscreen;$('#showOverview').onclick=()=>$('#overview').showModal();$('#act').innerHTML=DECK.acts.map((a,i)=>`<option value="${i}">${i===0?'Opening':'Section '+i} · ${a}</option>`).join('');$('#act').onchange=e=>go(DECK.slides.findIndex(s=>s.act===Number(e.target.value)));$('#overviewList').innerHTML=DECK.slides.map((s,i)=>`<button data-jump="${i}">${String(i+1).padStart(2,'0')} · ${s.title.replaceAll('<br>',' ')}</button>`).join('');
+function resize(){const scale=Math.min(innerWidth/1600,innerHeight/900);$('#stage').style.transform=`translate(-50%,-50%) scale(${scale})`;}
+addEventListener('resize',resize);addEventListener('hashchange',()=>{const n=Number(location.hash.slice(1));if(Number.isInteger(n)&&n>=1&&n<=DECK.slides.length)go(n-1);});addEventListener('beforeprint',()=>{const old=index;$('#print').innerHTML=DECK.slides.map((s,i)=>{index=i;return `<section class="print-page ${slideClass(s)}">${slideContent(s,st())}</section>`;}).join('');index=old;});resize();const initial=Number(location.hash.slice(1));go(Number.isInteger(initial)&&initial>0?initial-1:0);
+</script><script>
+// This module is isolated from deck controls, except for the render/print hooks.
+(()=>{
+ 'use strict';
+ const TEXT_ENABLED=true;
+ const NS='http://www.w3.org/2000/svg',W=1600,H=900;
+ const hash=s=>{let h=2166136261;for(const ch of s){h^=ch.charCodeAt(0);h=Math.imul(h,16777619);}return (h>>>0).toString(16);};
+ const fingerprint=DECK.annotationId||(`m${DECK.meeting}-`+hash(DECK.slides.map(s=>s.title).join('\n')));
+ const storagePrefix=TEXT_ENABLED?'cs241-ink-text-copy-v1:':'cs241-ink-copy-v1:';
+ const storageKey=storagePrefix+fingerprint;
+ const icons={
+  use:'<path d="M5 3v17l4-5 4 7 3-2-4-6 7-1Z"/>',
+  pen:'<path d="m4 16 12-12 4 4L8 20l-5 1Z"/><path d="m13 7 4 4M4 16l4 4"/>',
+  highlight:'<path d="m7 15 7-12 7 4-7 12Z"/><path d="m7 15-3 4 6 3 4-3M3 22h18"/>',
+  erase:'<path d="m3 14 11-11 8 8-10 10H9Z"/><path d="m7 10 8 8M12 21h9"/>',
+  text:'<path d="M4 5V3h16v2M12 3v18M8 21h8"/>',
+  undo:'<path d="M8 5 3 10l5 5M4 10h10a6 6 0 0 1 0 12"/>',
+  redo:'<path d="m16 5 5 5-5 5M20 10H10a6 6 0 0 0 0 12"/>',
+  clear:'<path d="M3 6h18M8 6V3h8v3M6 6l1 15h10l1-15M10 10v7M14 10v7"/>',
+  menu:'<circle cx="5" cy="12" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/>'
+ };
+ const toolButton=(name,label,extra='')=>`<button type="button" id="ink-${name==='menu'?'more':name}" title="${label}" aria-label="${label}" ${extra}><svg viewBox="0 0 24 24" aria-hidden="true">${icons[name]}</svg></button>`;
+ const stage=document.getElementById('stage'),layer=document.createElementNS(NS,'svg');
+ layer.id='ink-layer';layer.setAttribute('viewBox',`0 0 ${W} ${H}`);layer.setAttribute('aria-label','Slide annotation layer');
+ stage.append(layer);
+ const toolbar=document.createElement('div');toolbar.id='ink-tools';toolbar.setAttribute('role','toolbar');toolbar.setAttribute('aria-label','Writing tools');
+ toolbar.innerHTML=toolButton('use','Interact with the slide (V)','aria-pressed="true"')+toolButton('pen','Pen (P)','aria-pressed="false"')+toolButton('highlight','Highlighter (H)','aria-pressed="false"')+toolButton('erase','Eraser: remove whole strokes (E)','aria-pressed="false"')+'<hr>'+toolButton('undo','Undo ink on this slide (Ctrl+Z)')+toolButton('redo','Redo ink on this slide (Ctrl+Shift+Z)')+'<hr><input id="ink-color" type="color" value="#c62828" title="Ink color" aria-label="Ink color"><select id="ink-width" title="Stroke width" aria-label="Stroke width"><option value="3">3</option><option value="5">5</option><option value="8">8</option></select><hr>'+toolButton('clear','Clear ink on this slide (undo available)')+toolButton('menu','Ink backup, printing, and help')+'<span id="ink-save-status" role="status" aria-live="polite">Ready</span>';
+ stage.append(toolbar);
+ if(TEXT_ENABLED)toolbar.querySelector('#ink-erase').insertAdjacentHTML('afterend',toolButton('text','Text box (T)','aria-pressed="false"'));
+ const resets=document.createElement('div');resets.id='lectureResetControls';resets.setAttribute('role','group');resets.setAttribute('aria-label','Lecture reset controls');
+ resets.innerHTML='<button id="restartLecture" type="button" title="Reset all demonstrations; keep annotations">↺ Restart lecture</button><button id="resetAnnotations" type="button" title="Clear ink and text on all slides; Undo restores annotations on each slide">Reset annotations</button>';
+ stage.append(resets);
+ const menu=document.createElement('dialog');menu.id='ink-menu';
+ menu.innerHTML='<button type="button" id="ink-close">Close</button><h2>Write on this copy</h2><p>Choose <b>Pen</b> or <b>Highlighter</b> and write with a mouse, stylus, or touch. Buttons below the diagrams work in every mode. Choose <b>Interact</b> to click directly on a diagram’s edges or vertices. The eraser removes whole strokes.</p><p>Ink is saved per slide in <b>this browser</b>, together with the diagram state. It is not written into the HTML file. Download a backup before switching browsers, moving the file, or clearing browser data.</p><p class="ink-hint">Ink stays at its page position when you change a diagram. Arrow keys and the slide controls still navigate. V = interact · P = pen · H = highlighter · E = eraser. Ctrl/Cmd+Z undoes ink on the current slide.</p><div class="ink-menu-actions"><button type="button" id="ink-export">Download ink backup</button><button type="button" id="ink-load">Load ink backup…</button><button type="button" id="ink-print">Print slides with ink</button></div><p class="ink-hint">Loading a backup replaces the current ink and diagram states. Each slide’s prior ink can be recovered with Undo. Printing preserves the slide’s layout and ink alignment.</p><p id="ink-menu-message" role="status" aria-live="polite"></p>';
+ document.body.append(menu);
+ const resources=document.createElement('section');resources.innerHTML='<h3>Reading and related slides</h3>';resources.append(stage.querySelector('.footer>div:first-child'));menu.append(resources);
+ const controlHelp=document.createElement('p');controlHelp.className='ink-hint';controlHelp.textContent='Quick colors remember separate pen and highlighter choices. Writing pauses route playback. On the opening slide, Restart lecture resets all demonstrations and keeps your annotations. Reset annotations clears ink and text across the deck; Undo restores them on each slide.';menu.append(controlHelp);
+ if(TEXT_ENABLED){
+  const help=document.createElement('p');help.innerHTML='<b>Text boxes:</b> choose <b>T</b>, then click the slide and type. Click an existing box to edit it. Drag its Move handle or resize from its bottom-right corner. Adjust the size and color above the box. Press Escape or Ctrl/Cmd+Enter to finish typing. Use Undo/Redo for ink and completed text edits.';menu.querySelector('h2').after(help);
+  for(const p of menu.querySelectorAll('p'))p.innerHTML=p.innerHTML.replaceAll('Ink is saved','Ink and text are saved').replaceAll('ink and diagram states','ink, text, and diagram states').replaceAll('prior ink','prior annotations');
+  menu.querySelector('#ink-export').textContent='Download annotation backup';menu.querySelector('#ink-load').textContent='Load annotation backup…';menu.querySelector('#ink-print').textContent='Print slides with annotations';
+ }
+ const fileInput=document.createElement('input');fileInput.id='ink-import';fileInput.type='file';fileInput.accept='.json,application/json';fileInput.hidden=true;document.body.append(fileInput);
+ const get=id=>document.getElementById(id);
+ let ink={},undo={},redo={},mode='use',colorsForTool={pen:'#1565c0',highlight:'#fdd835'},width=3;
+ let gesture=null,raf=0,saveTimer=0,loadedWarning='',saveFailed=false;
+ const strokes=(i=index)=>ink[i]||[];
+ const textTools=TEXT_ENABLED?createTextTools():null;
+ // Included inside the annotation module only for an ink + text copy.
+function createTextTools(){
+ const textLayer=document.createElement('div');textLayer.id='ink-text-layer';stage.append(textLayer);
+ let selected=null,selectedSlide=-1,editing=null,drag=null,textColor='#172439',textSize=28;
+ const clamp=(x,a,b)=>Math.max(a,Math.min(b,x));
+ const boxData=(id,i=index)=>strokes(i).find(s=>s.tool==='text'&&s.id===id);
+ const boxElement=id=>Array.from(textLayer.children).find(e=>e.dataset.textId===id);
+ function applyStyle(el,s){Object.assign(el.style,{left:s.x+'px',top:s.y+'px',width:s.w+'px',height:s.h+'px',fontSize:s.size+'px',color:s.color});}
+ function content(s,placeholder=false){const el=document.createElement('div');el.className='ink-text-content';el.textContent=s.text||(placeholder?'Type a note…':'');el.dataset.empty=placeholder&&!s.text;return el;}
+ function fit(s){
+  const measure=document.createElement('div');measure.className='ink-text-content';
+  Object.assign(measure.style,{position:'absolute',left:'-10000px',top:'0',visibility:'hidden',width:(s.w-2)+'px',height:'auto',fontSize:s.size+'px',lineHeight:'1.25'});
+  measure.textContent=s.text+'\u200b';textLayer.append(measure);
+  const h=clamp(measure.scrollHeight+2,48,702);measure.remove();
+  return {...s,h,x:clamp(s.x,64,W-64-s.w),y:clamp(s.y,104,H-94-h)};
+ }
+ function replace(id,changes,i=index){let updated;ink[i]=strokes(i).map(s=>{if(s.tool!=='text'||s.id!==id)return s;updated=fit({...s,...changes});return updated;});return updated;}
+ function changed(a,b){return JSON.stringify(a)!==JSON.stringify(b);}
+ function finishEditing(){
+  if(!editing)return;
+  const session=editing;editing=null;
+  const current=boxData(session.id,session.slide);
+  if(changed(session.before,strokes(session.slide)))remember(session.slide,session.before);
+  if(current&&session.area.isConnected)session.area.replaceWith(content(current,true));
+  updateButtons();saveNow();
+ }
+ function endDrag(cancel=false){
+  if(!drag)return;
+  const session=drag;drag=null;
+  if(session.handle.hasPointerCapture(session.pointerId))session.handle.releasePointerCapture(session.pointerId);
+  if(cancel)ink[session.slide]=session.before;
+  else if(changed(session.before,strokes(session.slide)))remember(session.slide,session.before);
+  renderText();updateButtons();saveNow();
+ }
+ function finish(){finishEditing();endDrag();}
+ function beginEdit(id,before){
+  if(editing?.id===id&&editing.slide===index)return;
+  // A playing route must not replace the editor while someone is typing.
+  stopPlayback();
+  finish();selected=id;selectedSlide=index;renderText();
+  const s=boxData(id),box=boxElement(id);if(!s||!box)return;
+  textColor=s.color;textSize=s.size;if(mode==='text')get('ink-color').value=s.color;
+  updateInkChoices();
+  const area=document.createElement('textarea');area.className='ink-text-editor';area.value=s.text;area.placeholder='Type a note…';area.maxLength=5000;area.spellcheck=false;area.setAttribute('aria-label','Slide text box');
+  box.querySelector('.ink-text-content').replaceWith(area);
+  editing={id,slide:index,before:before||strokes(),area};
+  area.addEventListener('input',()=>{if(!editing||editing.area!==area)return;const current=replace(id,{text:area.value},editing.slide);applyStyle(box,current);scheduleSave();});
+  area.addEventListener('blur',finishEditing);
+  area.addEventListener('keydown',e=>{
+   e.stopPropagation();
+   if(e.key==='Escape'||((e.ctrlKey||e.metaKey)&&e.key==='Enter')){e.preventDefault();finishEditing();}
+  });
+  area.focus();area.setSelectionRange(area.value.length,area.value.length);
+ }
+ function editStyle(id,changes){
+  finish();const before=strokes();if(!boxData(id))return;replace(id,changes);
+  if(changed(before,strokes()))remember(index,before);
+  renderText();updateButtons();saveNow();
+ }
+ function remove(id){finish();const before=strokes();ink[index]=before.filter(s=>s.tool!=='text'||s.id!==id);if(changed(before,strokes()))remember(index,before);selected=null;renderText();updateButtons();saveNow();}
+ function startDrag(e,id,kind,handle){
+  if(e.pointerType==='mouse'&&e.button!==0)return;
+  e.preventDefault();e.stopPropagation();finishEditing();
+  const s=boxData(id);if(!s)return;
+  selected=id;selectedSlide=index;
+  drag={id,kind,handle,pointerId:e.pointerId,slide:index,before:strokes(),start:point(e),original:s};handle.setPointerCapture(e.pointerId);
+ }
+ function attachHandle(handle,id,kind){
+  handle.addEventListener('pointerdown',e=>startDrag(e,id,kind,handle));
+  handle.addEventListener('pointermove',e=>{
+   if(!drag||e.pointerId!==drag.pointerId)return;e.preventDefault();
+   const p=point(e),dx=p[0]-drag.start[0],dy=p[1]-drag.start[1],s=drag.original;
+   const change=kind==='move'?{x:s.x+dx,y:s.y+dy}:{w:clamp(s.w+dx,140,W-64-s.x)};
+   const current=replace(id,change,drag.slide);applyStyle(boxElement(id),current);scheduleSave();
+  });
+  handle.addEventListener('pointerup',e=>{if(drag?.pointerId===e.pointerId)endDrag();});
+  handle.addEventListener('pointercancel',e=>{if(drag?.pointerId===e.pointerId)endDrag(true);});
+  handle.addEventListener('lostpointercapture',e=>{if(drag?.pointerId===e.pointerId)endDrag();});
+  handle.addEventListener('keydown',e=>{
+   if(!['ArrowLeft','ArrowRight','ArrowUp','ArrowDown','Delete','Backspace'].includes(e.key))return;e.preventDefault();e.stopPropagation();
+   if(['Delete','Backspace'].includes(e.key)){remove(id);return;}
+   const s=boxData(id),delta=e.shiftKey?20:5,dx=e.key==='ArrowLeft'?-delta:e.key==='ArrowRight'?delta:0,dy=e.key==='ArrowUp'?-delta:e.key==='ArrowDown'?delta:0;
+   editStyle(id,kind==='move'?{x:s.x+dx,y:s.y+dy}:{w:clamp(s.w+dx+dy,140,W-64-s.x)});
+   boxElement(id)?.querySelector(kind==='move'?'.ink-text-move':'.ink-text-resize').focus();
+  });
+ }
+ function renderText(){
+  textLayer.dataset.mode=mode;if(editing||drag)return;
+  if(selectedSlide!==index||!boxData(selected))selected=null;
+  textLayer.replaceChildren();
+  for(const s of strokes().filter(s=>s.tool==='text')){
+   const box=document.createElement('div');box.className='ink-text-box';box.dataset.textId=s.id;applyStyle(box,s);box.append(content(s,true));
+   const active=s.id===selected&&['use','text'].includes(mode);box.classList.toggle('is-selected',active);
+   box.addEventListener('click',e=>{if(!e.target.closest('button,input,select,textarea')&&['use','text'].includes(mode))beginEdit(s.id);});
+   if(active){
+    const options=document.createElement('div');options.className='ink-text-options';options.setAttribute('aria-label','Text box controls');
+    const move=document.createElement('button');move.type='button';move.className='ink-text-move';move.textContent='⠿ Move';move.title='Drag to move; arrow keys to nudge';move.setAttribute('aria-label','Move text box');attachHandle(move,s.id,'move');
+    const size=document.createElement('select');size.setAttribute('aria-label','Text size');for(const n of [20,24,28,32,40,48,56]){const option=document.createElement('option');option.value=n;option.textContent=n;option.selected=n===s.size;size.append(option);}size.onchange=()=>{textSize=Number(size.value);editStyle(s.id,{size:textSize});};
+    const color=document.createElement('input');color.type='color';color.value=s.color;color.title='Text color';color.setAttribute('aria-label','Text color');color.onchange=()=>{textColor=color.value;editStyle(s.id,{color:textColor});if(mode==='text')get('ink-color').value=textColor;updateInkChoices();};
+    const del=document.createElement('button');del.type='button';del.textContent='Delete';del.setAttribute('aria-label','Delete text box');del.onclick=()=>remove(s.id);
+    options.append(move,size,color,del);box.append(options);
+    const resize=document.createElement('button');resize.type='button';resize.className='ink-text-resize';resize.title='Drag to change width; height follows the text';resize.setAttribute('aria-label','Resize text box');attachHandle(resize,s.id,'resize');box.append(resize);
+   }
+   textLayer.append(box);
+  }
+ }
+ return {
+  finish,render:renderText,
+  color:()=>selected&&boxData(selected)?boxData(selected).color:textColor,
+  setColor(color){textColor=color;if(selected&&selectedSlide===index)editStyle(selected,{color});},
+  setMode(next){if(!['use','text'].includes(next))selected=null;layer.classList.toggle('ink-text-mode',next==='text');renderText();},
+  add(p){
+   finish();const before=strokes(),id='text-'+(globalThis.crypto?.randomUUID?.()||Date.now()+'-'+Math.random().toString(36).slice(2));
+   const s=fit({tool:'text',id,x:p[0],y:p[1],w:360,h:48,text:'',size:textSize,color:textColor});
+   ink[index]=[...before,s];beginEdit(id,before);scheduleSave();
+  },
+  validate(s){
+   if(typeof s.id!=='string'||!/^[a-zA-Z0-9_-]{1,80}$/.test(s.id)||typeof s.text!=='string'||s.text.length>5000||!/^#[0-9a-f]{6}$/i.test(s.color)||![20,24,28,32,40,48,56].includes(s.size)||![s.x,s.y,s.w,s.h].every(Number.isFinite)||s.x<0||s.y<0||s.w<140||s.h<48||s.x+s.w>W||s.y+s.h>H)throw Error('Invalid text box.');
+   return {tool:'text',id:s.id,x:s.x,y:s.y,w:s.w,h:s.h,text:s.text,size:s.size,color:s.color};
+  },
+  print(page,i){for(const s of strokes(i).filter(s=>s.tool==='text')){const box=document.createElement('div');box.className='ink-text-print';applyStyle(box,s);box.append(content(s));page.append(box);}}
+ };
+}
+
+ function validInt(x,lo,hi){return Number.isInteger(x)&&x>=lo&&x<=hi;}
+ function cleanStates(raw){if(typeof cleanDeckStates==='function')return cleanDeckStates(raw);let result={};if(!raw||typeof raw!=='object'||Array.isArray(raw))return result;
+  Object.entries(raw).forEach(([key,v])=>{const i=Number(key);if(!validInt(i,0,DECK.slides.length-1)||!v||typeof v!=='object')return;
+   const s=DECK.slides[i],max=s.scene==='route'?s.route.length-1:({pathCycle:3,longestPath:2,deleteAudit:2,spanningSteps:6,traversal:9,weightedTree:2,uniqueExplore:1,boundaryWalk:3,spiderModel:3,build:3,districtMap:2}[s.scene]||0);
+   const q={step:validInt(v.step,0,max)?v.step:0,toggle:v.toggle===true,palette:validInt(v.palette,0,colors.length-1)?v.palette:0,assigned:[],face:-1};
+   const colorCount=s.scene==='districtMap'?districtGraph.p.length:s.scene==='map'?4:s.scene==='colorGraph'?G[s.graph].p.length:0;
+   if(Array.isArray(v.assigned))q.assigned=Array.from(v.assigned.slice(0,colorCount),c=>validInt(c,-1,colors.length-1)?c:-1);
+   if(s.scene==='faces'&&validInt(v.face,-1,s.graph==='cube'?5:2))q.face=v.face;
+   // Feedback is plain text inserted by the base renderer; never restore markup.
+   if(typeof v.message==='string')q.message=v.message.slice(0,1000).replace(/[<>&]/g,'');
+   if(validInt(v.example,0,s.scene==='countLab'?countExamples.length-1:3))q.example=v.example;
+   if(Array.isArray(v.countShown))q.countShown=v.countShown.slice(0,4).map(x=>x===true);
+   if(Array.isArray(v.active)&&v.active.length<=12&&v.active.every(x=>validInt(x,0,11)))q.active=[...new Set(v.active)];
+   if(v.root===0||v.root===5)q.root=v.root;
+   if(['pre','in','post'].includes(v.order))q.order=v.order;
+   if(s.scene==='route'&&[350,700,1400].includes(v.routeDelay))q.routeDelay=v.routeDelay;
+   result[i]=q;
+  });return result;
+ }
+ function migratePayload(data){
+  if(data.deck===fingerprint)return data;
+  const migrations=Array.isArray(DECK.annotationMigrations)?DECK.annotationMigrations:[];
+  const matches=migrations.filter(m=>m&&m.deck===data.deck);
+  if(matches.length!==1)throw Error(`This backup does not match this version of meeting ${DECK.meeting}.`);
+  const map=matches[0].slideMap;
+  // A legacy slide must have exactly one distinct, valid destination. Reject
+  // holes, duplicate targets, and noninteger indices before moving any notes.
+  if(!Array.isArray(map)||!map.length||!Array.from(map).every(i=>validInt(i,0,DECK.slides.length-1))||new Set(map).size!==map.length)throw Error('Invalid annotation migration map.');
+  const oldIndex=key=>/^(0|[1-9]\d*)$/.test(key)&&validInt(Number(key),0,map.length-1)?Number(key):-1;
+  const slides={},states={};
+  for(const [key,list] of Object.entries(data.slides)){
+   const i=oldIndex(key);if(i<0)throw Error('Invalid legacy slide data.');
+   slides[map[i]]=list;
+  }
+  // Malformed demonstration states are ignored, as in cleanStates. Invalid
+  // ink indices above are fatal: silently dropping or moving notes is unsafe.
+  if(data.states&&typeof data.states==='object'&&!Array.isArray(data.states))for(const [key,value] of Object.entries(data.states)){
+   const i=oldIndex(key);if(i>=0)states[map[i]]=value;
+  }
+  return {...data,deck:fingerprint,slides,states};
+ }
+ function validatePayload(data){
+  if(!data||!(data.version===1||(TEXT_ENABLED&&data.version===2))||!data.slides||typeof data.slides!=='object'||Array.isArray(data.slides))throw Error(`This backup does not match this version of meeting ${DECK.meeting}.`);
+  data=migratePayload(data);
+  let result={},total=0;
+  for(const [key,list] of Object.entries(data.slides)){
+   const i=Number(key);if(!validInt(i,0,DECK.slides.length-1)||!Array.isArray(list)||list.length>10000)throw Error('Invalid slide data.');
+   const textIds=new Set();result[i]=list.map(s=>{
+    if(s?.tool==='text'&&textTools){const box=textTools.validate(s);if(textIds.has(box.id))throw Error('Duplicate text box.');textIds.add(box.id);return box;}
+    if(!s||!['pen','highlight'].includes(s.tool)||!/^#[0-9a-f]{6}$/i.test(s.color)||!Number.isFinite(s.width)||s.width<1||s.width>100||!Array.isArray(s.points)||!s.points.length)throw Error('Invalid ink stroke.');
+    total+=s.points.length;if(total>1500000)throw Error('The backup contains too many points.');
+    const points=s.points.map(p=>{if(!Array.isArray(p)||p.length!==2||!p.every(Number.isFinite)||p[0]<0||p[0]>W||p[1]<0||p[1]>H)throw Error('Invalid ink coordinates.');return [p[0],p[1]];});
+    return {tool:s.tool,color:s.color,width:s.width,points};
+   });
+  }
+  return {slides:result,states:cleanStates(data.states)};
+ }
+ try{
+  let raw=localStorage.getItem(storageKey),legacy=false;
+  // A present current key always wins, even if it cannot be parsed. Do not
+  // replace newer work with an older backup after a validation failure.
+  if(raw===null&&Array.isArray(DECK.annotationMigrations))for(const migration of DECK.annotationMigrations){
+   if(!migration||typeof migration.deck!=='string'||migration.deck===fingerprint)continue;
+   const candidate=localStorage.getItem(storagePrefix+migration.deck);
+   if(candidate===null)continue;
+   const data=JSON.parse(candidate);
+   if(data?.deck!==migration.deck)throw Error('Stored annotations do not match their legacy storage key.');
+   raw=candidate;legacy=true;break;
+  }
+  if(raw){const data=validatePayload(JSON.parse(raw));ink=data.slides;state=data.states;if(legacy)saveNow();}
+ }
+ catch(e){loadedWarning='Browser storage could not be loaded. Use backups for this session.';saveFailed=true;}
+ function payload(){return {version:TEXT_ENABLED?2:1,deck:fingerprint,title:`CS 241 · Meeting ${DECK.meeting} · ${DECK.title}`,savedAt:new Date().toISOString(),slides:ink,states:cleanStates(state)};}
+ function status(message,failed=false){const e=get('ink-save-status');e.textContent=message;e.dataset.failed=failed;e.title=failed?'Automatic browser saving failed. Download an annotation backup.':`Ink${TEXT_ENABLED?', text,':''} and diagram states are saved in this browser, not in the HTML file.`;}
+ function saveNow(){clearTimeout(saveTimer);try{localStorage.setItem(storageKey,JSON.stringify(payload()));saveFailed=false;status('Saved locally');}catch(e){saveFailed=true;status('Use backup',true);}}
+ function scheduleSave(){clearTimeout(saveTimer);saveTimer=setTimeout(saveNow,180);}
+ // Answer fields can update state without replacing the focused input or its next click target.
+ document.addEventListener('deck-state-change',scheduleSave);
+ function elementForStroke(s){let el;
+  if(s.points.length===1){el=document.createElementNS(NS,'circle');el.setAttribute('cx',s.points[0][0]);el.setAttribute('cy',s.points[0][1]);el.setAttribute('r',s.width/2);el.setAttribute('fill',s.color);}
+  else{el=document.createElementNS(NS,'path');el.setAttribute('d',s.points.map((p,i)=>(i?'L':'M')+p.join(' ')).join(' '));el.setAttribute('fill','none');el.setAttribute('stroke',s.color);el.setAttribute('stroke-width',s.width);el.setAttribute('stroke-linecap','round');el.setAttribute('stroke-linejoin','round');}
+  el.setAttribute('opacity',s.tool==='highlight'?'.27':'1');el.setAttribute('class','ink-stroke');return el;
+ }
+ function drawInk(){raf=0;layer.replaceChildren(...strokes().filter(s=>s.tool!=='text').map(elementForStroke));if(gesture?.stroke&&gesture.slide===index)layer.append(elementForStroke(gesture.stroke));textTools?.render();updateButtons();}
+ function requestDraw(){if(!raf)raf=requestAnimationFrame(drawInk);}
+ function updateButtons(){get('ink-undo').disabled=!(undo[index]?.length);get('ink-redo').disabled=!(redo[index]?.length);get('ink-clear').disabled=!strokes().length;get('resetAnnotations').disabled=!Object.values(ink).some(list=>list.length);}
+ function remember(i,before){(undo[i]||(undo[i]=[])).push(before);if(undo[i].length>100)undo[i].shift();redo[i]=[];}
+ function finishGesture(cancel=false){textTools?.finish();if(!gesture)return;const g=gesture;gesture=null;
+  if(g.stroke&&!cancel){remember(g.slide,strokes(g.slide));ink[g.slide]=[...strokes(g.slide),g.stroke];}
+  if(g.before){if(cancel)ink[g.slide]=g.before;else if(g.erased)remember(g.slide,g.before);}
+  if(layer.hasPointerCapture(g.pointerId))layer.releasePointerCapture(g.pointerId);
+  drawInk();saveNow();
+ }
+ function useMode(next){finishGesture();if(toolbar.contains(document.activeElement))document.activeElement.blur();mode=next;layer.classList.toggle('ink-enabled',mode!=='use');for(const name of ['use','pen','highlight','erase',...(TEXT_ENABLED?['text']:[])])get('ink-'+name).setAttribute('aria-pressed',name===mode);
+  if(next!=='use')stopPlayback();
+  get('ink-color').disabled=!['pen','highlight','text'].includes(mode);get('ink-color').value=mode==='text'?textTools.color():colorsForTool[mode]||colorsForTool.pen;textTools?.setMode(mode);updateInkChoices();
+ }
+ function undoInk(){finishGesture();if(!undo[index]?.length)return;(redo[index]||(redo[index]=[])).push(strokes());ink[index]=undo[index].pop();drawInk();saveNow();}
+ function redoInk(){finishGesture();if(!redo[index]?.length)return;(undo[index]||(undo[index]=[])).push(strokes());ink[index]=redo[index].pop();drawInk();saveNow();}
+ function point(e){const r=layer.getBoundingClientRect();return [Math.round(Math.max(0,Math.min(W,(e.clientX-r.left)*W/r.width))*10)/10,Math.round(Math.max(0,Math.min(H,(e.clientY-r.top)*H/r.height))*10)/10];}
+ function pointSegment(p,a,b){const dx=b[0]-a[0],dy=b[1]-a[1],len=dx*dx+dy*dy,t=len?Math.max(0,Math.min(1,((p[0]-a[0])*dx+(p[1]-a[1])*dy)/len)):0;return Math.hypot(p[0]-a[0]-t*dx,p[1]-a[1]-t*dy);}
+ function segmentsDistance(a,b,c,d){const cross=(u,v,w)=>(v[0]-u[0])*(w[1]-u[1])-(v[1]-u[1])*(w[0]-u[0]);let x=cross(a,b,c),y=cross(a,b,d),z=cross(c,d,a),w=cross(c,d,b);
+  if(((x>0&&y<0)||(x<0&&y>0))&&((z>0&&w<0)||(z<0&&w>0)))return 0;
+  return Math.min(pointSegment(a,c,d),pointSegment(b,c,d),pointSegment(c,a,b),pointSegment(d,a,b));
+ }
+ function eraseBetween(a,b){const g=gesture;if(!g)return;const before=strokes(g.slide);ink[g.slide]=before.filter(s=>{if(s.tool==='text')return true;const radius=10+s.width/2;if(s.points.length===1)return pointSegment(s.points[0],a,b)>radius;for(let j=1;j<s.points.length;j++)if(segmentsDistance(a,b,s.points[j-1],s.points[j])<=radius)return false;return true;});if(ink[g.slide].length!==before.length)g.erased=true;requestDraw();}
+ layer.addEventListener('pointerdown',e=>{if(mode==='use'||gesture||(e.pointerType==='mouse'&&e.button!==0))return;e.preventDefault();const p=point(e),eraser=mode==='erase'||e.button===5;
+  if(mode==='text'){textTools.add(p);return;}
+  gesture={slide:index,pointerId:e.pointerId,last:p};layer.setPointerCapture(e.pointerId);
+  if(eraser){gesture.before=strokes();gesture.erased=false;eraseBetween(p,p);}else gesture.stroke={tool:mode,color:colorsForTool[mode],width:mode==='highlight'?width*6:width,points:[p]};requestDraw();
+ });
+ layer.addEventListener('pointermove',e=>{if(!gesture||e.pointerId!==gesture.pointerId)return;e.preventDefault();const samples=e.getCoalescedEvents?.()||[],events=samples.length?samples:[e];
+  for(const sample of events){const p=point(sample);if(gesture.before)eraseBetween(gesture.last,p);else if(Math.hypot(p[0]-gesture.last[0],p[1]-gesture.last[1])>.5)gesture.stroke.points.push(p);gesture.last=p;}requestDraw();
+ });
+ layer.addEventListener('pointerup',e=>{if(!gesture||e.pointerId!==gesture.pointerId)return;e.preventDefault();const p=point(e);if(gesture.before)eraseBetween(gesture.last,p);else if(Math.hypot(p[0]-gesture.last[0],p[1]-gesture.last[1])>.5)gesture.stroke.points.push(p);finishGesture();});
+ layer.addEventListener('pointercancel',e=>{if(gesture?.pointerId===e.pointerId)finishGesture(true);});
+ layer.addEventListener('lostpointercapture',e=>{if(gesture?.pointerId===e.pointerId)finishGesture();});
+ for(const name of ['use','pen','highlight','erase'])get('ink-'+name).onclick=()=>useMode(name);
+ if(TEXT_ENABLED){get('ink-text').onclick=()=>useMode('text');for(const [id,label] of [['ink-undo','Undo annotation on this slide (Ctrl+Z)'],['ink-redo','Redo annotation on this slide (Ctrl+Shift+Z)'],['ink-clear','Clear ink and text on this slide (undo available)'],['ink-more','Annotation backup, printing, and help'],['ink-color','Annotation color']]){get(id).title=label;get(id).setAttribute('aria-label',label);}}
+ get('ink-undo').onclick=undoInk;get('ink-redo').onclick=redoInk;
+ get('ink-clear').onclick=()=>{finishGesture();if(!strokes().length)return;remember(index,strokes());ink[index]=[];drawInk();saveNow();};
+ get('ink-color').insertAdjacentHTML('beforebegin',[
+  ['ink',[['Blue','#1565c0'],['Red','#c62828'],['Black','#111111']]],
+  ['highlight',[['Yellow','#fdd835'],['Orange','#fb8c00']]]
+ ].map(([palette,swatches])=>`<div class="ink-swatches" data-palette="${palette}" role="group" aria-label="${palette==='ink'?'Ink':'Highlighter'} color">`+swatches.map(([name,color])=>`<button type="button" class="ink-swatch" data-ink-color="${color}" title="${name} ${palette==='ink'?'ink':'highlighter'}" aria-label="${name} ${palette==='ink'?'ink':'highlighter'}" aria-pressed="false"><span style="background:${color}"></span></button>`).join('')+'</div>').join(''));
+ get('ink-width').insertAdjacentHTML('beforebegin','<label class="ink-width-label" for="ink-width">Width</label>');
+ get('ink-width').innerHTML=[[3,'Thin'],[5,'Medium'],[8,'Thick']].map(([n,name])=>`<option value="${n}">${name}</option>`).join('');
+ function updateInkChoices(){
+  const color=mode==='text'?textTools.color():(colorsForTool[mode]||colorsForTool.pen);
+  toolbar.querySelectorAll('[data-palette]').forEach(group=>group.hidden=group.dataset.palette!==(mode==='highlight'?'highlight':'ink'));
+  toolbar.querySelectorAll('[data-ink-color]').forEach(button=>button.setAttribute('aria-pressed',button.dataset.inkColor===color));
+  get('ink-width').value=String(width);
+ }
+ function chooseInkColor(color){
+  if(!['pen','highlight','text'].includes(mode))useMode('pen');
+  if(mode==='text')textTools.setColor(color);else colorsForTool[mode]=color;
+  get('ink-color').value=color;updateInkChoices();
+ }
+ toolbar.querySelectorAll('[data-ink-color]').forEach(button=>button.onclick=()=>chooseInkColor(button.dataset.inkColor));
+ get('ink-color').oninput=e=>chooseInkColor(e.target.value);
+ get('ink-width').onchange=e=>{finishGesture();width=Number(e.target.value);useMode(mode==='highlight'?'highlight':'pen');};
+ get('ink-menu').querySelector('#ink-close').onclick=()=>menu.close();
+ const menuButton=get('ink-more');
+ menuButton.onclick=()=>{finishGesture();get('ink-menu-message').textContent=saveFailed?'Browser saving is unavailable. Download a backup to keep your annotations.':`Backups include ink${TEXT_ENABLED?', text,':''} and diagram states for all slides.`;get('ink-menu-message').dataset.failed=saveFailed;menu.showModal();};
+ get('ink-export').onclick=()=>{finishGesture();const blob=new Blob([JSON.stringify(payload(),null,2)],{type:'application/json'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=`meeting-${DECK.meeting}-ink${TEXT_ENABLED?'-text':''}-backup.json`;a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);get('ink-menu-message').textContent='Annotation backup downloaded.';get('ink-menu-message').dataset.failed=false;};
+ get('ink-load').onclick=()=>{fileInput.value='';fileInput.click();};
+ fileInput.onchange=async()=>{const f=fileInput.files[0];if(!f)return;try{if(f.size>40000000)throw Error('The backup file is too large.');const loaded=validatePayload(JSON.parse(await f.text()));finishGesture();clearInterval(timer);timer=null;for(let i=0;i<DECK.slides.length;i++)remember(i,strokes(i));ink=loaded.slides;state=loaded.states;render();saveNow();get('ink-menu-message').textContent='Backup loaded. Previous ink is available with Undo on each slide.';get('ink-menu-message').dataset.failed=false;}catch(e){get('ink-menu-message').textContent='Could not load backup: '+e.message;get('ink-menu-message').dataset.failed=true;}};
+ get('ink-print').onclick=()=>{finishGesture();menu.close();window.print();};
+ // Run before the original keyboard listener, without changing its navigation keys.
+ document.addEventListener('keydown',e=>{if(document.querySelector('dialog[open]')||e.target.closest('input,select,textarea')||e.altKey)return;const key=e.key.toLowerCase();
+  if((e.ctrlKey||e.metaKey)&&key==='z'){e.preventDefault();e.stopImmediatePropagation();e.shiftKey?redoInk():undoInk();return;}
+  if((e.ctrlKey||e.metaKey)&&key==='y'){e.preventDefault();e.stopImmediatePropagation();redoInk();return;}
+  if(e.ctrlKey||e.metaKey)return;const map={v:'use',p:'pen',h:'highlight',e:'erase',...(TEXT_ENABLED?{t:'text'}:{})};if(map[key]){e.preventDefault();e.stopImmediatePropagation();useMode(map[key]);}
+ },true);
+ function stopPlayback(){
+  clearInterval(timer);timer=null;
+  if(typeof pauseDeckAnimations==='function')pauseDeckAnimations();
+  const button=stage.querySelector('[data-action="play"]');if(button)button.textContent='Play';
+ }
+ // Pause without rerendering: an active pen stroke or text editor must stay put.
+ document.addEventListener('pointerdown',e=>{if(e.target.closest('#ink-tools,#ink-layer,#ink-text-layer'))stopPlayback();},true);
+ function updateLectureControls(){
+  resets.hidden=index!==0;
+  const s=DECK.slides[index];if(s.scene!=='route')return;
+  const q=st(),controls=stage.querySelector('#slide .controls'),play=controls.querySelector('[data-action="play"]');
+  play.textContent=timer?'Pause':'Play';
+  controls.insertAdjacentHTML('beforeend','<label class="route-playback">Speed <select id="route-speed" aria-label="Route playback speed">'+[[1400,'Slow'],[700,'Normal'],[350,'Fast']].map(([n,label])=>`<option value="${n}" ${n===(q.routeDelay||700)?'selected':''}>${label}</option>`).join('')+'</select></label>'+`<label class="route-playback">Step <input id="route-progress" aria-label="Route step" type="range" min="0" max="${s.route.length-1}" value="${q.step}" aria-valuetext="${q.step} of ${s.route.length-1}"></label>`);
+ }
+ const baseAction=action;
+ action=function(a,target){
+  if(a!=='play')return baseAction(a,target);
+  if(timer){stopPlayback();return;}
+  const q=st(),s=DECK.slides[index],at=index;
+  if(q.step>=s.route.length-1)q.step=0;
+  timer=setInterval(()=>{if(index!==at){stopPlayback();return;}q.step=Math.min(q.step+1,s.route.length-1);if(q.step===s.route.length-1)stopPlayback();render();},q.routeDelay||700);
+  render();
+ };
+ document.addEventListener('change',e=>{
+  if(!['route-speed','route-progress'].includes(e.target.id))return;
+  stopPlayback();const q=st();if(e.target.id==='route-speed')q.routeDelay=Number(e.target.value);else q.step=Number(e.target.value);render();
+ });
+ const baseRender=render;
+ render=function(){finishGesture();baseRender();updateLectureControls();if(DECK.copyLabel!==false)document.title+=TEXT_ENABLED?' · Ink + text copy':' · Ink copy';drawInk();scheduleSave();};
+ // The base print listener runs first; replace its reflowed pages with exact-layout pages.
+ addEventListener('beforeprint',()=>{finishGesture();clearInterval(timer);timer=null;const old=index,container=get('print');container.replaceChildren();
+  DECK.slides.forEach((s,i)=>{index=i;const page=document.createElement('section');page.className='ink-print-page';
+   const customLayout=typeof slideClass==='function';
+   const markup=customLayout?slideContent(s,st()):`<div class="eyebrow">${s.act===0?'Opening investigation':`Act ${s.act} / ${DECK.acts[s.act]}`}</div><h1>${s.title}</h1><div class="content"><div class="text">${s.body}</div><div class="visual">${renderScene(s,st())}</div></div>`;
+   page.innerHTML=`<div class="brand"><b>CS 241</b>MEETING ${DECK.meeting}</div><article class="ink-print-slide ${customLayout?slideClass(s):(s.cover?'cover':'')}">${markup}</article><footer class="footer"><span>Meeting ${DECK.meeting} · ${DECK.title}</span><span>${i+1} / ${DECK.slides.length}</span></footer>`;
+   const svg=document.createElementNS(NS,'svg');svg.setAttribute('viewBox',`0 0 ${W} ${H}`);svg.setAttribute('class','ink-print-svg');strokes(i).filter(s=>s.tool!=='text').forEach(s=>svg.append(elementForStroke(s)));page.append(svg);textTools?.print(page,i);container.append(page);
+  });index=old;
+ });
+ addEventListener('pagehide',()=>{finishGesture();saveNow();});
+ addEventListener('blur',()=>finishGesture());
+ get('restartLecture').onclick=()=>{useMode('use');stopPlayback();state={};go(0);saveNow();status('Lecture reset');get('restartLecture').blur();};
+ get('resetAnnotations').onclick=()=>{useMode('use');stopPlayback();for(const [key,list] of Object.entries(ink))if(list.length)remember(Number(key),list);ink={};drawInk();saveNow();status('Notes reset');get('resetAnnotations').blur();};
+ useMode('use');baseRender();updateLectureControls();if(DECK.copyLabel!==false)document.title+=TEXT_ENABLED?' · Ink + text copy':' · Ink copy';drawInk();
+ if(loadedWarning)status('Use backup',true);else status(Object.keys(ink).length?(TEXT_ENABLED?'Notes restored':'Ink restored'):'Ready');
+})();
+</script></body></html>
